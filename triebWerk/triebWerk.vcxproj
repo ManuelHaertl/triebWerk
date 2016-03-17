@@ -143,6 +143,7 @@
     <ClCompile Include="src\CGamepad.cpp" />
     <ClCompile Include="src\CInput.cpp" />
     <ClCompile Include="src\CTime.cpp" />
+    <ClCompile Include="src\CTransform.cpp" />
     <ClCompile Include="src\CWorld.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -152,6 +153,7 @@
     <ClInclude Include="include\CGamepad.h" />
     <ClInclude Include="include\CInput.h" />
     <ClInclude Include="include\CTime.h" />
+    <ClInclude Include="include\CTransform.h" />
     <ClInclude Include="include\CWorld.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

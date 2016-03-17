@@ -31,6 +31,12 @@
     <Filter Include="Quelldateien\Input">
       <UniqueIdentifier>{ed027113-beeb-4f88-8087-b4a80f51c7fe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Quelldateien\World\Entity">
+      <UniqueIdentifier>{493ca8a9-1061-4b35-8871-a9c5062b5884}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\World\Entity">
+      <UniqueIdentifier>{66ef1a70-ac54-416d-b3a5-ed937fb27b40}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="extern\include\loadPNG\lodepng.cpp">
@@ -42,9 +48,6 @@
     <ClCompile Include="src\CWorld.cpp">
       <Filter>Quelldateien\World</Filter>
     </ClCompile>
-    <ClCompile Include="src\CEntity.cpp">
-      <Filter>Quelldateien\World</Filter>
-    </ClCompile>
     <ClCompile Include="src\CTime.cpp">
       <Filter>Quelldateien\Time</Filter>
     </ClCompile>
@@ -53,6 +56,12 @@
     </ClCompile>
     <ClCompile Include="src\CGamepad.cpp">
       <Filter>Quelldateien\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CEntity.cpp">
+      <Filter>Quelldateien\World\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CTransform.cpp">
+      <Filter>Quelldateien\World\Entity</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -65,9 +74,6 @@
     <ClInclude Include="include\CWorld.h">
       <Filter>Headerdateien\World</Filter>
     </ClInclude>
-    <ClInclude Include="include\CEntity.h">
-      <Filter>Headerdateien\World</Filter>
-    </ClInclude>
     <ClInclude Include="include\CTime.h">
       <Filter>Headerdateien\Time</Filter>
     </ClInclude>
@@ -76,6 +82,12 @@
     </ClInclude>
     <ClInclude Include="include\CGamepad.h">
       <Filter>Headerdateien\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CTransform.h">
+      <Filter>Headerdateien\World\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CEntity.h">
+      <Filter>Headerdateien\World\Entity</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
