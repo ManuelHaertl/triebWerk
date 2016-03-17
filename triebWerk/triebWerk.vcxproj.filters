@@ -13,15 +13,69 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Headerdateien\World">
+      <UniqueIdentifier>{69186e04-2e09-430f-aa1e-29fd64503f47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\World">
+      <UniqueIdentifier>{9643ea9f-fabe-4462-938c-23fd1d053a5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Time">
+      <UniqueIdentifier>{f846ddfb-9dc7-4963-818f-e06cbcbe5fda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Time">
+      <UniqueIdentifier>{455c72fb-4991-42b7-932a-2a38630c6dce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Input">
+      <UniqueIdentifier>{a166a3c8-21f2-42d4-903a-29e3a654ade9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Input">
+      <UniqueIdentifier>{ed027113-beeb-4f88-8087-b4a80f51c7fe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="extern\include\loadPNG\lodepng.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="src\CEngine.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CWorld.cpp">
+      <Filter>Quelldateien\World</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CEntity.cpp">
+      <Filter>Quelldateien\World</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CTime.cpp">
+      <Filter>Quelldateien\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CInput.cpp">
+      <Filter>Quelldateien\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CGamepad.cpp">
+      <Filter>Quelldateien\Input</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="extern\include\loadPNG\lodepng.h">
       <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CEngine.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CWorld.h">
+      <Filter>Headerdateien\World</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CEntity.h">
+      <Filter>Headerdateien\World</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CTime.h">
+      <Filter>Headerdateien\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CInput.h">
+      <Filter>Headerdateien\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CGamepad.h">
+      <Filter>Headerdateien\Input</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

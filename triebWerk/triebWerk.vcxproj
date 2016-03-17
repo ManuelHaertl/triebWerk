@@ -138,9 +138,21 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="extern\include\loadPNG\lodepng.cpp" />
+    <ClCompile Include="src\CEngine.cpp" />
+    <ClCompile Include="src\CEntity.cpp" />
+    <ClCompile Include="src\CGamepad.cpp" />
+    <ClCompile Include="src\CInput.cpp" />
+    <ClCompile Include="src\CTime.cpp" />
+    <ClCompile Include="src\CWorld.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="extern\include\loadPNG\lodepng.h" />
+    <ClInclude Include="include\CEngine.h" />
+    <ClInclude Include="include\CEntity.h" />
+    <ClInclude Include="include\CGamepad.h" />
+    <ClInclude Include="include\CInput.h" />
+    <ClInclude Include="include\CTime.h" />
+    <ClInclude Include="include\CWorld.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
