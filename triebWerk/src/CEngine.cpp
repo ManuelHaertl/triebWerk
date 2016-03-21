@@ -16,28 +16,26 @@ triebWerk::CEngine & triebWerk::CEngine::Instance()
 
 bool triebWerk::CEngine::Initialize()
 {
-    m_pInput = new CInput();
     m_pTime = new CTime();
+    m_pInput = new CInput();
     m_pWorld = new CWorld();
 
     m_pInput->Initialize();
-    m_pTime->Initialize();
     m_pWorld->Initialize();
     return true;
 }
 
 bool triebWerk::CEngine::Run()
 {
-    m_pTime->Update();
     m_pInput->Update();
     m_pWorld->Update();
+    m_pTime->Update();
     return true;
 }
 
 void triebWerk::CEngine::Shutdown()
 {
     m_pInput->Shutdown();
-    m_pTime->Shutdown();
     m_pWorld->Shutdown();
 
     delete m_pInput;

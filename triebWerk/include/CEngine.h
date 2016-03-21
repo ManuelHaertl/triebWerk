@@ -1,4 +1,5 @@
 #pragma once
+#include <EngineDefines.h>
 #include <CInput.h>
 #include <CTime.h>
 #include <CWorld.h>

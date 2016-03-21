@@ -3,12 +3,18 @@
 
 int main()
 {
-    triebWerk::CEngine::Instance().Initialize();
-
-    while (42)
+    if (Engine.Initialize() == false)
     {
-        triebWerk::CEngine::Instance().Run();
+        Engine.Shutdown();
+        return 0;
     }
 
-    triebWerk::CEngine::Instance().Shutdown();
+    bool run = true;
+    while (run == true)
+    {
+        run = Engine.Run();
+    }
+
+    Engine.Shutdown();
+    return 0;
 }

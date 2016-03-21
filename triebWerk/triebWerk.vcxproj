@@ -155,6 +155,7 @@
     <ClInclude Include="include\CTime.h" />
     <ClInclude Include="include\CTransform.h" />
     <ClInclude Include="include\CWorld.h" />
+    <ClInclude Include="include\EngineDefines.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

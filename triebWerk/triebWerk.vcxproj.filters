@@ -89,5 +89,8 @@
     <ClInclude Include="include\CEntity.h">
       <Filter>Headerdateien\World\Entity</Filter>
     </ClInclude>
+    <ClInclude Include="include\EngineDefines.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
