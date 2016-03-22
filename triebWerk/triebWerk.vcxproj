@@ -144,6 +144,7 @@
     <ClCompile Include="src\CInput.cpp" />
     <ClCompile Include="src\CTime.cpp" />
     <ClCompile Include="src\CTransform.cpp" />
+    <ClCompile Include="src\CWindow.cpp" />
     <ClCompile Include="src\CWorld.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -154,6 +155,7 @@
     <ClInclude Include="include\CInput.h" />
     <ClInclude Include="include\CTime.h" />
     <ClInclude Include="include\CTransform.h" />
+    <ClInclude Include="include\CWindow.h" />
     <ClInclude Include="include\CWorld.h" />
     <ClInclude Include="include\EngineDefines.h" />
   </ItemGroup>
