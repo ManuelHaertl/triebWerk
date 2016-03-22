@@ -13,7 +13,6 @@ int main()
     while (run == true)
     {
         run = twEngine.Run();
-        std::cout << twTime->GetDeltaTime() << std::endl;
     }
 
     twEngine.Shutdown();

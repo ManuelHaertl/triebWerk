@@ -145,6 +145,7 @@
     <ClCompile Include="src\CTime.cpp" />
     <ClCompile Include="src\CTransform.cpp" />
     <ClCompile Include="src\CWorld.cpp" />
+    <ClCompile Include="src\CXboxController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="extern\include\loadPNG\lodepng.h" />
@@ -155,6 +156,8 @@
     <ClInclude Include="include\CTime.h" />
     <ClInclude Include="include\CTransform.h" />
     <ClInclude Include="include\CWorld.h" />
+    <ClInclude Include="include\CXboxController.h" />
+    <ClInclude Include="include\EButtonState.h" />
     <ClInclude Include="include\EngineDefines.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

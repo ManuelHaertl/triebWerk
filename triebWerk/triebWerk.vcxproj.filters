@@ -63,6 +63,9 @@
     <ClCompile Include="src\CTransform.cpp">
       <Filter>Quelldateien\World\Entity</Filter>
     </ClCompile>
+    <ClCompile Include="src\CXboxController.cpp">
+      <Filter>Quelldateien\Input</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="extern\include\loadPNG\lodepng.h">
@@ -91,6 +94,12 @@
     </ClInclude>
     <ClInclude Include="include\EngineDefines.h">
       <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CXboxController.h">
+      <Filter>Headerdateien\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EButtonState.h">
+      <Filter>Headerdateien\Input</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
