@@ -42,8 +42,8 @@ const bool triebWerk::CWindow::Initialize(const bool a_IsFullscreen, const unsig
 		dmScreenSettings.dmBitsPerPel = 32;
 		dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
 
-		m_Width = dmScreenSettings.dmPelsWidth;
-		m_Height = dmScreenSettings.dmPelsHeight;
+		m_Width = static_cast<unsigned short>(dmScreenSettings.dmPelsWidth);
+		m_Height = static_cast<unsigned short>(dmScreenSettings.dmPelsHeight);
 
 		ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN);
 
@@ -112,8 +112,9 @@ const MSG triebWerk::CWindow::GetWindowEvent()
 		TranslateMessage(&msg);
 
 		DispatchMessage(&msg);
-		return msg;
 	}
+
+	return msg;
 }
 
 LRESULT triebWerk::CWindow::WindowProcedure(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
