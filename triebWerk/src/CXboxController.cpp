@@ -47,7 +47,7 @@ void triebWerk::CXboxController::SetIndex(DWORD a_Index)
     m_Index = a_Index;
 }
 
-void triebWerk::CXboxController::Update()
+void triebWerk::CXboxController::Update(float a_DeltaTime)
 {
     XINPUT_STATE state = { 0 };
     DWORD result = XInputGetState(m_Index, &state);
@@ -58,7 +58,7 @@ void triebWerk::CXboxController::Update()
     case ERROR_SUCCESS:
         m_IsConnected = true;
         CheckButtons(state);
-        CheckRumble();
+        CheckRumble(a_DeltaTime);
         break;
     case ERROR_DEVICE_NOT_CONNECTED:
         m_IsConnected = false;
@@ -66,11 +66,11 @@ void triebWerk::CXboxController::Update()
     }
 }
 
-void triebWerk::CXboxController::CheckRumble()
+void triebWerk::CXboxController::CheckRumble(float a_DeltaTime)
 {
     if (m_RumbleHasEnded == false)
     {
-        m_RumbleTime -= 0.01f;
+        m_RumbleTime -= a_DeltaTime;
 
         if (m_RumbleTime <= 0.0f)
         {

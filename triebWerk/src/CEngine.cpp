@@ -30,7 +30,7 @@ bool triebWerk::CEngine::Initialize()
 
 bool triebWerk::CEngine::Run()
 {
-    m_pInput->Update();
+    m_pInput->Update(m_pTime->GetUnscaledDeltaTime());
     m_pWorld->Update();
     m_pTime->Update();
 	MSG msg = m_pWindow->GetWindowEvent();

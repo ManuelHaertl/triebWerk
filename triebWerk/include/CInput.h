@@ -14,7 +14,7 @@ namespace triebWerk
 
     public:
         bool Initialize();
-        bool Update();
+        bool Update(float a_DeltaTime);
         void Shutdown();
     };
 }

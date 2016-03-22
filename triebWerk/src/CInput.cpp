@@ -14,9 +14,9 @@ bool triebWerk::CInput::Initialize()
     return true;
 }
 
-bool triebWerk::CInput::Update()
+bool triebWerk::CInput::Update(float a_DeltaTime)
 {
-    m_Gamepad->Update();
+    m_Gamepad->Update(a_DeltaTime);
     return true;
 }
 

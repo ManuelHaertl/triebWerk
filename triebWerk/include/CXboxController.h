@@ -63,10 +63,10 @@ namespace triebWerk
         ~CXboxController();
 
         void SetIndex(DWORD a_Index);
-        void Update();
+        void Update(float a_DeltaTime);
 
     private:
-        void CheckRumble();
+        void CheckRumble(float a_DeltaTime);
         void CheckButtons(XINPUT_STATE a_State);
         short DeadzoneCheck(short a_A, short a_B, short a_Deadzone);
     };

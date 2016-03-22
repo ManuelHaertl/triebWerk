@@ -12,11 +12,11 @@ triebWerk::CGamepad::~CGamepad()
 {
 }
 
-void triebWerk::CGamepad::Update()
+void triebWerk::CGamepad::Update(float a_DeltaTime)
 {
     for (size_t i = 0; i < XUSER_MAX_COUNT; ++i)
     {
-        m_Controller[i].Update();
+        m_Controller[i].Update(a_DeltaTime);
     }
 }
 

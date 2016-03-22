@@ -12,7 +12,7 @@ namespace triebWerk
         CGamepad();
         ~CGamepad();
 
-        void Update();
+        void Update(float a_DeltaTime);
 
         bool IsConnected(size_t a_ControllerIndex);
         void SetRumbleOn(size_t a_ControllerIndex, float a_LeftMotor, float a_RightMotor, float a_Time);
