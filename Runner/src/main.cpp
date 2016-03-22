@@ -3,18 +3,19 @@
 
 int main()
 {
-    if (Engine.Initialize() == false)
+    if (twEngine.Initialize() == false)
     {
-        Engine.Shutdown();
+        twEngine.Shutdown();
         return 0;
     }
 
     bool run = true;
     while (run == true)
     {
-        run = Engine.Run();
+        run = twEngine.Run();
+        std::cout << twTime->GetDeltaTime() << std::endl;
     }
 
-    Engine.Shutdown();
+    twEngine.Shutdown();
     return 0;
 }
