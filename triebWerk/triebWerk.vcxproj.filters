@@ -37,6 +37,12 @@
     <Filter Include="Headerdateien\World\Entity">
       <UniqueIdentifier>{66ef1a70-ac54-416d-b3a5-ed937fb27b40}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headerdateien\Window">
+      <UniqueIdentifier>{13243e3e-f181-44f9-9492-741cbf82a446}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Window">
+      <UniqueIdentifier>{7fbcaa0b-5ef3-4064-b8c2-d849b7d82fd2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="extern\include\loadPNG\lodepng.cpp">
@@ -66,6 +72,9 @@
     <ClCompile Include="src\CXboxController.cpp">
       <Filter>Quelldateien\Input</Filter>
     </ClCompile>
+    <ClCompile Include="src\CWindow.cpp">
+      <Filter>Quelldateien\Window</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="extern\include\loadPNG\lodepng.h">
@@ -94,12 +103,6 @@
     </ClInclude>
     <ClInclude Include="include\EngineDefines.h">
       <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="include\CXboxController.h">
-      <Filter>Headerdateien\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="include\EButtonState.h">
-      <Filter>Headerdateien\Input</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
