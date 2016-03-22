@@ -1,5 +1,6 @@
 #pragma once
-#define Engine CEngine::Instance()
-#define Input CEngine::Instance().m_pInput
-#define Time CEngine::Instance().m_pTime
-#define World CEngine::Instance().m_pWorld
+#define twEngine triebWerk::CEngine::Instance()
+#define twInput triebWerk::CEngine::Instance().m_pInput
+#define twGamepad triebWerk::CEngine::Instance().m_pInput->m_Gamepad
+#define twTime triebWerk::CEngine::Instance().m_pTime
+#define twWorld triebWerk::CEngine::Instance().m_pWorld
