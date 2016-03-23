@@ -104,14 +104,14 @@
     <ClInclude Include="include\EngineDefines.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="include\CXboxController.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="include\EButtonState.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="include\CWindow.h">
       <Filter>Headerdateien\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CXboxController.h">
+      <Filter>Headerdateien\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EButtonState.h">
+      <Filter>Headerdateien\Input</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

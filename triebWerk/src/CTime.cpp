@@ -4,7 +4,10 @@ triebWerk::CTime::CTime() :
     m_DeltaTime(0.0f),
     m_UnscaledDeltaTime(0.0f),
     m_TimeSinceStartup(0.0f),
-    m_TimeScale(1.0f)
+    m_TimeScale(1.0f),
+    m_FPS(0),
+    m_CurrentFPSCalcTime(0.0f),
+    m_CurrentFPSCounter(0)
 {
     m_StartupTime = std::chrono::high_resolution_clock::now();;
     m_LastTime = m_StartupTime;
@@ -28,6 +31,16 @@ void triebWerk::CTime::Update()
     // Calculate time since startup
     auto realTime = std::chrono::duration_cast<std::chrono::duration<float>>(now - m_StartupTime);
     m_TimeSinceStartup = realTime.count();
+
+    // Calculate FPS
+    m_CurrentFPSCalcTime += m_DeltaTime;
+    m_CurrentFPSCounter++;
+    if (m_CurrentFPSCalcTime >= FPS_CALC_TIME)
+    {
+        m_FPS = m_CurrentFPSCounter / static_cast<int>(FPS_CALC_TIME);
+        m_CurrentFPSCounter = 0;
+        m_CurrentFPSCalcTime = 0.0f;
+    }
 }
 
 float triebWerk::CTime::GetDeltaTime()
@@ -53,4 +66,9 @@ float triebWerk::CTime::GetTimeScale()
 void triebWerk::CTime::SetTimeScale(float a_TimeStamp)
 {
     m_TimeScale = a_TimeStamp;
+}
+
+int triebWerk::CTime::GetFPS()
+{
+    return m_FPS;
 }
