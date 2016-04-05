@@ -142,6 +142,8 @@
     <ClCompile Include="src\CEntity.cpp" />
     <ClCompile Include="src\CGamepad.cpp" />
     <ClCompile Include="src\CInput.cpp" />
+    <ClCompile Include="src\CKeyboard.cpp" />
+    <ClCompile Include="src\CMouse.cpp" />
     <ClCompile Include="src\CTime.cpp" />
     <ClCompile Include="src\CTransform.cpp" />
     <ClCompile Include="src\CWindow.cpp" />
@@ -154,12 +156,16 @@
     <ClInclude Include="include\CEntity.h" />
     <ClInclude Include="include\CGamepad.h" />
     <ClInclude Include="include\CInput.h" />
+    <ClInclude Include="include\CKeyboard.h" />
+    <ClInclude Include="include\CMouse.h" />
     <ClInclude Include="include\CTime.h" />
     <ClInclude Include="include\CTransform.h" />
     <ClInclude Include="include\CWindow.h" />
     <ClInclude Include="include\CWorld.h" />
     <ClInclude Include="include\CXboxController.h" />
     <ClInclude Include="include\EButtonState.h" />
+    <ClInclude Include="include\EKey.h" />
+    <ClInclude Include="include\EMouse.h" />
     <ClInclude Include="include\EngineDefines.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

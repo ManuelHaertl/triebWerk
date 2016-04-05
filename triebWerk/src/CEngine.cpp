@@ -21,7 +21,6 @@ bool triebWerk::CEngine::Initialize()
     m_pWorld = new CWorld();
 	m_pWindow = new CWindow();
 
-    m_pInput->Initialize();
     m_pWorld->Initialize();
 	m_pWindow->Initialize(false, 800, 800, "Test");
 
@@ -40,7 +39,6 @@ bool triebWerk::CEngine::Run()
 
 void triebWerk::CEngine::Shutdown()
 {
-    m_pInput->Shutdown();
     m_pWorld->Shutdown();
 
     delete m_pInput;
@@ -58,6 +56,7 @@ void triebWerk::CEngine::ProcessMessage(const MSG a_WindowEvent)
 		break;
 
 	default:
+        m_pInput->UpdateMSG(a_WindowEvent);
 		break;
 	}
 }

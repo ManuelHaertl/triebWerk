@@ -8,19 +8,15 @@ triebWerk::CInput::~CInput()
 {
 }
 
-bool triebWerk::CInput::Initialize()
+void triebWerk::CInput::Update(const float a_DeltaTime)
 {
-    m_Gamepad = new CGamepad();
-    return true;
+    m_Gamepad.Update(a_DeltaTime);
+    m_Keyboard.Update();
+    m_Mouse.Update();
 }
 
-bool triebWerk::CInput::Update(float a_DeltaTime)
+void triebWerk::CInput::UpdateMSG(const MSG& a_rMsg)
 {
-    m_Gamepad->Update(a_DeltaTime);
-    return true;
-}
-
-void triebWerk::CInput::Shutdown()
-{
-    delete m_Gamepad;
+    m_Keyboard.UpdateMSG(a_rMsg);
+    m_Mouse.UpdateMSG(a_rMsg);
 }

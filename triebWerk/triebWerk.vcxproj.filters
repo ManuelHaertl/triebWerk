@@ -43,6 +43,24 @@
     <Filter Include="Quelldateien\Window">
       <UniqueIdentifier>{7fbcaa0b-5ef3-4064-b8c2-d849b7d82fd2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headerdateien\Input\Gamepad">
+      <UniqueIdentifier>{2c1910a4-6c1e-4c89-86b8-bf3d92e49b9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Input\Keyboard">
+      <UniqueIdentifier>{eaeb3984-6a34-441c-a534-9a5da3fc73bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Input\Mouse">
+      <UniqueIdentifier>{a6cf0299-63fc-4a3a-a8dc-6a26f9442a84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Input\Mouse">
+      <UniqueIdentifier>{6d6a7c13-f9f1-4df0-96ff-0e48d9633088}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Input\Keyboard">
+      <UniqueIdentifier>{b8995dd3-7ef4-4444-984a-35a3ba7bdc81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Input\Gamepad">
+      <UniqueIdentifier>{0fd22b9c-39dd-44c3-bb83-edd3c08094b3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="extern\include\loadPNG\lodepng.cpp">
@@ -60,20 +78,26 @@
     <ClCompile Include="src\CInput.cpp">
       <Filter>Quelldateien\Input</Filter>
     </ClCompile>
-    <ClCompile Include="src\CGamepad.cpp">
-      <Filter>Quelldateien\Input</Filter>
-    </ClCompile>
     <ClCompile Include="src\CEntity.cpp">
       <Filter>Quelldateien\World\Entity</Filter>
     </ClCompile>
     <ClCompile Include="src\CTransform.cpp">
       <Filter>Quelldateien\World\Entity</Filter>
     </ClCompile>
-    <ClCompile Include="src\CXboxController.cpp">
-      <Filter>Quelldateien\Input</Filter>
-    </ClCompile>
     <ClCompile Include="src\CWindow.cpp">
       <Filter>Quelldateien\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CGamepad.cpp">
+      <Filter>Quelldateien\Input\Gamepad</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CKeyboard.cpp">
+      <Filter>Quelldateien\Input\Keyboard</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMouse.cpp">
+      <Filter>Quelldateien\Input\Mouse</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CXboxController.cpp">
+      <Filter>Quelldateien\Input\Gamepad</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -92,9 +116,6 @@
     <ClInclude Include="include\CInput.h">
       <Filter>Headerdateien\Input</Filter>
     </ClInclude>
-    <ClInclude Include="include\CGamepad.h">
-      <Filter>Headerdateien\Input</Filter>
-    </ClInclude>
     <ClInclude Include="include\CTransform.h">
       <Filter>Headerdateien\World\Entity</Filter>
     </ClInclude>
@@ -107,11 +128,26 @@
     <ClInclude Include="include\CWindow.h">
       <Filter>Headerdateien\Window</Filter>
     </ClInclude>
-    <ClInclude Include="include\CXboxController.h">
-      <Filter>Headerdateien\Input</Filter>
-    </ClInclude>
     <ClInclude Include="include\EButtonState.h">
       <Filter>Headerdateien\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CGamepad.h">
+      <Filter>Headerdateien\Input\Gamepad</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EKey.h">
+      <Filter>Headerdateien\Input\Keyboard</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CKeyboard.h">
+      <Filter>Headerdateien\Input\Keyboard</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CMouse.h">
+      <Filter>Headerdateien\Input\Mouse</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EMouse.h">
+      <Filter>Headerdateien\Input\Mouse</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CXboxController.h">
+      <Filter>Headerdateien\Input\Gamepad</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
