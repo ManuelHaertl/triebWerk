@@ -33,6 +33,9 @@ namespace triebWerk
 		unsigned short m_Width;
 		unsigned short m_Height;
 
+		unsigned short m_DefaultWidth;
+		unsigned short m_DefaultHeight;
+
 		bool m_IsFullscreen;
 		bool m_ShowCursor;
 	};

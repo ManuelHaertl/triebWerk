@@ -13,10 +13,27 @@ triebWerk::CWindow::CWindow() :
 
 triebWerk::CWindow::~CWindow()
 {
+	//If screen resolution is not user default change it to user default
+	if (m_DefaultHeight != GetSystemMetrics(SM_CYSCREEN) || m_DefaultWidth != GetSystemMetrics(SM_CXSCREEN))
+	{
+		DEVMODE dmScreenSettings;
+		EnumDisplaySettings(NULL, 0, &dmScreenSettings);
+		dmScreenSettings.dmSize = sizeof(dmScreenSettings);
+		dmScreenSettings.dmPelsWidth = static_cast<DWORD>(m_DefaultWidth);
+		dmScreenSettings.dmPelsHeight = static_cast<DWORD>(m_DefaultHeight);
+		dmScreenSettings.dmBitsPerPel = 32;
+		dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
+
+		ChangeDisplaySettingsEx(NULL, &dmScreenSettings, NULL, CDS_FULLSCREEN, NULL);
+	}
 }
 
 bool triebWerk::CWindow::Initialize(const bool a_IsFullscreen, const unsigned short a_ScreenWidth, const unsigned short a_ScreenHeight, const char* a_WindowName)
 {
+	//Get the user screen resolution
+	m_DefaultWidth = GetSystemMetrics(SM_CXSCREEN);
+	m_DefaultHeight = GetSystemMetrics(SM_CYSCREEN);
+
 	//Set initialize values
 	m_Height = a_ScreenHeight;
 	m_Width = a_ScreenWidth;
@@ -148,8 +165,8 @@ void triebWerk::CWindow::ChangeWindowSettings(const bool a_IsFullscreen, const u
 	}
 	else
 	{
-		dmScreenSettings.dmPelsWidth = static_cast<DWORD>(GetMaximalDisplayWidth());
-		dmScreenSettings.dmPelsHeight = static_cast<DWORD>(GetMaximalDisplayHeight());
+		dmScreenSettings.dmPelsWidth = static_cast<DWORD>(m_DefaultWidth);
+		dmScreenSettings.dmPelsHeight = static_cast<DWORD>(m_DefaultHeight);
 	}
 	dmScreenSettings.dmBitsPerPel = 32;
 	dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
