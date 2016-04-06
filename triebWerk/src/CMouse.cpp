@@ -55,7 +55,7 @@ void triebWerk::CMouse::UpdateMSG(const MSG& a_rMSG)
 
     case WM_RBUTTONDOWN:
     {
-        m_MouseState[EMouseButton::Left] = EButtonState::Down;
+        m_MouseState[EMouseButton::Right] = EButtonState::Down;
 
         m_UpdateMouse = true;
         m_UpdateMouseType = EMouseButton::Right;
@@ -65,7 +65,7 @@ void triebWerk::CMouse::UpdateMSG(const MSG& a_rMSG)
 
     case WM_RBUTTONUP:
     {
-        m_MouseState[EMouseButton::Left] = EButtonState::Up;
+        m_MouseState[EMouseButton::Right] = EButtonState::Up;
 
         m_UpdateMouse = true;
         m_UpdateMouseType = EMouseButton::Right;
@@ -75,7 +75,7 @@ void triebWerk::CMouse::UpdateMSG(const MSG& a_rMSG)
 
     case WM_MBUTTONDOWN:
     {
-        m_MouseState[EMouseButton::Left] = EButtonState::Down;
+        m_MouseState[EMouseButton::Middle] = EButtonState::Down;
 
         m_UpdateMouse = true;
         m_UpdateMouseType = EMouseButton::Middle;
@@ -85,7 +85,7 @@ void triebWerk::CMouse::UpdateMSG(const MSG& a_rMSG)
 
     case WM_MBUTTONUP:
     {
-        m_MouseState[EMouseButton::Left] = EButtonState::Up;
+        m_MouseState[EMouseButton::Middle] = EButtonState::Up;
 
         m_UpdateMouse = true;
         m_UpdateMouseType = EMouseButton::Middle;
