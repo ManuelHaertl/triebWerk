@@ -164,8 +164,9 @@
     <ClInclude Include="include\CWorld.h" />
     <ClInclude Include="include\CXboxController.h" />
     <ClInclude Include="include\EButtonState.h" />
+    <ClInclude Include="include\EGamepadButton.h" />
     <ClInclude Include="include\EKey.h" />
-    <ClInclude Include="include\EMouse.h" />
+    <ClInclude Include="include\EMouseButton.h" />
     <ClInclude Include="include\EngineDefines.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

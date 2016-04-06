@@ -1,7 +1,7 @@
 #pragma once
 namespace triebWerk
 {
-    struct EMouse
+    struct EMouseButton
     {
         enum Type
         {

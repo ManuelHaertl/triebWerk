@@ -3,7 +3,7 @@
 
 triebWerk::CMouse::CMouse() :
     m_UpdateMouse(false),
-    m_UpdateMouseType(EMouse::Left),
+    m_UpdateMouseType(EMouseButton::Left),
     m_UpdateButtonState(EButtonState::Released),
     m_Position(0, 0),
     m_WheelMovement(0)
@@ -35,60 +35,60 @@ void triebWerk::CMouse::UpdateMSG(const MSG& a_rMSG)
     {
     case WM_LBUTTONDOWN:
     {
-        m_MouseState[EMouse::Left] = EButtonState::Down;
+        m_MouseState[EMouseButton::Left] = EButtonState::Down;
 
         m_UpdateMouse = true;
-        m_UpdateMouseType = EMouse::Left;
+        m_UpdateMouseType = EMouseButton::Left;
         m_UpdateButtonState = EButtonState::Pressed;
         break;
     }
 
     case WM_LBUTTONUP:
     {
-        m_MouseState[EMouse::Left] = EButtonState::Up;
+        m_MouseState[EMouseButton::Left] = EButtonState::Up;
 
         m_UpdateMouse = true;
-        m_UpdateMouseType = EMouse::Left;
+        m_UpdateMouseType = EMouseButton::Left;
         m_UpdateButtonState = EButtonState::Released;
         break;
     }
 
     case WM_RBUTTONDOWN:
     {
-        m_MouseState[EMouse::Left] = EButtonState::Down;
+        m_MouseState[EMouseButton::Left] = EButtonState::Down;
 
         m_UpdateMouse = true;
-        m_UpdateMouseType = EMouse::Right;
+        m_UpdateMouseType = EMouseButton::Right;
         m_UpdateButtonState = EButtonState::Pressed;
         break;
     }
 
     case WM_RBUTTONUP:
     {
-        m_MouseState[EMouse::Left] = EButtonState::Up;
+        m_MouseState[EMouseButton::Left] = EButtonState::Up;
 
         m_UpdateMouse = true;
-        m_UpdateMouseType = EMouse::Right;
+        m_UpdateMouseType = EMouseButton::Right;
         m_UpdateButtonState = EButtonState::Released;
         break;
     }
 
     case WM_MBUTTONDOWN:
     {
-        m_MouseState[EMouse::Left] = EButtonState::Down;
+        m_MouseState[EMouseButton::Left] = EButtonState::Down;
 
         m_UpdateMouse = true;
-        m_UpdateMouseType = EMouse::Middle;
+        m_UpdateMouseType = EMouseButton::Middle;
         m_UpdateButtonState = EButtonState::Pressed;
         break;
     }
 
     case WM_MBUTTONUP:
     {
-        m_MouseState[EMouse::Left] = EButtonState::Up;
+        m_MouseState[EMouseButton::Left] = EButtonState::Up;
 
         m_UpdateMouse = true;
-        m_UpdateMouseType = EMouse::Middle;
+        m_UpdateMouseType = EMouseButton::Middle;
         m_UpdateButtonState = EButtonState::Released;
         break;
     }
@@ -111,7 +111,7 @@ void triebWerk::CMouse::UpdateMSG(const MSG& a_rMSG)
     }
 }
 
-bool triebWerk::CMouse::IsState(const EMouse::Type a_Mouse, const EButtonState::Type a_State) const
+bool triebWerk::CMouse::IsState(const EMouseButton::Type a_Mouse, const EButtonState::Type a_State) const
 {
     EButtonState::Type current = m_MouseState[a_Mouse];
 

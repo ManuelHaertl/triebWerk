@@ -4,7 +4,7 @@
 #include <Winuser.h>
 
 #include <EButtonState.h>
-#include <EMouse.h>
+#include <EMouseButton.h>
 
 namespace triebWerk
 {
@@ -18,7 +18,7 @@ namespace triebWerk
         short m_WheelMovement;
 
         bool m_UpdateMouse;
-        EMouse::Type m_UpdateMouseType;
+        EMouseButton::Type m_UpdateMouseType;
         EButtonState::Type m_UpdateButtonState;
 
     public:
@@ -27,7 +27,7 @@ namespace triebWerk
 
         void Update();
         void UpdateMSG(const MSG& a_rMSG);
-        bool IsState(const EMouse::Type a_Mouse, const EButtonState::Type a_State) const;
+        bool IsState(const EMouseButton::Type a_Mouse, const EButtonState::Type a_State) const;
         DirectX::XMINT2 GetPosition() const;
         short GetWheelMovement() const;
     };

@@ -143,11 +143,14 @@
     <ClInclude Include="include\CMouse.h">
       <Filter>Headerdateien\Input\Mouse</Filter>
     </ClInclude>
-    <ClInclude Include="include\EMouse.h">
-      <Filter>Headerdateien\Input\Mouse</Filter>
-    </ClInclude>
     <ClInclude Include="include\CXboxController.h">
       <Filter>Headerdateien\Input\Gamepad</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EGamepadButton.h">
+      <Filter>Headerdateien\Input\Gamepad</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EMouseButton.h">
+      <Filter>Headerdateien\Input\Mouse</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
