@@ -61,11 +61,50 @@
     <Filter Include="Quelldateien\Input\Gamepad">
       <UniqueIdentifier>{0fd22b9c-39dd-44c3-bb83-edd3c08094b3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headerdateien\Resource">
+      <UniqueIdentifier>{00fbe54a-6ec2-46a9-a226-2fb9916e7d6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Resource">
+      <UniqueIdentifier>{61dcd59f-a61c-4cb1-88c8-e67838920931}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Resource\Resources">
+      <UniqueIdentifier>{13b7a41a-0595-45e5-b73a-80caf6239e77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Resource\Parser">
+      <UniqueIdentifier>{d550d0db-f0c4-40fd-b10e-ee0606b88588}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Resource\Resources\TilesetMap">
+      <UniqueIdentifier>{567a1bdc-1119-49c0-91da-361a5d801987}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Resource\Resources\TilesetMap\Layers">
+      <UniqueIdentifier>{b13d104b-4adf-4ab3-a751-a4db262fb34c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Resource\Resources">
+      <UniqueIdentifier>{b677baa5-2dc8-4c3d-bcb4-ab93f54ad238}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Resource\Resources\TilesetMap">
+      <UniqueIdentifier>{23665d30-6e3d-4346-a91c-d20942c12a15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Resource\Resources\TilesetMap\Layers">
+      <UniqueIdentifier>{91a25283-533e-4132-8da7-2e50e76f6523}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Resource\Parser">
+      <UniqueIdentifier>{14da79b3-92ef-4fce-b5d3-414ff3611076}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Resource\Resources\Texture">
+      <UniqueIdentifier>{d227c161-4740-420c-bbac-547c12c570e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Resource\Resources\Texture">
+      <UniqueIdentifier>{cd2f12d8-ea9e-4038-a36f-c589f3510dec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Resource\Resources\INI">
+      <UniqueIdentifier>{3fdd0573-8369-480c-9b01-a7abd84594c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Resource\Resources\INI">
+      <UniqueIdentifier>{65014bff-8141-4e1a-995c-09379eaad0b6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="extern\include\loadPNG\lodepng.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="src\CEngine.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -99,11 +138,44 @@
     <ClCompile Include="src\CXboxController.cpp">
       <Filter>Quelldateien\Input\Gamepad</Filter>
     </ClCompile>
+    <ClCompile Include="src\CResourceManager.cpp">
+      <Filter>Quelldateien\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMapLayer.cpp">
+      <Filter>Quelldateien\Resource\Resources\TilesetMap\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMapImageLayer.cpp">
+      <Filter>Quelldateien\Resource\Resources\TilesetMap\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CTileset.cpp">
+      <Filter>Quelldateien\Resource\Resources\TilesetMap\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IMapLayer.cpp">
+      <Filter>Quelldateien\Resource\Resources\TilesetMap\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CTilesetMap.cpp">
+      <Filter>Quelldateien\Resource\Resources\TilesetMap</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CTMXParser.cpp">
+      <Filter>Quelldateien\Resource\Parser</Filter>
+    </ClCompile>
+    <ClCompile Include="extern\include\loadPNG\lodepng.cpp">
+      <Filter>Quelldateien\Resource\Parser</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CFileReader.cpp">
+      <Filter>Quelldateien\Resource\Parser</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CTexture2D.cpp">
+      <Filter>Quelldateien\Resource\Resources\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CINIParser.cpp">
+      <Filter>Quelldateien\Resource\Parser</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CConfiguration.cpp">
+      <Filter>Quelldateien\Resource\Resources\INI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="extern\include\loadPNG\lodepng.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="include\CEngine.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -151,6 +223,48 @@
     </ClInclude>
     <ClInclude Include="include\EMouseButton.h">
       <Filter>Headerdateien\Input\Mouse</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\include\loadPNG\lodepng.h">
+      <Filter>Headerdateien\Resource\Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CTMXParser.h">
+      <Filter>Headerdateien\Resource\Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CTilesetMap.h">
+      <Filter>Headerdateien\Resource\Resources\TilesetMap</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CMapImageLayer.h">
+      <Filter>Headerdateien\Resource\Resources\TilesetMap\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CMapLayer.h">
+      <Filter>Headerdateien\Resource\Resources\TilesetMap\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CTileset.h">
+      <Filter>Headerdateien\Resource\Resources\TilesetMap\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\IMapLayer.h">
+      <Filter>Headerdateien\Resource\Resources\TilesetMap\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CResourceManager.h">
+      <Filter>Headerdateien\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EFileType.h">
+      <Filter>Headerdateien\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CFileReader.h">
+      <Filter>Headerdateien\Resource\Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CStringHasher.h">
+      <Filter>Headerdateien\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CTexture2D.h">
+      <Filter>Headerdateien\Resource\Resources\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CINIParser.h">
+      <Filter>Headerdateien\Resource\Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CConfiguration.h">
+      <Filter>Headerdateien\Resource\Resources\INI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -4,6 +4,7 @@
 #include <CTime.h>
 #include <CWorld.h>
 #include <CWindow.h>
+#include <CResourceManager.h>
 
 namespace triebWerk
 {
@@ -14,6 +15,7 @@ namespace triebWerk
         CTime* m_pTime;
         CWorld* m_pWorld;
 		CWindow* m_pWindow;
+		CResourceManager* m_pResourceManager;
 
 	private:
 		bool m_IsRunning;
