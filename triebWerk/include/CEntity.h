@@ -1,5 +1,6 @@
 #pragma once
 #include <CTransform.h>
+#include <IBehaviour.h>
 
 namespace triebWerk
 {
@@ -7,6 +8,7 @@ namespace triebWerk
     {
     public:
         CTransform m_Transform;
+        IBehaviour* m_pBehaviour;
 
     public:
         CEntity();
