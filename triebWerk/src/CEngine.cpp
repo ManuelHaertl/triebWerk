@@ -34,7 +34,7 @@ bool triebWerk::CEngine::Run()
     ProcessMessage(msg);
 
     m_pTime->Update();
-    m_pWorld->Update();
+    m_pWorld->Update(m_pTime->GetDeltaTime());
 
     return m_IsRunning;
 }

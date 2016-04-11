@@ -1,8 +1,8 @@
 #include <CWorld.h>
 
 triebWerk::CWorld::CWorld() :
-    m_CurrentSize(Start_Reserve_Size),
-    m_UpdateEntityCount(0)
+    m_pPhysicWorld(nullptr),
+    m_CurrentSize(Start_Reserve_Size)
 {
 }
 
@@ -12,39 +12,41 @@ triebWerk::CWorld::~CWorld()
 
 bool triebWerk::CWorld::Initialize()
 {
-    // reserve some spots so the vectore doesn't need
+    m_pPhysicWorld = new CPhysicWorld();
+
+    // reserve some spots so the vector doesn't need
     // to get resized too often during runtime
     m_Entities.reserve(Start_Reserve_Size);
-
-    //m_UpdateEntities.reserve(Start_Reserve_Size);
-    m_UpdateEntities.resize(Start_Reserve_Size);
     return true;
 }
 
-bool triebWerk::CWorld::Update()
+bool triebWerk::CWorld::Update(const float a_DeltaTime)
 {
-    m_UpdateEntityCount = 0;
-
     // check what behaviour the entity has
     for (size_t i = 0; i < m_Entities.size(); ++i)
     {
         if (m_Entities[i]->m_pBehaviour != nullptr)
         {
-            m_UpdateEntities[m_UpdateEntityCount] = m_Entities[i]->m_pBehaviour;
-            m_UpdateEntityCount++;
+            m_Entities[i]->m_pBehaviour->Update();
         }
     }
 
-    // Update Entities Behaviour
-    for (size_t i = 0; i < m_UpdateEntityCount; ++i)
-        m_UpdateEntities[i]->Update();
-
+    m_pPhysicWorld->Update(a_DeltaTime);
     return true;
 }
 
 void triebWerk::CWorld::Shutdown()
 {
     ClearEntities();
+
+    if (m_pPhysicWorld != nullptr)
+        delete m_pPhysicWorld;
+}
+
+triebWerk::CEntity* triebWerk::CWorld::CreateEntity() const
+{
+    CEntity* entity = new CEntity();
+    return entity;
 }
 
 void triebWerk::CWorld::AddEntity(CEntity * a_pEntity)
@@ -54,7 +56,6 @@ void triebWerk::CWorld::AddEntity(CEntity * a_pEntity)
     {
         m_CurrentSize *= 2;
         m_Entities.reserve(m_CurrentSize);
-        m_UpdateEntities.reserve(m_CurrentSize);
     }
 
     if (a_pEntity->m_pBehaviour != nullptr)
@@ -62,6 +63,11 @@ void triebWerk::CWorld::AddEntity(CEntity * a_pEntity)
         a_pEntity->m_pBehaviour->Start();
     }
 
+    // check for Physic Entity
+    if (a_pEntity->m_pPhysicEntity != nullptr)
+    {
+        m_pPhysicWorld->AddPhysicEntity(a_pEntity->m_pPhysicEntity);
+    }
     m_Entities.push_back(a_pEntity);
 }
 
@@ -94,6 +100,11 @@ void triebWerk::CWorld::DeleteEntity(CEntity * a_pEntity)
     {
         a_pEntity->m_pBehaviour->End();
         delete a_pEntity->m_pBehaviour;
+    }
+
+    if (a_pEntity->m_pPhysicEntity != nullptr)
+    {
+        m_pPhysicWorld->RemovePhysicEntity(a_pEntity->m_pPhysicEntity);
     }
 
     delete a_pEntity;

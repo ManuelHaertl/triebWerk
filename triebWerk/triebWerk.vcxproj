@@ -138,26 +138,41 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="extern\include\loadPNG\lodepng.cpp" />
+    <ClCompile Include="src\CAABB.cpp" />
+    <ClCompile Include="src\CBody.cpp" />
+    <ClCompile Include="src\CCollider.cpp" />
     <ClCompile Include="src\CEngine.cpp" />
     <ClCompile Include="src\CEntity.cpp" />
     <ClCompile Include="src\CGamepad.cpp" />
     <ClCompile Include="src\CInput.cpp" />
     <ClCompile Include="src\CKeyboard.cpp" />
     <ClCompile Include="src\CMouse.cpp" />
+    <ClCompile Include="src\CPhysicEntity.cpp" />
+    <ClCompile Include="src\CPhysicWorld.cpp" />
+    <ClCompile Include="src\CQuadtree.cpp" />
+    <ClCompile Include="src\CQuadtreeNode.cpp" />
     <ClCompile Include="src\CTime.cpp" />
     <ClCompile Include="src\CTransform.cpp" />
     <ClCompile Include="src\CWindow.cpp" />
     <ClCompile Include="src\CWorld.cpp" />
     <ClCompile Include="src\CXboxController.cpp" />
+    <ClCompile Include="src\IBehaviour.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="extern\include\loadPNG\lodepng.h" />
+    <ClInclude Include="include\CAABB.h" />
+    <ClInclude Include="include\CBody.h" />
+    <ClInclude Include="include\CCollider.h" />
     <ClInclude Include="include\CEngine.h" />
     <ClInclude Include="include\CEntity.h" />
     <ClInclude Include="include\CGamepad.h" />
     <ClInclude Include="include\CInput.h" />
     <ClInclude Include="include\CKeyboard.h" />
     <ClInclude Include="include\CMouse.h" />
+    <ClInclude Include="include\CPhysicEntity.h" />
+    <ClInclude Include="include\CPhysicWorld.h" />
+    <ClInclude Include="include\CQuadtree.h" />
+    <ClInclude Include="include\CQuadtreeNode.h" />
     <ClInclude Include="include\CTime.h" />
     <ClInclude Include="include\CTransform.h" />
     <ClInclude Include="include\CWindow.h" />
@@ -168,6 +183,7 @@
     <ClInclude Include="include\EKey.h" />
     <ClInclude Include="include\EMouseButton.h" />
     <ClInclude Include="include\EngineDefines.h" />
+    <ClInclude Include="include\IBehaviour.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

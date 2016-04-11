@@ -10,7 +10,7 @@ int main()
         return 0;
     }
 
-    triebWerk::CEntity* player = new triebWerk::CEntity();
+    triebWerk::CEntity* player = twWorld->CreateEntity();
     player->m_pBehaviour = new CPlayer();
     twWorld->AddEntity(player);
 

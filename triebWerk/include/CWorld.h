@@ -1,19 +1,21 @@
 #pragma once
-#include <CEntity.h>
 #include <vector>
+
+#include <CEntity.h>
+#include <CPhysicWorld.h>
 
 namespace triebWerk
 {
     class CWorld
     {
+    public:
+        CPhysicWorld* m_pPhysicWorld;
+
     private:
         static const size_t Start_Reserve_Size = 512;
         size_t m_CurrentSize;
 
         std::vector<CEntity*> m_Entities;
-
-        std::vector<IBehaviour*> m_UpdateEntities;
-        size_t m_UpdateEntityCount;
 
     public:
         CWorld();
@@ -21,9 +23,10 @@ namespace triebWerk
 
     public:
         bool Initialize();
-        bool Update();
+        bool Update(const float a_DeltaTime);
         void Shutdown();
 
+        CEntity* CreateEntity() const;
         void AddEntity(CEntity* a_pEntity);
         void RemoveEntity(CEntity* a_pEntity);
         void ClearEntities();

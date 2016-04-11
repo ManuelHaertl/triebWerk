@@ -41,7 +41,7 @@ void triebWerk::CGamepad::SetRumbleOn(const size_t a_ControllerIndex, float a_Le
     XINPUT_VIBRATION vibration = { 0 };
     vibration.wLeftMotorSpeed = left;
     vibration.wRightMotorSpeed = right;
-    XInputSetState(a_ControllerIndex, &vibration);
+    XInputSetState(static_cast<DWORD>(a_ControllerIndex), &vibration);
 
     m_Controller[a_ControllerIndex].m_RumbleHasEnded = false;
     m_Controller[a_ControllerIndex].m_RumbleTime = a_Time;
