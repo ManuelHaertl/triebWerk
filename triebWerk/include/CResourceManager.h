@@ -45,6 +45,8 @@ namespace triebWerk
 		bool Initialize();
 		void CleanUp();
 		
+		const char& GetModulPath();
+
 		//Load Interface User
 		void LoadAllFilesInFolder(const char* a_pPath);
 		void LoadAllSpecificFilesInFolder(EFileType a_FileType, const char* a_pPath);

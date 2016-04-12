@@ -11,7 +11,6 @@ triebWerk::CResourceManager::~CResourceManager()
 bool triebWerk::CResourceManager::Initialize()
 {
 	bool error = SetModulPath();
-	LoadAllFilesInFolder("data");
 	return error;
 }
 
@@ -22,6 +21,11 @@ void triebWerk::CResourceManager::CleanUp()
 		Tileset.second->ClearMap();
 		delete Tileset.second;
 	}
+}
+
+const char& triebWerk::CResourceManager::GetModulPath()
+{
+	return *m_ModulPath.c_str();
 }
 
 void triebWerk::CResourceManager::LoadAllFilesInFolder(const char * a_pPath)
