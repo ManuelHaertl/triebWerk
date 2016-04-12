@@ -25,9 +25,9 @@ bool triebWerk::CWorld::Update(const float a_DeltaTime)
     // check what behaviour the entity has
     for (size_t i = 0; i < m_Entities.size(); ++i)
     {
-        if (m_Entities[i]->m_pBehaviour != nullptr)
+        if (m_Entities[i]->GetBehaviour() != nullptr)
         {
-            m_Entities[i]->m_pBehaviour->Update();
+            m_Entities[i]->GetBehaviour()->Update();
         }
     }
 
@@ -49,7 +49,7 @@ triebWerk::CEntity* triebWerk::CWorld::CreateEntity() const
     return entity;
 }
 
-void triebWerk::CWorld::AddEntity(CEntity * a_pEntity)
+void triebWerk::CWorld::AddEntity(CEntity* a_pEntity)
 {
     // resize if the vector doesn't have any more reserved spots
     if (m_Entities.size() >= m_CurrentSize)
@@ -58,16 +58,18 @@ void triebWerk::CWorld::AddEntity(CEntity * a_pEntity)
         m_Entities.reserve(m_CurrentSize);
     }
 
-    if (a_pEntity->m_pBehaviour != nullptr)
+    if (a_pEntity->GetBehaviour() != nullptr)
     {
-        a_pEntity->m_pBehaviour->Start();
+        a_pEntity->GetBehaviour()->Start();
     }
 
     // check for Physic Entity
-    if (a_pEntity->m_pPhysicEntity != nullptr)
+    if (a_pEntity->GetPhysicEntity() != nullptr)
     {
-        m_pPhysicWorld->AddPhysicEntity(a_pEntity->m_pPhysicEntity);
+        m_pPhysicWorld->AddPhysicEntity(a_pEntity->GetPhysicEntity());
     }
+
+    a_pEntity->SetInWorldState(true);
     m_Entities.push_back(a_pEntity);
 }
 
@@ -96,15 +98,18 @@ void triebWerk::CWorld::ClearEntities()
 
 void triebWerk::CWorld::DeleteEntity(CEntity * a_pEntity)
 {
-    if (a_pEntity->m_pBehaviour != nullptr)
+    IBehaviour* pBehaviour = a_pEntity->GetBehaviour();
+    CPhysicEntity* pPhysicEntity = a_pEntity->GetPhysicEntity();
+
+    if (pBehaviour != nullptr)
     {
-        a_pEntity->m_pBehaviour->End();
-        delete a_pEntity->m_pBehaviour;
+        pBehaviour->End();
+        delete pBehaviour;
     }
 
-    if (a_pEntity->m_pPhysicEntity != nullptr)
+    if (pPhysicEntity != nullptr)
     {
-        m_pPhysicWorld->RemovePhysicEntity(a_pEntity->m_pPhysicEntity);
+        m_pPhysicWorld->RemovePhysicEntity(pPhysicEntity);
     }
 
     delete a_pEntity;

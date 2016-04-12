@@ -27,7 +27,11 @@ namespace triebWerk
         CBody* CreateBody();
         CAABB* CreateAABB();
         void AddPhysicEntity(CPhysicEntity* a_pPhysicEntity);
+        void AddBody(CBody* a_pBody);
+        void AddCollider(CCollider* a_pCollider);
         void RemovePhysicEntity(CPhysicEntity* a_pPhysicEntity);
+        void RemoveBody(CBody* a_pBody);
+        void RemoveCollider(CCollider* a_pCollider);
         void Update(const float a_DeltaTime);
     };
 }

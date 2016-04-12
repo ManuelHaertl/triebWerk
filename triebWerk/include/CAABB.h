@@ -7,6 +7,8 @@ namespace triebWerk
     {
     public:
         CAABB();
-        virtual ~CAABB();
+        ~CAABB();
+
+        ECollider::Type GetColliderType() final;
     };
 }

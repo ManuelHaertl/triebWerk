@@ -154,8 +154,6 @@
     <ClCompile Include="src\CMouse.cpp" />
     <ClCompile Include="src\CPhysicEntity.cpp" />
     <ClCompile Include="src\CPhysicWorld.cpp" />
-    <ClCompile Include="src\CQuadtree.cpp" />
-    <ClCompile Include="src\CQuadtreeNode.cpp" />
     <ClCompile Include="src\CResourceManager.cpp" />
     <ClCompile Include="src\CTexture2D.cpp" />
     <ClCompile Include="src\CTileset.cpp" />
@@ -187,8 +185,6 @@
     <ClInclude Include="include\CMouse.h" />
     <ClInclude Include="include\CPhysicEntity.h" />
     <ClInclude Include="include\CPhysicWorld.h" />
-    <ClInclude Include="include\CQuadtree.h" />
-    <ClInclude Include="include\CQuadtreeNode.h" />
     <ClInclude Include="include\CResourceManager.h" />
     <ClInclude Include="include\CTexture2D.h" />
     <ClInclude Include="include\CTileset.h" />
@@ -200,6 +196,8 @@
     <ClInclude Include="include\CWorld.h" />
     <ClInclude Include="include\CXboxController.h" />
     <ClInclude Include="include\EButtonState.h" />
+    <ClInclude Include="include\ECollider.h" />
+    <ClInclude Include="include\ECombine.h" />
     <ClInclude Include="include\EFileType.h" />
     <ClInclude Include="include\EGamepadButton.h" />
     <ClInclude Include="include\EKey.h" />
@@ -208,6 +206,7 @@
     <ClInclude Include="include\IBehaviour.h" />
     <ClInclude Include="include\CStringHasher.h" />
     <ClInclude Include="include\IMapLayer.h" />
+    <ClInclude Include="include\SPhysicMaterial.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

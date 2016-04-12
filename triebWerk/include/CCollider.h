@@ -1,5 +1,7 @@
 #pragma once
 #include <DirectXCollision.h>
+#include <ECollider.h>
+#include <SPhysicMaterial.h>
 
 namespace triebWerk
 {
@@ -8,10 +10,13 @@ namespace triebWerk
     public:
         bool m_CheckCollision;
         bool m_IsTrigger;
+        SPhysicMaterial m_PhysicMaterial;
         DirectX::BoundingBox m_BoundingBox;
 
     public:
         CCollider();
-        ~CCollider();
+        virtual ~CCollider();
+
+        virtual ECollider::Type GetColliderType() = 0;
     };
 }

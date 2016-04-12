@@ -115,11 +115,8 @@
     <Filter Include="Quelldateien\Physic\Collider">
       <UniqueIdentifier>{e193d3fb-05f6-4234-86a1-458abadab8c8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Headerdateien\Physic\Quadtree">
-      <UniqueIdentifier>{7fce0ea3-0e77-4c76-8ef8-9eaf59e5b25f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Quelldateien\Physic\Quadtree">
-      <UniqueIdentifier>{9b3eda4d-0551-4f96-b342-24632c92f8d2}</UniqueIdentifier>
+    <Filter Include="Headerdateien\Physic\Body">
+      <UniqueIdentifier>{cbbec432-cdd1-4e3c-8727-f32986fe4c6f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -173,12 +170,6 @@
     </ClCompile>
     <ClCompile Include="src\CPhysicWorld.cpp">
       <Filter>Quelldateien\Physic</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CQuadtree.cpp">
-      <Filter>Quelldateien\Physic\Quadtree</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CQuadtreeNode.cpp">
-      <Filter>Quelldateien\Physic\Quadtree</Filter>
     </ClCompile>
     <ClCompile Include="src\CResourceManager.cpp">
       <Filter>Quelldateien\Resource</Filter>
@@ -317,20 +308,23 @@
     <ClInclude Include="include\CAABB.h">
       <Filter>Headerdateien\Physic\Collider</Filter>
     </ClInclude>
-    <ClInclude Include="include\CBody.h">
-      <Filter>Headerdateien\Physic</Filter>
-    </ClInclude>
     <ClInclude Include="include\CPhysicEntity.h">
       <Filter>Headerdateien\Physic</Filter>
     </ClInclude>
     <ClInclude Include="include\CPhysicWorld.h">
       <Filter>Headerdateien\Physic</Filter>
     </ClInclude>
-    <ClInclude Include="include\CQuadtree.h">
-      <Filter>Headerdateien\Physic\Quadtree</Filter>
+    <ClInclude Include="include\ECollider.h">
+      <Filter>Headerdateien\Physic\Collider</Filter>
     </ClInclude>
-    <ClInclude Include="include\CQuadtreeNode.h">
-      <Filter>Headerdateien\Physic\Quadtree</Filter>
+    <ClInclude Include="include\SPhysicMaterial.h">
+      <Filter>Headerdateien\Physic\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CBody.h">
+      <Filter>Headerdateien\Physic\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ECombine.h">
+      <Filter>Headerdateien\Physic\Body</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
