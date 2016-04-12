@@ -1,6 +1,14 @@
 #include <CEngine.h>
+#include <iostream>
 
-triebWerk::CEngine::CEngine() : m_IsRunning(true)
+triebWerk::CEngine::CEngine() :
+	m_IsRunning(true),
+	m_pGraphics(nullptr),
+	m_pInput(nullptr),
+	m_pResourceManager(nullptr),
+	m_pTime(nullptr),
+	m_pWindow(nullptr),
+	m_pWorld(nullptr)
 {
 }
 
@@ -21,10 +29,12 @@ bool triebWerk::CEngine::Initialize()
     m_pWorld = new CWorld();
 	m_pWindow = new CWindow();
 	m_pResourceManager = new CResourceManager();
+	m_pGraphics = new CGraphics();
 
     m_pWorld->Initialize();
 	m_pWindow->Initialize(false, 800, 800, "Test");
-	m_pResourceManager->Initialize();
+	m_pGraphics->Initialize(*m_pWindow->GetWindowHandle(), 800, 800, false, false);
+	m_pResourceManager->Initialize(m_pGraphics);
 
     return true;
 }
@@ -37,6 +47,10 @@ bool triebWerk::CEngine::Run()
 
     m_pTime->Update();
     m_pWorld->Update(m_pTime->GetDeltaTime());
+	m_pWindow->UpdateWindow();
+
+	m_pGraphics->ClearRenderTarget();
+	m_pGraphics->Present();
 
     return m_IsRunning;
 }
@@ -45,12 +59,14 @@ void triebWerk::CEngine::Shutdown()
 {
     m_pWorld->Shutdown();
 	m_pResourceManager->CleanUp();
+	m_pGraphics->Shutdown();
 
     delete m_pInput;
     delete m_pTime;
     delete m_pWorld;
 	delete m_pWindow;
 	delete m_pResourceManager;
+	delete m_pGraphics;
 }
 
 void triebWerk::CEngine::ProcessMessage(const MSG a_WindowEvent)
@@ -59,6 +75,10 @@ void triebWerk::CEngine::ProcessMessage(const MSG a_WindowEvent)
 	{
 	case WM_QUIT:
 		m_IsRunning = false;
+		break;
+
+	case WM_EXITSIZEMOVE:
+		m_pGraphics->UpdateSwapchainConfiguration();
 		break;
 
 	default:

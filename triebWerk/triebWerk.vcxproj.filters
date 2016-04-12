@@ -118,6 +118,12 @@
     <Filter Include="Headerdateien\Physic\Body">
       <UniqueIdentifier>{cbbec432-cdd1-4e3c-8727-f32986fe4c6f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headerdateien\Graphics">
+      <UniqueIdentifier>{83ce876f-fe94-40c7-ba1a-0ede0490fde9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Graphics">
+      <UniqueIdentifier>{192b20bf-e196-43f5-b8ca-2d5b98ba14ad}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CEngine.cpp">
@@ -206,6 +212,9 @@
     </ClCompile>
     <ClCompile Include="src\CConfiguration.cpp">
       <Filter>Quelldateien\Resource\Resources\INI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CGraphics.cpp">
+      <Filter>Quelldateien\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -325,6 +334,9 @@
     </ClInclude>
     <ClInclude Include="include\ECombine.h">
       <Filter>Headerdateien\Physic\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CGraphics.h">
+      <Filter>Headerdateien\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

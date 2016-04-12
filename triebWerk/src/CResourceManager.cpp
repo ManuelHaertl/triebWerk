@@ -1,6 +1,7 @@
 #include <CResourceManager.h>
 
-triebWerk::CResourceManager::CResourceManager()
+triebWerk::CResourceManager::CResourceManager() :
+	m_pGraphicsHandle(nullptr)
 {
 }
 
@@ -8,9 +9,10 @@ triebWerk::CResourceManager::~CResourceManager()
 {
 }
 
-bool triebWerk::CResourceManager::Initialize()
+bool triebWerk::CResourceManager::Initialize(CGraphics* a_pGraphics)
 {
 	bool error = SetModulPath();
+	m_pGraphicsHandle = a_pGraphics;
 	return error;
 }
 
@@ -21,6 +23,15 @@ void triebWerk::CResourceManager::CleanUp()
 		Tileset.second->ClearMap();
 		delete Tileset.second;
 	}
+
+	for (auto config : m_ConfigurationBuffer)
+	{
+		delete config.second;
+	}
+
+	m_ConfigurationBuffer.clear();
+	m_TextureBuffer.clear();
+	m_TilesetBuffer.clear();
 }
 
 const char& triebWerk::CResourceManager::GetModulPath()
@@ -83,7 +94,21 @@ triebWerk::CConfiguration* triebWerk::CResourceManager::GetConfiguration(const c
 	}
 	else
 	{
-		foundIterator->second;
+		return foundIterator->second;
+	}
+}
+
+triebWerk::CTexture2D * triebWerk::CResourceManager::GetTexture2D(const char * a_pTexture2DName)
+{
+	auto foundIterator = m_TextureBuffer.find(StringHasher(a_pTexture2DName));
+
+	if (foundIterator == m_TextureBuffer.end())
+	{
+		return nullptr;
+	}
+	else
+	{
+		return &foundIterator->second;
 	}
 }
 
@@ -115,6 +140,20 @@ void triebWerk::CResourceManager::UnloadConfiguration(const char * a_pConfigurat
 	{
 		delete foundIterator->second;
 		m_ConfigurationBuffer.erase(StringHasher(a_pConfigurationName));
+	}
+}
+
+void triebWerk::CResourceManager::UnloadTexture2D(const char * a_pTexture2DName)
+{
+	auto foundIterator = m_TextureBuffer.find(StringHasher(a_pTexture2DName));
+
+	if (foundIterator == m_TextureBuffer.end())
+	{
+		return;
+	}
+	else
+	{
+		m_TextureBuffer.erase(StringHasher(a_pTexture2DName));
 	}
 }
 
@@ -155,12 +194,15 @@ void triebWerk::CResourceManager::LoadPNG(SFile a_File)
 		return;
 	else
 	{
-	//Set TExture;
-	//	m_pTexture = a_pGraphicsHandle->CreateD3D11Texture2D(&image[0], m_Width, m_Height);
+		CTexture2D texture2d;
 
-	//	m_pShaderResourceView = a_pGraphicsHandle->CreateID3D11ShaderResourceView(m_pTexture);
+		ID3D11Texture2D* texture = m_pGraphicsHandle->CreateD3D11Texture2D(&pixelBuffer[0], width, height);
 
-	//	return true;
+		ID3D11ShaderResourceView* resourceView = m_pGraphicsHandle->CreateID3D11ShaderResourceView(texture);
+
+		texture2d.SetTexture(width, height, texture, resourceView);
+
+		m_TextureBuffer.insert(CTexturePair(StringHasher(a_File.FileName), texture2d));
 	}
 
 }

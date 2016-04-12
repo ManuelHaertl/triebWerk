@@ -3,12 +3,15 @@
 #include <vector>
 #include <Windows.h>
 #include <unordered_map>
+#include <d3d11.h>
 
+#include <CGraphics.h>
 #include <EFileType.h>
 #include <CTilesetMap.h>
 #include <CTMXParser.h>
 #include <CStringHasher.h>
 #include <CINIParser.h>
+#include <CTexture2D.h>
 #include <loadPNG\lodepng.h>
 
 namespace triebWerk
@@ -31,9 +34,16 @@ namespace triebWerk
 		typedef std::unordered_map<size_t, CConfiguration*> CConfigurationMap;
 		typedef std::pair<size_t, CConfiguration*> CConfigurationPair;
 
+		//Texture2D
+		typedef std::unordered_map<size_t, CTexture2D> CTextureMap;
+		typedef std::pair<size_t, CTexture2D> CTexturePair;
+
 	private:
 		CTilesetHashMap m_TilesetBuffer;
 		CConfigurationMap m_ConfigurationBuffer;
+		CTextureMap m_TextureBuffer;
+
+		CGraphics* m_pGraphicsHandle;
 
 		std::string m_ModulPath;
 
@@ -42,7 +52,7 @@ namespace triebWerk
 		~CResourceManager();
 
 	public:
-		bool Initialize();
+		bool Initialize(CGraphics* a_pGraphics);
 		void CleanUp();
 		
 		const char& GetModulPath();
@@ -55,10 +65,12 @@ namespace triebWerk
 		//Get Interface
 		CTilesetMap* GetTileset(const char* a_pTilesetName);
 		CConfiguration* GetConfiguration(const char* a_pConfigurationName);
+		CTexture2D* GetTexture2D(const char* a_pTexture2DName);
 
 		//Unload
 		void UnloadTileset(const char* a_pTilesetName);
 		void UnloadConfiguration(const char* a_pConfigurationName);
+		void UnloadTexture2D(const char* a_pTexture2DName);
 
 	private:
 		//Load actual data

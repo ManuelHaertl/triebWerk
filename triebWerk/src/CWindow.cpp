@@ -53,13 +53,13 @@ bool triebWerk::CWindow::Initialize(const bool a_IsFullscreen, const unsigned sh
 	RegisterClassEx(&mainWindowDescription);
 
 	RECT windowRectangle = { 0, 0, a_ScreenWidth ,a_ScreenHeight };
-	AdjustWindowRect(&windowRectangle, WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX, FALSE);
+	AdjustWindowRect(&windowRectangle, WS_OVERLAPPEDWINDOW, FALSE);
 
 	//Create window 
 	m_WindowHandle = CreateWindowEx(NULL,
 		a_WindowName,
 		a_WindowName,
-		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
+		WS_OVERLAPPEDWINDOW,
 		0,
 		0,
 		windowRectangle.right - windowRectangle.left,
@@ -67,7 +67,7 @@ bool triebWerk::CWindow::Initialize(const bool a_IsFullscreen, const unsigned sh
 		NULL,
 		NULL,
 		GetModuleHandle(NULL),
-		NULL);
+		this);
 
 	if (m_WindowHandle == NULL)
 		return false;
@@ -85,12 +85,10 @@ bool triebWerk::CWindow::Initialize(const bool a_IsFullscreen, const unsigned sh
 const MSG triebWerk::CWindow::GetWindowEvent()
 {
 	MSG msg = { 0 };
-
-	if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+	if (m_MessageQueue.size() != 0)
 	{
-		TranslateMessage(&msg);
-
-		DispatchMessage(&msg);
+		msg = m_MessageQueue.front();
+		m_MessageQueue.pop();
 	}
 
 	return msg;
@@ -98,18 +96,65 @@ const MSG triebWerk::CWindow::GetWindowEvent()
 
 LRESULT triebWerk::CWindow::WindowProcedure(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	switch (message)
+		CWindow *pThis = NULL;
+
+		if (message == WM_NCCREATE)
+		{
+			CREATESTRUCT* pCreate = (CREATESTRUCT*)lParam;
+			pThis = (CWindow*)pCreate->lpCreateParams;
+			SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG_PTR)pThis);
+
+			pThis->m_WindowHandle = hWnd;
+		}
+		else
+		{
+			pThis = (CWindow*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+		}
+		if (pThis)
+		{
+			return pThis->HandleMessage(message, wParam, lParam);
+		}
+		else
+		{
+			return DefWindowProc(hWnd, message, wParam, lParam);
+		}
+}
+
+LRESULT triebWerk::CWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	switch (uMsg)
 	{
+	case WM_SIZE:
+	{
+		MSG msg = { 0 };
+		msg.message = uMsg;
+		msg.lParam = lParam;
+		msg.wParam = wParam;
+		m_MessageQueue.push(msg);
+	}break;
+	
+	case WM_EXITSIZEMOVE:
+	{
+		MSG msg = { 0 };
+		msg.message = uMsg;
+		msg.lParam = lParam;
+		msg.wParam = wParam;
+		m_MessageQueue.push(msg);
+	}break;
+	
 	case WM_DESTROY:
 	{
 		PostQuitMessage(0);
 		return 0;
-	} break;
+	}break;
+
+	default:
+		return DefWindowProc(m_WindowHandle, uMsg, wParam, lParam);
 	}
-	return DefWindowProc(hWnd, message, wParam, lParam);
+	return TRUE;
 }
 
-HWND* triebWerk::CWindow::GetModulHanle()
+HWND* triebWerk::CWindow::GetWindowHandle()
 {
 	return &m_WindowHandle;
 }
@@ -127,6 +172,19 @@ const unsigned short triebWerk::CWindow::GetScreenHeight()
 bool triebWerk::CWindow::IsWindowFullscreen()
 {
 	return m_IsFullscreen;
+}
+
+void triebWerk::CWindow::UpdateWindow()
+{
+	MSG msg = { 0 };
+
+	if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+	{
+		TranslateMessage(&msg);
+		m_MessageQueue.push(msg);
+
+		DispatchMessage(&msg);
+	}
 }
 
 int triebWerk::CWindow::GetMaximalDisplayWidth()
@@ -177,11 +235,11 @@ void triebWerk::CWindow::ChangeWindowSettings(const bool a_IsFullscreen, const u
 	if(a_IsFullscreen)
 		SetWindowLongPtr(m_WindowHandle, GWL_STYLE, WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP);
 	else
-		SetWindowLongPtr(m_WindowHandle, GWL_STYLE, WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX);
+		SetWindowLongPtr(m_WindowHandle, GWL_STYLE, WS_OVERLAPPEDWINDOW);
 
 	//If window calculate correct client space
 	if (!a_IsFullscreen)
-		AdjustWindowRect(&windowRectangle, WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX, FALSE);
+		AdjustWindowRect(&windowRectangle, WS_OVERLAPPEDWINDOW, FALSE);
 
 	//Resize the window and draw it new
 	SetWindowPos(m_WindowHandle, NULL, 0, 0, windowRectangle.right - windowRectangle.left, windowRectangle.bottom - windowRectangle.top, SWP_FRAMECHANGED | SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_SHOWWINDOW);
@@ -197,4 +255,9 @@ void triebWerk::CWindow::ChangeWindowSettings(const bool a_IsFullscreen, const u
 		ShowCursor(true);
 		m_ShowCursor = true;
 	}
+
+	MSG msg = { 0 };
+	msg.message = WM_EXITSIZEMOVE;
+
+	m_MessageQueue.push(msg);
 }
