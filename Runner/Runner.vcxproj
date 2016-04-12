@@ -161,6 +161,7 @@ xcopy "$(ProjectDir)gamedata\*.*" "$(ProjectDir)build\$(Configuration)\$(Platfor
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\CPlayer.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
