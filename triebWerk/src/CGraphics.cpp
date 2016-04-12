@@ -335,4 +335,6 @@ void triebWerk::CGraphics::SetDisplayProperties(const unsigned int a_ScreenHeigh
 
 	m_VideoCardMemory = static_cast<unsigned int>(adapterDesc.DedicatedVideoMemory / 1024 / 1024);
 	m_VideoCardDescription = adapterDesc.Description;
+
+    delete displayModeList;
 }

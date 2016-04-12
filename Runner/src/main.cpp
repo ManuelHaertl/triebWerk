@@ -4,6 +4,7 @@
 
 int main()
 {
+    //_crtBreakAlloc = 176;
     if (twEngine.Initialize() == false)
     {
         twEngine.Shutdown();
