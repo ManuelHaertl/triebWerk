@@ -121,6 +121,12 @@
     <Filter Include="Quelldateien\Physic\Quadtree">
       <UniqueIdentifier>{9b3eda4d-0551-4f96-b342-24632c92f8d2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headerdateien\Graphics">
+      <UniqueIdentifier>{83ce876f-fe94-40c7-ba1a-0ede0490fde9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Graphics">
+      <UniqueIdentifier>{192b20bf-e196-43f5-b8ca-2d5b98ba14ad}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CEngine.cpp">
@@ -215,6 +221,9 @@
     </ClCompile>
     <ClCompile Include="src\CConfiguration.cpp">
       <Filter>Quelldateien\Resource\Resources\INI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CGraphics.cpp">
+      <Filter>Quelldateien\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -331,6 +340,9 @@
     </ClInclude>
     <ClInclude Include="include\CQuadtreeNode.h">
       <Filter>Headerdateien\Physic\Quadtree</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CGraphics.h">
+      <Filter>Headerdateien\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

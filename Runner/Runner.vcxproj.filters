@@ -18,9 +18,6 @@
     <ClCompile Include="src\main.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="src\CPlayer.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\CPlayer.h">
