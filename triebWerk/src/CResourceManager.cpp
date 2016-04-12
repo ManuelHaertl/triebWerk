@@ -83,7 +83,7 @@ triebWerk::CConfiguration* triebWerk::CResourceManager::GetConfiguration(const c
 	}
 	else
 	{
-		foundIterator->second;
+		return foundIterator->second;
 	}
 }
 
