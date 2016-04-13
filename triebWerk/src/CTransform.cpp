@@ -107,7 +107,7 @@ void triebWerk::CTransform::SetPosition(float a_X, float a_Y, float a_Z)
 {
     m_Position = DirectX::XMVectorSet(a_X, a_Y, a_Z, 0.0f);
 
-    if (m_pParent == nullptr)
+    if (m_pParent != nullptr)
         m_LocalPosition = DirectX::XMVectorSubtract(m_Position, m_pParent->GetPosition());
 
     else
@@ -120,7 +120,7 @@ void triebWerk::CTransform::SetPosition(DirectX::XMVECTOR a_Position)
 {
     m_Position = a_Position;
 
-    if (m_pParent == nullptr)
+    if (m_pParent != nullptr)
         m_LocalPosition = DirectX::XMVectorSubtract(m_Position, m_pParent->GetPosition());
 
     else
@@ -133,11 +133,11 @@ void triebWerk::CTransform::SetLocalPosition(float a_X, float a_Y, float a_Z)
 {
     m_LocalPosition = DirectX::XMVectorSet(a_X, a_Y, a_Z, 0.0f);
 
-    if (m_pParent == nullptr)
-        m_Position = m_LocalPosition;
+    if (m_pParent != nullptr)
+        m_Position = DirectX::XMVectorAdd(m_pParent->GetPosition(), m_LocalPosition);
 
     else
-        m_Position = DirectX::XMVectorAdd(m_pParent->GetPosition(), m_LocalPosition);
+        m_Position = m_LocalPosition;
 
     UpdateChildPosition();
 }
@@ -146,11 +146,11 @@ void triebWerk::CTransform::SetLocalPosition(DirectX::XMVECTOR a_Position)
 {
     m_LocalPosition = a_Position;
 
-    if (m_pParent == nullptr)
-        m_Position = m_LocalPosition;
+    if (m_pParent != nullptr)
+        m_Position = DirectX::XMVectorAdd(m_pParent->GetPosition(), m_LocalPosition);
 
     else
-        m_Position = DirectX::XMVectorAdd(m_pParent->GetPosition(), m_LocalPosition);
+        m_Position = m_LocalPosition;
 
     UpdateChildPosition();
 }

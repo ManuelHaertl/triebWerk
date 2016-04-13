@@ -39,6 +39,7 @@ void triebWerk::CEntity::SetBehaviour(IBehaviour* a_pBehaviour)
     RemoveBehaviour();
 
     m_pBehaviour = a_pBehaviour;
+    m_pBehaviour->m_pEntity = this;
 
     if (m_IsInWorld)
         m_pBehaviour->Start();

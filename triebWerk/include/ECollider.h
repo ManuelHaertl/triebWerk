@@ -1,9 +1,12 @@
 #pragma once
-struct ECollider
+namespace triebWerk
 {
-    enum Type
+    struct ECollider
     {
-        None,
-        AABB
+        enum Type
+        {
+            None,
+            AABB
+        };
     };
-};
+}

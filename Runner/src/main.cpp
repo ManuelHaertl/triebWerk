@@ -15,24 +15,6 @@ int main()
     player->SetBehaviour(new CPlayer());
     twWorld->AddEntity(player);
 
-    auto test1 = twWorld->CreateEntity();
-    test1->SetBehaviour(new CPlayer());
-    test1->SetBehaviour(new CPlayer());
-    test1->SetPhysicEntity(twPhysic->CreatePhysicEntity());
-    test1->GetPhysicEntity()->SetBody(twPhysic->CreateBody());
-    test1->GetPhysicEntity()->SetBody(twPhysic->CreateBody());
-    test1->GetPhysicEntity()->AddCollider(twPhysic->CreateAABB());
-    test1->GetPhysicEntity()->AddCollider(twPhysic->CreateAABB());
-    test1->SetPhysicEntity(twPhysic->CreatePhysicEntity());
-    twWorld->AddEntity(test1);
-    test1->SetPhysicEntity(twPhysic->CreatePhysicEntity());
-    test1->GetPhysicEntity()->SetBody(twPhysic->CreateBody());
-    test1->GetPhysicEntity()->SetBody(twPhysic->CreateBody());
-    test1->GetPhysicEntity()->AddCollider(twPhysic->CreateAABB());
-    test1->GetPhysicEntity()->AddCollider(twPhysic->CreateAABB());
-    test1->SetPhysicEntity(twPhysic->CreatePhysicEntity());
-    twWorld->RemoveEntity(test1);
-
     bool run = true;
     while (run == true)
     {

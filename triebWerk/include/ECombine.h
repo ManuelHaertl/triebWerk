@@ -1,11 +1,14 @@
 #pragma once
-struct ECombine
+namespace triebWerk
 {
-    enum Type
+    struct ECombine
     {
-        Average,
-        Minimum,
-        Maximum,
-        Multiply
+        enum Type
+        {
+            Average,
+            Minimum,
+            Maximum,
+            Multiply
+        };
     };
-};
+}

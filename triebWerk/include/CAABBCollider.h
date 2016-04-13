@@ -1,13 +1,13 @@
 #pragma once
-#include <CCollider.h>
+#include <ICollider.h>
 
 namespace triebWerk
 {
-    class CAABB : public CCollider
+    class CAABBCollider : public ICollider
     {
     public:
-        CAABB();
-        ~CAABB();
+        CAABBCollider();
+        ~CAABBCollider();
 
         ECollider::Type GetColliderType() final;
     };

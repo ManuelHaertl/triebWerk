@@ -138,9 +138,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="extern\include\loadPNG\lodepng.cpp" />
-    <ClCompile Include="src\CAABB.cpp" />
+    <ClCompile Include="src\CAABBCollider.cpp" />
     <ClCompile Include="src\CBody.cpp" />
-    <ClCompile Include="src\CCollider.cpp" />
+    <ClCompile Include="src\CCollision.cpp" />
     <ClCompile Include="src\CConfiguration.cpp" />
     <ClCompile Include="src\CEngine.cpp" />
     <ClCompile Include="src\CEntity.cpp" />
@@ -150,6 +150,7 @@
     <ClCompile Include="src\CINIParser.cpp" />
     <ClCompile Include="src\CInput.cpp" />
     <ClCompile Include="src\CKeyboard.cpp" />
+    <ClCompile Include="src\CManifold.cpp" />
     <ClCompile Include="src\CMapImageLayer.cpp" />
     <ClCompile Include="src\CMapLayer.cpp" />
     <ClCompile Include="src\CMouse.cpp" />
@@ -166,13 +167,14 @@
     <ClCompile Include="src\CWorld.cpp" />
     <ClCompile Include="src\CXboxController.cpp" />
     <ClCompile Include="src\IBehaviour.cpp" />
+    <ClCompile Include="src\ICollider.cpp" />
     <ClCompile Include="src\IMapLayer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="extern\include\loadPNG\lodepng.h" />
-    <ClInclude Include="include\CAABB.h" />
+    <ClInclude Include="include\CAABBCollider.h" />
     <ClInclude Include="include\CBody.h" />
-    <ClInclude Include="include\CCollider.h" />
+    <ClInclude Include="include\CCollision.h" />
     <ClInclude Include="include\CConfiguration.h" />
     <ClInclude Include="include\CEngine.h" />
     <ClInclude Include="include\CEntity.h" />
@@ -182,6 +184,7 @@
     <ClInclude Include="include\CINIParser.h" />
     <ClInclude Include="include\CInput.h" />
     <ClInclude Include="include\CKeyboard.h" />
+    <ClInclude Include="include\CManifold.h" />
     <ClInclude Include="include\CMapImageLayer.h" />
     <ClInclude Include="include\CMapLayer.h" />
     <ClInclude Include="include\CMouse.h" />
@@ -207,6 +210,7 @@
     <ClInclude Include="include\EngineDefines.h" />
     <ClInclude Include="include\IBehaviour.h" />
     <ClInclude Include="include\CStringHasher.h" />
+    <ClInclude Include="include\ICollider.h" />
     <ClInclude Include="include\IMapLayer.h" />
     <ClInclude Include="include\SPhysicMaterial.h" />
   </ItemGroup>

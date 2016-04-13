@@ -19,7 +19,7 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="src\CPlayer.cpp">
-      <Filter>Ressourcendateien</Filter>
+      <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

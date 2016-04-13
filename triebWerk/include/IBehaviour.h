@@ -1,8 +1,14 @@
 #pragma once
+
 namespace triebWerk
 {
+    class CEntity;
+
     class IBehaviour
     {
+    public:
+        CEntity* m_pEntity;
+
     public:
         IBehaviour();
         virtual ~IBehaviour();

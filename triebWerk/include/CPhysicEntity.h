@@ -1,8 +1,8 @@
 #pragma once
 #include <vector>
 #include <CBody.h>
-#include <CCollider.h>
 #include <CTransform.h>
+#include <ICollider.h>
 
 namespace triebWerk
 {
@@ -12,7 +12,7 @@ namespace triebWerk
     {
     public:
         CTransform* m_pTransform;
-        std::vector<CCollider*> m_Collider;
+        std::vector<ICollider*> m_Collider;
 
     private:
         CPhysicWorld* m_pPhysicWorld;
@@ -29,13 +29,13 @@ namespace triebWerk
         size_t GetID() const;
         CPhysicWorld* GetPhysicWorld() const;
         CBody* GetBody() const;
-        std::vector<CCollider*>* GetCollider() const;
+        std::vector<ICollider*>* GetCollider() const;
 
         void SetBody(CBody* a_pBody);
-        void AddCollider(CCollider* a_pCollider);
+        void AddCollider(ICollider* a_pCollider);
         
         void RemoveBody();
-        void RemoveCollider(CCollider* a_pCollider);
+        void RemoveCollider(ICollider* a_pCollider);
         void RemoveAllCollider();
 
         bool IsInPhysicWorld() const;

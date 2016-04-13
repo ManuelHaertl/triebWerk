@@ -29,7 +29,7 @@ triebWerk::CBody* triebWerk::CPhysicEntity::GetBody() const
     return m_pBody;
 }
 
-std::vector<triebWerk::CCollider*>* triebWerk::CPhysicEntity::GetCollider() const
+std::vector<triebWerk::ICollider*>* triebWerk::CPhysicEntity::GetCollider() const
 {
     return nullptr;
 }
@@ -38,17 +38,26 @@ void triebWerk::CPhysicEntity::SetBody(CBody* a_pBody)
 {
     RemoveBody();
     m_pBody = a_pBody;
+    m_pBody->m_pTransform = m_pTransform;
 
     if (m_IsInPhysicWorld)
         m_pPhysicWorld->AddBody(a_pBody);
+
+    // give all collider the new body
+    for (ICollider* pCollider : m_Collider)
+        pCollider->m_pBody = m_pBody;
 }
 
-void triebWerk::CPhysicEntity::AddCollider(CCollider* a_pCollider)
+void triebWerk::CPhysicEntity::AddCollider(ICollider* a_pCollider)
 {
     m_Collider.push_back(a_pCollider);
 
     if (m_IsInPhysicWorld)
         m_pPhysicWorld->AddCollider(a_pCollider);
+
+    a_pCollider->m_pBody = m_pBody;
+    a_pCollider->m_pTransform = m_pTransform;
+    a_pCollider->SetID(m_ID);
 }
 
 void triebWerk::CPhysicEntity::RemoveBody()
@@ -65,7 +74,7 @@ void triebWerk::CPhysicEntity::RemoveBody()
     }
 }
 
-void triebWerk::CPhysicEntity::RemoveCollider(CCollider* a_pCollider)
+void triebWerk::CPhysicEntity::RemoveCollider(ICollider* a_pCollider)
 {
     for (size_t i = 0; i < m_Collider.size(); ++i)
     {

@@ -124,6 +124,15 @@
     <Filter Include="Quelldateien\Graphics">
       <UniqueIdentifier>{192b20bf-e196-43f5-b8ca-2d5b98ba14ad}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Quelldateien\Physic\Body">
+      <UniqueIdentifier>{858de906-085b-47ad-9dbd-f65927608600}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Physic\Collision">
+      <UniqueIdentifier>{06fb4cf8-86fd-4e6e-a4f4-238128d01c85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Physic\Collision">
+      <UniqueIdentifier>{23143f8f-7516-4d1c-9f5b-f5ecb76ae71b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CEngine.cpp">
@@ -161,15 +170,6 @@
     </ClCompile>
     <ClCompile Include="src\IBehaviour.cpp">
       <Filter>Quelldateien\World\Entity</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CAABB.cpp">
-      <Filter>Quelldateien\Physic\Collider</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CCollider.cpp">
-      <Filter>Quelldateien\Physic\Collider</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CBody.cpp">
-      <Filter>Quelldateien\Physic</Filter>
     </ClCompile>
     <ClCompile Include="src\CPhysicEntity.cpp">
       <Filter>Quelldateien\Physic</Filter>
@@ -215,6 +215,21 @@
     </ClCompile>
     <ClCompile Include="src\CGraphics.cpp">
       <Filter>Quelldateien\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CAABBCollider.cpp">
+      <Filter>Quelldateien\Physic\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ICollider.cpp">
+      <Filter>Quelldateien\Physic\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CBody.cpp">
+      <Filter>Quelldateien\Physic\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CCollision.cpp">
+      <Filter>Quelldateien\Physic\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CManifold.cpp">
+      <Filter>Quelldateien\Physic\Collision</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -311,12 +326,6 @@
     <ClInclude Include="include\IBehaviour.h">
       <Filter>Headerdateien\World\Entity</Filter>
     </ClInclude>
-    <ClInclude Include="include\CCollider.h">
-      <Filter>Headerdateien\Physic\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="include\CAABB.h">
-      <Filter>Headerdateien\Physic\Collider</Filter>
-    </ClInclude>
     <ClInclude Include="include\CPhysicEntity.h">
       <Filter>Headerdateien\Physic</Filter>
     </ClInclude>
@@ -337,6 +346,18 @@
     </ClInclude>
     <ClInclude Include="include\CGraphics.h">
       <Filter>Headerdateien\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CAABBCollider.h">
+      <Filter>Headerdateien\Physic\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ICollider.h">
+      <Filter>Headerdateien\Physic\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CCollision.h">
+      <Filter>Headerdateien\Physic\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CManifold.h">
+      <Filter>Headerdateien\Physic\Collision</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
