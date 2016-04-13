@@ -150,6 +150,7 @@ bool triebWerk::CGraphics::Initialize(HWND & a_rWindowHandle, const unsigned int
 
 	m_pDeviceContext->RSSetState(m_pRasterState);
 
+	//TODO: Move this to the camera
 	// Setup the viewport for rendering.
 	viewport.Width = (float)a_ScreenWidth;
 	viewport.Height = (float)a_ScreenHeight;
@@ -160,6 +161,9 @@ bool triebWerk::CGraphics::Initialize(HWND & a_rWindowHandle, const unsigned int
 
 	m_pDeviceContext->RSSetViewports(1, &viewport);
 	
+	//Debug function: loading simple shader
+	InitShaders();
+
 	return true;
 }
 
@@ -232,6 +236,36 @@ ID3D11DeviceContext * triebWerk::CGraphics::GetDeviceContext()
 unsigned int triebWerk::CGraphics::GetVideoCardMemory()
 {
 	return m_VideoCardMemory;
+}
+
+void triebWerk::CGraphics::InitShaders()
+{
+	ID3D10Blob* vertexShader;
+	ID3D11VertexShader* vertex;
+
+	HRESULT error;
+	error = D3DCompileFromFile(L"VertexShader.hlsl", 0, 0, "VShader", "vs_4_0", D3DCOMPILE_DEBUG, 0, &vertexShader, 0);
+
+	error = this->m_pDevice->CreateVertexShader(vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), NULL, &vertex);
+
+	D3D11_INPUT_ELEMENT_DESC ied[] =
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+	};
+
+	m_pDevice->CreateInputLayout(ied, 2, vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), &m_pInputLayout);
+	m_pDeviceContext->IASetInputLayout(m_pInputLayout);
+
+	ID3D10Blob* pixelShader;
+	ID3D11PixelShader* pixel;
+
+	error = D3DCompileFromFile(L"PixelShader.hlsl", 0, 0, "PShader", "ps_4_0", D3DCOMPILE_DEBUG, 0, &pixelShader, 0);
+
+	error = this->m_pDevice->CreatePixelShader(pixelShader->GetBufferPointer(), pixelShader->GetBufferSize(), NULL, &pixel);
+
+	m_pDeviceContext->VSSetShader(vertex, 0, 0);
+	m_pDeviceContext->PSSetShader(pixel, 0, 0);
 }
 
 void triebWerk::CGraphics::UpdateSwapchainConfiguration()

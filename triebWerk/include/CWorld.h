@@ -3,6 +3,7 @@
 
 #include <CEntity.h>
 #include <CPhysicWorld.h>
+#include <CRenderer.h>
 
 namespace triebWerk
 {
@@ -12,17 +13,19 @@ namespace triebWerk
         CPhysicWorld* m_pPhysicWorld;
 
     private:
-        static const size_t Start_Reserve_Size = 512;
+		static const size_t Start_Reserve_Size = 512;
         size_t m_CurrentSize;
 
         std::vector<CEntity*> m_Entities;
+
+		CRenderer* m_pRenderingHandle;
 
     public:
         CWorld();
         ~CWorld();
 
     public:
-        bool Initialize();
+        bool Initialize(CRenderer* a_pRenderer);
         bool Update(const float a_DeltaTime);
         void Shutdown();
 

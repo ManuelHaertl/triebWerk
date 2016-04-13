@@ -282,7 +282,7 @@ std::vector<triebWerk::CResourceManager::SFile> triebWerk::CResourceManager::Sea
 	std::string SearchFolderForAllFiles = dir;
 	SearchFolderForAllFiles += "*";
 
-	std::vector<SFile>filesToLoad;
+	std::vector<SFile>filesToLoad; 
 	filesToLoad.clear();
 	//Find first Element in Directory
 	hFindHandle = FindFirstFile(SearchFolderForAllFiles.c_str(), &winFindData);

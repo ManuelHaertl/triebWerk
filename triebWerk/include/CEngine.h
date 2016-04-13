@@ -6,6 +6,7 @@
 #include <CWindow.h>
 #include <CResourceManager.h>
 #include <CGraphics.h>
+#include <CRenderer.h>
 
 namespace triebWerk
 {
@@ -18,6 +19,7 @@ namespace triebWerk
 		CWindow* m_pWindow;
 		CGraphics* m_pGraphics;
 		CResourceManager* m_pResourceManager;
+		CRenderer* m_pRenderer;
 
 	private:
 		bool m_IsRunning;
