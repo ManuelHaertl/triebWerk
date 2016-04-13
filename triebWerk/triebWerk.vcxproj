@@ -180,7 +180,6 @@
   <ItemGroup>
     <ClInclude Include="extern\include\loadPNG\lodepng.h" />
     <ClInclude Include="include\CAABBCollider.h" />
-    <ClInclude Include="include\CAABB.h" />
     <ClInclude Include="include\Camera.h" />
     <ClInclude Include="include\CBody.h" />
     <ClInclude Include="include\CCollision.h" />
