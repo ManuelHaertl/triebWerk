@@ -21,6 +21,11 @@ triebWerk::IBehaviour* triebWerk::CEntity::GetBehaviour() const
     return m_pBehaviour;
 }
 
+triebWerk::IDrawable* triebWerk::CEntity::GetDrawable() const
+{
+	return m_pDrawable;
+}
+
 void triebWerk::CEntity::SetPhysicEntity(CPhysicEntity* a_pPhysicEntity)
 {
     // delete the old physic entity in case it gets overwritten
@@ -43,6 +48,12 @@ void triebWerk::CEntity::SetBehaviour(IBehaviour* a_pBehaviour)
 
     if (m_IsInWorld)
         m_pBehaviour->Start();
+}
+
+void triebWerk::CEntity::SetDrawable(IDrawable * a_pDrawable)
+{
+	RemoveDrawable();
+	m_pDrawable = a_pDrawable;
 }
 
 void triebWerk::CEntity::RemovePhysicEntity()
@@ -76,6 +87,15 @@ void triebWerk::CEntity::RemoveBehaviour()
         delete m_pBehaviour;
         m_pBehaviour = nullptr;
     }
+}
+
+void triebWerk::CEntity::RemoveDrawable()
+{
+	if (m_pDrawable != nullptr)
+	{
+		delete m_pDrawable;
+		m_pDrawable = nullptr;
+	}
 }
 
 bool triebWerk::CEntity::IsInWorld() const

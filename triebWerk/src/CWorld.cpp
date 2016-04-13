@@ -10,13 +10,16 @@ triebWerk::CWorld::~CWorld()
 {
 }
 
-bool triebWerk::CWorld::Initialize()
+bool triebWerk::CWorld::Initialize(CRenderer* a_pRenderer)
 {
     m_pPhysicWorld = new CPhysicWorld();
 
     // reserve some spots so the vector doesn't need
     // to get resized too often during runtime
     m_Entities.reserve(Start_Reserve_Size);
+
+	m_pRenderingHandle = a_pRenderer;
+
     return true;
 }
 
@@ -29,7 +32,16 @@ bool triebWerk::CWorld::Update(const float a_DeltaTime)
         {
             m_Entities[i]->GetBehaviour()->Update();
         }
+
+		//Temp Debug drawing
+		if (m_Entities[i]->GetDrawable() != nullptr)
+		{
+			//Queue up rendercommand 
+			m_pRenderingHandle->AddRenderCommand(m_Entities[i]->GetDrawable()->GetRenderCommand());
+		}
     }
+
+
 
     m_pPhysicWorld->Update(a_DeltaTime);
     return true;
@@ -98,19 +110,11 @@ void triebWerk::CWorld::ClearEntities()
 
 void triebWerk::CWorld::DeleteEntity(CEntity * a_pEntity)
 {
-    IBehaviour* pBehaviour = a_pEntity->GetBehaviour();
-    CPhysicEntity* pPhysicEntity = a_pEntity->GetPhysicEntity();
+	a_pEntity->RemoveBehaviour();
 
-    if (pBehaviour != nullptr)
-    {
-        pBehaviour->End();
-        delete pBehaviour;
-    }
+	a_pEntity->RemovePhysicEntity();
 
-    if (pPhysicEntity != nullptr)
-    {
-        m_pPhysicWorld->RemovePhysicEntity(pPhysicEntity);
-    }
+	a_pEntity->RemoveDrawable();
 
     delete a_pEntity;
 }

@@ -52,6 +52,10 @@ namespace triebWerk
 
 		unsigned int GetVideoCardMemory();
 
+		//Only debug function
+		//TODO: Intigrate this into resource manager and shader reflection
+		void InitShaders();
+
 		//TODO: Resize viewport !
 		void UpdateSwapchainConfiguration();
 		
@@ -60,7 +64,5 @@ namespace triebWerk
 		ID3D11ShaderResourceView* CreateID3D11ShaderResourceView(ID3D11Texture2D* a_Texture) const;
 	private:
 		void SetDisplayProperties(const unsigned int a_ScreenWidth, const unsigned int a_ScreenHeight);
-		
-
 	};
 }

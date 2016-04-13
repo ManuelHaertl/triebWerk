@@ -124,6 +124,39 @@
     <Filter Include="Quelldateien\Graphics">
       <UniqueIdentifier>{192b20bf-e196-43f5-b8ca-2d5b98ba14ad}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headerdateien\Rendering">
+      <UniqueIdentifier>{d5ba01e9-2cfb-41e4-bdf3-2077bd41c7da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Rendering">
+      <UniqueIdentifier>{7d5e0812-8dcb-469b-8c26-a1086a6c8fd7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Rendering\Drawables">
+      <UniqueIdentifier>{15d97f77-6de1-42df-a21c-815fbee8bf13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Rendering\Drawables">
+      <UniqueIdentifier>{e30d4275-185f-46f6-aa7a-2fad18cac6df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Rendering\Material">
+      <UniqueIdentifier>{52bd95c0-5061-417e-8209-e9a21bba48fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Rendering\Material">
+      <UniqueIdentifier>{7887de8a-d83a-4204-a55b-5f3a0a9ce3c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Resource\Resources\Mesh">
+      <UniqueIdentifier>{5136731f-a462-4ccc-b117-10454f6be685}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Resource\Resources\Mesh">
+      <UniqueIdentifier>{540ecaad-3c2d-4614-b004-28cccb169ba8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Rendering\RenderCommands">
+      <UniqueIdentifier>{b85c3b68-bb70-448d-a81a-8969a33ec0f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Rendering\RenderCommands">
+      <UniqueIdentifier>{32c41fb2-7330-4e37-8399-0323a72aebd2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Rendering\Camera">
+      <UniqueIdentifier>{19645587-ccff-42aa-ac2a-65e317731c1b}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Quelldateien\Physic\Body">
       <UniqueIdentifier>{858de906-085b-47ad-9dbd-f65927608600}</UniqueIdentifier>
     </Filter>
@@ -230,6 +263,27 @@
     </ClCompile>
     <ClCompile Include="src\CManifold.cpp">
       <Filter>Quelldateien\Physic\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IDrawable.cpp">
+      <Filter>Quelldateien\Rendering\Drawables</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMeshDrawable.cpp">
+      <Filter>Quelldateien\Rendering\Drawables</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMaterial.cpp">
+      <Filter>Quelldateien\Rendering\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMesh.cpp">
+      <Filter>Quelldateien\Resource\Resources\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IRenderCommand.cpp">
+      <Filter>Quelldateien\Rendering\RenderCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CRenderCommandMesh.cpp">
+      <Filter>Quelldateien\Rendering\RenderCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CRenderer.cpp">
+      <Filter>Quelldateien\Rendering</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -346,6 +400,30 @@
     </ClInclude>
     <ClInclude Include="include\CGraphics.h">
       <Filter>Headerdateien\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\IDrawable.h">
+      <Filter>Headerdateien\Rendering\Drawables</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CMeshDrawable.h">
+      <Filter>Headerdateien\Rendering\Drawables</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CMaterial.h">
+      <Filter>Headerdateien\Rendering\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CMesh.h">
+      <Filter>Headerdateien\Resource\Resources\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="include\IRenderCommand.h">
+      <Filter>Headerdateien\Rendering\RenderCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CRenderCommandMesh.h">
+      <Filter>Headerdateien\Rendering\RenderCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CRenderer.h">
+      <Filter>Headerdateien\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Camera.h">
+      <Filter>Headerdateien\Rendering\Camera</Filter>
     </ClInclude>
     <ClInclude Include="include\CAABBCollider.h">
       <Filter>Headerdateien\Physic\Collider</Filter>
