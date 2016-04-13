@@ -10,7 +10,6 @@ CPlayer::~CPlayer()
 
 void CPlayer::Start()
 {
-    std::cout << "Player start" << std::endl;
     m_pEntity->SetPhysicEntity(twPhysic->CreatePhysicEntity());
     m_pEntity->GetPhysicEntity()->SetBody(twPhysic->CreateBody());
     m_pEntity->GetPhysicEntity()->GetBody()->m_GravityFactor = 0.2f;
@@ -24,8 +23,6 @@ void CPlayer::Start()
 
 void CPlayer::Update()
 {
-    std::cout << m_pEntity->m_Transform.GetPosition().m128_f32[1] << std::endl;
-
     if (twKeyboard.IsState(triebWerk::EKey::Space, triebWerk::EButtonState::Down))
         std::cout << "Keyboard Space" << std::endl;
 
@@ -38,5 +35,5 @@ void CPlayer::Update()
 
 void CPlayer::End()
 {
-    std::cout << "Player end" << std::endl;
+
 }

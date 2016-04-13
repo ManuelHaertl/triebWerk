@@ -20,7 +20,6 @@ int main()
 	a->m_pMesh = new triebWerk::CMesh(twEngine.m_pGraphics->GetDevice(), twEngine.m_pGraphics->GetDeviceContext());
 
     auto test1 = twWorld->CreateEntity();
-    test1->SetBehaviour(new CPlayer());
 	test1->SetDrawable(a);
     twWorld->AddEntity(test1);
 

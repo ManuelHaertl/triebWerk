@@ -46,7 +46,5 @@ void triebWerk::CRenderer::DrawScene()
 
 	m_pGraphicsHandle->Present();
 
-	std::cout << m_CommandList.size() << std::endl;
-
 	m_CommandList.clear();
 }
