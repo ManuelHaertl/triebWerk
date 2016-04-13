@@ -35,7 +35,7 @@ bool triebWerk::CEngine::Initialize()
 	m_pWindow->Initialize(false, 800, 800, "Test");
 	m_pGraphics->Initialize(*m_pWindow->GetWindowHandle(), 800, 800, false, false);
 	m_pResourceManager->Initialize(m_pGraphics);
-	m_pRenderer->Initialize(m_pGraphics);
+	m_pRenderer->Initialize(m_pGraphics, 800, 800);
 	m_pWorld->Initialize(m_pRenderer);
     return true;
 }
@@ -60,6 +60,7 @@ void triebWerk::CEngine::Shutdown()
     m_pWorld->Shutdown();
 	m_pResourceManager->CleanUp();
 	m_pGraphics->Shutdown();
+	m_pRenderer->Shutdown();
 
     delete m_pInput;
     delete m_pTime;
