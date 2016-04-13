@@ -5,6 +5,9 @@
 
 class CPlayer : public triebWerk::IBehaviour
 {
+private:
+    triebWerk::CEntity* m_pBlock;
+
 public:
     CPlayer();
     ~CPlayer();

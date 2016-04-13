@@ -285,6 +285,9 @@
     <ClCompile Include="src\CRenderer.cpp">
       <Filter>Quelldateien\Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="src\CCollisionEvent.cpp">
+      <Filter>Quelldateien\Physic\Collision</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\CEngine.h">
@@ -435,6 +438,9 @@
       <Filter>Headerdateien\Physic\Collision</Filter>
     </ClInclude>
     <ClInclude Include="include\CManifold.h">
+      <Filter>Headerdateien\Physic\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CCollisionEvent.h">
       <Filter>Headerdateien\Physic\Collision</Filter>
     </ClInclude>
   </ItemGroup>

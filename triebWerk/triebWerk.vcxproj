@@ -141,6 +141,7 @@
     <ClCompile Include="src\CAABBCollider.cpp" />
     <ClCompile Include="src\CBody.cpp" />
     <ClCompile Include="src\CCollision.cpp" />
+    <ClCompile Include="src\CCollisionEvent.cpp" />
     <ClCompile Include="src\CConfiguration.cpp" />
     <ClCompile Include="src\CEngine.cpp" />
     <ClCompile Include="src\CEntity.cpp" />
@@ -183,6 +184,7 @@
     <ClInclude Include="include\Camera.h" />
     <ClInclude Include="include\CBody.h" />
     <ClInclude Include="include\CCollision.h" />
+    <ClInclude Include="include\CCollisionEvent.h" />
     <ClInclude Include="include\CConfiguration.h" />
     <ClInclude Include="include\CEngine.h" />
     <ClInclude Include="include\CEntity.h" />

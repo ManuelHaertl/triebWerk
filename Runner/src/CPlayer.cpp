@@ -12,13 +12,19 @@ void CPlayer::Start()
 {
     m_pEntity->SetPhysicEntity(twPhysic->CreatePhysicEntity());
     m_pEntity->GetPhysicEntity()->SetBody(twPhysic->CreateBody());
-    m_pEntity->GetPhysicEntity()->GetBody()->m_GravityFactor = 0.2f;
-    m_pEntity->GetPhysicEntity()->AddCollider(twPhysic->CreateAABBCollider());
+    m_pEntity->GetPhysicEntity()->GetBody()->m_GravityFactor = 0.0f;
+    auto coll = twPhysic->CreateAABBCollider();
+    coll->CreateFromMesh(nullptr);
+    m_pEntity->GetPhysicEntity()->AddCollider(coll);
 
-    auto brumbrum = twWorld->CreateEntity();
-    brumbrum->SetPhysicEntity(twPhysic->CreatePhysicEntity());
-    brumbrum->GetPhysicEntity()->AddCollider(twPhysic->CreateAABBCollider());
-    twWorld->AddEntity(brumbrum);
+    m_pBlock = twWorld->CreateEntity();
+    m_pBlock->SetPhysicEntity(twPhysic->CreatePhysicEntity());
+    auto collider = twPhysic->CreateAABBCollider();
+    collider->CreateFromMesh(nullptr);
+    m_pBlock->GetPhysicEntity()->AddCollider(collider);
+    m_pBlock->GetPhysicEntity()->SetBody(twPhysic->CreateBody());
+    twWorld->AddEntity(m_pBlock);
+    m_pBlock->m_Transform.SetPosition(0.0f, 10.0f, 0.0f);
 }
 
 void CPlayer::Update()
