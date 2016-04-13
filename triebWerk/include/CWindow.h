@@ -43,5 +43,6 @@ namespace triebWerk
 
 		bool m_IsFullscreen;
 		bool m_ShowCursor;
+		bool m_IsSizing;
 	};
 }

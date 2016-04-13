@@ -7,7 +7,8 @@ triebWerk::CWindow::CWindow() :
 	m_Width(0),
 	m_IsFullscreen(false),
 	m_ShowCursor(true),
-	m_WindowHandle(NULL)
+	m_WindowHandle(NULL),
+	m_IsSizing(false)
 {
 }
 
@@ -133,13 +134,25 @@ LRESULT triebWerk::CWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lPara
 		m_MessageQueue.push(msg);
 	}break;
 	
+	case WM_SIZING:
+	{
+		m_IsSizing = true;
+		std::cout << "Sizing" << std::endl;
+	}break;
+
 	case WM_EXITSIZEMOVE:
 	{
-		MSG msg = { 0 };
-		msg.message = uMsg;
-		msg.lParam = lParam;
-		msg.wParam = wParam;
-		m_MessageQueue.push(msg);
+		if (m_IsSizing)
+		{
+			MSG msg = { 0 };
+			msg.message = uMsg;
+			msg.lParam = lParam;
+			msg.wParam = wParam;
+			m_MessageQueue.push(msg);
+
+			m_IsSizing = false;
+		}
+
 	}break;
 	
 	case WM_DESTROY:

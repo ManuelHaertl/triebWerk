@@ -166,6 +166,9 @@
     <Filter Include="Headerdateien\Physic\Collision">
       <UniqueIdentifier>{23143f8f-7516-4d1c-9f5b-f5ecb76ae71b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Quelldateien\Rendering\Camera">
+      <UniqueIdentifier>{b73bc194-1d6e-4977-b065-f33735511e4c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CEngine.cpp">
@@ -284,6 +287,9 @@
     </ClCompile>
     <ClCompile Include="src\CRenderer.cpp">
       <Filter>Quelldateien\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CCamera.cpp">
+      <Filter>Quelldateien\Rendering\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -422,9 +428,6 @@
     <ClInclude Include="include\CRenderer.h">
       <Filter>Headerdateien\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="include\Camera.h">
-      <Filter>Headerdateien\Rendering\Camera</Filter>
-    </ClInclude>
     <ClInclude Include="include\CAABBCollider.h">
       <Filter>Headerdateien\Physic\Collider</Filter>
     </ClInclude>
@@ -436,6 +439,9 @@
     </ClInclude>
     <ClInclude Include="include\CManifold.h">
       <Filter>Headerdateien\Physic\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CCamera.h">
+      <Filter>Headerdateien\Rendering\Camera</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

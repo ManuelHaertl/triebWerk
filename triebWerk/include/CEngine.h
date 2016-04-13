@@ -21,6 +21,8 @@ namespace triebWerk
 		CResourceManager* m_pResourceManager;
 		CRenderer* m_pRenderer;
 
+		bool IsSizing;
+
 	private:
 		bool m_IsRunning;
 

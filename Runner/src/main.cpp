@@ -5,7 +5,7 @@
 
 int main()
 {
-    //_crtBreakAlloc = 176;
+   // _crtBreakAlloc = 180;
     if (twEngine.Initialize() == false)
     {
         twEngine.Shutdown();
@@ -29,7 +29,7 @@ int main()
         run = twEngine.Run();
     }
 
-	delete 	a->m_pMesh;
+	delete a->m_pMesh;
 	twWorld->RemoveEntity(test1);
 
     twEngine.Shutdown();
