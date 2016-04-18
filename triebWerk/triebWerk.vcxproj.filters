@@ -169,6 +169,15 @@
     <Filter Include="Quelldateien\Rendering\Camera">
       <UniqueIdentifier>{b73bc194-1d6e-4977-b065-f33735511e4c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headerdateien\Rendering\Material\ConstantBuffer">
+      <UniqueIdentifier>{26cf9f8f-c796-4d22-9555-7c467956442d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Debug">
+      <UniqueIdentifier>{b877340b-0c1a-47ca-a641-3c73897628b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Debug">
+      <UniqueIdentifier>{b399a2e4-6ed0-4f14-93c2-f220a9220664}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CEngine.cpp">
@@ -293,6 +302,18 @@
     </ClCompile>
     <ClCompile Include="src\CCamera.cpp">
       <Filter>Quelldateien\Rendering\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CConstantBuffer.cpp">
+      <Filter>Quelldateien\Rendering\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="src\COBJParser.cpp">
+      <Filter>Quelldateien\Resource\Parser</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CDebug.cpp">
+      <Filter>Quelldateien\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CDebugCamera.cpp">
+      <Filter>Quelldateien\Debug</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -448,6 +469,18 @@
     </ClInclude>
     <ClInclude Include="include\CCollisionEvent.h">
       <Filter>Headerdateien\Physic\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CConstantBuffer.h">
+      <Filter>Headerdateien\Rendering\Material\ConstantBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\COBJParser.h">
+      <Filter>Headerdateien\Resource\Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CDebug.h">
+      <Filter>Headerdateien\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CDebugCamera.h">
+      <Filter>Headerdateien\Debug</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

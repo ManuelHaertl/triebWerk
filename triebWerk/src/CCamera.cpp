@@ -32,6 +32,9 @@ triebWerk::CCamera::~CCamera()
 
 void triebWerk::CCamera::Update()
 {
+	DirectX::XMVECTOR At = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+	DirectX::XMVECTOR Up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+	m_ViewMatrix = DirectX::XMMatrixLookAtLH(DirectX::XMVector3Rotate(m_Transform.GetPosition(), m_Transform.GetRotation()), At, Up);
 }
 
 DirectX::XMMATRIX & triebWerk::CCamera::GetViewMatrix()
@@ -91,9 +94,5 @@ void triebWerk::CCamera::CalculateProjection()
 
 void triebWerk::CCamera::DetermineViewport()
 {
-	m_Viewport = { 0 };
-	m_Viewport.TopLeftX = 0;
-	m_Viewport.TopLeftY = 0;
-	m_Viewport.Width = static_cast<float>(m_ScreenWidth);
-	m_Viewport.Height = static_cast<float>(m_ScreenHeight);
+
 }

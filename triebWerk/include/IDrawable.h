@@ -3,6 +3,9 @@
 
 namespace triebWerk
 {
+
+	class CEntity;
+
 	class IDrawable
 	{
 	public:
@@ -12,8 +15,6 @@ namespace triebWerk
 			UI,
 			Empty
 		};
-
-
 
 	private:
 		bool m_ActiveState;
@@ -28,7 +29,7 @@ namespace triebWerk
 		virtual ~IDrawable();
 
 	public:
-		virtual IRenderCommand* GetRenderCommand() = 0;
+		virtual IRenderCommand* GetRenderCommand(CEntity* a_pThisEntity) = 0;
 		virtual EDrawableType GetType() = 0;
 
 		void SetActive(bool a_State);

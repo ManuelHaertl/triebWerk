@@ -7,6 +7,7 @@
 #include <CResourceManager.h>
 #include <CGraphics.h>
 #include <CRenderer.h>
+#include <CDebug.h>
 
 namespace triebWerk
 {
@@ -20,6 +21,7 @@ namespace triebWerk
 		CGraphics* m_pGraphics;
 		CResourceManager* m_pResourceManager;
 		CRenderer* m_pRenderer;
+		CDebug* m_pDebug;
 
 		bool IsSizing;
 

@@ -12,12 +12,16 @@ namespace triebWerk
         std::vector<CTransform*> m_Children;
 
     private:
+		bool m_Modified;
+
         DirectX::XMVECTOR m_Position;
         DirectX::XMVECTOR m_Scale;
         DirectX::XMVECTOR m_Rotation;
         DirectX::XMVECTOR m_LocalPosition;
         DirectX::XMVECTOR m_LocalScale;
         DirectX::XMVECTOR m_LocalRotation;
+		DirectX::XMVECTOR m_Pivot;
+		DirectX::XMMATRIX m_Transformation;
 
     public:
         CTransform();
@@ -57,6 +61,7 @@ namespace triebWerk
         //void SetLocalRotation(float a_X, float a_Y, float a_Z);
         //void SetLocalRotation(DirectX::XMVECTOR a_Rotation);
 
+		DirectX::XMMATRIX& GetTransformation();
     private:
         void UpdateChildPosition();
         //void UpdateChildScale();

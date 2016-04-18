@@ -6,8 +6,10 @@
 class CPlayer : public triebWerk::IBehaviour
 {
 private:
-    triebWerk::CEntity* m_pBlock;
-
+	triebWerk::CCamera* m_pCam;
+	float Rotation;
+	float RotationY;
+	DirectX::XMINT2 pos;
 public:
     CPlayer();
     ~CPlayer();

@@ -144,6 +144,9 @@
     <ClCompile Include="src\CCollision.cpp" />
     <ClCompile Include="src\CCollisionEvent.cpp" />
     <ClCompile Include="src\CConfiguration.cpp" />
+    <ClCompile Include="src\CConstantBuffer.cpp" />
+    <ClCompile Include="src\CDebug.cpp" />
+    <ClCompile Include="src\CDebugCamera.cpp" />
     <ClCompile Include="src\CEngine.cpp" />
     <ClCompile Include="src\CEntity.cpp" />
     <ClCompile Include="src\CFileReader.cpp" />
@@ -159,6 +162,7 @@
     <ClCompile Include="src\CMesh.cpp" />
     <ClCompile Include="src\CMeshDrawable.cpp" />
     <ClCompile Include="src\CMouse.cpp" />
+    <ClCompile Include="src\COBJParser.cpp" />
     <ClCompile Include="src\CPhysicEntity.cpp" />
     <ClCompile Include="src\CPhysicWorld.cpp" />
     <ClCompile Include="src\CRenderCommandMesh.cpp" />
@@ -187,6 +191,8 @@
     <ClInclude Include="include\CCollision.h" />
     <ClInclude Include="include\CCollisionEvent.h" />
     <ClInclude Include="include\CConfiguration.h" />
+    <ClInclude Include="include\CConstantBuffer.h" />
+    <ClInclude Include="include\CDebug.h" />
     <ClInclude Include="include\CEngine.h" />
     <ClInclude Include="include\CEntity.h" />
     <ClInclude Include="include\CFileReader.h" />
@@ -202,6 +208,7 @@
     <ClInclude Include="include\CMesh.h" />
     <ClInclude Include="include\CMeshDrawable.h" />
     <ClInclude Include="include\CMouse.h" />
+    <ClInclude Include="include\COBJParser.h" />
     <ClInclude Include="include\CPhysicEntity.h" />
     <ClInclude Include="include\CPhysicWorld.h" />
     <ClInclude Include="include\CRenderCommandMesh.h" />
@@ -216,6 +223,7 @@
     <ClInclude Include="include\CWindow.h" />
     <ClInclude Include="include\CWorld.h" />
     <ClInclude Include="include\CXboxController.h" />
+    <ClInclude Include="include\CDebugCamera.h" />
     <ClInclude Include="include\EButtonState.h" />
     <ClInclude Include="include\ECollider.h" />
     <ClInclude Include="include\ECombine.h" />

@@ -1,4 +1,5 @@
 #include <CMeshDrawable.h>
+#include <CEntity.h>
 
 triebWerk::CMeshDrawable::CMeshDrawable():
 	m_pMesh(nullptr)
@@ -10,10 +11,11 @@ triebWerk::CMeshDrawable::~CMeshDrawable()
 {
 }
 
-triebWerk::IRenderCommand* triebWerk::CMeshDrawable::GetRenderCommand()
+triebWerk::IRenderCommand* triebWerk::CMeshDrawable::GetRenderCommand(CEntity* a_pEntity)
 {
 	m_RenderCommand.m_pMaterial = &m_Material;
 	m_RenderCommand.m_pMesh = m_pMesh;
+	m_RenderCommand.m_Transformation = a_pEntity->m_Transform.GetTransformation();
 
 	return &m_RenderCommand;
 }

@@ -31,6 +31,7 @@ bool triebWerk::CEngine::Initialize()
 	m_pResourceManager = new CResourceManager();
 	m_pGraphics = new CGraphics();
 	m_pRenderer = new CRenderer();
+	m_pDebug = new CDebug();
 
 	m_pWindow->Initialize(false, 800, 800, "Test");
 	m_pGraphics->Initialize(*m_pWindow->GetWindowHandle(), 800, 800, false, false);
@@ -48,6 +49,7 @@ bool triebWerk::CEngine::Run()
     MSG msg = m_pWindow->GetWindowEvent();
     ProcessMessage(msg);
 
+	m_pDebug->Update();
 	m_pWindow->UpdateWindow();
     m_pWorld->Update(m_pTime->GetDeltaTime());
 	m_pRenderer->DrawScene();
@@ -62,6 +64,7 @@ void triebWerk::CEngine::Shutdown()
 	m_pGraphics->Shutdown();
 	m_pRenderer->Shutdown();
 
+	delete m_pDebug;
     delete m_pInput;
     delete m_pTime;
     delete m_pWorld;

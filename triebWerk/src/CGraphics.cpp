@@ -134,7 +134,7 @@ bool triebWerk::CGraphics::Initialize(HWND & a_rWindowHandle, const unsigned int
 
 	// Setup the raster state
 	rasterDesc.AntialiasedLineEnable = false;
-	rasterDesc.CullMode = D3D11_CULL_BACK;
+	rasterDesc.CullMode = D3D11_CULL_NONE;
 	rasterDesc.DepthBias = 0;
 	rasterDesc.DepthBiasClamp = 0.0f;
 	rasterDesc.DepthClipEnable = true;
@@ -248,13 +248,15 @@ void triebWerk::CGraphics::InitShaders()
 
 	error = this->m_pDevice->CreateVertexShader(vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), NULL, &vertex);
 
-	D3D11_INPUT_ELEMENT_DESC ied[] =
+	D3D11_INPUT_ELEMENT_DESC inputDesc[] =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+		{ "UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 
-	m_pDevice->CreateInputLayout(ied, 2, vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), &m_pInputLayout);
+
+	m_pDevice->CreateInputLayout(inputDesc, 3, vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), &m_pInputLayout);
 	m_pDeviceContext->IASetInputLayout(m_pInputLayout);
 
 	ID3D10Blob* pixelShader;

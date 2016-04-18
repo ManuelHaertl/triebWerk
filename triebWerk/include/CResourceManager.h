@@ -12,6 +12,7 @@
 #include <CStringHasher.h>
 #include <CINIParser.h>
 #include <CTexture2D.h>
+#include <COBJParser.h>
 #include <loadPNG\lodepng.h>
 
 namespace triebWerk
@@ -38,10 +39,15 @@ namespace triebWerk
 		typedef std::unordered_map<size_t, CTexture2D> CTextureMap;
 		typedef std::pair<size_t, CTexture2D> CTexturePair;
 
+		//OBJ 
+		typedef std::unordered_map<size_t, CMesh> CMeshMap;
+		typedef std::pair<size_t, CMesh> CMeshPair;
+
 	private:
 		CTilesetHashMap m_TilesetBuffer;
 		CConfigurationMap m_ConfigurationBuffer;
 		CTextureMap m_TextureBuffer;
+		CMeshMap m_MeshBuffer;
 
 		CGraphics* m_pGraphicsHandle;
 
@@ -66,11 +72,13 @@ namespace triebWerk
 		CTilesetMap* GetTileset(const char* a_pTilesetName);
 		CConfiguration* GetConfiguration(const char* a_pConfigurationName);
 		CTexture2D* GetTexture2D(const char* a_pTexture2DName);
+		CMesh* GetMesh(const char* a_pMeshName);
 
 		//Unload
 		void UnloadTileset(const char* a_pTilesetName);
 		void UnloadConfiguration(const char* a_pConfigurationName);
 		void UnloadTexture2D(const char* a_pTexture2DName);
+		void UnloadMesh(const char* a_pMeshName);
 
 	private:
 		//Load actual data

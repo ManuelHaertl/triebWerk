@@ -20,7 +20,7 @@ namespace triebWerk
 		~CMeshDrawable();
 
 	public:
-		IRenderCommand* GetRenderCommand() final;
+		IRenderCommand* GetRenderCommand(CEntity* a_pThisEntity) final;
 		EDrawableType GetType() final;
 	};
 }

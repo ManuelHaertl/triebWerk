@@ -37,7 +37,7 @@ bool triebWerk::CWorld::Update(const float a_DeltaTime)
 		if (m_Entities[i]->GetDrawable() != nullptr)
 		{
 			//Queue up rendercommand 
-			m_pRenderingHandle->AddRenderCommand(m_Entities[i]->GetDrawable()->GetRenderCommand());
+			m_pRenderingHandle->AddRenderCommand(m_Entities[i]->GetDrawable()->GetRenderCommand(m_Entities[i]));
 		}
     }
 

@@ -29,9 +29,15 @@ void triebWerk::CResourceManager::CleanUp()
 		delete config.second;
 	}
 
+	for (auto mesh : m_MeshBuffer)
+	{
+		mesh.second.m_pVertexBuffer->Release();
+	}
+
 	m_ConfigurationBuffer.clear();
 	m_TextureBuffer.clear();
 	m_TilesetBuffer.clear();
+	m_MeshBuffer.clear();
 }
 
 const char& triebWerk::CResourceManager::GetModulPath()
@@ -112,6 +118,20 @@ triebWerk::CTexture2D * triebWerk::CResourceManager::GetTexture2D(const char * a
 	}
 }
 
+triebWerk::CMesh * triebWerk::CResourceManager::GetMesh(const char * a_pMeshName)
+{
+	auto foundIterator = m_MeshBuffer.find(StringHasher(a_pMeshName));
+
+	if (foundIterator == m_MeshBuffer.end())
+	{
+		return nullptr;
+	}
+	else
+	{
+		return &foundIterator->second;
+	}
+}
+
 void triebWerk::CResourceManager::UnloadTileset(const char * a_TilesetName)
 {
 	auto foundIterator = m_TilesetBuffer.find(StringHasher(a_TilesetName));
@@ -154,6 +174,21 @@ void triebWerk::CResourceManager::UnloadTexture2D(const char * a_pTexture2DName)
 	else
 	{
 		m_TextureBuffer.erase(StringHasher(a_pTexture2DName));
+	}
+}
+
+void triebWerk::CResourceManager::UnloadMesh(const char * a_pMeshName)
+{
+	auto foundIterator = m_MeshBuffer.find(StringHasher(a_pMeshName));
+
+	if (foundIterator == m_MeshBuffer.end())
+	{
+		return;
+	}
+	else
+	{
+		foundIterator->second.m_pVertexBuffer->Release();
+		m_MeshBuffer.erase(StringHasher(a_pMeshName));
 	}
 }
 
@@ -209,6 +244,26 @@ void triebWerk::CResourceManager::LoadPNG(SFile a_File)
 
 void triebWerk::CResourceManager::LoadOBJ(SFile a_File)
 {
+	COBJParser objParser;
+	objParser.LoadOBJ(a_File.FilePath.c_str());
+
+	CMesh mesh;
+	mesh.m_VertexCount = objParser.m_VertexCount;
+	
+	D3D11_BUFFER_DESC vertexBufferDescription;
+	ZeroMemory(&vertexBufferDescription, sizeof(D3D11_BUFFER_DESC));
+	vertexBufferDescription.Usage = D3D11_USAGE_DEFAULT;
+	vertexBufferDescription.ByteWidth = sizeof(CMesh::SVertex) * objParser.m_VertexCount;
+	vertexBufferDescription.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vertexBufferDescription.CPUAccessFlags = 0;
+
+	D3D11_SUBRESOURCE_DATA subresourceData;
+	ZeroMemory(&subresourceData, sizeof(D3D11_SUBRESOURCE_DATA));
+	subresourceData.pSysMem = objParser.m_pVertices;
+
+	m_pGraphicsHandle->GetDevice()->CreateBuffer(&vertexBufferDescription, &subresourceData, &mesh.m_pVertexBuffer);
+
+	m_MeshBuffer.insert(CMeshPair(StringHasher(a_File.FileName), mesh));
 }
 
 void triebWerk::CResourceManager::LoadMP3(SFile a_File)

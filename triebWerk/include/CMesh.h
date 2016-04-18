@@ -1,15 +1,17 @@
 #pragma once
 #include <d3d11.h>
+#include <DirectXMath.h>
 
 namespace triebWerk
 {
 	class CMesh
 	{
 	public:
-		struct SVertices
+		struct SVertex
 		{
-			float x, y, z;
-			float u, v;
+			DirectX::XMFLOAT3 position;
+			DirectX::XMFLOAT2 uv;
+			DirectX::XMFLOAT3 normal;
 		};
 
 	public:
@@ -17,7 +19,7 @@ namespace triebWerk
 		unsigned int m_VertexCount;
 
 	public:
-		CMesh(ID3D11Device* a_pDevice, ID3D11DeviceContext* a_pDeviceContext);
+		CMesh();
 		~CMesh();
 	};
 }

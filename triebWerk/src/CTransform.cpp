@@ -1,12 +1,14 @@
 #include <CTransform.h>
 
 triebWerk::CTransform::CTransform() :
-    m_pParent(nullptr)
+    m_pParent(nullptr),
+	m_Modified(true)
 {
     m_Position = DirectX::XMVectorZero();
     m_LocalPosition = DirectX::XMVectorZero();
-    m_Rotation = DirectX::XMVectorZero();
-    m_LocalRotation = DirectX::XMVectorZero();
+	m_Rotation = DirectX::XMQuaternionIdentity();
+    m_LocalRotation = DirectX::XMQuaternionIdentity();
+	m_Pivot = DirectX::XMVectorZero();
     m_Scale = DirectX::XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f);
     m_LocalScale = DirectX::XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f);
 }
@@ -113,7 +115,9 @@ void triebWerk::CTransform::SetPosition(float a_X, float a_Y, float a_Z)
     else
         m_LocalPosition = m_Position;
 
-    UpdateChildPosition();
+	UpdateChildPosition();
+
+	m_Modified = true;
 }
 
 void triebWerk::CTransform::SetPosition(DirectX::XMVECTOR a_Position)
@@ -127,6 +131,8 @@ void triebWerk::CTransform::SetPosition(DirectX::XMVECTOR a_Position)
         m_LocalPosition = m_Position;
 
     UpdateChildPosition();
+
+	m_Modified = true;
 }
 
 void triebWerk::CTransform::SetLocalPosition(float a_X, float a_Y, float a_Z)
@@ -140,6 +146,8 @@ void triebWerk::CTransform::SetLocalPosition(float a_X, float a_Y, float a_Z)
         m_Position = m_LocalPosition;
 
     UpdateChildPosition();
+
+	m_Modified = true;
 }
 
 void triebWerk::CTransform::SetLocalPosition(DirectX::XMVECTOR a_Position)
@@ -153,26 +161,49 @@ void triebWerk::CTransform::SetLocalPosition(DirectX::XMVECTOR a_Position)
         m_Position = m_LocalPosition;
 
     UpdateChildPosition();
+
+	m_Modified = true;
 }
 
 void triebWerk::CTransform::SetScale(float a_X, float a_Y, float a_Z)
 {
     m_Scale = DirectX::XMVectorSet(a_X, a_Y, a_Z, 0.0f);
+
+	m_Modified = true;
 }
 
 void triebWerk::CTransform::SetScale(DirectX::XMVECTOR a_Scale)
 {
     m_Scale = a_Scale;
+
+	m_Modified = true;
 }
 
 void triebWerk::CTransform::SetRotation(float a_X, float a_Y, float a_Z)
 {
     m_Rotation = DirectX::XMVectorSet(a_X, a_Y, a_Z, 0.0f);
+
+	m_Modified = true;
 }
 
 void triebWerk::CTransform::SetRotation(DirectX::XMVECTOR a_Rotation)
 {
     m_Rotation = a_Rotation;
+
+	m_Modified = true;
+}
+
+DirectX::XMMATRIX & triebWerk::CTransform::GetTransformation()
+{
+	if (!m_Modified)
+		return m_Transformation;
+	else
+	{
+		m_Transformation = DirectX::XMMatrixTransformation(m_Pivot, DirectX::XMQuaternionIdentity(), m_Scale, m_Pivot, m_Rotation, m_Position);
+		m_Modified = false;
+		return m_Transformation;
+	}
+
 }
 
 void triebWerk::CTransform::UpdateChildPosition()

@@ -16,12 +16,16 @@ int main()
     player->SetBehaviour(new CPlayer());
     twWorld->AddEntity(player);
 
-	triebWerk::CMeshDrawable* a = new triebWerk::CMeshDrawable();
-	a->m_pMesh = new triebWerk::CMesh(twEngine.m_pGraphics->GetDevice(), twEngine.m_pGraphics->GetDeviceContext());
+	twEngine.m_pResourceManager->LoadAllFilesInFolder("data");
+
+	triebWerk::CMeshDrawable* mesh = new triebWerk::CMeshDrawable();
+	mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube.obj");
+	mesh->m_Material.m_ConstantBuffer.InitializeConstantBufffer(twEngine.m_pGraphics->GetDevice());
 
     auto test1 = twWorld->CreateEntity();
-	test1->SetDrawable(a);
-    twWorld->AddEntity(test1);
+	test1->SetDrawable(mesh);
+
+	twWorld->AddEntity(test1);
 
     bool run = true;
     while (run == true)
@@ -29,8 +33,8 @@ int main()
         run = twEngine.Run();
     }
 
-	delete a->m_pMesh;
 	twWorld->RemoveEntity(test1);
+
 
     twEngine.Shutdown();
     _CrtDumpMemoryLeaks();
