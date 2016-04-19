@@ -12,6 +12,14 @@ namespace triebWerk
 			None
 		};
 
+		enum class EDrawType
+		{
+			Draw,
+			DrawInstanced,
+			DrawIndexed,
+			DrawIndexedInstanced,
+		};
+
 	public:
 
 	protected:

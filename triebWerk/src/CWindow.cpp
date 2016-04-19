@@ -137,7 +137,6 @@ LRESULT triebWerk::CWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lPara
 	case WM_SIZING:
 	{
 		m_IsSizing = true;
-		std::cout << "Sizing" << std::endl;
 	}break;
 
 	case WM_EXITSIZEMOVE:

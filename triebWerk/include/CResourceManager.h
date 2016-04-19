@@ -36,12 +36,12 @@ namespace triebWerk
 		typedef std::pair<size_t, CConfiguration*> CConfigurationPair;
 
 		//Texture2D
-		typedef std::unordered_map<size_t, CTexture2D> CTextureMap;
-		typedef std::pair<size_t, CTexture2D> CTexturePair;
+		typedef std::unordered_map<size_t, CTexture2D*> CTextureMap;
+		typedef std::pair<size_t, CTexture2D*> CTexturePair;
 
 		//OBJ 
-		typedef std::unordered_map<size_t, CMesh> CMeshMap;
-		typedef std::pair<size_t, CMesh> CMeshPair;
+		typedef std::unordered_map<size_t, CMesh*> CMeshMap;
+		typedef std::pair<size_t, CMesh*> CMeshPair;
 
 	private:
 		CTilesetHashMap m_TilesetBuffer;
@@ -62,6 +62,10 @@ namespace triebWerk
 		void CleanUp();
 		
 		const char& GetModulPath();
+
+		//Bind D3D11 Resources new
+		//For example if the backbuffer was resized
+		void UpdateD3D11Resources();
 
 		//Load Interface User
 		void LoadAllFilesInFolder(const char* a_pPath);

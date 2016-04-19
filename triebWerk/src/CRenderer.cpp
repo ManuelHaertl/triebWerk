@@ -15,8 +15,10 @@ void triebWerk::CRenderer::Initialize(CGraphics * a_pGraphicsHandle, unsigned in
 	m_ScreenWidth = a_ScreenWidth;
 	m_pGraphicsHandle = a_pGraphicsHandle;
 
+	float aspect = (float)m_ScreenWidth / (float)m_ScreenHeight;
+
 	//Create Default Camera
-	SetActiveCamera(CreateCamera(static_cast<float>(m_ScreenHeight / m_ScreenWidth), DirectX::XM_PIDIV4, 0.01f, 100.0f));
+	SetActiveCamera(CreateCamera(aspect, DirectX::XM_PIDIV4, 0.01f, 100.0f));
 	m_pCurrentCamera->m_Transform.SetPosition(0, 0, -5);
 }
 
@@ -76,13 +78,10 @@ void triebWerk::CRenderer::DrawScene()
 			CRenderCommandMesh* meshCommand = reinterpret_cast<CRenderCommandMesh*>(pRenderCommand);
 
 			meshCommand->m_pMaterial->m_ConstantBuffer.SetConstantBuffer(this->m_pGraphicsHandle->GetDeviceContext(), meshCommand->m_Transformation, m_pCurrentCamera->GetViewMatrix(), m_pCurrentCamera->GetProjection());
-
-			UINT stride = sizeof(CMesh::SVertex);
 			UINT offset = 0;
-			m_pGraphicsHandle->GetDeviceContext()->IASetVertexBuffers(0, 1, &meshCommand->m_pMesh->m_pVertexBuffer, &stride, &offset);
+			m_pGraphicsHandle->GetDeviceContext()->IASetVertexBuffers(0, 1, &meshCommand->m_pMesh->m_pVertexBuffer, &meshCommand->m_Stride, &offset);
 
-			// select which primtive type we are using
-			m_pGraphicsHandle->GetDeviceContext()->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			m_pGraphicsHandle->GetDeviceContext()->IASetPrimitiveTopology(meshCommand->m_Topology);
 			m_pGraphicsHandle->GetDeviceContext()->Draw(meshCommand->m_pMesh->m_VertexCount, 0);
 
 		}break;

@@ -33,10 +33,10 @@ bool triebWerk::CEngine::Initialize()
 	m_pRenderer = new CRenderer();
 	m_pDebug = new CDebug();
 
-	m_pWindow->Initialize(false, 800, 800, "Test");
-	m_pGraphics->Initialize(*m_pWindow->GetWindowHandle(), 800, 800, false, false);
+	m_pWindow->Initialize(false, 1200, 800, "Test");
+	m_pGraphics->Initialize(*m_pWindow->GetWindowHandle(), 1200, 800, false, false);
 	m_pResourceManager->Initialize(m_pGraphics);
-	m_pRenderer->Initialize(m_pGraphics, 800, 800);
+	m_pRenderer->Initialize(m_pGraphics, 1200, 800);
 	m_pWorld->Initialize(m_pRenderer);
     return true;
 }

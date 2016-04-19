@@ -1,5 +1,6 @@
 #pragma once
 #include <d3d11.h>
+#include <vector>
 
 namespace triebWerk
 {
@@ -10,6 +11,10 @@ namespace triebWerk
 		ID3D11ShaderResourceView* m_pShaderResourceView;
 		unsigned int m_Height;
 		unsigned int m_Width;
+
+	public:
+		std::vector<unsigned char>m_PixelData;
+
 
 	public:
 		CTexture2D();

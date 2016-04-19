@@ -1,4 +1,5 @@
 #include <CCamera.h>
+#include <iostream>
 
 triebWerk::CCamera::CCamera() :
 	m_Aspect(0.0f),
@@ -6,7 +7,8 @@ triebWerk::CCamera::CCamera() :
 	m_FOV(0.0f),
 	m_NearPlane(0.0f),
 	m_ScreenHeight(0),
-	m_ScreenWidth(0)
+	m_ScreenWidth(0),
+	m_Modified(false)
 {
 	m_ProjectionMatrix = DirectX::XMMatrixIdentity();
 	m_ViewMatrix = DirectX::XMMatrixIdentity();
@@ -35,6 +37,12 @@ void triebWerk::CCamera::Update()
 	DirectX::XMVECTOR At = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
 	DirectX::XMVECTOR Up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 	m_ViewMatrix = DirectX::XMMatrixLookAtLH(DirectX::XMVector3Rotate(m_Transform.GetPosition(), m_Transform.GetRotation()), At, Up);
+
+	if (m_Modified)
+	{
+		CalculateProjection();
+		m_Modified = false;
+	}
 }
 
 DirectX::XMMATRIX & triebWerk::CCamera::GetViewMatrix()
@@ -50,21 +58,25 @@ DirectX::XMMATRIX & triebWerk::CCamera::GetProjection()
 void triebWerk::CCamera::SetAspect(const float a_Aspect)
 {
 	m_Aspect = a_Aspect;
+	m_Modified = true;
 }
 
 void triebWerk::CCamera::SetFOV(const float a_FOV)
 {
 	m_FOV = a_FOV;
+	m_Modified = true;
 }
 
 void triebWerk::CCamera::SetNear(const float a_NearPlane)
 {
 	m_NearPlane = a_NearPlane;
+	m_Modified = true;
 }
 
 void triebWerk::CCamera::SetFar(const float a_FarPlane)
 {
 	m_FarPlane = a_FarPlane;
+	m_Modified = true;
 }
 
 float triebWerk::CCamera::GetAspect() const

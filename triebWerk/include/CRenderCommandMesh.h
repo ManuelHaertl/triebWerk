@@ -12,6 +12,9 @@ namespace triebWerk
 		CMesh* m_pMesh;
 		CMaterial* m_pMaterial;
 		DirectX::XMMATRIX m_Transformation;
+		IRenderCommand::EDrawType m_DrawType;
+		D3D11_PRIMITIVE_TOPOLOGY m_Topology;
+		UINT m_Stride;
 	public:
 		CRenderCommandMesh();
 		~CRenderCommandMesh();

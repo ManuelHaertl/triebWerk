@@ -12,7 +12,7 @@ namespace triebWerk
     public:
         CPhysicWorld* m_pPhysicWorld;
 
-    private:
+    public:
 		static const size_t Start_Reserve_Size = 512;
         size_t m_CurrentSize;
 

@@ -21,6 +21,8 @@ namespace triebWerk
 		float m_NearPlane;
 		float m_FarPlane;
 
+		bool m_Modified;
+
 		D3D11_VIEWPORT m_Viewport;
 
 	public:

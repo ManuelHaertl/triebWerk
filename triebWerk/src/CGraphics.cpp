@@ -1,4 +1,7 @@
 #include <CGraphics.h>
+#include <iostream>
+#include <CEngine.h>
+#include <CMeshDrawable.h>
 
 triebWerk::CGraphics::CGraphics() :
 	m_IsFullscreen(false),
@@ -26,7 +29,6 @@ bool triebWerk::CGraphics::Initialize(HWND & a_rWindowHandle, const unsigned int
 
 	HRESULT result;
 	DXGI_SWAP_CHAIN_DESC swapChainDesc;
-	ID3D11Texture2D* pBackBuffer;
 	D3D11_TEXTURE2D_DESC depthBufferDesc;
 	D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
 	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
@@ -67,17 +69,14 @@ bool triebWerk::CGraphics::Initialize(HWND & a_rWindowHandle, const unsigned int
 	if (FAILED(result))
 		return false;
 
-	result = m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
+	result = m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&m_pBackBufferTexture);
 	if (FAILED(result))
 		return false;
 
 	//Create render target view 
-	result = m_pDevice->CreateRenderTargetView(pBackBuffer, NULL, &m_pRenderTargetView);
+	result = m_pDevice->CreateRenderTargetView(m_pBackBufferTexture, NULL, &m_pRenderTargetView);
 	if (FAILED(result))
 		return false;
-
-	pBackBuffer->Release();
-	pBackBuffer = nullptr;
 
 	//Set up the description of the depth buffer
 	ZeroMemory(&depthBufferDesc, sizeof(depthBufferDesc));
@@ -192,6 +191,12 @@ void triebWerk::CGraphics::Shutdown()
 
 	if (m_pSwapChain != nullptr)
 		m_pSwapChain->Release();
+
+	if (m_pBackBufferTexture != nullptr)
+		m_pBackBufferTexture->Release();
+
+	if (m_pInputLayout != nullptr)
+		m_pInputLayout->Release();
 }	
 
 void triebWerk::CGraphics::ClearRenderTarget()
@@ -215,7 +220,6 @@ void triebWerk::CGraphics::SetClearColor(const float a_R, const float a_G, const
 	m_ClearColor.m128_f32[1] = a_G;
 	m_ClearColor.m128_f32[2] = a_B;
 	m_ClearColor.m128_f32[3] = a_A;
-
 }
 
 void triebWerk::CGraphics::SetClearColor(DirectX::XMVECTOR a_Color)
@@ -272,22 +276,41 @@ void triebWerk::CGraphics::InitShaders()
 
 void triebWerk::CGraphics::UpdateSwapchainConfiguration()
 {
-	HRESULT result;
-	//TODO: elaborate if this is necessary
-	//result = m_pSwapChain->SetFullscreenState(a_Fullscreen, NULL);
-	
-	m_pRenderTargetView->Release();
-	result = m_pSwapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
-	
-	ID3D11Buffer* pBackBuffer;
-	
-	result = m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
-	
-	//Create render target view 
-	result = m_pDevice->CreateRenderTargetView(pBackBuffer, NULL, &m_pRenderTargetView);
+	RECT a;
+	GetClientRect(*CEngine::Instance().m_pWindow->GetWindowHandle(), &a);
 
-	pBackBuffer->Release();
-	pBackBuffer = nullptr;
+	this->Shutdown();
+	this->Initialize(*CEngine::Instance().m_pWindow->GetWindowHandle(), a.right - a.left, a.bottom - a.top, false, false);
+	
+	//HRESULT result;
+	//std::cout << "Resize" << std::endl;
+	//result = m_pSwapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
+	////ConfigureBackBuffer();
+	CEngine::Instance().m_pResourceManager->UpdateD3D11Resources();
+
+	CEngine::Instance().m_pRenderer->GetCurrentActiveCamera()->SetAspect((float)(a.right - a.left) / (float)(a.bottom - a.top));
+	CMeshDrawable* b = (CMeshDrawable*)CEngine::Instance().m_pWorld->m_Entities[0]->GetDrawable();
+	b->m_Material.m_ConstantBuffer.InitializeConstantBufffer(twEngine.m_pGraphics->GetDevice());
+	//CEngine::Instance().m_pWorld->m_Entities[0]->SetDrawable(mesh);
+
+	this->InitShaders();
+
+	//HRESULT result;
+	////TODO: elaborate if this is necessary
+	////result = m_pSwapChain->SetFullscreenState(a_Fullscreen, NULL);
+	//
+	//m_pRenderTargetView->Release();
+	//result = m_pSwapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
+	//
+	//ID3D11Buffer* pBackBuffer;
+	//
+	//result = m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
+	//
+	////Create render target view 
+	//result = m_pDevice->CreateRenderTargetView(pBackBuffer, NULL, &m_pRenderTargetView);
+
+	//pBackBuffer->Release();
+	//pBackBuffer = nullptr;
 }
 
 ID3D11Texture2D * triebWerk::CGraphics::CreateD3D11Texture2D(const void * a_pData, const unsigned int a_Width, const unsigned int a_Height) const
@@ -373,4 +396,66 @@ void triebWerk::CGraphics::SetDisplayProperties(const unsigned int a_ScreenHeigh
 	m_VideoCardDescription = adapterDesc.Description;
 
     delete displayModeList;
+}
+
+void triebWerk::CGraphics::ReleaseBackBuffer()
+{
+	m_pRenderTargetView->Release();
+
+	m_pBackBufferTexture->Release();
+
+	m_pDepthStencilView->Release();
+	m_pDepthStencilBuffer->Release();
+
+	m_pDeviceContext->Flush();
+}
+
+void triebWerk::CGraphics::ConfigureBackBuffer()
+{
+	HRESULT hr = S_OK;
+
+	hr = m_pSwapChain->GetBuffer(
+		0,
+		__uuidof(ID3D11Texture2D),
+		(void**)&m_pBackBufferTexture);
+
+	hr = m_pDevice->CreateRenderTargetView( m_pBackBufferTexture, nullptr, &m_pRenderTargetView);
+
+	m_pBackBufferTexture->GetDesc(&m_bbDesc);
+
+	// Create a depth-stencil view for use with 3D rendering if needed.
+	CD3D11_TEXTURE2D_DESC depthStencilDesc(DXGI_FORMAT_D24_UNORM_S8_UINT,
+		static_cast<UINT> (m_bbDesc.Width),
+		static_cast<UINT> (m_bbDesc.Height),
+		1, // This depth stencil view has only one texture.
+		1, // Use a single mipmap level.
+		D3D11_BIND_DEPTH_STENCIL
+	);
+
+	hr = m_pDevice->CreateTexture2D(
+		&depthStencilDesc,
+		nullptr,
+		&m_pDepthStencilBuffer
+	);
+
+	CD3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc(D3D11_DSV_DIMENSION_TEXTURE2D);
+
+	hr = m_pDevice->CreateDepthStencilView(
+		m_pDepthStencilBuffer,
+		&depthStencilViewDesc,
+		&m_pDepthStencilView
+	);
+
+
+	D3D11_VIEWPORT viewport;
+	ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));
+	viewport.Height = (float)m_bbDesc.Height;
+	viewport.Width = (float)m_bbDesc.Width;
+	viewport.MinDepth = 0;
+	viewport.MaxDepth = 1;
+
+	m_pDeviceContext->RSSetViewports(
+		1,
+		&viewport);
+
 }

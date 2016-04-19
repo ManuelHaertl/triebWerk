@@ -15,6 +15,7 @@ namespace triebWerk
 		};
 
 	public:
+		CMesh::SVertex* m_pVertices;
 		ID3D11Buffer* m_pVertexBuffer;
 		unsigned int m_VertexCount;
 

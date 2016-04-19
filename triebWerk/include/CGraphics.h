@@ -28,6 +28,8 @@ namespace triebWerk
 		ID3D11DepthStencilView* m_pDepthStencilView;
 		ID3D11RasterizerState* m_pRasterState;
 		ID3D11InputLayout* m_pInputLayout;
+		ID3D11Texture2D* m_pBackBufferTexture;
+		D3D11_TEXTURE2D_DESC m_bbDesc;
 		
 		DirectX::XMVECTOR m_ClearColor;
 
@@ -64,5 +66,7 @@ namespace triebWerk
 		ID3D11ShaderResourceView* CreateID3D11ShaderResourceView(ID3D11Texture2D* a_Texture) const;
 	private:
 		void SetDisplayProperties(const unsigned int a_ScreenWidth, const unsigned int a_ScreenHeight);
+		void ReleaseBackBuffer();
+		void ConfigureBackBuffer();
 	};
 }

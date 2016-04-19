@@ -9,8 +9,8 @@ triebWerk::COBJParser::COBJParser() :
 
 triebWerk::COBJParser::~COBJParser()
 {
-	if (m_pVertices != nullptr)
-		delete[] m_pVertices;
+	//if (m_pVertices != nullptr)
+	//	delete[] m_pVertices;
 }
 
 void triebWerk::COBJParser::LoadOBJ(const char * a_pPath)

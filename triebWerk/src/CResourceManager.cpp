@@ -31,7 +31,16 @@ void triebWerk::CResourceManager::CleanUp()
 
 	for (auto mesh : m_MeshBuffer)
 	{
-		mesh.second.m_pVertexBuffer->Release();
+		mesh.second->m_pVertexBuffer->Release();
+		delete mesh.second->m_pVertices;
+		delete mesh.second;
+	}
+
+	for (auto texture : m_TextureBuffer)
+	{
+		texture.second->GetD3D11Texture()->Release();
+		texture.second->GetShaderResourceView()->Release();
+		delete texture.second;
 	}
 
 	m_ConfigurationBuffer.clear();
@@ -43,6 +52,39 @@ void triebWerk::CResourceManager::CleanUp()
 const char& triebWerk::CResourceManager::GetModulPath()
 {
 	return *m_ModulPath.c_str();
+}
+
+void triebWerk::CResourceManager::UpdateD3D11Resources()
+{
+	for (auto mesh : m_MeshBuffer)
+	{
+		mesh.second->m_pVertexBuffer->Release();
+
+		D3D11_BUFFER_DESC vertexBufferDescription;
+		ZeroMemory(&vertexBufferDescription, sizeof(D3D11_BUFFER_DESC));
+		vertexBufferDescription.Usage = D3D11_USAGE_DEFAULT;
+		vertexBufferDescription.ByteWidth = sizeof(CMesh::SVertex) * mesh.second->m_VertexCount;
+		vertexBufferDescription.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		vertexBufferDescription.CPUAccessFlags = 0;
+
+		D3D11_SUBRESOURCE_DATA subresourceData;
+		ZeroMemory(&subresourceData, sizeof(D3D11_SUBRESOURCE_DATA));
+		subresourceData.pSysMem = mesh.second->m_pVertices;
+
+		m_pGraphicsHandle->GetDevice()->CreateBuffer(&vertexBufferDescription, &subresourceData, &mesh.second->m_pVertexBuffer);
+	}
+
+	for (auto texture : m_TextureBuffer)
+	{
+		texture.second->GetShaderResourceView()->Release();
+		texture.second->GetD3D11Texture()->Release();
+		
+		ID3D11Texture2D* d3dtexture = m_pGraphicsHandle->CreateD3D11Texture2D(&texture.second->m_PixelData[0], texture.second->GetWidth(), texture.second->GetHeight());
+
+		ID3D11ShaderResourceView* resourceView = m_pGraphicsHandle->CreateID3D11ShaderResourceView(d3dtexture);
+
+		texture.second->SetTexture(texture.second->GetWidth(), texture.second->GetHeight(), d3dtexture, resourceView);
+	}
 }
 
 void triebWerk::CResourceManager::LoadAllFilesInFolder(const char * a_pPath)
@@ -114,7 +156,7 @@ triebWerk::CTexture2D * triebWerk::CResourceManager::GetTexture2D(const char * a
 	}
 	else
 	{
-		return &foundIterator->second;
+		return foundIterator->second;
 	}
 }
 
@@ -128,7 +170,7 @@ triebWerk::CMesh * triebWerk::CResourceManager::GetMesh(const char * a_pMeshName
 	}
 	else
 	{
-		return &foundIterator->second;
+		return foundIterator->second;
 	}
 }
 
@@ -173,6 +215,10 @@ void triebWerk::CResourceManager::UnloadTexture2D(const char * a_pTexture2DName)
 	}
 	else
 	{
+		foundIterator->second->GetD3D11Texture()->Release();
+		foundIterator->second->GetShaderResourceView()->Release();
+		delete foundIterator->second;
+
 		m_TextureBuffer.erase(StringHasher(a_pTexture2DName));
 	}
 }
@@ -187,7 +233,9 @@ void triebWerk::CResourceManager::UnloadMesh(const char * a_pMeshName)
 	}
 	else
 	{
-		foundIterator->second.m_pVertexBuffer->Release();
+		foundIterator->second->m_pVertexBuffer->Release();
+		delete foundIterator->second->m_pVertices;
+		delete foundIterator->second;
 		m_MeshBuffer.erase(StringHasher(a_pMeshName));
 	}
 }
@@ -219,25 +267,24 @@ void triebWerk::CResourceManager::LoadFile(SFile a_File)
 
 void triebWerk::CResourceManager::LoadPNG(SFile a_File)
 {
-	std::vector<unsigned char> pixelBuffer;
+	CTexture2D* texture = new CTexture2D();
+
 	unsigned int width;
 	unsigned int height;
 
-	unsigned int error = lodepng::decode(pixelBuffer, width, height, a_File.FilePath);
+	unsigned int error = lodepng::decode(texture->m_PixelData, width, height, a_File.FilePath);
 
 	if (error != 0)
 		return;
 	else
 	{
-		CTexture2D texture2d;
+		ID3D11Texture2D* d3dtexture = m_pGraphicsHandle->CreateD3D11Texture2D(&texture->m_PixelData[0], width, height);
 
-		ID3D11Texture2D* texture = m_pGraphicsHandle->CreateD3D11Texture2D(&pixelBuffer[0], width, height);
+		ID3D11ShaderResourceView* resourceView = m_pGraphicsHandle->CreateID3D11ShaderResourceView(d3dtexture);
 
-		ID3D11ShaderResourceView* resourceView = m_pGraphicsHandle->CreateID3D11ShaderResourceView(texture);
+		texture->SetTexture(width, height, d3dtexture, resourceView);
 
-		texture2d.SetTexture(width, height, texture, resourceView);
-
-		m_TextureBuffer.insert(CTexturePair(StringHasher(a_File.FileName), texture2d));
+		m_TextureBuffer.insert(CTexturePair(StringHasher(a_File.FileName), texture));
 	}
 
 }
@@ -247,21 +294,22 @@ void triebWerk::CResourceManager::LoadOBJ(SFile a_File)
 	COBJParser objParser;
 	objParser.LoadOBJ(a_File.FilePath.c_str());
 
-	CMesh mesh;
-	mesh.m_VertexCount = objParser.m_VertexCount;
+	CMesh* mesh = new CMesh();
+	mesh->m_VertexCount = objParser.m_VertexCount;
+	mesh->m_pVertices = objParser.m_pVertices;
 	
 	D3D11_BUFFER_DESC vertexBufferDescription;
 	ZeroMemory(&vertexBufferDescription, sizeof(D3D11_BUFFER_DESC));
 	vertexBufferDescription.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDescription.ByteWidth = sizeof(CMesh::SVertex) * objParser.m_VertexCount;
+	vertexBufferDescription.ByteWidth = sizeof(CMesh::SVertex) * mesh->m_VertexCount;
 	vertexBufferDescription.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDescription.CPUAccessFlags = 0;
 
 	D3D11_SUBRESOURCE_DATA subresourceData;
 	ZeroMemory(&subresourceData, sizeof(D3D11_SUBRESOURCE_DATA));
-	subresourceData.pSysMem = objParser.m_pVertices;
+	subresourceData.pSysMem = mesh->m_pVertices;
 
-	m_pGraphicsHandle->GetDevice()->CreateBuffer(&vertexBufferDescription, &subresourceData, &mesh.m_pVertexBuffer);
+	m_pGraphicsHandle->GetDevice()->CreateBuffer(&vertexBufferDescription, &subresourceData, &mesh->m_pVertexBuffer);
 
 	m_MeshBuffer.insert(CMeshPair(StringHasher(a_File.FileName), mesh));
 }
