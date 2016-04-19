@@ -60,18 +60,8 @@ void triebWerk::CResourceManager::UpdateD3D11Resources()
 	{
 		mesh.second->m_pVertexBuffer->Release();
 
-		D3D11_BUFFER_DESC vertexBufferDescription;
-		ZeroMemory(&vertexBufferDescription, sizeof(D3D11_BUFFER_DESC));
-		vertexBufferDescription.Usage = D3D11_USAGE_DEFAULT;
-		vertexBufferDescription.ByteWidth = sizeof(CMesh::SVertex) * mesh.second->m_VertexCount;
-		vertexBufferDescription.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		vertexBufferDescription.CPUAccessFlags = 0;
 
-		D3D11_SUBRESOURCE_DATA subresourceData;
-		ZeroMemory(&subresourceData, sizeof(D3D11_SUBRESOURCE_DATA));
-		subresourceData.pSysMem = mesh.second->m_pVertices;
-
-		m_pGraphicsHandle->GetDevice()->CreateBuffer(&vertexBufferDescription, &subresourceData, &mesh.second->m_pVertexBuffer);
+		mesh.second->m_pVertexBuffer = m_pGraphicsHandle->CreateVertexBuffer(mesh.second->m_pVertices, mesh.second->m_VertexCount);
 	}
 
 	for (auto texture : m_TextureBuffer)
@@ -297,19 +287,8 @@ void triebWerk::CResourceManager::LoadOBJ(SFile a_File)
 	CMesh* mesh = new CMesh();
 	mesh->m_VertexCount = objParser.m_VertexCount;
 	mesh->m_pVertices = objParser.m_pVertices;
-	
-	D3D11_BUFFER_DESC vertexBufferDescription;
-	ZeroMemory(&vertexBufferDescription, sizeof(D3D11_BUFFER_DESC));
-	vertexBufferDescription.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDescription.ByteWidth = sizeof(CMesh::SVertex) * mesh->m_VertexCount;
-	vertexBufferDescription.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vertexBufferDescription.CPUAccessFlags = 0;
 
-	D3D11_SUBRESOURCE_DATA subresourceData;
-	ZeroMemory(&subresourceData, sizeof(D3D11_SUBRESOURCE_DATA));
-	subresourceData.pSysMem = mesh->m_pVertices;
-
-	m_pGraphicsHandle->GetDevice()->CreateBuffer(&vertexBufferDescription, &subresourceData, &mesh->m_pVertexBuffer);
+	mesh->m_pVertexBuffer = m_pGraphicsHandle->CreateVertexBuffer(mesh->m_pVertices, mesh->m_VertexCount);
 
 	m_MeshBuffer.insert(CMeshPair(StringHasher(a_File.FileName), mesh));
 }

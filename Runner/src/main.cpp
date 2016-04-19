@@ -21,25 +21,32 @@ int main()
 	triebWerk::CMeshDrawable* mesh = new triebWerk::CMeshDrawable();
 	mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube.obj");
 	mesh->m_Material.m_ConstantBuffer.InitializeConstantBufffer(twEngine.m_pGraphics->GetDevice());
-	mesh->m_Material.m_pTexture = twEngine.m_pResourceManager->GetTexture2D("texture.png");
-	//triebWerk::CMeshDrawable* mesh2 = new triebWerk::CMeshDrawable();
-	//mesh2->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube.obj");
-	//mesh2->m_Material.m_ConstantBuffer.InitializeConstantBufffer(twEngine.m_pGraphics->GetDevice());
-	//
-	//auto test2 = twWorld->CreateEntity();
-	//test2->SetDrawable(mesh2);
-	//test2->m_Transform.SetPosition(2, 0, 0);
+	//mesh->m_Material.m_pTexture = twEngine.m_pResourceManager->GetTexture2D("texture.png");
 
     auto test1 = twWorld->CreateEntity();
 	test1->SetDrawable(mesh);
 
 	twWorld->AddEntity(test1);
-	//twWorld->AddEntity(test2);
 
     bool run = true;
     while (run == true)
     {
         run = twEngine.Run();
+
+		if (twKeyboard.IsState(triebWerk::EKey::A, triebWerk::EButtonState::Down))
+		{
+			twEngine.m_pWindow->ChangeWindowSettings(true, 1920, 1080);
+		}
+		if (twKeyboard.IsState(triebWerk::EKey::S, triebWerk::EButtonState::Down))
+		{
+			twEngine.m_pWindow->ChangeWindowSettings(false, 800, 800);
+		}
+
+		if (twKeyboard.IsState(triebWerk::EKey::D, triebWerk::EButtonState::Down))
+		{
+			twEngine.m_pWindow->ChangeWindowSettings(true, 800, 600);
+		}
+
     }
 
 	twWorld->RemoveEntity(test1);

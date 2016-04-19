@@ -4,6 +4,7 @@
 #include <DirectXMath.h>
 #include <string>
 #include <cfloat>
+#include <CMesh.h>
 
 namespace triebWerk
 {
@@ -30,7 +31,11 @@ namespace triebWerk
 		ID3D11InputLayout* m_pInputLayout;
 		ID3D11Texture2D* m_pBackBufferTexture;
 		D3D11_TEXTURE2D_DESC m_bbDesc;
-		
+	
+		//Debug
+		ID3D11VertexShader* m_pVertexShader;
+		ID3D11PixelShader* m_pPixelShader;
+
 		DirectX::XMVECTOR m_ClearColor;
 
 		unsigned int m_VideoCardMemory;
@@ -40,7 +45,6 @@ namespace triebWerk
 		~CGraphics();
 
 	public:
-
 		bool Initialize(HWND &a_rWindowHandle, const unsigned int a_ScreenHeight, const unsigned int a_ScreenWidth, const bool a_Fullscreen, const bool a_VSync);
 		void Shutdown();
 		void ClearRenderTarget();
@@ -64,6 +68,8 @@ namespace triebWerk
 		//Factory functions
 		ID3D11Texture2D* CreateD3D11Texture2D(const void* a_pData, const unsigned int a_Width, const unsigned int a_Height) const;
 		ID3D11ShaderResourceView* CreateID3D11ShaderResourceView(ID3D11Texture2D* a_Texture) const;
+		ID3D11Buffer* CreateVertexBuffer(void* a_pVertexData, unsigned int a_VertexCount);
+
 	private:
 		void SetDisplayProperties(const unsigned int a_ScreenWidth, const unsigned int a_ScreenHeight);
 		void ReleaseBackBuffer();
