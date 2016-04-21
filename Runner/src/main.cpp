@@ -13,14 +13,10 @@ int main()
     }
 
 	twEngine.m_pResourceManager->LoadAllFilesInFolder("data");
-
-	triebWerk::CMeshDrawable* mesh = new triebWerk::CMeshDrawable();
-	mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube.obj");
-	mesh->m_Material.m_ConstantBuffer.InitializeConstantBufffer(twEngine.m_pGraphics->GetDevice());
 	//mesh->m_Material.m_pTexture = twEngine.m_pResourceManager->GetTexture2D("texture.png");
 
     auto test1 = twWorld->CreateEntity();
-	test1->SetDrawable(mesh);
+    test1->SetBehaviour(new CPlayer());
 
 	twWorld->AddEntity(test1);
 
