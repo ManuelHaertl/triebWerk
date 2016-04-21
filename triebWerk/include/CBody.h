@@ -10,7 +10,6 @@ namespace triebWerk
         CTransform* m_pTransform;
         DirectX::XMVECTOR m_Velocity;
         float m_Mass;
-        float m_Drag;
         float m_GravityFactor;
 
     private:

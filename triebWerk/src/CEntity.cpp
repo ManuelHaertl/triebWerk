@@ -32,7 +32,7 @@ void triebWerk::CEntity::SetPhysicEntity(CPhysicEntity* a_pPhysicEntity)
     RemovePhysicEntity();
 
     m_pPhysicEntity = a_pPhysicEntity;
-    m_pPhysicEntity->m_pTransform = &m_Transform;
+    m_pPhysicEntity->m_pEntity = this;
 
     if (m_IsInWorld)
         m_pPhysicEntity->GetPhysicWorld()->AddPhysicEntity(m_pPhysicEntity);

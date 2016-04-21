@@ -2,7 +2,8 @@
 
 triebWerk::CWorld::CWorld() :
     m_pPhysicWorld(nullptr),
-    m_CurrentSize(Start_Reserve_Size)
+    m_CurrentSize(Start_Reserve_Size),
+    m_EntitiesToRemove(0)
 {
 }
 
@@ -17,6 +18,7 @@ bool triebWerk::CWorld::Initialize(CRenderer* a_pRenderer)
     // reserve some spots so the vector doesn't need
     // to get resized too often during runtime
     m_Entities.reserve(Start_Reserve_Size);
+    m_RemoveEntities.resize(Start_Reserve_Size);
 
 	m_pRenderingHandle = a_pRenderer;
 
@@ -25,6 +27,8 @@ bool triebWerk::CWorld::Initialize(CRenderer* a_pRenderer)
 
 bool triebWerk::CWorld::Update(const float a_DeltaTime)
 {
+    DeleteRemoveEntities();
+
     // check what behaviour the entity has
     for (size_t i = 0; i < m_Entities.size(); ++i)
     {
@@ -32,24 +36,28 @@ bool triebWerk::CWorld::Update(const float a_DeltaTime)
         {
             m_Entities[i]->GetBehaviour()->Update();
         }
-
-		//Temp Debug drawing
-		if (m_Entities[i]->GetDrawable() != nullptr)
-		{
-			//Queue up rendercommand 
-			m_pRenderingHandle->AddRenderCommand(m_Entities[i]->GetDrawable()->GetRenderCommand(m_Entities[i]));
-		}
     }
 
-
-
     m_pPhysicWorld->Update(a_DeltaTime);
+
+    for (size_t i = 0; i < m_Entities.size(); ++i)
+    {
+        //Temp Debug drawing
+        if (m_Entities[i]->GetDrawable() != nullptr)
+        {
+            //Queue up rendercommand 
+            m_pRenderingHandle->AddRenderCommand(m_Entities[i]->GetDrawable()->GetRenderCommand(m_Entities[i]));
+        }
+    }
     return true;
 }
 
 void triebWerk::CWorld::Shutdown()
 {
-    ClearEntities();
+    for (size_t i = 0; i < m_Entities.size(); ++i)
+    {
+        DeleteEntity(m_Entities[i]);
+    }
 
     if (m_pPhysicWorld != nullptr)
         delete m_pPhysicWorld;
@@ -68,12 +76,11 @@ void triebWerk::CWorld::AddEntity(CEntity* a_pEntity)
     {
         m_CurrentSize *= 2;
         m_Entities.reserve(m_CurrentSize);
+        m_RemoveEntities.resize(m_CurrentSize);
     }
 
-    if (a_pEntity->GetBehaviour() != nullptr)
-    {
-        a_pEntity->GetBehaviour()->Start();
-    }
+    // and add it to the vector
+    m_Entities.push_back(a_pEntity);
 
     // check for Physic Entity
     if (a_pEntity->GetPhysicEntity() != nullptr)
@@ -81,39 +88,66 @@ void triebWerk::CWorld::AddEntity(CEntity* a_pEntity)
         m_pPhysicWorld->AddPhysicEntity(a_pEntity->GetPhysicEntity());
     }
 
+    // now set the world state true because every needed subsystem has been added
     a_pEntity->SetInWorldState(true);
-    m_Entities.push_back(a_pEntity);
+
+    if (a_pEntity->GetBehaviour() != nullptr)
+    {
+        // call the behaviour start function at the end because behaviour
+        // functions only may be called while the entity is in the world
+        a_pEntity->GetBehaviour()->Start();
+    }
+
+
 }
 
 void triebWerk::CWorld::RemoveEntity(CEntity* a_pEntity)
 {
-    for (size_t i = 0; i < m_Entities.size(); ++i)
-    {
-        if (m_Entities[i] == a_pEntity)
-        {
-            DeleteEntity(a_pEntity);
-            m_Entities.erase(m_Entities.begin() + i);
-            break;
-        }
-    }
+    m_RemoveEntities[m_EntitiesToRemove] = a_pEntity;
+    m_EntitiesToRemove++;
 }
 
 void triebWerk::CWorld::ClearEntities()
 {
     for (size_t i = 0; i < m_Entities.size(); ++i)
     {
-        DeleteEntity(m_Entities[i]);
+        m_RemoveEntities[m_EntitiesToRemove] = m_Entities[i];
+        m_EntitiesToRemove++;
     }
-
-    m_Entities.clear();
 }
 
-void triebWerk::CWorld::DeleteEntity(CEntity * a_pEntity)
+triebWerk::CEntity* triebWerk::CWorld::GetEntity(size_t a_ID) const
+{
+    return m_Entities[a_ID];
+}
+
+size_t triebWerk::CWorld::GetEntityCount() const
+{
+    return m_Entities.size();
+}
+
+void triebWerk::CWorld::DeleteRemoveEntities()
+{
+    // TO DO: maybe improve this a bit in case ClearEntities() gets called..
+    for (size_t i = 0; i < m_EntitiesToRemove; ++i)
+    {
+        for (size_t j = 0; j < m_Entities.size(); ++j)
+        {
+            if (m_RemoveEntities[i] == m_Entities[j])
+            {
+                m_Entities.erase(m_Entities.begin() + j);
+                DeleteEntity(m_RemoveEntities[i]);
+            }
+        }
+    }
+
+    m_EntitiesToRemove = 0;
+}
+
+void triebWerk::CWorld::DeleteEntity(CEntity* a_pEntity)
 {
 	a_pEntity->RemoveBehaviour();
-
 	a_pEntity->RemovePhysicEntity();
-
 	a_pEntity->RemoveDrawable();
 
     delete a_pEntity;

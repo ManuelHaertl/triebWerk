@@ -1,13 +1,13 @@
 #pragma once
 namespace triebWerk
 {
-    struct ECollider
+    struct ECollisionState
     {
         enum Type
         {
-            None,
-            AABB,
-            Sphere
+            Enter,
+            Stay,
+            Leave
         };
     };
 }

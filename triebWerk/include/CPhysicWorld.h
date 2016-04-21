@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <CAABBCollider.h>
+#include <CSphereCollider.h>
 #include <CCollision.h>
 #include <CPhysicEntity.h>
 
@@ -26,6 +27,7 @@ namespace triebWerk
         CPhysicEntity* CreatePhysicEntity();
         CBody* CreateBody();
         CAABBCollider* CreateAABBCollider();
+        CSphereCollider* CreateSphereCollider();
         void AddPhysicEntity(CPhysicEntity* a_pPhysicEntity);
         void AddBody(CBody* a_pBody);
         void AddCollider(ICollider* a_pCollider);
@@ -33,5 +35,8 @@ namespace triebWerk
         void RemoveBody(CBody* a_pBody);
         void RemoveCollider(ICollider* a_pCollider);
         void Update(const float a_DeltaTime);
+
+    private:
+        void CheckCollisionEvents();
     };
 }

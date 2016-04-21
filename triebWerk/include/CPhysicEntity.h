@@ -7,11 +7,13 @@
 namespace triebWerk
 {
     class CPhysicWorld;
+    class CEntity;
 
     class CPhysicEntity
     {
     public:
-        CTransform* m_pTransform;
+        CEntity* m_pEntity;
+        //CTransform* m_pTransform;
         std::vector<ICollider*> m_Collider;
 
     private:

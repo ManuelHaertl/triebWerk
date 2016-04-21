@@ -30,6 +30,12 @@ triebWerk::CAABBCollider* triebWerk::CPhysicWorld::CreateAABBCollider()
     return aabbCollider;
 }
 
+triebWerk::CSphereCollider* triebWerk::CPhysicWorld::CreateSphereCollider()
+{
+    CSphereCollider* sphereCollider = new CSphereCollider();
+    return sphereCollider;
+}
+
 void triebWerk::CPhysicWorld::AddPhysicEntity(CPhysicEntity* a_pPhysicEntity)
 {
     // add the entity and all sub categories in it's specific vector
@@ -156,5 +162,57 @@ void triebWerk::CPhysicWorld::Update(const float a_DeltaTime)
             collision.CheckCollision(m_DynamicCollider[i], m_StaticCollider[j]);
     }
 
-    collision.SolveAllCollisions();
+    CheckCollisionEvents();
+}
+
+void triebWerk::CPhysicWorld::CheckCollisionEvents()
+{
+    for (size_t i = 0; i < m_DynamicCollider.size(); ++i)
+    {
+        ICollider* collider = m_DynamicCollider[i];
+
+        for (int j = collider->m_CollisionEvents.size() - 1; j >= 0; --j)
+        {
+            CCollisionEvent& collEvent = collider->m_CollisionEvents[j];
+
+            // check if there hasn't been a collision but there is still an open event with another collider
+            if (collEvent.m_Updated == false)
+            {
+                switch (collEvent.m_CollisionState)
+                {
+                case ECollisionState::Enter:
+                    collEvent.m_CollisionState = ECollisionState::Leave;
+                    break;
+                case ECollisionState::Stay:
+                    collEvent.m_CollisionState = ECollisionState::Leave;
+                    break;
+                case ECollisionState::Leave:
+                    collider->m_CollisionEvents.erase(collider->m_CollisionEvents.begin() + j);
+                    break;
+                }
+            }
+            else
+            {
+                collEvent.m_Updated = false;
+            }
+
+            // call the collision event from the behaviour
+            IBehaviour* behaviour = collider->m_pEntity->GetBehaviour();
+            if (behaviour != nullptr)
+            {
+                switch (collEvent.m_CollisionState)
+                {
+                case ECollisionState::Enter:
+                    behaviour->CollisionEnter(collEvent);
+                    break;
+                case ECollisionState::Stay:
+                    behaviour->CollisionStay(collEvent);
+                    break;
+                case ECollisionState::Leave:
+                    behaviour->CollisionLeave(collEvent);
+                    break;
+                }
+            }
+        }
+    }
 }

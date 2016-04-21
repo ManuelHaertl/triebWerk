@@ -1,32 +1,31 @@
 #pragma once
-#include <DirectXCollision.h>
+#include <vector>
+
 #include <ECollider.h>
 #include <CBody.h>
+#include <CCollisionEvent.h>
 #include <CTransform.h>
-#include <SPhysicMaterial.h>
 
 namespace triebWerk
 {
+    class CEntity;
+
     class ICollider
     {
     public:
+        // determines wheiter this collider actively makes collision checks with other colliders
         bool m_CheckCollision;
-        bool m_IsTrigger;
-        SPhysicMaterial m_PhysicMaterial;
 
-        CTransform* m_pTransform;
-        CBody* m_pBody;
+        // a collider only can contain collision events if m_CheckCollision is true
+        std::vector<CCollisionEvent> m_CollisionEvents;
 
-    private:
-        size_t m_ID;
+        // the entity the collider belongs to
+        CEntity* m_pEntity;
 
     public:
         ICollider();
         virtual ~ICollider();
 
         virtual ECollider::Type GetColliderType() = 0;
-
-        size_t GetID() const;
-        void SetID(const size_t a_ID);
     };
 }

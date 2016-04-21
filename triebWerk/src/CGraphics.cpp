@@ -289,7 +289,7 @@ void triebWerk::CGraphics::UpdateSwapchainConfiguration()
 	CEngine::Instance().m_pResourceManager->UpdateD3D11Resources();
 
 	CEngine::Instance().m_pRenderer->GetCurrentActiveCamera()->SetAspect((float)(a.right - a.left) / (float)(a.bottom - a.top));
-	CMeshDrawable* b = (CMeshDrawable*)CEngine::Instance().m_pWorld->m_Entities[0]->GetDrawable();
+	CMeshDrawable* b = (CMeshDrawable*)CEngine::Instance().m_pWorld->GetEntity(0)->GetDrawable();
 	b->m_Material.m_ConstantBuffer.InitializeConstantBufffer(twEngine.m_pGraphics->GetDevice());
 	//CEngine::Instance().m_pWorld->m_Entities[0]->SetDrawable(mesh);
 

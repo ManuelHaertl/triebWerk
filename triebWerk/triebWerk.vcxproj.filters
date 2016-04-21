@@ -273,9 +273,6 @@
     <ClCompile Include="src\CCollision.cpp">
       <Filter>Quelldateien\Physic\Collision</Filter>
     </ClCompile>
-    <ClCompile Include="src\CManifold.cpp">
-      <Filter>Quelldateien\Physic\Collision</Filter>
-    </ClCompile>
     <ClCompile Include="src\IDrawable.cpp">
       <Filter>Quelldateien\Rendering\Drawables</Filter>
     </ClCompile>
@@ -314,6 +311,9 @@
     </ClCompile>
     <ClCompile Include="src\CDebugCamera.cpp">
       <Filter>Quelldateien\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CSphereCollider.cpp">
+      <Filter>Quelldateien\Physic\Collider</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -419,13 +419,7 @@
     <ClInclude Include="include\ECollider.h">
       <Filter>Headerdateien\Physic\Collider</Filter>
     </ClInclude>
-    <ClInclude Include="include\SPhysicMaterial.h">
-      <Filter>Headerdateien\Physic\Body</Filter>
-    </ClInclude>
     <ClInclude Include="include\CBody.h">
-      <Filter>Headerdateien\Physic\Body</Filter>
-    </ClInclude>
-    <ClInclude Include="include\ECombine.h">
       <Filter>Headerdateien\Physic\Body</Filter>
     </ClInclude>
     <ClInclude Include="include\CGraphics.h">
@@ -461,9 +455,6 @@
     <ClInclude Include="include\CCollision.h">
       <Filter>Headerdateien\Physic\Collision</Filter>
     </ClInclude>
-    <ClInclude Include="include\CManifold.h">
-      <Filter>Headerdateien\Physic\Collision</Filter>
-    </ClInclude>
     <ClInclude Include="include\CCamera.h">
       <Filter>Headerdateien\Rendering\Camera</Filter>
     </ClInclude>
@@ -481,6 +472,12 @@
     </ClInclude>
     <ClInclude Include="include\CDebugCamera.h">
       <Filter>Headerdateien\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ECollisionState.h">
+      <Filter>Headerdateien\Physic\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CSphereCollider.h">
+      <Filter>Headerdateien\Physic\Collider</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

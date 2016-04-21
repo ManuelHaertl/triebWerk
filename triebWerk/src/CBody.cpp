@@ -3,7 +3,6 @@
 triebWerk::CBody::CBody() :
     m_pTransform(nullptr),
     m_Mass(1.0f),
-    m_Drag(0.0f),
     m_GravityFactor(1.0f),
     m_MassInverse(1.0f)
 {

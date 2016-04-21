@@ -4,15 +4,14 @@
 
 namespace triebWerk
 {
-    class CAABBCollider : public ICollider
+    class CSphereCollider : public ICollider
     {
     public:
-        DirectX::XMVECTOR m_Min;
-        DirectX::XMVECTOR m_Max;
+        float m_Radius;
 
     public:
-        CAABBCollider();
-        ~CAABBCollider();
+        CSphereCollider();
+        ~CSphereCollider();
 
         ECollider::Type GetColliderType() final;
         void CreateFromVertices(const CMesh::SVertex* const a_pVertices, const size_t a_Count);
