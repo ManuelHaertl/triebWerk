@@ -8,7 +8,8 @@ triebWerk::CEngine::CEngine() :
 	m_pResourceManager(nullptr),
 	m_pTime(nullptr),
 	m_pWindow(nullptr),
-	m_pWorld(nullptr)
+	m_pWorld(nullptr),
+	m_pDebug(nullptr)
 {
 }
 
@@ -82,9 +83,14 @@ void triebWerk::CEngine::ProcessMessage(const MSG a_WindowEvent)
 		m_IsRunning = false;
 		break;
 
-	case WM_EXITSIZEMOVE:
+	//TODO: Listen only to finished resized
+	case WM_SIZE:
 		m_pGraphics->UpdateSwapchainConfiguration();
 		break;
+
+	//case WM_EXITSIZEMOVE:
+	//	m_pGraphics->UpdateSwapchainConfiguration();
+	//	break;
 
 	default:
         m_pInput->UpdateMSG(a_WindowEvent);

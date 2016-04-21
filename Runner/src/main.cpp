@@ -12,16 +12,37 @@ int main()
         return 0;
     }
 
-    twEngine.m_pResourceManager->LoadAllFilesInFolder("data");
+	twEngine.m_pResourceManager->LoadAllFilesInFolder("data");
 
-    auto player = twWorld->CreateEntity();
-    player->SetBehaviour(new CPlayer());
-    twWorld->AddEntity(player);
+	triebWerk::CMeshDrawable* mesh = new triebWerk::CMeshDrawable();
+	mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube.obj");
+	mesh->m_Material.m_ConstantBuffer.InitializeConstantBufffer(twEngine.m_pGraphics->GetDevice());
+	//mesh->m_Material.m_pTexture = twEngine.m_pResourceManager->GetTexture2D("texture.png");
+
+    auto test1 = twWorld->CreateEntity();
+	test1->SetDrawable(mesh);
+
+	twWorld->AddEntity(test1);
 
     bool run = true;
     while (run == true)
     {
         run = twEngine.Run();
+
+		if (twKeyboard.IsState(triebWerk::EKey::A, triebWerk::EButtonState::Down))
+		{
+			twEngine.m_pWindow->ChangeWindowSettings(true, 1920, 1080);
+		}
+		if (twKeyboard.IsState(triebWerk::EKey::S, triebWerk::EButtonState::Down))
+		{
+			twEngine.m_pWindow->ChangeWindowSettings(false, 800, 800);
+		}
+
+		if (twKeyboard.IsState(triebWerk::EKey::D, triebWerk::EButtonState::Down))
+		{
+			twEngine.m_pWindow->ChangeWindowSettings(true, 800, 600);
+		}
+
     }
 
     twEngine.Shutdown();

@@ -45,6 +45,14 @@ void triebWerk::CDebugCamera::Update()
 		m_PreviousMousePosition = twMouse.GetPosition();
 	}
 
+	if (twMouse.IsState(EMouseButton::Middle, EButtonState::Down))
+	{
+		m_pMainCamera->m_Transform.SetPosition(0, 0, -6);
+		m_pMainCamera->m_Transform.SetRotation(DirectX::XMQuaternionIdentity());
+		m_RotationY = 0;
+		m_RotationX = 0;
+	}
+
 }
 
 void triebWerk::CDebugCamera::SetZoomSpeed(float a_Speed)

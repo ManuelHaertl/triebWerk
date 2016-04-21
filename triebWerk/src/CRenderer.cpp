@@ -78,6 +78,14 @@ void triebWerk::CRenderer::DrawScene()
 			CRenderCommandMesh* meshCommand = reinterpret_cast<CRenderCommandMesh*>(pRenderCommand);
 
 			meshCommand->m_pMaterial->m_ConstantBuffer.SetConstantBuffer(this->m_pGraphicsHandle->GetDeviceContext(), meshCommand->m_Transformation, m_pCurrentCamera->GetViewMatrix(), m_pCurrentCamera->GetProjection());
+			
+
+			if (meshCommand->m_pMaterial->m_pTexture != nullptr)
+			{
+				ID3D11ShaderResourceView* pResourceView = meshCommand->m_pMaterial->m_pTexture->GetShaderResourceView();
+				m_pGraphicsHandle->GetDeviceContext()->PSSetShaderResources(0, 1, &pResourceView);
+			}
+
 			UINT offset = 0;
 			m_pGraphicsHandle->GetDeviceContext()->IASetVertexBuffers(0, 1, &meshCommand->m_pMesh->m_pVertexBuffer, &meshCommand->m_Stride, &offset);
 

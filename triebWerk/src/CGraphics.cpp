@@ -197,6 +197,12 @@ void triebWerk::CGraphics::Shutdown()
 
 	if (m_pInputLayout != nullptr)
 		m_pInputLayout->Release();
+
+	if (m_pPixelShader != nullptr)
+		m_pPixelShader->Release();
+
+	if (m_pVertexShader != nullptr)
+		m_pVertexShader->Release();
 }	
 
 void triebWerk::CGraphics::ClearRenderTarget()
@@ -245,12 +251,11 @@ unsigned int triebWerk::CGraphics::GetVideoCardMemory()
 void triebWerk::CGraphics::InitShaders()
 {
 	ID3D10Blob* vertexShader;
-	ID3D11VertexShader* vertex;
 
 	HRESULT error;
 	error = D3DCompileFromFile(L"VertexShader.hlsl", 0, 0, "VShader", "vs_4_0", D3DCOMPILE_DEBUG, 0, &vertexShader, 0);
 
-	error = this->m_pDevice->CreateVertexShader(vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), NULL, &vertex);
+	error = this->m_pDevice->CreateVertexShader(vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), NULL, &m_pVertexShader);
 
 	D3D11_INPUT_ELEMENT_DESC inputDesc[] =
 	{
@@ -259,58 +264,42 @@ void triebWerk::CGraphics::InitShaders()
 		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 
-
 	m_pDevice->CreateInputLayout(inputDesc, 3, vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), &m_pInputLayout);
 	m_pDeviceContext->IASetInputLayout(m_pInputLayout);
 
 	ID3D10Blob* pixelShader;
-	ID3D11PixelShader* pixel;
 
 	error = D3DCompileFromFile(L"PixelShader.hlsl", 0, 0, "PShader", "ps_4_0", D3DCOMPILE_DEBUG, 0, &pixelShader, 0);
 
-	error = this->m_pDevice->CreatePixelShader(pixelShader->GetBufferPointer(), pixelShader->GetBufferSize(), NULL, &pixel);
+	error = this->m_pDevice->CreatePixelShader(pixelShader->GetBufferPointer(), pixelShader->GetBufferSize(), NULL, &m_pPixelShader);
 
-	m_pDeviceContext->VSSetShader(vertex, 0, 0);
-	m_pDeviceContext->PSSetShader(pixel, 0, 0);
+	m_pDeviceContext->VSSetShader(m_pVertexShader, 0, 0);
+	m_pDeviceContext->PSSetShader(m_pPixelShader, 0, 0);
+
+	pixelShader->Release();
+	vertexShader->Release();
 }
 
 void triebWerk::CGraphics::UpdateSwapchainConfiguration()
 {
+	HRESULT hr;
+	
+	ReleaseBackBuffer();
+
+	hr = m_pSwapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
+
+	ConfigureBackBuffer();
+
 	RECT a;
 	GetClientRect(*CEngine::Instance().m_pWindow->GetWindowHandle(), &a);
 
-	this->Shutdown();
-	this->Initialize(*CEngine::Instance().m_pWindow->GetWindowHandle(), a.right - a.left, a.bottom - a.top, false, false);
-	
-	//HRESULT result;
-	//std::cout << "Resize" << std::endl;
-	//result = m_pSwapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
-	////ConfigureBackBuffer();
 	CEngine::Instance().m_pResourceManager->UpdateD3D11Resources();
 
 	CEngine::Instance().m_pRenderer->GetCurrentActiveCamera()->SetAspect((float)(a.right - a.left) / (float)(a.bottom - a.top));
 	CMeshDrawable* b = (CMeshDrawable*)CEngine::Instance().m_pWorld->GetEntity(0)->GetDrawable();
 	b->m_Material.m_ConstantBuffer.InitializeConstantBufffer(twEngine.m_pGraphics->GetDevice());
-	//CEngine::Instance().m_pWorld->m_Entities[0]->SetDrawable(mesh);
 
-	this->InitShaders();
-
-	//HRESULT result;
-	////TODO: elaborate if this is necessary
-	////result = m_pSwapChain->SetFullscreenState(a_Fullscreen, NULL);
-	//
-	//m_pRenderTargetView->Release();
-	//result = m_pSwapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
-	//
-	//ID3D11Buffer* pBackBuffer;
-	//
-	//result = m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
-	//
-	////Create render target view 
-	//result = m_pDevice->CreateRenderTargetView(pBackBuffer, NULL, &m_pRenderTargetView);
-
-	//pBackBuffer->Release();
-	//pBackBuffer = nullptr;
+	InitShaders();
 }
 
 ID3D11Texture2D * triebWerk::CGraphics::CreateD3D11Texture2D(const void * a_pData, const unsigned int a_Width, const unsigned int a_Height) const
@@ -364,6 +353,29 @@ ID3D11ShaderResourceView * triebWerk::CGraphics::CreateID3D11ShaderResourceView(
 		return temp;
 }
 
+ID3D11Buffer * triebWerk::CGraphics::CreateVertexBuffer(void* a_pVertexData, unsigned int a_VertexCount)
+{
+	ID3D11Buffer* pVertexBuffer;
+
+	D3D11_BUFFER_DESC vertexBufferDescription;
+	ZeroMemory(&vertexBufferDescription, sizeof(D3D11_BUFFER_DESC));
+	vertexBufferDescription.Usage = D3D11_USAGE_DEFAULT;
+	vertexBufferDescription.ByteWidth = sizeof(CMesh::SVertex) * a_VertexCount;
+	vertexBufferDescription.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vertexBufferDescription.CPUAccessFlags = 0;
+
+	D3D11_SUBRESOURCE_DATA subresourceData;
+	ZeroMemory(&subresourceData, sizeof(D3D11_SUBRESOURCE_DATA));
+	subresourceData.pSysMem = a_pVertexData;
+
+	HRESULT hr = m_pDevice->CreateBuffer(&vertexBufferDescription, &subresourceData, &pVertexBuffer);
+
+	if (FAILED(hr))
+		return nullptr;
+
+	return pVertexBuffer;
+}
+
 void triebWerk::CGraphics::SetDisplayProperties(const unsigned int a_ScreenHeight, const unsigned int a_ScreenWidth)
 {
 	IDXGIFactory* factory;
@@ -407,6 +419,9 @@ void triebWerk::CGraphics::ReleaseBackBuffer()
 	m_pDepthStencilView->Release();
 	m_pDepthStencilBuffer->Release();
 
+	m_pVertexShader->Release();
+	m_pPixelShader->Release();
+
 	m_pDeviceContext->Flush();
 }
 
@@ -414,38 +429,21 @@ void triebWerk::CGraphics::ConfigureBackBuffer()
 {
 	HRESULT hr = S_OK;
 
-	hr = m_pSwapChain->GetBuffer(
-		0,
-		__uuidof(ID3D11Texture2D),
-		(void**)&m_pBackBufferTexture);
+	hr = m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&m_pBackBufferTexture);
 
-	hr = m_pDevice->CreateRenderTargetView( m_pBackBufferTexture, nullptr, &m_pRenderTargetView);
+	hr = m_pDevice->CreateRenderTargetView(m_pBackBufferTexture, nullptr, &m_pRenderTargetView);
 
 	m_pBackBufferTexture->GetDesc(&m_bbDesc);
 
-	// Create a depth-stencil view for use with 3D rendering if needed.
-	CD3D11_TEXTURE2D_DESC depthStencilDesc(DXGI_FORMAT_D24_UNORM_S8_UINT,
-		static_cast<UINT> (m_bbDesc.Width),
-		static_cast<UINT> (m_bbDesc.Height),
-		1, // This depth stencil view has only one texture.
-		1, // Use a single mipmap level.
-		D3D11_BIND_DEPTH_STENCIL
-	);
+	CD3D11_TEXTURE2D_DESC depthStencilDesc(DXGI_FORMAT_D24_UNORM_S8_UINT,static_cast<UINT> (m_bbDesc.Width),static_cast<UINT> (m_bbDesc.Height),1,1,D3D11_BIND_DEPTH_STENCIL);
 
-	hr = m_pDevice->CreateTexture2D(
-		&depthStencilDesc,
-		nullptr,
-		&m_pDepthStencilBuffer
-	);
+	hr = m_pDevice->CreateTexture2D(&depthStencilDesc,nullptr,&m_pDepthStencilBuffer);
 
 	CD3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc(D3D11_DSV_DIMENSION_TEXTURE2D);
 
-	hr = m_pDevice->CreateDepthStencilView(
-		m_pDepthStencilBuffer,
-		&depthStencilViewDesc,
-		&m_pDepthStencilView
-	);
+	hr = m_pDevice->CreateDepthStencilView(m_pDepthStencilBuffer,&depthStencilViewDesc,&m_pDepthStencilView);
 
+	m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
 
 	D3D11_VIEWPORT viewport;
 	ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));
@@ -454,8 +452,5 @@ void triebWerk::CGraphics::ConfigureBackBuffer()
 	viewport.MinDepth = 0;
 	viewport.MaxDepth = 1;
 
-	m_pDeviceContext->RSSetViewports(
-		1,
-		&viewport);
-
+	m_pDeviceContext->RSSetViewports(1,&viewport);
 }

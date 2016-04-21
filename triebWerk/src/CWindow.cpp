@@ -132,6 +132,15 @@ LRESULT triebWerk::CWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lPara
 		msg.lParam = lParam;
 		msg.wParam = wParam;
 		m_MessageQueue.push(msg);
+
+		if (wParam == SIZE_MAXIMIZED)
+		{
+			MSG msg = { 0 };
+			msg.message = WM_EXITSIZEMOVE;
+			msg.lParam = lParam;
+			msg.wParam = wParam;
+			m_MessageQueue.push(msg);
+		}
 	}break;
 	
 	case WM_SIZING:
