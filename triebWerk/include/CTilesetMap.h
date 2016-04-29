@@ -6,6 +6,7 @@
 #include "CMapImageLayer.h"
 #include "CMapLayer.h"
 #include "CTileset.h"
+#include <CObjectLayer.h>s
 
 namespace triebWerk
 {
@@ -17,6 +18,7 @@ namespace triebWerk
 	public:
 		struct SMap
 		{
+			std::string m_MapName;
 			std::string m_Orientation;
 			std::string m_RenderOrder;
 			unsigned short m_Width;

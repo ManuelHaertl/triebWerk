@@ -1,7 +1,8 @@
 #include <CMaterial.h>
 
 triebWerk::CMaterial::CMaterial() :
-	m_pTexture(nullptr)
+	m_pPixelShader(nullptr),
+	m_pVertexShader(nullptr)
 {
 }
 

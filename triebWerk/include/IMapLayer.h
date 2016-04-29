@@ -9,7 +9,8 @@ namespace triebWerk
 			enum Type
 			{
 				MapLayer,
-				MapImageLayer
+				MapImageLayer,
+				ObjectLayer
 			};
 		};
 	public:

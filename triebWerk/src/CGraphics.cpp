@@ -161,7 +161,7 @@ bool triebWerk::CGraphics::Initialize(HWND & a_rWindowHandle, const unsigned int
 	m_pDeviceContext->RSSetViewports(1, &viewport);
 	
 	//Debug function: loading simple shader
-	InitShaders();
+	//InitShaders();
 
 	return true;
 }
@@ -248,38 +248,6 @@ unsigned int triebWerk::CGraphics::GetVideoCardMemory()
 	return m_VideoCardMemory;
 }
 
-void triebWerk::CGraphics::InitShaders()
-{
-	ID3D10Blob* vertexShader;
-
-	HRESULT error;
-	error = D3DCompileFromFile(L"VertexShader.hlsl", 0, 0, "VShader", "vs_4_0", D3DCOMPILE_DEBUG, 0, &vertexShader, 0);
-
-	error = this->m_pDevice->CreateVertexShader(vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), NULL, &m_pVertexShader);
-
-	D3D11_INPUT_ELEMENT_DESC inputDesc[] =
-	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	};
-
-	m_pDevice->CreateInputLayout(inputDesc, 3, vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), &m_pInputLayout);
-	m_pDeviceContext->IASetInputLayout(m_pInputLayout);
-
-	ID3D10Blob* pixelShader;
-
-	error = D3DCompileFromFile(L"PixelShader.hlsl", 0, 0, "PShader", "ps_4_0", D3DCOMPILE_DEBUG, 0, &pixelShader, 0);
-
-	error = this->m_pDevice->CreatePixelShader(pixelShader->GetBufferPointer(), pixelShader->GetBufferSize(), NULL, &m_pPixelShader);
-
-	m_pDeviceContext->VSSetShader(m_pVertexShader, 0, 0);
-	m_pDeviceContext->PSSetShader(m_pPixelShader, 0, 0);
-
-	pixelShader->Release();
-	vertexShader->Release();
-}
-
 void triebWerk::CGraphics::UpdateSwapchainConfiguration()
 {
 	HRESULT hr;
@@ -291,15 +259,9 @@ void triebWerk::CGraphics::UpdateSwapchainConfiguration()
 	ConfigureBackBuffer();
 
 	RECT a;
-	GetClientRect(*CEngine::Instance().m_pWindow->GetWindowHandle(), &a);
-
-	CEngine::Instance().m_pResourceManager->UpdateD3D11Resources();
+	GetClientRect(CEngine::Instance().m_pWindow->GetWindowHandle(), &a);
 
 	CEngine::Instance().m_pRenderer->GetCurrentActiveCamera()->SetAspect((float)(a.right - a.left) / (float)(a.bottom - a.top));
-	CMeshDrawable* b = (CMeshDrawable*)CEngine::Instance().m_pWorld->GetEntity(0)->GetDrawable();
-	b->m_Material.m_ConstantBuffer.InitializeConstantBufffer(twEngine.m_pGraphics->GetDevice());
-
-	InitShaders();
 }
 
 ID3D11Texture2D * triebWerk::CGraphics::CreateD3D11Texture2D(const void * a_pData, const unsigned int a_Width, const unsigned int a_Height) const
@@ -419,8 +381,8 @@ void triebWerk::CGraphics::ReleaseBackBuffer()
 	m_pDepthStencilView->Release();
 	m_pDepthStencilBuffer->Release();
 
-	m_pVertexShader->Release();
-	m_pPixelShader->Release();
+	//m_pVertexShader->Release();
+	//m_pPixelShader->Release();
 
 	m_pDeviceContext->Flush();
 }

@@ -178,6 +178,18 @@
     <Filter Include="Quelldateien\Debug">
       <UniqueIdentifier>{b399a2e4-6ed0-4f14-93c2-f220a9220664}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headerdateien\Resource\Resources\Shader">
+      <UniqueIdentifier>{200415dc-8b19-4f85-9aa1-a4081b9af42c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Resource\Resources\Shader">
+      <UniqueIdentifier>{02035484-a548-4783-9e03-01adaa867602}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Rendering\Material\ConstantBuffer">
+      <UniqueIdentifier>{004a5ec6-7311-464c-9353-87583fc9705a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Resource\Resources\TilesetMap\Layers\Object">
+      <UniqueIdentifier>{61897cbc-e838-4925-8451-c1868aae1fcb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CEngine.cpp">
@@ -300,9 +312,6 @@
     <ClCompile Include="src\CCamera.cpp">
       <Filter>Quelldateien\Rendering\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="src\CConstantBuffer.cpp">
-      <Filter>Quelldateien\Rendering\Material</Filter>
-    </ClCompile>
     <ClCompile Include="src\COBJParser.cpp">
       <Filter>Quelldateien\Resource\Parser</Filter>
     </ClCompile>
@@ -314,6 +323,24 @@
     </ClCompile>
     <ClCompile Include="src\CSphereCollider.cpp">
       <Filter>Quelldateien\Physic\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CHLSLParser.cpp">
+      <Filter>Quelldateien\Resource\Parser</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IShader.cpp">
+      <Filter>Quelldateien\Resource\Resources\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CVertexShader.cpp">
+      <Filter>Quelldateien\Resource\Resources\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CPixelShader.cpp">
+      <Filter>Quelldateien\Resource\Resources\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CConstantBuffer.cpp">
+      <Filter>Quelldateien\Rendering\Material\ConstantBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CObjectLayer.cpp">
+      <Filter>Quelldateien\Resource\Resources\TilesetMap\Layers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -478,6 +505,24 @@
     </ClInclude>
     <ClInclude Include="include\CSphereCollider.h">
       <Filter>Headerdateien\Physic\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CHLSLParser.h">
+      <Filter>Headerdateien\Resource\Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="include\IShader.h">
+      <Filter>Headerdateien\Resource\Resources\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CVertexShader.h">
+      <Filter>Headerdateien\Resource\Resources\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CPixelShader.h">
+      <Filter>Headerdateien\Resource\Resources\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CObjectLayer.h">
+      <Filter>Headerdateien\Resource\Resources\TilesetMap\Layers\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CLayerObject.h">
+      <Filter>Headerdateien\Resource\Resources\TilesetMap\Layers\Object</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

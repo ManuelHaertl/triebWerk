@@ -13,6 +13,8 @@
 #include <CINIParser.h>
 #include <CTexture2D.h>
 #include <COBJParser.h>
+#include <CHLSLParser.h>
+#include <CMaterial.h>
 #include <loadPNG\lodepng.h>
 
 namespace triebWerk
@@ -43,11 +45,16 @@ namespace triebWerk
 		typedef std::unordered_map<size_t, CMesh*> CMeshMap;
 		typedef std::pair<size_t, CMesh*> CMeshPair;
 
+		//Material
+		typedef std::unordered_map<size_t, CMaterial*> CMaterialMap;
+		typedef std::pair<size_t, CMaterial*> CMaterialPair;
+
 	private:
 		CTilesetHashMap m_TilesetBuffer;
 		CConfigurationMap m_ConfigurationBuffer;
 		CTextureMap m_TextureBuffer;
 		CMeshMap m_MeshBuffer;
+		CMaterialMap m_MaterialBuffer;
 
 		CGraphics* m_pGraphicsHandle;
 
@@ -63,10 +70,6 @@ namespace triebWerk
 		
 		const char& GetModulPath();
 
-		//Bind D3D11 Resources new
-		//For example if the backbuffer was resized
-		void UpdateD3D11Resources();
-
 		//Load Interface User
 		void LoadAllFilesInFolder(const char* a_pPath);
 		void LoadAllSpecificFilesInFolder(EFileType a_FileType, const char* a_pPath);
@@ -77,6 +80,7 @@ namespace triebWerk
 		CConfiguration* GetConfiguration(const char* a_pConfigurationName);
 		CTexture2D* GetTexture2D(const char* a_pTexture2DName);
 		CMesh* GetMesh(const char* a_pMeshName);
+		CMaterial* GetMaterial(const char* a_pMaterialName);
 
 		//Unload
 		void UnloadTileset(const char* a_pTilesetName);

@@ -27,6 +27,7 @@ private:
 	void ReadTileSet(std::string a_Line);      
 	void ReadMap(std::string a_Line);
 	void ReadProperties(std::unordered_map<std::string, std::string>* a_pProp);
+	void ReadObject(std::string a_Line);
 
 	//TODO: Fix Index count
 	void RecalculateTilesetLayerIndices();

@@ -12,6 +12,13 @@ triebWerk::CTilesetMap* triebWerk::CTMXParser::ParseData(const char * a_pFilePat
 {
 	m_TilesetMap = new CTilesetMap();
 	ReadData(a_pFilePath);
+	std::string name(a_pFilePath);
+
+	m_TilesetMap->m_Map.m_MapName = name.substr(name.rfind("\\")+1, name.size() - name.rfind("\\"));
+
+	m_TilesetMap->m_Map.m_MapName = m_TilesetMap->m_Map.m_MapName.substr(0, m_TilesetMap->m_Map.m_MapName.find("."));
+
+
 	std::string line;
 
 	//Main Parse Loop whitch checks the different Layer Types
@@ -37,6 +44,11 @@ triebWerk::CTilesetMap* triebWerk::CTMXParser::ParseData(const char * a_pFilePat
 		if (BeginLineWith(line, "<imagelayer"))
 		{
 			this->ReadImageLayer(line);
+		}
+
+		if (BeginLineWith(line, "<objectgroup"))
+		{
+			this->ReadObject(line);
 		}
 
 		if (ReachedEndOfFile())
@@ -237,6 +249,65 @@ void triebWerk::CTMXParser::ReadProperties(std::unordered_map<std::string, std::
 		CTilesetMap::PropertyPair temp = CTilesetMap::PropertyPair(GetProportie(line, "name"), GetProportie(line, "value"));
 		a_pProp->insert(temp);
 	} while (runState);
+}
+
+void triebWerk::CTMXParser::ReadObject(std::string a_Line)
+{
+	CObjectLayer* objectLayer = new CObjectLayer();
+
+	objectLayer->m_Name = GetProportie(a_Line, "name");
+	
+	do
+	{
+		a_Line = GetLine();
+		if (BeginLineWith(a_Line, "<object"))
+		{
+			CLayerObject object;
+
+			object.m_ID = stoi(GetProportie(a_Line, "id"));
+			object.m_GID = stoi(GetProportie(a_Line, "gid"));
+			object.m_X = stoi(GetProportie(a_Line, "x"));
+			object.m_Y = stoi(GetProportie(a_Line, "y"));
+			object.m_Width = stoi(GetProportie(a_Line, "width"));
+			object.m_Height = stoi(GetProportie(a_Line, "height"));
+
+			a_Line = GetLine();
+
+			if (BeginLineWith(a_Line, "<properties>"))
+			{
+				ReadProperties(&object.m_Properties);
+			}
+
+			a_Line = GetLine();
+
+			if (BeginLineWith(a_Line, "</object"))
+			{
+				objectLayer->m_Objects.push_back(object);
+			}
+		}
+
+
+	} while (!BeginLineWith(a_Line, "</objectgroup>"));
+
+	this->m_TilesetMap->m_Layers.push_back(objectLayer);
+
+	//a_Line = GetLine();
+
+	//if (BeginLineWith(a_Line, "<properties>"))
+	//{
+	//	ReadProperties(&objectLayer->m_Properties);
+	//}
+	//else if (BeginLineWith(a_Line, "</object"))
+	//{
+	//	this->m_TilesetMap->m_Layers.push_back(objectLayer);
+	//}
+
+	//a_Line = GetLine();
+	//if (BeginLineWith(a_Line, "</object"))
+	//{
+	//	this->m_TilesetMap->m_Layers.push_back(objectLayer);
+	//}
+
 }
 
 void triebWerk::CTMXParser::RecalculateTilesetLayerIndices()
