@@ -9,7 +9,7 @@ namespace triebWerk
 	class CMeshDrawable : public IDrawable
 	{
 	public:
-		CMaterial m_Material;
+		CMaterial* m_Material;
 		CMesh* m_pMesh;
 
 	private:

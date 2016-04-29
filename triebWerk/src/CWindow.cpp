@@ -7,17 +7,16 @@ triebWerk::CWindow::CWindow() :
 	m_Width(0),
 	m_IsFullscreen(false),
 	m_ShowCursor(true),
-	m_WindowHandle(NULL),
 	m_IsSizing(false)
 {
 }
 
 triebWerk::CWindow::~CWindow()
 {
-	//If screen resolution is not user default change it to user default
+	//If screen resolution is not user default, change it to user default before 
 	if (m_DefaultHeight != GetSystemMetrics(SM_CYSCREEN) || m_DefaultWidth != GetSystemMetrics(SM_CXSCREEN))
 	{
-		DEVMODE dmScreenSettings;
+		DEVMODE dmScreenSettings = { 0 };
 		EnumDisplaySettings(NULL, 0, &dmScreenSettings);
 		dmScreenSettings.dmSize = sizeof(dmScreenSettings);
 		dmScreenSettings.dmPelsWidth = static_cast<DWORD>(m_DefaultWidth);
@@ -29,16 +28,16 @@ triebWerk::CWindow::~CWindow()
 	}
 }
 
-bool triebWerk::CWindow::Initialize(const bool a_IsFullscreen, const unsigned short a_ScreenWidth, const unsigned short a_ScreenHeight, const char* a_WindowName)
+bool triebWerk::CWindow::Initialize(const CWindow::SWindowConfiguration& a_rConfiguration)
 {
-	//Get the user screen resolution
+	//Get the default user screen resolution
 	m_DefaultWidth = GetSystemMetrics(SM_CXSCREEN);
 	m_DefaultHeight = GetSystemMetrics(SM_CYSCREEN);
 
 	//Set initialize values
-	m_Height = a_ScreenHeight;
-	m_Width = a_ScreenWidth;
-	m_IsFullscreen = a_IsFullscreen;
+	m_Height = a_rConfiguration.m_ScreenWidth;
+	m_Width = a_rConfiguration.m_ScreenHeight;
+	m_IsFullscreen = a_rConfiguration.m_Fullscreen;
 
 	//window sytle
 	WNDCLASSEX mainWindowDescription;
@@ -49,18 +48,18 @@ bool triebWerk::CWindow::Initialize(const bool a_IsFullscreen, const unsigned sh
 	mainWindowDescription.hInstance = GetModuleHandle(NULL);
 	mainWindowDescription.hCursor = LoadCursor(NULL, IDC_ARROW);
 	mainWindowDescription.hbrBackground = (HBRUSH)COLOR_WINDOW;
-	mainWindowDescription.lpszClassName = a_WindowName;
+	mainWindowDescription.lpszClassName = a_rConfiguration.m_WindowName;
 
 	RegisterClassEx(&mainWindowDescription);
 
-	RECT windowRectangle = { 0, 0, a_ScreenWidth ,a_ScreenHeight };
-	AdjustWindowRect(&windowRectangle, WS_OVERLAPPEDWINDOW, FALSE);
+	RECT windowRectangle = { 0, 0, a_rConfiguration.m_ScreenWidth ,a_rConfiguration.m_ScreenHeight };
+	AdjustWindowRect(&windowRectangle, WindowStyleWindowed, FALSE);
 
 	//Create window 
 	m_WindowHandle = CreateWindowEx(NULL,
-		a_WindowName,
-		a_WindowName,
-		WS_OVERLAPPEDWINDOW,
+		a_rConfiguration.m_WindowName,
+		a_rConfiguration.m_WindowName,
+		WindowStyleWindowed,
 		0,
 		0,
 		windowRectangle.right - windowRectangle.left,
@@ -76,8 +75,8 @@ bool triebWerk::CWindow::Initialize(const bool a_IsFullscreen, const unsigned sh
 	ShowWindow(m_WindowHandle, SW_SHOWDEFAULT);
 	m_ShowCursor = true;
 
-	//If fullscreen change normal window above to fullscreen
-	if (a_IsFullscreen)
+	//If fullscreen change normal "default" window above to fullscreen
+	if (a_rConfiguration.m_Fullscreen)
 		ChangeWindowSettings(true, m_Width, m_Height);
 
 	return true;
@@ -95,40 +94,40 @@ const MSG triebWerk::CWindow::GetWindowEvent()
 	return msg;
 }
 
-LRESULT triebWerk::CWindow::WindowProcedure(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT triebWerk::CWindow::WindowProcedure(HWND a_HWnd, UINT a_Message, WPARAM a_WParam, LPARAM a_LParam)
 {
-		CWindow *pThis = NULL;
+		CWindow *pThis = nullptr;
 
-		if (message == WM_NCCREATE)
+		if (a_Message == WM_NCCREATE)
 		{
-			CREATESTRUCT* pCreate = (CREATESTRUCT*)lParam;
-			pThis = (CWindow*)pCreate->lpCreateParams;
-			SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG_PTR)pThis);
-
-			pThis->m_WindowHandle = hWnd;
+			CREATESTRUCT* pCreate = reinterpret_cast<CREATESTRUCT*>(a_LParam);
+			pThis = reinterpret_cast<CWindow*>(pCreate->lpCreateParams);
+			SetWindowLongPtr(a_HWnd, GWLP_USERDATA, (LONG_PTR)pThis);
+	
+			pThis->m_WindowHandle = a_HWnd;
 		}
 		else
 		{
-			pThis = (CWindow*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+			pThis = reinterpret_cast<CWindow*>(GetWindowLongPtr(a_HWnd, GWLP_USERDATA));
 		}
 		if (pThis)
 		{
-			return pThis->HandleMessage(message, wParam, lParam);
+			return pThis->HandleMessage(a_Message, a_WParam, a_LParam);
 		}
 		else
 		{
-			return DefWindowProc(hWnd, message, wParam, lParam);
+			return DefWindowProc(a_HWnd, a_Message, a_WParam, a_LParam);
 		}
 }
 
-LRESULT triebWerk::CWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT triebWerk::CWindow::HandleMessage(UINT a_Message, WPARAM wParam, LPARAM lParam)
 {
-	switch (uMsg)
+	switch (a_Message)
 	{
 	case WM_SIZE:
 	{
 		MSG msg = { 0 };
-		msg.message = uMsg;
+		msg.message = a_Message;
 		msg.lParam = lParam;
 		msg.wParam = wParam;
 		m_MessageQueue.push(msg);
@@ -153,7 +152,7 @@ LRESULT triebWerk::CWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lPara
 		if (m_IsSizing)
 		{
 			MSG msg = { 0 };
-			msg.message = uMsg;
+			msg.message = a_Message;
 			msg.lParam = lParam;
 			msg.wParam = wParam;
 			m_MessageQueue.push(msg);
@@ -170,22 +169,23 @@ LRESULT triebWerk::CWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lPara
 	}break;
 
 	default:
-		return DefWindowProc(m_WindowHandle, uMsg, wParam, lParam);
+		return DefWindowProc(m_WindowHandle, a_Message, wParam, lParam);
 	}
-	return TRUE;
+
+	return true;
 }
 
-HWND* triebWerk::CWindow::GetWindowHandle()
+HWND& triebWerk::CWindow::GetWindowHandle()
 {
-	return &m_WindowHandle;
+	return m_WindowHandle;
 }
 
-const unsigned short triebWerk::CWindow::GetScreenWidth()
+inline unsigned short triebWerk::CWindow::GetScreenWidth() const
 {
 	return m_Width;
 }
 
-const unsigned short triebWerk::CWindow::GetScreenHeight()
+inline unsigned short triebWerk::CWindow::GetScreenHeight() const
 {
 	return m_Height;
 }
@@ -250,17 +250,21 @@ void triebWerk::CWindow::ChangeWindowSettings(const bool a_IsFullscreen, const u
 	dmScreenSettings.dmBitsPerPel = 32;
 	dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
 
-	ChangeDisplaySettingsEx(NULL, &dmScreenSettings, NULL, CDS_FULLSCREEN, NULL);
+	long error = ChangeDisplaySettingsEx(NULL, &dmScreenSettings, NULL, CDS_FULLSCREEN, NULL);
+	if (error != DISP_CHANGE_SUCCESSFUL)
+	{
+		//Make error
+	}
 
 	//Set the style for fullscreen or window
 	if(a_IsFullscreen)
-		SetWindowLongPtr(m_WindowHandle, GWL_STYLE, WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP);
+		SetWindowLongPtr(m_WindowHandle, GWL_STYLE, WindowStyleFullscreen);
 	else
-		SetWindowLongPtr(m_WindowHandle, GWL_STYLE, WS_OVERLAPPEDWINDOW);
+		SetWindowLongPtr(m_WindowHandle, GWL_STYLE, WindowStyleWindowed);
 
 	//If window calculate correct client space
 	if (!a_IsFullscreen)
-		AdjustWindowRect(&windowRectangle, WS_OVERLAPPEDWINDOW, FALSE);
+		AdjustWindowRect(&windowRectangle, WindowStyleWindowed, FALSE);
 
 	//Resize the window and draw it new
 	SetWindowPos(m_WindowHandle, NULL, 0, 0, windowRectangle.right - windowRectangle.left, windowRectangle.bottom - windowRectangle.top, SWP_FRAMECHANGED | SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_SHOWWINDOW);
@@ -276,9 +280,4 @@ void triebWerk::CWindow::ChangeWindowSettings(const bool a_IsFullscreen, const u
 		ShowCursor(true);
 		m_ShowCursor = true;
 	}
-
-	MSG msg = { 0 };
-	msg.message = WM_EXITSIZEMOVE;
-
-	m_MessageQueue.push(msg);
 }

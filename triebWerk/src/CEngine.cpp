@@ -34,10 +34,12 @@ bool triebWerk::CEngine::Initialize()
 	m_pRenderer = new CRenderer();
 	m_pDebug = new CDebug();
 
-	m_pWindow->Initialize(false, 1200, 800, "Test");
-	m_pGraphics->Initialize(*m_pWindow->GetWindowHandle(), 1200, 800, false, false);
+	CWindow::SWindowConfiguration conifg = { false, 1200, 800, "Engine" };
+
+	m_pWindow->Initialize(conifg);
+	m_pGraphics->Initialize(m_pWindow->GetWindowHandle(), conifg.m_ScreenWidth, conifg.m_ScreenHeight, false, false);
 	m_pResourceManager->Initialize(m_pGraphics);
-	m_pRenderer->Initialize(m_pGraphics, 1200, 800);
+	m_pRenderer->Initialize(m_pGraphics, conifg.m_ScreenWidth, conifg.m_ScreenHeight);
 	m_pWorld->Initialize(m_pRenderer);
     return true;
 }
@@ -86,10 +88,6 @@ void triebWerk::CEngine::ProcessMessage(const MSG a_WindowEvent)
 	case WM_SIZE:
 		m_pGraphics->UpdateSwapchainConfiguration();
 		break;
-
-	//case WM_EXITSIZEMOVE:
-	//	m_pGraphics->UpdateSwapchainConfiguration();
-	//	break;
 
 	default:
         m_pInput->UpdateMSG(a_WindowEvent);

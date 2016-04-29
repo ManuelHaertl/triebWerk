@@ -7,31 +7,18 @@ namespace triebWerk
 	class CWindow
 	{
 	public:
-		CWindow();
-		~CWindow();
-	public:
-		bool Initialize(const bool a_IsFullscreen, const unsigned short a_ScreenWidth, const unsigned short a_ScreenHeight, const char* a_WindowName);
-		
-		const MSG GetWindowEvent();
-
-		static LRESULT CALLBACK WindowProcedure(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-
-		LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
-
-		void ChangeWindowSettings(const bool a_IsFullscreen, const unsigned short a_ScreenWidth, const unsigned short a_ScreenHeight);
-		
-		HWND* GetWindowHandle();
-
-		const unsigned short GetScreenWidth();
-		const unsigned short GetScreenHeight();
-		
-		bool IsWindowFullscreen();
-		void UpdateWindow();
-
-		static int GetMaximalDisplayWidth();
-		static int GetMaximalDisplayHeight();
+		struct SWindowConfiguration
+		{
+			bool m_Fullscreen;
+			unsigned m_ScreenWidth;
+			unsigned m_ScreenHeight;
+			const char* m_WindowName;
+		};
 
 	private:
+		static const DWORD WindowStyleFullscreen = WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP;
+		static const DWORD WindowStyleWindowed = WS_OVERLAPPEDWINDOW;
+
 		HWND m_WindowHandle;
 		std::queue<MSG> m_MessageQueue;
 
@@ -44,5 +31,31 @@ namespace triebWerk
 		bool m_IsFullscreen;
 		bool m_ShowCursor;
 		bool m_IsSizing;
+
+	public:
+		CWindow();
+		~CWindow();
+
+	public:
+		bool Initialize(const SWindowConfiguration& a_rWindowConfig);
+
+		const MSG GetWindowEvent();
+
+		LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+		void ChangeWindowSettings(const bool a_IsFullscreen, const unsigned short a_ScreenWidth, const unsigned short a_ScreenHeight);
+		
+		HWND& GetWindowHandle();
+
+		static LRESULT CALLBACK WindowProcedure(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+
+		inline unsigned short GetScreenWidth() const;
+		inline unsigned short GetScreenHeight() const;
+		
+		bool IsWindowFullscreen();
+		void UpdateWindow();
+
+		static int GetMaximalDisplayWidth();
+		static int GetMaximalDisplayHeight();
 	};
 }

@@ -152,6 +152,7 @@
     <ClCompile Include="src\CFileReader.cpp" />
     <ClCompile Include="src\CGamepad.cpp" />
     <ClCompile Include="src\CGraphics.cpp" />
+    <ClCompile Include="src\CHLSLParser.cpp" />
     <ClCompile Include="src\CINIParser.cpp" />
     <ClCompile Include="src\CInput.cpp" />
     <ClCompile Include="src\CKeyboard.cpp" />
@@ -166,6 +167,7 @@
     <ClCompile Include="src\COBJParser.cpp" />
     <ClCompile Include="src\CPhysicEntity.cpp" />
     <ClCompile Include="src\CPhysicWorld.cpp" />
+    <ClCompile Include="src\CPixelShader.cpp" />
     <ClCompile Include="src\CRenderCommandMesh.cpp" />
     <ClCompile Include="src\CRenderer.cpp" />
     <ClCompile Include="src\CResourceManager.cpp" />
@@ -176,6 +178,7 @@
     <ClCompile Include="src\CTime.cpp" />
     <ClCompile Include="src\CTMXParser.cpp" />
     <ClCompile Include="src\CTransform.cpp" />
+    <ClCompile Include="src\CVertexShader.cpp" />
     <ClCompile Include="src\CWindow.cpp" />
     <ClCompile Include="src\CWorld.cpp" />
     <ClCompile Include="src\CXboxController.cpp" />
@@ -184,6 +187,7 @@
     <ClCompile Include="src\IDrawable.cpp" />
     <ClCompile Include="src\IMapLayer.cpp" />
     <ClCompile Include="src\IRenderCommand.cpp" />
+    <ClCompile Include="src\IShader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="extern\include\loadPNG\lodepng.h" />
@@ -200,6 +204,7 @@
     <ClInclude Include="include\CFileReader.h" />
     <ClInclude Include="include\CGamepad.h" />
     <ClInclude Include="include\CGraphics.h" />
+    <ClInclude Include="include\CHLSLParser.h" />
     <ClInclude Include="include\CINIParser.h" />
     <ClInclude Include="include\CInput.h" />
     <ClInclude Include="include\CKeyboard.h" />
@@ -215,6 +220,7 @@
     <ClInclude Include="include\COBJParser.h" />
     <ClInclude Include="include\CPhysicEntity.h" />
     <ClInclude Include="include\CPhysicWorld.h" />
+    <ClInclude Include="include\CPixelShader.h" />
     <ClInclude Include="include\CRenderCommandMesh.h" />
     <ClInclude Include="include\CRenderer.h" />
     <ClInclude Include="include\CResourceManager.h" />
@@ -225,6 +231,7 @@
     <ClInclude Include="include\CTime.h" />
     <ClInclude Include="include\CTMXParser.h" />
     <ClInclude Include="include\CTransform.h" />
+    <ClInclude Include="include\CVertexShader.h" />
     <ClInclude Include="include\CWindow.h" />
     <ClInclude Include="include\CWorld.h" />
     <ClInclude Include="include\CXboxController.h" />
@@ -243,6 +250,7 @@
     <ClInclude Include="include\ICollider.h" />
     <ClInclude Include="include\IMapLayer.h" />
     <ClInclude Include="include\IRenderCommand.h" />
+    <ClInclude Include="include\IShader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

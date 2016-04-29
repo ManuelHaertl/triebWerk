@@ -60,7 +60,7 @@ namespace triebWerk
 
 		//Only debug function
 		//TODO: Intigrate this into resource manager and shader reflection
-		void InitShaders();
+		//void InitShaders();
 
 		//TODO: Resize viewport !
 		void UpdateSwapchainConfiguration();

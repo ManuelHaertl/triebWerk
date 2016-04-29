@@ -10,7 +10,7 @@ namespace triebWerk
 			{
 				MapLayer,
 				MapImageLayer,
-                ObjectLayer
+				ObjectLayer
 			};
 		};
 	public:

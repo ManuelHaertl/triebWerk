@@ -13,7 +13,7 @@ triebWerk::CMeshDrawable::~CMeshDrawable()
 
 triebWerk::IRenderCommand* triebWerk::CMeshDrawable::GetRenderCommand(CEntity* a_pEntity)
 {
-	m_RenderCommand.m_pMaterial = &m_Material;
+	m_RenderCommand.m_pMaterial = m_Material;
 	m_RenderCommand.m_pMesh = m_pMesh;
 	m_RenderCommand.m_Transformation = a_pEntity->m_Transform.GetTransformation();
 

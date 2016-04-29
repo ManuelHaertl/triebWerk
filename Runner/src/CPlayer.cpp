@@ -13,7 +13,7 @@ void CPlayer::Start()
 {
     triebWerk::CMeshDrawable* mesh = new triebWerk::CMeshDrawable();
     mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube.obj");
-    mesh->m_Material.m_ConstantBuffer.InitializeConstantBufffer(twEngine.m_pGraphics->GetDevice());
+    mesh->m_Material = twEngine.m_pResourceManager->GetMaterial("Standard");
     m_pEntity->SetDrawable(mesh);
 
     m_pEntity->SetPhysicEntity(twPhysic->CreatePhysicEntity());
@@ -39,7 +39,7 @@ void CPlayer::Update()
         auto entity = twWorld->CreateEntity();
         triebWerk::CMeshDrawable* mesh = new triebWerk::CMeshDrawable();
         mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube.obj");
-        mesh->m_Material.m_ConstantBuffer.InitializeConstantBufffer(twEngine.m_pGraphics->GetDevice());
+        mesh->m_Material = twEngine.m_pResourceManager->GetMaterial("Standard");
         entity->SetDrawable(mesh);
 
         entity->SetPhysicEntity(twPhysic->CreatePhysicEntity());
@@ -59,7 +59,7 @@ void CPlayer::Update()
         auto entity = twWorld->CreateEntity();
         triebWerk::CMeshDrawable* mesh = new triebWerk::CMeshDrawable();
         mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube.obj");
-        mesh->m_Material.m_ConstantBuffer.InitializeConstantBufffer(twEngine.m_pGraphics->GetDevice());
+        mesh->m_Material = twEngine.m_pResourceManager->GetMaterial("Standard");
         entity->SetDrawable(mesh);
 
         entity->SetPhysicEntity(twPhysic->CreatePhysicEntity());
@@ -79,7 +79,7 @@ void CPlayer::Update()
         auto entity = twWorld->CreateEntity();
         triebWerk::CMeshDrawable* mesh = new triebWerk::CMeshDrawable();
         mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube.obj");
-        mesh->m_Material.m_ConstantBuffer.InitializeConstantBufffer(twEngine.m_pGraphics->GetDevice());
+        mesh->m_Material = twEngine.m_pResourceManager->GetMaterial("Standard");
         entity->SetDrawable(mesh);
 
         entity->SetPhysicEntity(twPhysic->CreatePhysicEntity());

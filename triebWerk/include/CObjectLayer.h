@@ -7,21 +7,21 @@
 
 namespace triebWerk
 {
-    class CObjectLayer : public IMapLayer
-    {
-    public:
+	class CObjectLayer : public IMapLayer
+	{
+	public:
 
-        std::string m_Name;
+		std::string m_Name;
 
-        std::vector<CLayerObject> m_Objects;
+		std::vector<CLayerObject> m_Objects;
 
-    public:
-        CObjectLayer();
-        ~CObjectLayer();
+	public:
+		CObjectLayer();
+		~CObjectLayer();
 
-    private:
-        ETypes::Type GetType() override;
-    };
+	private:
+		ETypes::Type GetType() override;
+	};
 
 }
 

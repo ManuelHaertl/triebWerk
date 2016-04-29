@@ -11,9 +11,10 @@ triebWerk::CResourceManager::~CResourceManager()
 
 bool triebWerk::CResourceManager::Initialize(CGraphics* a_pGraphics)
 {
-	bool error = SetModulPath();
+	//bool error = SetModulPath();
 	m_pGraphicsHandle = a_pGraphics;
-	return error;
+	//return error;
+    return true;
 }
 
 void triebWerk::CResourceManager::CleanUp()
@@ -43,6 +44,11 @@ void triebWerk::CResourceManager::CleanUp()
 		delete texture.second;
 	}
 
+	for (auto material : m_MaterialBuffer)
+	{
+		delete material.second;
+	}
+
 	m_ConfigurationBuffer.clear();
 	m_TextureBuffer.clear();
 	m_TilesetBuffer.clear();
@@ -52,29 +58,6 @@ void triebWerk::CResourceManager::CleanUp()
 const char& triebWerk::CResourceManager::GetModulPath()
 {
 	return *m_ModulPath.c_str();
-}
-
-void triebWerk::CResourceManager::UpdateD3D11Resources()
-{
-	for (auto mesh : m_MeshBuffer)
-	{
-		mesh.second->m_pVertexBuffer->Release();
-
-
-		mesh.second->m_pVertexBuffer = m_pGraphicsHandle->CreateVertexBuffer(mesh.second->m_pVertices, mesh.second->m_VertexCount);
-	}
-
-	for (auto texture : m_TextureBuffer)
-	{
-		texture.second->GetShaderResourceView()->Release();
-		texture.second->GetD3D11Texture()->Release();
-		
-		ID3D11Texture2D* d3dtexture = m_pGraphicsHandle->CreateD3D11Texture2D(&texture.second->m_PixelData[0], texture.second->GetWidth(), texture.second->GetHeight());
-
-		ID3D11ShaderResourceView* resourceView = m_pGraphicsHandle->CreateID3D11ShaderResourceView(d3dtexture);
-
-		texture.second->SetTexture(texture.second->GetWidth(), texture.second->GetHeight(), d3dtexture, resourceView);
-	}
 }
 
 void triebWerk::CResourceManager::LoadAllFilesInFolder(const char * a_pPath)
@@ -167,6 +150,20 @@ triebWerk::CMesh * triebWerk::CResourceManager::GetMesh(const char * a_pMeshName
 	auto foundIterator = m_MeshBuffer.find(StringHasher(a_pMeshName));
 
 	if (foundIterator == m_MeshBuffer.end())
+	{
+		return nullptr;
+	}
+	else
+	{
+		return foundIterator->second;
+	}
+}
+
+triebWerk::CMaterial * triebWerk::CResourceManager::GetMaterial(const char * a_pEffectName)
+{
+	auto foundIterator = m_MaterialBuffer.find(StringHasher(a_pEffectName));
+
+	if (foundIterator == m_MaterialBuffer.end())
 	{
 		return nullptr;
 	}
@@ -330,6 +327,13 @@ void triebWerk::CResourceManager::LoadTMX(SFile a_File)
 			CMapLayer* t = (CMapLayer*)tileset->m_Layers[i];
 			//t->m_TileSetTexture = GetTextureByName(t->m_TilesetName.c_str());
 		}
+
+		if (tileset->m_Layers[i]->GetType() == IMapLayer::ETypes::Type::ObjectLayer)
+		{
+			CObjectLayer* t = (CObjectLayer*)tileset->m_Layers[i];
+			//t->m_TileSetTexture = GetTextureByName(t->m_TilesetName.c_str());
+			int a = 0;
+		}
 	}
 
 	m_TilesetBuffer.insert(CTilesetPair(StringHasher(RemoveFileType(a_File.FileName)), tileset));
@@ -337,6 +341,10 @@ void triebWerk::CResourceManager::LoadTMX(SFile a_File)
 
 void triebWerk::CResourceManager::LoadHLSL(SFile a_File)
 {
+	CHLSLParser hlslParser;
+	CMaterial* pMaterial = hlslParser.ParseShader(a_File.FilePath.c_str(), m_pGraphicsHandle);
+
+	m_MaterialBuffer.insert(CMaterialPair(StringHasher(RemoveFileType(a_File.FileName)), pMaterial));
 }
 
 void triebWerk::CResourceManager::LoadINI(SFile a_File)
