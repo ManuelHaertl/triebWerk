@@ -53,7 +53,6 @@ bool triebWerk::CEngine::Run()
 	m_pDebug->Update();
 	m_pWindow->UpdateWindow();
     m_pWorld->Update(m_pTime->GetDeltaTime());
-	m_pRenderer->DrawScene();
 
     return m_IsRunning;
 }

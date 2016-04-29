@@ -6,7 +6,7 @@
 class CPlayer : public triebWerk::IBehaviour
 {
 private:
-    triebWerk::CAABBCollider* m_pCollBox;
+    float m_Rotation;
 
 public:
     CPlayer();

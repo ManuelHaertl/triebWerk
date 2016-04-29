@@ -103,8 +103,7 @@
       <AdditionalDependencies>$(SolutionDir)triebWerk\build\$(Configuration)\$(PlatformShortName)\triebWerk.lib;irrKlang.lib;dxguid.lib;d3d11.lib;dxgi.lib;d3dcompiler.lib;xinput9_1_0.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>xcopy "$(SolutionDir)Engine\extern\lib\$(PlatformShortName)\*.dll" "$(ProjectDir)build\$(Configuration)\$(PlatformShortName)\" /y
-xcopy "$(ProjectDir)gamedata\*.*" "$(ProjectDir)build\$(Configuration)\$(PlatformShortName)\" /e /y</Command>
+      <Command>robocopy $(SolutionDir)triebWerk\extern\lib\$(PlatformShortName) $(ProjectDir)gamedata *.dll</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -118,8 +117,7 @@ xcopy "$(ProjectDir)gamedata\*.*" "$(ProjectDir)build\$(Configuration)\$(Platfor
       <AdditionalDependencies>$(SolutionDir)triebWerk\build\$(Configuration)\$(PlatformShortName)\triebWerk.lib;irrKlang.lib;dxguid.lib;d3d11.lib;dxgi.lib;d3dcompiler.lib;xinput9_1_0.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>xcopy "$(SolutionDir)Engine\extern\lib\$(PlatformShortName)\*.dll" "$(ProjectDir)build\$(Configuration)\$(PlatformShortName)\" /y
-xcopy "$(ProjectDir)gamedata\*.*" "$(ProjectDir)build\$(Configuration)\$(PlatformShortName)\" /e /y</Command>
+      <Command>robocopy $(SolutionDir)triebWerk\extern\lib\$(PlatformShortName) $(ProjectDir)gamedata *.dll</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -137,8 +135,7 @@ xcopy "$(ProjectDir)gamedata\*.*" "$(ProjectDir)build\$(Configuration)\$(Platfor
       <AdditionalDependencies>$(SolutionDir)triebWerk\build\$(Configuration)\$(PlatformShortName)\triebWerk.lib;irrKlang.lib;dxguid.lib;d3d11.lib;dxgi.lib;d3dcompiler.lib;xinput9_1_0.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>xcopy "$(SolutionDir)Engine\extern\lib\$(PlatformShortName)\*.dll" "$(ProjectDir)build\$(Configuration)\$(PlatformShortName)\" /y
-xcopy "$(ProjectDir)gamedata\*.*" "$(ProjectDir)build\$(Configuration)\$(PlatformShortName)\" /e /y</Command>
+      <Command>robocopy $(SolutionDir)triebWerk\extern\lib\$(PlatformShortName) $(ProjectDir)gamedata *.dll</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -156,16 +153,25 @@ xcopy "$(ProjectDir)gamedata\*.*" "$(ProjectDir)build\$(Configuration)\$(Platfor
       <AdditionalDependencies>$(SolutionDir)triebWerk\build\$(Configuration)\$(PlatformShortName)\triebWerk.lib;irrKlang.lib;dxguid.lib;d3d11.lib;dxgi.lib;d3dcompiler.lib;xinput9_1_0.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>xcopy "$(SolutionDir)Engine\extern\lib\$(PlatformShortName)\*.dll" "$(ProjectDir)build\$(Configuration)\$(PlatformShortName)\" /y
-xcopy "$(ProjectDir)gamedata\*.*" "$(ProjectDir)build\$(Configuration)\$(PlatformShortName)\" /e /y</Command>
+      <Command>robocopy $(SolutionDir)triebWerk\extern\lib\$(PlatformShortName) $(ProjectDir)gamedata *.dll</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\CGameScene.cpp" />
+    <ClCompile Include="src\CPattern.cpp" />
     <ClCompile Include="src\CPlayer.cpp" />
+    <ClCompile Include="src\CSceneManager.cpp" />
+    <ClCompile Include="src\IScene.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\CGameScene.h" />
+    <ClInclude Include="include\CPattern.h" />
     <ClInclude Include="include\CPlayer.h" />
+    <ClInclude Include="include\CSceneManager.h" />
+    <ClInclude Include="include\EScenes.h" />
+    <ClInclude Include="include\IScene.h" />
+    <ClInclude Include="include\SPatternTile.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

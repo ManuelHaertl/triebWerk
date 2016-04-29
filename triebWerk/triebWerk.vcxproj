@@ -161,6 +161,8 @@
     <ClCompile Include="src\CMesh.cpp" />
     <ClCompile Include="src\CMeshDrawable.cpp" />
     <ClCompile Include="src\CMouse.cpp" />
+    <ClCompile Include="src\COBBCollider.cpp" />
+    <ClCompile Include="src\CObjectLayer.cpp" />
     <ClCompile Include="src\COBJParser.cpp" />
     <ClCompile Include="src\CPhysicEntity.cpp" />
     <ClCompile Include="src\CPhysicWorld.cpp" />
@@ -201,12 +203,15 @@
     <ClInclude Include="include\CINIParser.h" />
     <ClInclude Include="include\CInput.h" />
     <ClInclude Include="include\CKeyboard.h" />
+    <ClInclude Include="include\CLayerObject.h" />
     <ClInclude Include="include\CMapImageLayer.h" />
     <ClInclude Include="include\CMapLayer.h" />
     <ClInclude Include="include\CMaterial.h" />
     <ClInclude Include="include\CMesh.h" />
     <ClInclude Include="include\CMeshDrawable.h" />
     <ClInclude Include="include\CMouse.h" />
+    <ClInclude Include="include\COBBCollider.h" />
+    <ClInclude Include="include\CObjectLayer.h" />
     <ClInclude Include="include\COBJParser.h" />
     <ClInclude Include="include\CPhysicEntity.h" />
     <ClInclude Include="include\CPhysicWorld.h" />

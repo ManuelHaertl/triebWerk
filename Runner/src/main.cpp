@@ -1,47 +1,38 @@
-#include <iostream>
 #include <CEngine.h>
-#include <CPlayer.h>
-#include <CMeshDrawable.h>
+#include <CSceneManager.h>
 
 int main()
 {
-   // _crtBreakAlloc = 180;
+    // _crtBreakAlloc = 180;
+
+    // Initialize the engine
     if (twEngine.Initialize() == false)
     {
         twEngine.Shutdown();
         return 0;
     }
 
-	twEngine.m_pResourceManager->LoadAllFilesInFolder("data");
-	//mesh->m_Material.m_pTexture = twEngine.m_pResourceManager->GetTexture2D("texture.png");
+    // initialize the scene manager (game)
+    CSceneManager sceneManager;
+    sceneManager.Initialize();
+    sceneManager.ChangeScene(EScenes::Game);
 
-    auto test1 = twWorld->CreateEntity();
-    test1->SetBehaviour(new CPlayer());
-
-	twWorld->AddEntity(test1);
-
+    // main loop, update game & engine
     bool run = true;
     while (run == true)
     {
-        run = twEngine.Run();
+        run = false;
 
-		if (twKeyboard.IsState(triebWerk::EKey::A, triebWerk::EButtonState::Down))
-		{
-			twEngine.m_pWindow->ChangeWindowSettings(true, 1920, 1080);
-		}
-		if (twKeyboard.IsState(triebWerk::EKey::S, triebWerk::EButtonState::Down))
-		{
-			twEngine.m_pWindow->ChangeWindowSettings(false, 800, 800);
-		}
+        run |= !sceneManager.Update();
+        run |= !twEngine.Run();
 
-		if (twKeyboard.IsState(triebWerk::EKey::D, triebWerk::EButtonState::Down))
-		{
-			twEngine.m_pWindow->ChangeWindowSettings(true, 800, 600);
-		}
-
+        run = !run;
     }
 
+    // shutdown first the game and then the engine
+    sceneManager.Shutdown();
     twEngine.Shutdown();
+
     _CrtDumpMemoryLeaks();
     return 0;
 }

@@ -74,6 +74,7 @@ namespace triebWerk
 
 		//Get Interface
 		CTilesetMap* GetTileset(const char* a_pTilesetName);
+        std::vector<CTilesetMap*> GetAllTilesets();
 		CConfiguration* GetConfiguration(const char* a_pConfigurationName);
 		CTexture2D* GetTexture2D(const char* a_pTexture2DName);
 		CMesh* GetMesh(const char* a_pMeshName);

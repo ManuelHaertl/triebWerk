@@ -13,18 +13,66 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Quelldateien\Scenes">
+      <UniqueIdentifier>{b5f60ea0-ef09-47dd-bd33-1613b588e9ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Scenes">
+      <UniqueIdentifier>{30e26dc6-8a3d-4039-a59d-2b4a1adb6903}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Game">
+      <UniqueIdentifier>{b48c4eae-f47b-4bc6-b3e0-a5d001074982}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Game">
+      <UniqueIdentifier>{05b72561-5b02-4f55-a109-432f11dd5ccd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Game\Pattern">
+      <UniqueIdentifier>{6a16d595-7953-452a-ae6f-fa30ff0f178e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Game\Pattern">
+      <UniqueIdentifier>{aa138ba1-39c8-442b-aac7-62f27618f94f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="src\IScene.cpp">
+      <Filter>Quelldateien\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CGameScene.cpp">
+      <Filter>Quelldateien\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CSceneManager.cpp">
+      <Filter>Quelldateien\Scenes</Filter>
+    </ClCompile>
     <ClCompile Include="src\CPlayer.cpp">
-      <Filter>Quelldateien</Filter>
+      <Filter>Quelldateien\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CPattern.cpp">
+      <Filter>Quelldateien\Game\Pattern</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\IScene.h">
+      <Filter>Headerdateien\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EScenes.h">
+      <Filter>Headerdateien\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CGameScene.h">
+      <Filter>Headerdateien\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CSceneManager.h">
+      <Filter>Headerdateien\Scenes</Filter>
+    </ClInclude>
     <ClInclude Include="include\CPlayer.h">
-      <Filter>Headerdateien</Filter>
+      <Filter>Headerdateien\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CPattern.h">
+      <Filter>Headerdateien\Game\Pattern</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SPatternTile.h">
+      <Filter>Headerdateien\Game\Pattern</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

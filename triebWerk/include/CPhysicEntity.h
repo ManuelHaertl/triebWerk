@@ -13,7 +13,6 @@ namespace triebWerk
     {
     public:
         CEntity* m_pEntity;
-        //CTransform* m_pTransform;
         std::vector<ICollider*> m_Collider;
 
     private:

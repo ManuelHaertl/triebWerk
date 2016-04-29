@@ -27,44 +27,49 @@ namespace triebWerk
         CTransform();
         ~CTransform();
 
-        void SetParent(CTransform* a_pParent);
-        CTransform* GetParent();
+        void SetParent(CTransform* const a_pParent);
+        CTransform* GetParent() const;
 
-        void AddChild(CTransform* a_pChild);
-        void RemoveChild(CTransform* a_pChild);
+        void AddChild(CTransform* const a_pChild);
+        void RemoveChild(CTransform* const a_pChild);
         std::vector<CTransform*>* GetChildren();
 
         void DetachChildren();
         void DetachFromParent();
 
-        DirectX::XMVECTOR GetPosition();
-        DirectX::XMVECTOR GetLocalPosition();
+        DirectX::XMVECTOR GetPosition() const;
+        DirectX::XMVECTOR GetLocalPosition() const;
 
-        DirectX::XMVECTOR GetScale();
-        DirectX::XMVECTOR GetLocalScale();
+        DirectX::XMVECTOR GetScale() const;
+        DirectX::XMVECTOR GetLocalScale() const;
 
-        DirectX::XMVECTOR GetRotation();
-        DirectX::XMVECTOR GetLocalRotation();
+        DirectX::XMVECTOR GetRotation() const;
+        DirectX::XMVECTOR GetLocalRotation() const;
 
-        void SetPosition(float a_X, float a_Y, float a_Z);
-        void SetPosition(DirectX::XMVECTOR a_Position);
-        void SetLocalPosition(float a_X, float a_Y, float a_Z);
-        void SetLocalPosition(DirectX::XMVECTOR a_Position);
+        DirectX::XMVECTOR GetPivot() const;
+        DirectX::XMMATRIX& GetTransformation();
 
-        void SetScale(float a_X, float a_Y, float a_Z);
-        void SetScale(DirectX::XMVECTOR a_Scale);
-        //void SetLocalScale(float a_X, float a_Y, float a_Z);
-        //void SetLocalScale(DirectX::XMVECTOR a_Scale);
+        void SetPosition(const float a_X, const float a_Y, const float a_Z);
+        void SetPosition(const DirectX::XMVECTOR a_Position);
+        void SetLocalPosition(const float a_X, const float a_Y, const float a_Z);
+        void SetLocalPosition(const DirectX::XMVECTOR a_Position);
 
-        void SetRotation(float a_X, float a_Y, float a_Z);
-        void SetRotation(DirectX::XMVECTOR a_Rotation);
-        //void SetLocalRotation(float a_X, float a_Y, float a_Z);
-        //void SetLocalRotation(DirectX::XMVECTOR a_Rotation);
+        void SetScale(const float a_X, const float a_Y, const float a_Z);
+        void SetScale(const DirectX::XMVECTOR a_Scale);
 
-		DirectX::XMMATRIX& GetTransformation();
+        void SetRotation(const float a_X, const float a_Y, const float a_Z);
+        void SetRotation(const DirectX::XMVECTOR a_Rotation);
+
+        void SetRotationDegrees(const float a_X, const float a_Y, const float a_Z);
+        void SetRotationDegrees(DirectX::XMVECTOR a_Rotation);
+
+        void SetPivot(const float a_X, const float a_Y, const float a_Z);
+        void SetPivot(const DirectX::XMVECTOR a_Pivot);
+
+        bool IsModified() const;
+        void SetModifiedStateFalse();
+
     private:
         void UpdateChildPosition();
-        //void UpdateChildScale();
-        //void UpdateChildRotation();
     };
 }

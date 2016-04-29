@@ -6,7 +6,7 @@ namespace triebWerk
     class CTime
     {
     private:
-        const float FPS_CALC_TIME = 5.0f;
+        const float FPS_CALC_TIME = 1.0f;
 
         std::chrono::high_resolution_clock::time_point m_StartupTime;
         std::chrono::high_resolution_clock::time_point m_LastTime;
@@ -26,14 +26,14 @@ namespace triebWerk
     public:
         void Update();
 
-        float GetDeltaTime();
-        float GetUnscaledDeltaTime();
+        float GetDeltaTime() const;
+        float GetUnscaledDeltaTime() const;
 
-        float GetTimeSinceStartup();
+        float GetTimeSinceStartup() const;
 
-        float GetTimeScale();
-        void SetTimeScale(float a_TimeScale);
+        float GetTimeScale() const;
+        void SetTimeScale(const float a_TimeScale);
 
-        int GetFPS();
+        int GetFPS() const;
     };
 }

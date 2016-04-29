@@ -27,5 +27,6 @@ namespace triebWerk
         virtual ~ICollider();
 
         virtual ECollider::Type GetColliderType() = 0;
+        virtual void UpdateWorldCollider() = 0;
     };
 }

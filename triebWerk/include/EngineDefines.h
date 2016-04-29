@@ -4,6 +4,7 @@
 #define twGamepad triebWerk::CEngine::Instance().m_pInput->m_Gamepad
 #define twKeyboard triebWerk::CEngine::Instance().m_pInput->m_Keyboard
 #define twMouse triebWerk::CEngine::Instance().m_pInput->m_Mouse
+#define twResourceManager triebWerk::CEngine::Instance().m_pResourceManager
 #define twTime triebWerk::CEngine::Instance().m_pTime
 #define twPhysic triebWerk::CEngine::Instance().m_pWorld->m_pPhysicWorld
 #define twWorld triebWerk::CEngine::Instance().m_pWorld

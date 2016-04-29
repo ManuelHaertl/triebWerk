@@ -122,6 +122,18 @@ triebWerk::CTilesetMap * triebWerk::CResourceManager::GetTileset(const char * Ti
 	}
 }
 
+std::vector<triebWerk::CTilesetMap*> triebWerk::CResourceManager::GetAllTilesets()
+{
+    std::vector<CTilesetMap*> allTilesets;
+
+    for (auto map : m_TilesetBuffer)
+    {
+        allTilesets.push_back(map.second);
+    }
+
+    return allTilesets;
+}
+
 triebWerk::CConfiguration* triebWerk::CResourceManager::GetConfiguration(const char * a_pConfiguration)
 {
 	auto foundIterator = m_ConfigurationBuffer.find(StringHasher(a_pConfiguration));

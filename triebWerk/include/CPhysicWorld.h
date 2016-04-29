@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <CAABBCollider.h>
+#include <COBBCollider.h>
 #include <CSphereCollider.h>
 #include <CCollision.h>
 #include <CPhysicEntity.h>
@@ -25,18 +26,20 @@ namespace triebWerk
         ~CPhysicWorld();
 
         CPhysicEntity* CreatePhysicEntity();
-        CBody* CreateBody();
-        CAABBCollider* CreateAABBCollider();
-        CSphereCollider* CreateSphereCollider();
-        void AddPhysicEntity(CPhysicEntity* a_pPhysicEntity);
-        void AddBody(CBody* a_pBody);
-        void AddCollider(ICollider* a_pCollider);
-        void RemovePhysicEntity(CPhysicEntity* a_pPhysicEntity);
-        void RemoveBody(CBody* a_pBody);
-        void RemoveCollider(ICollider* a_pCollider);
+        CBody* CreateBody() const;
+        CAABBCollider* CreateAABBCollider() const;
+        COBBCollider* CreateOBBCollider() const;
+        CSphereCollider* CreateSphereCollider() const;
+        void AddPhysicEntity(CPhysicEntity* const a_pPhysicEntity);
+        void AddBody(CBody* const a_pBody);
+        void AddCollider(ICollider* const a_pCollider);
+        void RemovePhysicEntity(CPhysicEntity* const a_pPhysicEntity);
+        void RemoveBody(CBody* const a_pBody);
+        void RemoveCollider(ICollider* const a_pCollider);
         void Update(const float a_DeltaTime);
 
     private:
+        void UpdateCollider();
         void CheckCollisionEvents();
     };
 }

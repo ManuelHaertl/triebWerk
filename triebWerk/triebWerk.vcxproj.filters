@@ -315,6 +315,12 @@
     <ClCompile Include="src\CSphereCollider.cpp">
       <Filter>Quelldateien\Physic\Collider</Filter>
     </ClCompile>
+    <ClCompile Include="src\COBBCollider.cpp">
+      <Filter>Quelldateien\Physic\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CObjectLayer.cpp">
+      <Filter>Quelldateien\Resource\Resources\TilesetMap\Layers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\CEngine.h">
@@ -478,6 +484,15 @@
     </ClInclude>
     <ClInclude Include="include\CSphereCollider.h">
       <Filter>Headerdateien\Physic\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="include\COBBCollider.h">
+      <Filter>Headerdateien\Physic\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CObjectLayer.h">
+      <Filter>Headerdateien\Resource\Resources\TilesetMap\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CLayerObject.h">
+      <Filter>Headerdateien\Resource\Resources\TilesetMap\Layers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

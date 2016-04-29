@@ -18,25 +18,31 @@ triebWerk::CPhysicEntity* triebWerk::CPhysicWorld::CreatePhysicEntity()
     return entity;
 }
 
-triebWerk::CBody* triebWerk::CPhysicWorld::CreateBody()
+triebWerk::CBody* triebWerk::CPhysicWorld::CreateBody() const
 {
     CBody* body = new CBody();
     return body;
 }
 
-triebWerk::CAABBCollider* triebWerk::CPhysicWorld::CreateAABBCollider()
+triebWerk::CAABBCollider* triebWerk::CPhysicWorld::CreateAABBCollider() const
 {
     CAABBCollider* aabbCollider = new CAABBCollider();
     return aabbCollider;
 }
 
-triebWerk::CSphereCollider* triebWerk::CPhysicWorld::CreateSphereCollider()
+triebWerk::COBBCollider* triebWerk::CPhysicWorld::CreateOBBCollider() const
+{
+    COBBCollider* obbCollider = new COBBCollider();
+    return obbCollider;
+}
+
+triebWerk::CSphereCollider* triebWerk::CPhysicWorld::CreateSphereCollider() const
 {
     CSphereCollider* sphereCollider = new CSphereCollider();
     return sphereCollider;
 }
 
-void triebWerk::CPhysicWorld::AddPhysicEntity(CPhysicEntity* a_pPhysicEntity)
+void triebWerk::CPhysicWorld::AddPhysicEntity(CPhysicEntity* const a_pPhysicEntity)
 {
     // add the entity and all sub categories in it's specific vector
 
@@ -51,13 +57,13 @@ void triebWerk::CPhysicWorld::AddPhysicEntity(CPhysicEntity* a_pPhysicEntity)
     }
 }
 
-void triebWerk::CPhysicWorld::AddBody(CBody* a_pBody)
+void triebWerk::CPhysicWorld::AddBody(CBody* const a_pBody)
 {
     if (a_pBody != nullptr)
         m_Bodies.push_back(a_pBody);
 }
 
-void triebWerk::CPhysicWorld::AddCollider(ICollider* a_pCollider)
+void triebWerk::CPhysicWorld::AddCollider(ICollider* const a_pCollider)
 {
     if (a_pCollider->m_CheckCollision == false)
         m_StaticCollider.push_back(a_pCollider);
@@ -65,7 +71,7 @@ void triebWerk::CPhysicWorld::AddCollider(ICollider* a_pCollider)
         m_DynamicCollider.push_back(a_pCollider);
 }
 
-void triebWerk::CPhysicWorld::RemovePhysicEntity(CPhysicEntity* a_pPhysicEntity)
+void triebWerk::CPhysicWorld::RemovePhysicEntity(CPhysicEntity* const a_pPhysicEntity)
 {
     // remove and delete collider
     for (size_t i = 0; i < a_pPhysicEntity->m_Collider.size(); ++i)
@@ -88,7 +94,7 @@ void triebWerk::CPhysicWorld::RemovePhysicEntity(CPhysicEntity* a_pPhysicEntity)
     }
 }
 
-void triebWerk::CPhysicWorld::RemoveBody(CBody* a_pBody)
+void triebWerk::CPhysicWorld::RemoveBody(CBody* const a_pBody)
 {
     // remove and delete body
     if (a_pBody != nullptr)
@@ -105,7 +111,7 @@ void triebWerk::CPhysicWorld::RemoveBody(CBody* a_pBody)
     }
 }
 
-void triebWerk::CPhysicWorld::RemoveCollider(ICollider* a_pCollider)
+void triebWerk::CPhysicWorld::RemoveCollider(ICollider* const a_pCollider)
 {
     if (a_pCollider->m_CheckCollision == false)
     {
@@ -149,6 +155,8 @@ void triebWerk::CPhysicWorld::Update(const float a_DeltaTime)
         pBody->m_pTransform->SetPosition(newPosition);
     }
 
+    UpdateCollider();
+
     CCollision collision;
 
     for (size_t i = 0; i < m_DynamicCollider.size(); ++i)
@@ -163,6 +171,21 @@ void triebWerk::CPhysicWorld::Update(const float a_DeltaTime)
     }
 
     CheckCollisionEvents();
+}
+
+void triebWerk::CPhysicWorld::UpdateCollider()
+{
+    for (size_t i = 0; i < m_StaticCollider.size(); ++i)
+    {
+        if (m_StaticCollider[i]->m_pEntity->m_Transform.IsModified())
+            m_StaticCollider[i]->UpdateWorldCollider();
+    }
+
+    for (size_t i = 0; i < m_DynamicCollider.size(); ++i)
+    {
+        if (m_DynamicCollider[i]->m_pEntity->m_Transform.IsModified())
+            m_DynamicCollider[i]->UpdateWorldCollider();
+    }
 }
 
 void triebWerk::CPhysicWorld::CheckCollisionEvents()

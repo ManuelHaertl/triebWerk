@@ -43,32 +43,32 @@ void triebWerk::CTime::Update()
     }
 }
 
-float triebWerk::CTime::GetDeltaTime()
+float triebWerk::CTime::GetDeltaTime() const
 {
     return m_DeltaTime;
 }
 
-float triebWerk::CTime::GetUnscaledDeltaTime()
+float triebWerk::CTime::GetUnscaledDeltaTime() const
 {
     return m_UnscaledDeltaTime;
 }
 
-float triebWerk::CTime::GetTimeSinceStartup()
+float triebWerk::CTime::GetTimeSinceStartup() const
 {
     return m_TimeSinceStartup;
 }
 
-float triebWerk::CTime::GetTimeScale()
+float triebWerk::CTime::GetTimeScale() const
 {
     return m_TimeScale;
 }
 
-void triebWerk::CTime::SetTimeScale(float a_TimeStamp)
+void triebWerk::CTime::SetTimeScale(const float a_TimeStamp)
 {
     m_TimeScale = a_TimeStamp;
 }
 
-int triebWerk::CTime::GetFPS()
+int triebWerk::CTime::GetFPS() const
 {
     return m_FPS;
 }
