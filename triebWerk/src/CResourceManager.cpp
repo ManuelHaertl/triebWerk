@@ -46,6 +46,8 @@ void triebWerk::CResourceManager::CleanUp()
 
 	for (auto material : m_MaterialBuffer)
 	{
+		delete material.second->m_pPixelShader;
+		delete material.second->m_pVertexShader;
 		delete material.second;
 	}
 

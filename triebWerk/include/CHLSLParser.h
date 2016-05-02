@@ -43,7 +43,7 @@ namespace triebWerk
 		//TODO: Handle Errors
 		void CompileShader(const char* a_pShaderPath);
 		ID3D11InputLayout* GetInputLayout(ID3DBlob* a_pShaderByteCode, CGraphics* a_pGraphicHandle);
-		void SetConstantBuffers(ID3DBlob* a_pShaderByteCode, IShader* a_pShader);
+		void SetConstantBuffers(ID3DBlob* a_pShaderByteCode, CConstantBuffer* a_pConstantBuffer);
 		void SetBoundResources(ID3DBlob* a_pShaderbyteCode, IShader* a_PShader);
 		CVertexShader* CreateVertexShader(CGraphics* a_pGraphicHandle);
 		CPixelShader* CreatePixelShader(CGraphics* a_pGraphicHandle);

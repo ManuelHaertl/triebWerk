@@ -15,6 +15,10 @@ triebWerk::CMaterial* triebWerk::CHLSLParser::ParseShader(const char* a_pShaderP
 
 	CMaterial* pMaterial = new CMaterial();
 
+	SetConstantBuffers(m_pVSByteCode, &pMaterial->m_ConstantBuffer);
+
+	pMaterial->m_ConstantBuffer.InitializeConstantBufffer(a_pGraphicHandle->GetDevice());
+
 	//Now create the specific Shader if they could be compiled
 
 	if (m_pVSByteCode != nullptr)
@@ -34,13 +38,6 @@ triebWerk::CVertexShader* triebWerk::CHLSLParser::CreateVertexShader(CGraphics* 
 
 	pVertexShader->SetInputLayout(GetInputLayout(m_pVSByteCode, a_pGraphicHandle));
 
-	SetConstantBuffers(m_pVSByteCode, pVertexShader);
-
-	for (size_t i = 0; i < pVertexShader->m_ConstantBuffers.size(); ++i)
-	{
-		pVertexShader->m_ConstantBuffers[i].InitializeConstantBufffer(a_pGraphicHandle->GetDevice());
-	}
-
 	SetBoundResources(m_pVSByteCode, pVertexShader);
 
 	hResult = a_pGraphicHandle->GetDevice()->CreateVertexShader(m_pVSByteCode->GetBufferPointer(), m_pVSByteCode->GetBufferSize(), NULL, &pVertexShader->m_pD3DVertexShader);
@@ -55,13 +52,6 @@ triebWerk::CPixelShader* triebWerk::CHLSLParser::CreatePixelShader(CGraphics* a_
 	CPixelShader* pPixelShader = new CPixelShader();
 
 	pPixelShader->SetInputLayout(GetInputLayout(m_pPSByteCode, a_pGraphicHandle));
-
-	SetConstantBuffers(m_pPSByteCode, pPixelShader);
-
-	for (auto constantBuffer : pPixelShader->m_ConstantBuffers)
-	{
-		constantBuffer.InitializeConstantBufffer(a_pGraphicHandle->GetDevice());
-	}
 
 	SetBoundResources(m_pPSByteCode, pPixelShader);
 
@@ -165,7 +155,7 @@ ID3D11InputLayout* triebWerk::CHLSLParser::GetInputLayout(ID3DBlob * a_pShaderBy
 	return layout;
 }
 
-void triebWerk::CHLSLParser::SetConstantBuffers(ID3DBlob* a_pShaderByteCode, IShader * a_pShader)
+void triebWerk::CHLSLParser::SetConstantBuffers(ID3DBlob* a_pShaderByteCode, triebWerk::CConstantBuffer* a_pConstantBuffer)
 {
 	HRESULT hResult;
 
@@ -197,7 +187,7 @@ void triebWerk::CHLSLParser::SetConstantBuffers(ID3DBlob* a_pShaderByteCode, ISh
 			constantBuffer.Types.push_back(typeDesc);
 		}
 
-		a_pShader->m_ConstantBuffers.push_back(constantBuffer);
+		*a_pConstantBuffer = constantBuffer;
 	}
 }
 

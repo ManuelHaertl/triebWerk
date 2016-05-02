@@ -1,6 +1,7 @@
 #include <CRenderer.h>
 #include <iostream>
 
+
 triebWerk::CRenderer::CRenderer()
 {
 }
@@ -76,22 +77,22 @@ void triebWerk::CRenderer::DrawScene()
 		case IRenderCommand::ECommandType::Mesh:
 		{
 			CRenderCommandMesh* meshCommand = reinterpret_cast<CRenderCommandMesh*>(pRenderCommand);
-
-
-			for (size_t i = 0; i < meshCommand->m_pMaterial->m_pVertexShader->m_ConstantBuffers.size(); i++)
-			{
-				meshCommand->m_pMaterial->m_pVertexShader->m_ConstantBuffers[i].SetConstantBuffer(this->m_pGraphicsHandle->GetDeviceContext(), meshCommand->m_Transformation, m_pCurrentCamera->GetViewMatrix(), m_pCurrentCamera->GetProjection());
-			}
-
-			//meshCommand->m_pMaterial->m_ConstantBuffer.SetConstantBuffer(this->m_pGraphicsHandle->GetDeviceContext(), meshCommand->m_Transformation, m_pCurrentCamera->GetViewMatrix(), m_pCurrentCamera->GetProjection());
-			this->m_pGraphicsHandle->GetDeviceContext()->IASetInputLayout(meshCommand->m_pMaterial->m_pVertexShader->GetInputLayout());
-
+			
 			this->m_pGraphicsHandle->GetDeviceContext()->VSSetShader(meshCommand->m_pMaterial->m_pVertexShader->m_pD3DVertexShader, 0, 0);
 
 			this->m_pGraphicsHandle->GetDeviceContext()->PSSetShader(meshCommand->m_pMaterial->m_pPixelShader->m_pD3DPixelShader, 0, 0);
 
+			meshCommand->m_pMaterial->m_ConstantBuffer.SetConstantBuffer(this->m_pGraphicsHandle->GetDeviceContext(), meshCommand->m_Transformation, m_pCurrentCamera->GetViewMatrix(), m_pCurrentCamera->GetProjection());
 
-			for(size_t i = 0; i <  meshCommand->m_pMaterial->m_pPixelShader->m_Textures.size(); i++)
+			this->m_pGraphicsHandle->GetDeviceContext()->IASetInputLayout(meshCommand->m_pMaterial->m_pVertexShader->GetInputLayout());
+
+			for(size_t i = 0; i <  meshCommand->m_pMaterial->m_pVertexShader->m_Textures.size(); i++)
+			{
+				ID3D11ShaderResourceView* pResourceView = meshCommand->m_pMaterial->m_pVertexShader->m_Textures[i]->GetShaderResourceView();
+				m_pGraphicsHandle->GetDeviceContext()->PSSetShaderResources(i, 1, &pResourceView);
+			}
+
+			for (size_t i = 0; i < meshCommand->m_pMaterial->m_pPixelShader->m_Textures.size(); i++)
 			{
 				ID3D11ShaderResourceView* pResourceView = meshCommand->m_pMaterial->m_pPixelShader->m_Textures[i]->GetShaderResourceView();
 				m_pGraphicsHandle->GetDeviceContext()->PSSetShaderResources(i, 1, &pResourceView);
