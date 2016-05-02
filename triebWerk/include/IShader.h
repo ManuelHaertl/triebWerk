@@ -21,7 +21,6 @@ namespace triebWerk
 		ID3D11InputLayout* m_pInputLayout;
 
 	public:
-		std::vector<CConstantBuffer> m_ConstantBuffers;
 		std::vector<D3D11_SHADER_INPUT_BIND_DESC> m_TextureDescriptions;
 		std::vector<D3D11_SHADER_INPUT_BIND_DESC> m_SamplerDescriptions;
 		EShaderType m_ShaderType;

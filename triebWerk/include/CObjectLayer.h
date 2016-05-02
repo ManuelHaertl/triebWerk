@@ -12,7 +12,7 @@ namespace triebWerk
 	public:
 
 		std::string m_Name;
-
+		std::unordered_map<std::string, std::string>Properties;
 		std::vector<CLayerObject> m_Objects;
 
 	public:

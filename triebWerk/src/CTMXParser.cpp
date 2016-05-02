@@ -65,7 +65,7 @@ triebWerk::CTilesetMap* triebWerk::CTMXParser::ParseData(const char * a_pFilePat
 	return m_TilesetMap;
 }
 
-std::string triebWerk::CTMXParser::GetProportie(std::string a_Line, const char * a_pProportieName)
+std::string triebWerk::CTMXParser::GetProportie(std::string& a_Line, const char * a_pProportieName)
 {
 	std::string toSearch = a_pProportieName;
 	toSearch += "=\"";
@@ -74,7 +74,7 @@ std::string triebWerk::CTMXParser::GetProportie(std::string a_Line, const char *
 	return a_Line.substr(startPos, endPos - startPos);;
 }
 
-bool triebWerk::CTMXParser::BeginLineWith(std::string a_Line, const char * a_pLineStart)
+bool triebWerk::CTMXParser::BeginLineWith(std::string& a_Line, const char * a_pLineStart)
 {
 	size_t startPos = a_Line.find(a_pLineStart);
 
@@ -88,7 +88,7 @@ bool triebWerk::CTMXParser::BeginLineWith(std::string a_Line, const char * a_pLi
 	}
 }
 
-bool triebWerk::CTMXParser::ExistsProperty(std::string a_Line, const char * a_pProportieName)
+bool triebWerk::CTMXParser::ExistsProperty(std::string& a_Line, const char * a_pProportieName)
 {
 	std::string toSearch = a_pProportieName;
 	toSearch += "=\"";
@@ -103,7 +103,7 @@ bool triebWerk::CTMXParser::ExistsProperty(std::string a_Line, const char * a_pP
 	}
 }
 
-void triebWerk::CTMXParser::ReadLayer(std::string a_Line)
+void triebWerk::CTMXParser::ReadLayer(std::string& a_Line)
 {
 	CMapLayer* layer = new CMapLayer();
 	layer->m_LayerHeight = (short)stoi(GetProportie(a_Line, "height"));
@@ -159,7 +159,7 @@ void triebWerk::CTMXParser::ReadLayer(std::string a_Line)
 	this->m_TilesetMap->m_Layers.push_back(layer);
 }
 
-void triebWerk::CTMXParser::ReadImageLayer(std::string a_Line)
+void triebWerk::CTMXParser::ReadImageLayer(std::string& a_Line)
 {
 	CMapImageLayer* tileset = new CMapImageLayer();
 
@@ -203,7 +203,7 @@ void triebWerk::CTMXParser::ReadImageLayer(std::string a_Line)
 	this->m_TilesetMap->m_Layers.push_back(tileset);
 }
 
-void triebWerk::CTMXParser::ReadTileSet(std::string a_Line)
+void triebWerk::CTMXParser::ReadTileSet(std::string& a_Line)
 {
 	CTileset* tileset = new CTileset();
 
@@ -251,7 +251,7 @@ void triebWerk::CTMXParser::ReadProperties(std::unordered_map<std::string, std::
 	} while (runState);
 }
 
-void triebWerk::CTMXParser::ReadObject(std::string a_Line)
+void triebWerk::CTMXParser::ReadObject(std::string& a_Line)
 {
 	CObjectLayer* objectLayer = new CObjectLayer();
 
@@ -260,6 +260,14 @@ void triebWerk::CTMXParser::ReadObject(std::string a_Line)
 	do
 	{
 		a_Line = GetLine();
+
+		if (BeginLineWith(a_Line, "<properties>"))
+		{
+			ReadProperties(&objectLayer->Properties);
+
+			a_Line = GetLine();
+		}
+
 		if (BeginLineWith(a_Line, "<object"))
 		{
 			CLayerObject object;
@@ -270,6 +278,12 @@ void triebWerk::CTMXParser::ReadObject(std::string a_Line)
 			object.m_Y = stoi(GetProportie(a_Line, "y"));
 			object.m_Width = stoi(GetProportie(a_Line, "width"));
 			object.m_Height = stoi(GetProportie(a_Line, "height"));
+
+			if (a_Line.rfind("/>") != std::string::npos)
+			{
+				objectLayer->m_Objects.push_back(object);
+				continue;
+			}
 
 			a_Line = GetLine();
 
@@ -350,7 +364,7 @@ void triebWerk::CTMXParser::RecalculateTilesetLayerIndices()
 	}	
 }
 
-void triebWerk::CTMXParser::ReadMap(std::string a_Line)
+void triebWerk::CTMXParser::ReadMap(std::string& a_Line)
 {
 	m_TilesetMap->m_Map.m_Orientation = GetProportie(a_Line, "orientation");
 	m_TilesetMap->m_Map.m_RenderOrder = GetProportie(a_Line, "renderorder");
