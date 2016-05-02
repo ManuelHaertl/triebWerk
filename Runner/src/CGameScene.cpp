@@ -33,13 +33,9 @@ void CGameScene::End()
 
 void CGameScene::LoadAllPattern()
 {
-    auto tilesets = twResourceManager->GetAllTilesets();
+    CPatternLoader patternLoader;
+    patternLoader.LoadPattern();
 
-    m_PatternCount = tilesets.size();
-    m_pPattern = new CPattern[m_PatternCount];
-
-    for (size_t i = 0; i < m_PatternCount; ++i)
-    {
-        CPattern& pPattern = m_pPattern[i];
-    }
+    m_pPattern = patternLoader.GetPattern();
+    m_PatternCount = patternLoader.GetPatternCount();
 }

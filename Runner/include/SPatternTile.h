@@ -1,7 +1,9 @@
 #pragma once
+#include <ETileType.h>
+
 struct SPatternTile
 {
-    char m_ID;
+    ETileType m_ID;
     float m_X;
     float m_Y;
 };

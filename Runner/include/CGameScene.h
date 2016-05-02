@@ -1,6 +1,7 @@
 #pragma once
 #include <IScene.h>
 #include <CPattern.h>
+#include <CPatternLoader.h>
 #include <CPlayer.h>
 
 class CGameScene : public IScene
