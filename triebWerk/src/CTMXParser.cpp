@@ -58,7 +58,7 @@ triebWerk::CTilesetMap* triebWerk::CTMXParser::ParseData(const char * a_pFilePat
 
 	} while (!BeginLineWith(line, "</map>"));
 
-	this->RecalculateTilesetLayerIndices();
+	//this->RecalculateTilesetLayerIndices();
 
 	CloseFile();
 

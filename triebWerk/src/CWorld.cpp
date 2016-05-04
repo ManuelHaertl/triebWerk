@@ -3,6 +3,7 @@
 triebWerk::CWorld::CWorld() :
     m_pPhysicWorld(nullptr),
     m_CurrentSize(Start_Reserve_Size),
+    m_EntitiesToUpdate(0),
     m_EntitiesToDraw(0),
     m_EntitiesToRemove(0),
     m_pRenderingHandle(nullptr)
@@ -20,6 +21,7 @@ bool triebWerk::CWorld::Initialize(CRenderer* a_pRenderer)
     // reserve some spots so the vector doesn't need
     // to get resized too often during runtime
     m_Entities.reserve(Start_Reserve_Size);
+    m_UpdateEntities.resize(Start_Reserve_Size);
     m_DrawEntities.resize(Start_Reserve_Size);
     m_RemoveEntities.resize(Start_Reserve_Size);
 
@@ -37,8 +39,8 @@ bool triebWerk::CWorld::Update(const float a_DeltaTime)
 
         if (pEntity->GetBehaviour() != nullptr)
         {
-            // Update Order #1: Update the Game Script
-            pEntity->GetBehaviour()->Update();
+            m_UpdateEntities[m_EntitiesToUpdate] = pEntity->GetBehaviour();
+            m_EntitiesToUpdate++;
         }
 
         if (pEntity->GetDrawable() != nullptr)
@@ -48,19 +50,31 @@ bool triebWerk::CWorld::Update(const float a_DeltaTime)
         }
     }
 
+    // Update Order #1: Update the Game Script
+    for (size_t i = 0; i < m_EntitiesToUpdate; ++i)
+    {
+        m_UpdateEntities[i]->Update();
+    }
+
     // Update Order #2: Update the Phyisc
     m_pPhysicWorld->Update(a_DeltaTime);
 
-    // Update Order #3: Collect all Entities that shall be rendered
+    // Update Order #3: Late Update the Game Script
+    for (size_t i = 0; i < m_EntitiesToUpdate; ++i)
+    {
+        m_UpdateEntities[i]->LateUpdate();
+    }
+
+    // Update Order #4: Collect all Entities that shall be rendered
     for (size_t i = 0; i < m_EntitiesToDraw; ++i)
     {
         m_pRenderingHandle->AddRenderCommand(m_DrawEntities[i]->GetDrawable()->GetRenderCommand(m_DrawEntities[i]));
     }
 
-    // Update Order #4: Draw all Entities
+    // Update Order #5: Draw all Entities
     m_pRenderingHandle->DrawScene();
 
-    // Update Order #5: Delete all entities what have been removed this frame
+    // Update Order #6: Delete all entities what have been removed this frame
     DeleteRemoveEntities();
 
     for (size_t i = 0; i < m_Entities.size(); ++i)
@@ -68,6 +82,7 @@ bool triebWerk::CWorld::Update(const float a_DeltaTime)
         m_Entities[i]->m_Transform.SetModifiedStateFalse();
     }
 
+    m_EntitiesToUpdate = 0;
     m_EntitiesToDraw = 0;
     return true;
 }
@@ -96,6 +111,7 @@ void triebWerk::CWorld::AddEntity(CEntity* a_pEntity)
     {
         m_CurrentSize *= 2;
         m_Entities.reserve(m_CurrentSize);
+        m_UpdateEntities.resize(m_CurrentSize);
         m_DrawEntities.resize(m_CurrentSize);
         m_RemoveEntities.resize(m_CurrentSize);
     }

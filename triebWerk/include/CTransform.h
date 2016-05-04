@@ -1,6 +1,5 @@
 #pragma once
 #include <vector>
-
 #include <DirectXMath.h>
 
 namespace triebWerk
@@ -20,6 +19,9 @@ namespace triebWerk
         DirectX::XMVECTOR m_LocalPosition;
         DirectX::XMVECTOR m_LocalScale;
         DirectX::XMVECTOR m_LocalRotation;
+        DirectX::XMVECTOR m_Forward;
+        DirectX::XMVECTOR m_Up;
+        DirectX::XMVECTOR m_Side;
 		DirectX::XMVECTOR m_Pivot;
 		DirectX::XMMATRIX m_Transformation;
 
@@ -46,6 +48,10 @@ namespace triebWerk
         DirectX::XMVECTOR GetRotation() const;
         DirectX::XMVECTOR GetLocalRotation() const;
 
+        DirectX::XMVECTOR GetForward() const;
+        DirectX::XMVECTOR GetUp() const;
+        DirectX::XMVECTOR GetSide() const;
+
         DirectX::XMVECTOR GetPivot() const;
         DirectX::XMMATRIX& GetTransformation();
 
@@ -61,7 +67,10 @@ namespace triebWerk
         void SetRotation(const DirectX::XMVECTOR a_Rotation);
 
         void SetRotationDegrees(const float a_X, const float a_Y, const float a_Z);
-        void SetRotationDegrees(DirectX::XMVECTOR a_Rotation);
+        void SetRotationDegrees(const DirectX::XMVECTOR a_Rotation);
+
+        void RotateDegrees(const float a_X, const float a_Y, const float a_Z);
+        void RotateDegrees(DirectX::XMVECTOR a_Rotation);
 
         void SetPivot(const float a_X, const float a_Y, const float a_Z);
         void SetPivot(const DirectX::XMVECTOR a_Pivot);
@@ -70,6 +79,7 @@ namespace triebWerk
         void SetModifiedStateFalse();
 
     private:
+        void CalculateForwardUpAndSideVector();
         void UpdateChildPosition();
     };
 }

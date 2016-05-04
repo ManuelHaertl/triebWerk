@@ -153,6 +153,7 @@
     <ClCompile Include="src\CGamepad.cpp" />
     <ClCompile Include="src\CGraphics.cpp" />
     <ClCompile Include="src\CHLSLParser.cpp" />
+    <ClCompile Include="src\CID.cpp" />
     <ClCompile Include="src\CINIParser.cpp" />
     <ClCompile Include="src\CInput.cpp" />
     <ClCompile Include="src\CKeyboard.cpp" />
@@ -205,6 +206,7 @@
     <ClInclude Include="include\CGamepad.h" />
     <ClInclude Include="include\CGraphics.h" />
     <ClInclude Include="include\CHLSLParser.h" />
+    <ClInclude Include="include\CID.h" />
     <ClInclude Include="include\CINIParser.h" />
     <ClInclude Include="include\CInput.h" />
     <ClInclude Include="include\CKeyboard.h" />

@@ -17,6 +17,10 @@ void triebWerk::IBehaviour::Update()
 {
 }
 
+void triebWerk::IBehaviour::LateUpdate()
+{
+}
+
 void triebWerk::IBehaviour::End()
 {
 }

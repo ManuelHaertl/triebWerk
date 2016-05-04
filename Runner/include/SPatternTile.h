@@ -3,7 +3,7 @@
 
 struct SPatternTile
 {
-    ETileType m_ID;
+    ETileType::Type m_Type;
     float m_X;
     float m_Y;
 };

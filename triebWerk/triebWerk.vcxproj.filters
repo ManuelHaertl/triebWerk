@@ -348,6 +348,9 @@
     <ClCompile Include="src\CObjectLayer.cpp">
       <Filter>Quelldateien\Resource\Resources\TilesetMap\Layers</Filter>
     </ClCompile>
+    <ClCompile Include="src\CID.cpp">
+      <Filter>Quelldateien\World\Entity</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\CEngine.h">
@@ -533,6 +536,8 @@
     <ClInclude Include="include\COBBCollider.h">
       <Filter>Headerdateien\Physic\Collider</Filter>
     </ClInclude>
-
+    <ClInclude Include="include\CID.h">
+      <Filter>Headerdateien\World\Entity</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

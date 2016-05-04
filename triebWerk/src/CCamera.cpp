@@ -12,6 +12,8 @@ triebWerk::CCamera::CCamera() :
 {
 	m_ProjectionMatrix = DirectX::XMMatrixIdentity();
 	m_ViewMatrix = DirectX::XMMatrixIdentity();
+    m_Forward = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
+    m_Up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 }
 
 triebWerk::CCamera::CCamera(float a_Aspect, float a_FOV, float a_Near, float a_Far, unsigned int a_ScreenHeight, unsigned int a_ScreenWidth)
@@ -22,6 +24,9 @@ triebWerk::CCamera::CCamera(float a_Aspect, float a_FOV, float a_Near, float a_F
 	m_NearPlane = a_Near;
 	m_ScreenHeight = a_ScreenHeight;
 	m_ScreenWidth = a_ScreenWidth;
+
+    m_Forward = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
+    m_Up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 
 	CalculateProjection();
 
@@ -34,9 +39,15 @@ triebWerk::CCamera::~CCamera()
 
 void triebWerk::CCamera::Update()
 {
-	DirectX::XMVECTOR At = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
-	DirectX::XMVECTOR Up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-	m_ViewMatrix = DirectX::XMMatrixLookAtLH(DirectX::XMVector3Rotate(m_Transform.GetPosition(), m_Transform.GetRotation()), At, Up);
+    if (m_Transform.IsModified())
+    {
+        DirectX::XMVECTOR lookAt = DirectX::XMVectorAdd(m_Transform.GetPosition(), m_Transform.GetForward());
+
+        m_ViewMatrix = DirectX::XMMatrixLookAtLH(m_Transform.GetPosition(), lookAt, m_Transform.GetUp());
+
+        m_Transform.SetModifiedStateFalse();
+    }
+
 
 	if (m_Modified)
 	{
@@ -79,6 +90,11 @@ void triebWerk::CCamera::SetFar(const float a_FarPlane)
 	m_Modified = true;
 }
 
+void triebWerk::CCamera::SetUp(const DirectX::XMVECTOR a_Up)
+{
+    m_Up = a_Up;
+}
+
 float triebWerk::CCamera::GetAspect() const
 {
 	return m_Aspect;
@@ -97,6 +113,16 @@ float triebWerk::CCamera::GetNear() const
 float triebWerk::CCamera::GetFar() const
 {
 	return m_FarPlane;
+}
+
+DirectX::XMVECTOR triebWerk::CCamera::GetForward() const
+{
+    return m_Forward;
+}
+
+DirectX::XMVECTOR triebWerk::CCamera::GetUp() const
+{
+    return m_Up;
 }
 
 void triebWerk::CCamera::CalculateProjection()

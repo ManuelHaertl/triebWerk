@@ -9,12 +9,13 @@ namespace triebWerk
 {
     class CXboxController
     {
-    private:
-        static const unsigned int HighestButtonValue = 23;
+    public:
         static const char DEADZONE_TRIGGER = 30;           // Range: 0 - 255
         static const short DEADZONE_LEFT_ANALOG = 12500;   // Range: -32.768 - 32.767
         static const short DEADZONE_RIGHT_ANALOG = 12500;  // Range: -32.768 - 32.767
 
+    private:
+        static const unsigned int HighestButtonValue = 23;
         DWORD m_Index;
 
     public:

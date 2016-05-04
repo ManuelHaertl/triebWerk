@@ -1,10 +1,15 @@
 #pragma once
-enum class ETileType
+struct ETileType
 {
-    Air = 0,
-    Checkpoint = 1,
-    Points = 2,
-    Shield = 3,
-    Block1x1 = 16,
-    Block2x2 = 17
+    enum Type
+    {
+        Invalid = -1,
+        Nothing = 0,
+        Air = 1,
+        Checkpoint = 2,
+        Points = 3,
+        Shield = 4,
+        Block1x1 = 17,
+        Block2x2 = 18
+    };
 };

@@ -8,6 +8,9 @@ triebWerk::CTransform::CTransform() :
     m_LocalPosition = DirectX::XMVectorZero();
 	m_Rotation = DirectX::XMQuaternionIdentity();
     m_LocalRotation = DirectX::XMQuaternionIdentity();
+    m_Forward = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
+    m_Up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+    m_Side = DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);
 	m_Pivot = DirectX::XMVectorZero();
     m_Scale = DirectX::XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f);
     m_LocalScale = DirectX::XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f);
@@ -105,6 +108,21 @@ DirectX::XMVECTOR triebWerk::CTransform::GetLocalRotation() const
     return m_LocalRotation;
 }
 
+DirectX::XMVECTOR triebWerk::CTransform::GetForward() const
+{
+    return m_Forward;
+}
+
+DirectX::XMVECTOR triebWerk::CTransform::GetUp() const
+{
+    return m_Up;
+}
+
+DirectX::XMVECTOR triebWerk::CTransform::GetSide() const
+{
+    return m_Side;
+}
+
 DirectX::XMVECTOR triebWerk::CTransform::GetPivot() const
 {
     return m_Pivot;
@@ -195,12 +213,14 @@ void triebWerk::CTransform::SetScale(const DirectX::XMVECTOR a_Scale)
 void triebWerk::CTransform::SetRotation(const float a_X, const float a_Y, const float a_Z)
 {
     m_Rotation = DirectX::XMVectorSet(a_X, a_Y, a_Z, 0.0f);
+    CalculateForwardUpAndSideVector();
 	m_Modified = true;
 }
 
 void triebWerk::CTransform::SetRotation(const DirectX::XMVECTOR a_Rotation)
 {
     m_Rotation = a_Rotation;
+    CalculateForwardUpAndSideVector();
 	m_Modified = true;
 }
 
@@ -211,6 +231,7 @@ void triebWerk::CTransform::SetRotationDegrees(const float a_X, const float a_Y,
         DirectX::XMConvertToRadians(a_Y),
         DirectX::XMConvertToRadians(a_Z));
 
+    CalculateForwardUpAndSideVector();
     m_Modified = true;
 }
 
@@ -221,6 +242,34 @@ void triebWerk::CTransform::SetRotationDegrees(DirectX::XMVECTOR a_Rotation)
     a_Rotation.m128_f32[2] = DirectX::XMConvertToRadians(a_Rotation.m128_f32[2]);
 
     m_Rotation = DirectX::XMQuaternionRotationRollPitchYawFromVector(a_Rotation);
+
+    CalculateForwardUpAndSideVector();
+    m_Modified = true;
+}
+
+void triebWerk::CTransform::RotateDegrees(const float a_X, const float a_Y, const float a_Z)
+{
+    DirectX::XMVECTOR rotation = DirectX::XMQuaternionRotationRollPitchYaw(
+        DirectX::XMConvertToRadians(a_X),
+        DirectX::XMConvertToRadians(a_Y),
+        DirectX::XMConvertToRadians(a_Z));
+
+    m_Rotation = DirectX::XMQuaternionMultiply(m_Rotation, rotation);
+
+    CalculateForwardUpAndSideVector();
+    m_Modified = true;
+}
+
+void triebWerk::CTransform::RotateDegrees(DirectX::XMVECTOR a_Rotation)
+{
+    a_Rotation.m128_f32[0] = DirectX::XMConvertToRadians(a_Rotation.m128_f32[0]);
+    a_Rotation.m128_f32[1] = DirectX::XMConvertToRadians(a_Rotation.m128_f32[1]);
+    a_Rotation.m128_f32[2] = DirectX::XMConvertToRadians(a_Rotation.m128_f32[2]);
+
+    m_Rotation = DirectX::XMQuaternionMultiply(m_Rotation, a_Rotation);
+
+    CalculateForwardUpAndSideVector();
+    m_Modified = true;
 }
 
 void triebWerk::CTransform::SetPivot(const float a_X, const float a_Y, const float a_Z)
@@ -243,6 +292,17 @@ bool triebWerk::CTransform::IsModified() const
 void triebWerk::CTransform::SetModifiedStateFalse()
 {
     m_Modified = false;
+}
+
+void triebWerk::CTransform::CalculateForwardUpAndSideVector()
+{
+    DirectX::XMVECTOR forward = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
+    DirectX::XMVECTOR up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+    DirectX::XMVECTOR side = DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);
+
+    m_Forward = DirectX::XMVector3Rotate(forward, m_Rotation);
+    m_Up = DirectX::XMVector3Rotate(up, m_Rotation);
+    m_Side = DirectX::XMVector3Rotate(side, m_Rotation);
 }
 
 void triebWerk::CTransform::UpdateChildPosition()

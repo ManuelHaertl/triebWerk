@@ -17,6 +17,8 @@ namespace triebWerk
         size_t m_CurrentSize;
 
         std::vector<CEntity*> m_Entities;
+        std::vector<IBehaviour*> m_UpdateEntities;
+        size_t m_EntitiesToUpdate;
         std::vector<CEntity*> m_DrawEntities;
         size_t m_EntitiesToDraw;
         std::vector<CEntity*> m_RemoveEntities;

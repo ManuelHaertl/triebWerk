@@ -18,5 +18,8 @@ namespace triebWerk
 	public:
 		void Update();
 
+        void Enable();
+        void Disable();
+        bool IsInDebug() const;
 	};
 }

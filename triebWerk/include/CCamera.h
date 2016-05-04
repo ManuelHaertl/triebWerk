@@ -20,6 +20,8 @@ namespace triebWerk
 		float m_FOV;
 		float m_NearPlane;
 		float m_FarPlane;
+        DirectX::XMVECTOR m_Forward;
+        DirectX::XMVECTOR m_Up;
 
 		bool m_Modified;
 
@@ -40,11 +42,15 @@ namespace triebWerk
 		void SetFOV(const float a_FOV);
 		void SetNear(const float a_NearPlane);
 		void SetFar(const float a_FarPlane);
+        void SetUp(const DirectX::XMVECTOR a_Up);
 
 		float GetAspect() const;
 		float GetFOV() const;
 		float GetNear() const;
 		float GetFar() const;
+        DirectX::XMVECTOR GetForward() const;
+        DirectX::XMVECTOR GetUp() const;
+
 	private:
 		void CalculateProjection();
 		void DetermineViewport();

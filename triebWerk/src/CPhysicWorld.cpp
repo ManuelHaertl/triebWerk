@@ -45,6 +45,7 @@ triebWerk::CSphereCollider* triebWerk::CPhysicWorld::CreateSphereCollider() cons
 void triebWerk::CPhysicWorld::AddPhysicEntity(CPhysicEntity* const a_pPhysicEntity)
 {
     // add the entity and all sub categories in it's specific vector
+    a_pPhysicEntity->GetBody()->m_pTransform = &(a_pPhysicEntity->m_pEntity->m_Transform);
 
     m_Entities.push_back(a_pPhysicEntity);
     a_pPhysicEntity->SetInPhysicWorldState(true);
@@ -53,6 +54,7 @@ void triebWerk::CPhysicWorld::AddPhysicEntity(CPhysicEntity* const a_pPhysicEnti
 
     for (ICollider* pCollider : a_pPhysicEntity->m_Collider)
     {
+        pCollider->m_pEntity = a_pPhysicEntity->m_pEntity;
         AddCollider(pCollider);
     }
 }

@@ -16,6 +16,7 @@ namespace triebWerk
 
         virtual void Start();
         virtual void Update();
+        virtual void LateUpdate();
         virtual void End();
 
         virtual void CollisionEnter(CCollisionEvent a_Collision);

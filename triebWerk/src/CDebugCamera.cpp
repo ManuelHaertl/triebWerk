@@ -3,59 +3,115 @@
 
 triebWerk::CDebugCamera::CDebugCamera() :
 	m_pMainCamera(nullptr),
-	m_RotationX(0),
-	m_RotationY(0),
-	m_ZoomSpeed(6)
+    m_RotationX(0.0f),
+    m_RotationY(0.0f)
 {
+
 }
 
 triebWerk::CDebugCamera::~CDebugCamera()
 {
 }
 
-void triebWerk::CDebugCamera::Update()
+void triebWerk::CDebugCamera::StartDebugging()
 {
-	if (m_pMainCamera == nullptr)
-	{
-		m_pMainCamera = CEngine::Instance().m_pRenderer->GetCurrentActiveCamera();
-	}
-
-	short zoom = twMouse.GetWheelMovement();
-	if (zoom != 0)
-	{
-		float t = zoom * m_ZoomSpeed * twTime->GetDeltaTime();
-		m_pMainCamera->m_Transform.SetPosition(0, 0, m_pMainCamera->m_Transform.GetPosition().m128_f32[2] + t);
-	}
-
-	if (twMouse.IsState(triebWerk::EMouseButton::Left, triebWerk::EButtonState::Pressed))
-	{
-		DirectX::XMINT2 currentMousePosition = twMouse.GetPosition();
-		float xvel = static_cast<float>((m_PreviousMousePosition.x - currentMousePosition.x) * 1000);
-		m_RotationX += xvel * twTime->GetDeltaTime();
-
-		float yvel = static_cast<float>((m_PreviousMousePosition.y - currentMousePosition.y) * 1000);
-		m_RotationY += yvel * twTime->GetDeltaTime();
-
-		m_pMainCamera->m_Transform.SetRotation(DirectX::XMQuaternionMultiply(DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(0, 1, 0, 0), DirectX::XMConvertToRadians(-m_RotationX)), DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(-1, 0, 0, 0), DirectX::XMConvertToRadians(m_RotationY))));
-		
-		m_PreviousMousePosition = twMouse.GetPosition();
-	}
-	else
-	{
-		m_PreviousMousePosition = twMouse.GetPosition();
-	}
-
-	if (twMouse.IsState(EMouseButton::Middle, EButtonState::Down))
-	{
-		m_pMainCamera->m_Transform.SetPosition(0, 0, -6);
-		m_pMainCamera->m_Transform.SetRotation(DirectX::XMQuaternionIdentity());
-		m_RotationY = 0;
-		m_RotationX = 0;
-	}
-
+    m_pMainCamera = CEngine::Instance().m_pRenderer->GetCurrentActiveCamera();
+    m_PreviousMousePosition = twMouse.GetPosition();
 }
 
-void triebWerk::CDebugCamera::SetZoomSpeed(float a_Speed)
+void triebWerk::CDebugCamera::EndDebugging()
 {
-	m_ZoomSpeed = a_Speed;
+}
+
+void triebWerk::CDebugCamera::Update()
+{
+    MouseRotation();
+    MouseFOV();
+    KeyboardMovement();
+}
+
+void triebWerk::CDebugCamera::MouseRotation()
+{
+    DirectX::XMINT2 currentMousePosition = twMouse.GetPosition();
+
+    if (twMouse.IsState(triebWerk::EMouseButton::Left, triebWerk::EButtonState::Pressed))
+    {
+        m_RotationX += -static_cast<float>((m_PreviousMousePosition.x - currentMousePosition.x) * RotateSpeed);
+        m_RotationY += -static_cast<float>((m_PreviousMousePosition.y - currentMousePosition.y) * RotateSpeed);
+
+        m_pMainCamera->m_Transform.SetRotationDegrees(m_RotationY, m_RotationX, 0.0f);
+    }
+
+    m_PreviousMousePosition = currentMousePosition;
+}
+
+void triebWerk::CDebugCamera::MouseFOV()
+{
+    float amount = static_cast<float>(twMouse.GetWheelMovement());
+
+    if (twKeyboard.IsState(triebWerk::EKey::Shift, triebWerk::EButtonState::Pressed))
+        amount *= FastMovementSpeedFactor;
+
+    if (amount != 0)
+    {
+        float fov = m_pMainCamera->GetFOV() + DirectX::XMConvertToRadians(amount * FOVZoomSpeed);
+        m_pMainCamera->SetFOV(fov);
+        std::cout << "FOV: " << DirectX::XMConvertToDegrees(fov) << std::endl;
+    }
+}
+
+void triebWerk::CDebugCamera::KeyboardMovement()
+{
+    float speed = MovementSpeed;
+
+    if (twKeyboard.IsState(triebWerk::EKey::Shift, triebWerk::EButtonState::Pressed))
+        speed *= FastMovementSpeedFactor;
+
+    // forward
+    if (twKeyboard.IsState(triebWerk::EKey::W, triebWerk::EButtonState::Pressed))
+    {
+        DirectX::XMVECTOR position = m_pMainCamera->m_Transform.GetPosition();
+        DirectX::XMVECTOR forward = DirectX::XMVectorScale(m_pMainCamera->m_Transform.GetForward(), speed * twTime->GetDeltaTime());
+        m_pMainCamera->m_Transform.SetPosition(DirectX::XMVectorAdd(position, forward));
+    }
+
+    // backwards
+    if (twKeyboard.IsState(triebWerk::EKey::S, triebWerk::EButtonState::Pressed))
+    {
+        DirectX::XMVECTOR position = m_pMainCamera->m_Transform.GetPosition();
+        DirectX::XMVECTOR forward = DirectX::XMVectorScale(m_pMainCamera->m_Transform.GetForward(), speed * twTime->GetDeltaTime());
+        m_pMainCamera->m_Transform.SetPosition(DirectX::XMVectorSubtract(position, forward));
+    }
+
+    // sidwards, right
+    if (twKeyboard.IsState(triebWerk::EKey::D, triebWerk::EButtonState::Pressed))
+    {
+        DirectX::XMVECTOR position = m_pMainCamera->m_Transform.GetPosition();
+        DirectX::XMVECTOR forward = DirectX::XMVectorScale(m_pMainCamera->m_Transform.GetSide(), speed * twTime->GetDeltaTime());
+        m_pMainCamera->m_Transform.SetPosition(DirectX::XMVectorAdd(position, forward));
+    }
+
+    // sidewards left
+    if (twKeyboard.IsState(triebWerk::EKey::A, triebWerk::EButtonState::Pressed))
+    {
+        DirectX::XMVECTOR position = m_pMainCamera->m_Transform.GetPosition();
+        DirectX::XMVECTOR forward = DirectX::XMVectorScale(m_pMainCamera->m_Transform.GetSide(), speed * twTime->GetDeltaTime());
+        m_pMainCamera->m_Transform.SetPosition(DirectX::XMVectorSubtract(position, forward));
+    }
+
+    // up
+    if (twKeyboard.IsState(triebWerk::EKey::Space, triebWerk::EButtonState::Pressed))
+    {
+        DirectX::XMVECTOR position = m_pMainCamera->m_Transform.GetPosition();
+        position.m128_f32[1] += speed * twTime->GetDeltaTime();
+        m_pMainCamera->m_Transform.SetPosition(position);
+    }
+
+    // down
+    if (twKeyboard.IsState(triebWerk::EKey::Z, triebWerk::EButtonState::Pressed))
+    {
+        DirectX::XMVECTOR position = m_pMainCamera->m_Transform.GetPosition();
+        position.m128_f32[1] -= speed * twTime->GetDeltaTime();
+        m_pMainCamera->m_Transform.SetPosition(position);
+    }
 }

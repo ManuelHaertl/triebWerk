@@ -9,6 +9,10 @@ class CGameScene : public IScene
 private:
     CPattern* m_pPattern;
     size_t m_PatternCount;
+    int m_MinDifficulty;
+    int m_MaxDifficulty;
+    int m_MinPriority;
+    int m_MaxPriority;
 
 public:
     CGameScene();
@@ -20,4 +24,8 @@ public:
 
 private:
     void LoadAllPattern();
+    void CreateFloorAndSidewalls();
+    void CreatePattern();
+    void CreateTestCubes();
+    void CreatePlayer();
 };

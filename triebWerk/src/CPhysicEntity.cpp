@@ -4,7 +4,6 @@
 #include <CEntity.h>
 
 triebWerk::CPhysicEntity::CPhysicEntity(size_t a_EntityID, CPhysicWorld* a_pPhysicWorld) :
-    //m_pTransform(nullptr),
     m_pPhysicWorld(a_pPhysicWorld),
     m_pBody(nullptr),
     m_IsInPhysicWorld(false),
@@ -41,8 +40,8 @@ void triebWerk::CPhysicEntity::SetBody(CBody* a_pBody)
 {
     RemoveBody();
     m_pBody = a_pBody;
-   // m_pBody->m_pTransform = m_pTransform;
-    m_pBody->m_pTransform = &m_pEntity->m_Transform;
+
+    m_pBody->m_pTransform = &(m_pEntity->m_Transform);
 
     if (m_IsInPhysicWorld)
         m_pPhysicWorld->AddBody(a_pBody);
@@ -50,7 +49,6 @@ void triebWerk::CPhysicEntity::SetBody(CBody* a_pBody)
     // give all collider the new body
     for (ICollider* pCollider : m_Collider)
         pCollider->m_pEntity = m_pEntity;
-        //pCollider->m_pBody = m_pBody;
 }
 
 void triebWerk::CPhysicEntity::AddCollider(ICollider* a_pCollider)
