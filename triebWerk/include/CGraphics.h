@@ -31,6 +31,7 @@ namespace triebWerk
 		ID3D11InputLayout* m_pInputLayout;
 		ID3D11Texture2D* m_pBackBufferTexture;
 		D3D11_TEXTURE2D_DESC m_bbDesc;
+		ID3D11BlendState* m_pBlendState;
 	
 		//Debug
 		ID3D11VertexShader* m_pVertexShader;

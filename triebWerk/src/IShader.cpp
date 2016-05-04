@@ -7,7 +7,6 @@ triebWerk::IShader::IShader()
 
 triebWerk::IShader::~IShader()
 {
-	std::cout << "Delete Sghader" << std::endl;
 }
 
 void triebWerk::IShader::SetInputLayout(ID3D11InputLayout* a_pInputLayout)

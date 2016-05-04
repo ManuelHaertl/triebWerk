@@ -14,9 +14,10 @@ triebWerk::CGraphics::CGraphics() :
 	m_pInputLayout(nullptr),
 	m_pRasterState(nullptr),
 	m_pRenderTargetView(nullptr),
-	m_pSwapChain(nullptr)
+	m_pSwapChain(nullptr),
+	m_pBlendState(nullptr)
 {
-	m_ClearColor = DirectX::XMVectorSet(1, 1, 1, 1);
+	m_ClearColor = DirectX::XMVectorSet(0.2, 0.2, 0.2, 1);
 }
 
 triebWerk::CGraphics::~CGraphics()
@@ -133,7 +134,7 @@ bool triebWerk::CGraphics::Initialize(HWND & a_rWindowHandle, const unsigned int
 
 	// Setup the raster state
 	rasterDesc.AntialiasedLineEnable = false;
-	rasterDesc.CullMode = D3D11_CULL_NONE;
+	rasterDesc.CullMode = D3D11_CULL_BACK;
 	rasterDesc.DepthBias = 0;
 	rasterDesc.DepthBiasClamp = 0.0f;
 	rasterDesc.DepthClipEnable = true;
@@ -146,6 +147,22 @@ bool triebWerk::CGraphics::Initialize(HWND & a_rWindowHandle, const unsigned int
 	result = m_pDevice->CreateRasterizerState(&rasterDesc, &m_pRasterState);
 	if (FAILED(result))
 		return false;
+
+	D3D11_BLEND_DESC blendStateDescription;
+	ZeroMemory(&blendStateDescription, sizeof(D3D11_BLEND_DESC));
+	blendStateDescription.AlphaToCoverageEnable = false;
+	blendStateDescription.IndependentBlendEnable = false;
+	blendStateDescription.RenderTarget[0].BlendEnable = true;
+	blendStateDescription.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	blendStateDescription.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	blendStateDescription.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	blendStateDescription.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ZERO;
+	blendStateDescription.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
+	blendStateDescription.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	blendStateDescription.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+	result = this->m_pDevice->CreateBlendState(&blendStateDescription, &m_pBlendState);
+	this->m_pDeviceContext->OMSetBlendState(m_pBlendState, 0, 0xffffffff);
 
 	m_pDeviceContext->RSSetState(m_pRasterState);
 

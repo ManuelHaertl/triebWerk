@@ -3,7 +3,8 @@
 triebWerk::CEntity::CEntity() :
     m_pBehaviour(nullptr),
     m_pPhysicEntity(nullptr),
-    m_IsInWorld(false)
+    m_IsInWorld(false),
+	m_pDrawable(nullptr)
 {
 }
 

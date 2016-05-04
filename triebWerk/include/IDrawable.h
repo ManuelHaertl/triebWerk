@@ -1,5 +1,6 @@
 #pragma once
-#include <IRenderCommand.h>
+
+#include <DirectXMath.h>
 
 namespace triebWerk
 {
@@ -21,7 +22,6 @@ namespace triebWerk
 
 
 	protected:
-		IRenderCommand* m_RenderCommand;
 		EDrawableType m_Type;
 
 	public:
@@ -29,8 +29,9 @@ namespace triebWerk
 		virtual ~IDrawable();
 
 	public:
-		virtual IRenderCommand* GetRenderCommand(CEntity* a_pThisEntity) = 0;
 		virtual EDrawableType GetType() = 0;
+
+		virtual void SetTransform(const DirectX::XMMATRIX& a_rTransform) = 0;
 
 		void SetActive(bool a_State);
 		bool IsActive();

@@ -1,16 +1,16 @@
 #pragma once
 #include <IDrawable.h>
 #include <vector>
-#include <CRenderCommandMesh.h>
 #include <CGraphics.h>
 #include <CCamera.h>
+#include <CMeshDrawable.h>
 
 namespace triebWerk
 {
 	class CRenderer
 	{
 	private:
-		std::vector<IRenderCommand*> m_CommandList;
+		std::vector<IDrawable*> m_CommandList;
 		std::vector<CCamera*> m_CameraBuffer;
 		CGraphics* m_pGraphicsHandle;
 		CCamera* m_pCurrentCamera;
@@ -32,8 +32,10 @@ namespace triebWerk
 		void SetActiveCamera(CCamera* a_pCamera);
 		CCamera* GetCurrentActiveCamera();
 
+		CMeshDrawable* CreateMeshDrawable();
+
 		//Command Functions
-		void AddRenderCommand(IRenderCommand* a_pRenderCommand);
+		void AddRenderCommand(IDrawable* a_pRenderCommand);
 
 		void DrawScene();
 	};

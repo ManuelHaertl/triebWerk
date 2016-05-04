@@ -7,7 +7,7 @@ triebWerk::CVertexShader::CVertexShader()
 
 triebWerk::CVertexShader::~CVertexShader()
 {
-	m_pD3DVertexShader->Release();
+	//m_pD3DVertexShader->Release();
 }
 
 void * triebWerk::CVertexShader::GetD3D11Shader()

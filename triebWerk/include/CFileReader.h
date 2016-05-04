@@ -19,7 +19,7 @@ public:
 protected:
 	bool ReadData(const char* a_pLoadPath);
 	bool ReachedEndOfFile();
-	std::string GetLine();
+	std::string& GetLine();
 	std::string GetAllData();
 	void CloseFile();
 	unsigned int GetLineCount();

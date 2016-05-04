@@ -169,7 +169,6 @@
     <ClCompile Include="src\CPhysicEntity.cpp" />
     <ClCompile Include="src\CPhysicWorld.cpp" />
     <ClCompile Include="src\CPixelShader.cpp" />
-    <ClCompile Include="src\CRenderCommandMesh.cpp" />
     <ClCompile Include="src\CRenderer.cpp" />
     <ClCompile Include="src\CResourceManager.cpp" />
     <ClCompile Include="src\CSphereCollider.cpp" />
@@ -187,7 +186,6 @@
     <ClCompile Include="src\ICollider.cpp" />
     <ClCompile Include="src\IDrawable.cpp" />
     <ClCompile Include="src\IMapLayer.cpp" />
-    <ClCompile Include="src\IRenderCommand.cpp" />
     <ClCompile Include="src\IShader.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -223,7 +221,6 @@
     <ClInclude Include="include\CPhysicEntity.h" />
     <ClInclude Include="include\CPhysicWorld.h" />
     <ClInclude Include="include\CPixelShader.h" />
-    <ClInclude Include="include\CRenderCommandMesh.h" />
     <ClInclude Include="include\CRenderer.h" />
     <ClInclude Include="include\CResourceManager.h" />
     <ClInclude Include="include\CSphereCollider.h" />
@@ -251,7 +248,6 @@
     <ClInclude Include="include\IDrawable.h" />
     <ClInclude Include="include\ICollider.h" />
     <ClInclude Include="include\IMapLayer.h" />
-    <ClInclude Include="include\IRenderCommand.h" />
     <ClInclude Include="include\IShader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -44,17 +44,20 @@ void triebWerk::CResourceManager::CleanUp()
 		delete texture.second;
 	}
 
-	for (auto material : m_MaterialBuffer)
+	for (const auto& material : m_MaterialBuffer)
 	{
-		delete material.second->m_pPixelShader;
-		delete material.second->m_pVertexShader;
+		material.second->m_pVertexShader.m_pD3DVertexShader->Release();
+		material.second->m_pPixelShader.m_pD3DPixelShader->Release();
 		delete material.second;
 	}
+
+
 
 	m_ConfigurationBuffer.clear();
 	m_TextureBuffer.clear();
 	m_TilesetBuffer.clear();
 	m_MeshBuffer.clear();
+	m_MaterialBuffer.clear();
 }
 
 const char& triebWerk::CResourceManager::GetModulPath()
@@ -161,7 +164,7 @@ triebWerk::CMesh * triebWerk::CResourceManager::GetMesh(const char * a_pMeshName
 	}
 }
 
-triebWerk::CMaterial * triebWerk::CResourceManager::GetMaterial(const char * a_pEffectName)
+triebWerk::CMaterial* triebWerk::CResourceManager::GetMaterial(const char * a_pEffectName)
 {
 	auto foundIterator = m_MaterialBuffer.find(StringHasher(a_pEffectName));
 
@@ -285,7 +288,7 @@ void triebWerk::CResourceManager::LoadPNG(SFile a_File)
 
 		texture->SetTexture(width, height, d3dtexture, resourceView);
 
-		m_TextureBuffer.insert(CTexturePair(StringHasher(a_File.FileName), texture));
+		m_TextureBuffer.insert(CTexturePair(StringHasher(RemoveFileType(a_File.FileName)), texture));
 	}
 
 }
@@ -301,7 +304,7 @@ void triebWerk::CResourceManager::LoadOBJ(SFile a_File)
 
 	mesh->m_pVertexBuffer = m_pGraphicsHandle->CreateVertexBuffer(mesh->m_pVertices, mesh->m_VertexCount);
 
-	m_MeshBuffer.insert(CMeshPair(StringHasher(a_File.FileName), mesh));
+	m_MeshBuffer.insert(CMeshPair(StringHasher(RemoveFileType(a_File.FileName)), mesh));
 }
 
 void triebWerk::CResourceManager::LoadMP3(SFile a_File)
@@ -343,10 +346,11 @@ void triebWerk::CResourceManager::LoadTMX(SFile a_File)
 
 void triebWerk::CResourceManager::LoadHLSL(SFile a_File)
 {
+	CMaterial* temp = new CMaterial();
 	CHLSLParser hlslParser;
-	CMaterial* pMaterial = hlslParser.ParseShader(a_File.FilePath.c_str(), m_pGraphicsHandle);
+	hlslParser.ParseShader(a_File.FilePath.c_str(), m_pGraphicsHandle, temp);
 
-	m_MaterialBuffer.insert(CMaterialPair(StringHasher(RemoveFileType(a_File.FileName)), pMaterial));
+	m_MaterialBuffer.insert(CMaterialPair(StringHasher(RemoveFileType(a_File.FileName)), temp));
 }
 
 void triebWerk::CResourceManager::LoadINI(SFile a_File)
@@ -357,7 +361,7 @@ void triebWerk::CResourceManager::LoadINI(SFile a_File)
 	if (configuration == nullptr)
 		return;
 
-	m_ConfigurationBuffer.insert(CConfigurationPair(StringHasher(a_File.FileName), configuration));
+	m_ConfigurationBuffer.insert(CConfigurationPair(StringHasher(RemoveFileType(a_File.FileName)), configuration));
 }
 
 bool triebWerk::CResourceManager::SetModulPath()
@@ -437,7 +441,7 @@ std::vector<triebWerk::CResourceManager::SFile> triebWerk::CResourceManager::Sea
 	return filesToLoad;
 }
 
-bool triebWerk::CResourceManager::CompareFileTypes(std::string a_Name, const char * a_ExpectedType)
+bool triebWerk::CResourceManager::CompareFileTypes(const std::string& a_Name, const char * a_ExpectedType)
 {
 	int a = a_Name.compare(a_Name.find("."), std::string::npos, a_ExpectedType);
 	if (a == 0)
@@ -446,24 +450,24 @@ bool triebWerk::CResourceManager::CompareFileTypes(std::string a_Name, const cha
 	return false;
 }
 
-std::string triebWerk::CResourceManager::RemoveFileType(std::string a_Name)
+std::string triebWerk::CResourceManager::RemoveFileType(const std::string& a_Name)
 {
 	return a_Name.substr(0, a_Name.find("."));
 }
 
-std::string triebWerk::CResourceManager::AbstractFileNameFromPath(std::string a_Path)
+std::string triebWerk::CResourceManager::AbstractFileNameFromPath(const std::string& a_Path)
 {
 	return a_Path.substr(a_Path.rfind("\\") + 1, a_Path.size() - a_Path.rfind("\\") + 1);
 }
 
-std::string triebWerk::CResourceManager::AbstractFolderFromPath(std::string a_Path)
+std::string triebWerk::CResourceManager::AbstractFolderFromPath(const std::string& a_Path)
 {
 	size_t end = a_Path.rfind("/", a_Path.rfind("/"));
 	size_t start = a_Path.rfind("/", a_Path.rfind("/") - 1) + 1;
 	return a_Path.substr(start, end - start);
 }
 
-triebWerk::EFileType triebWerk::CResourceManager::GetFileType(std::string a_FileName)
+triebWerk::EFileType triebWerk::CResourceManager::GetFileType(const std::string& a_FileName)
 {
 	std::string fileType = a_FileName.substr(a_FileName.find("."), a_FileName.size() - a_FileName.find("."));
 

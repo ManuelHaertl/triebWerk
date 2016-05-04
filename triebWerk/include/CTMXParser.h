@@ -30,6 +30,6 @@ private:
 	void ReadObject(std::string& a_Line);
 
 	//TODO: Fix Index count
-	void RecalculateTilesetLayerIndices();
+	//void RecalculateTilesetLayerIndices();
 };
 }

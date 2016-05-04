@@ -33,7 +33,7 @@ void triebWerk::CRenderer::Shutdown()
 	m_CameraBuffer.clear();
 }
 
-void triebWerk::CRenderer::AddRenderCommand(IRenderCommand* a_pRenderCommand)
+void triebWerk::CRenderer::AddRenderCommand(IDrawable* a_pRenderCommand)
 {
 	m_CommandList.push_back(a_pRenderCommand);
 }
@@ -65,6 +65,13 @@ triebWerk::CCamera* triebWerk::CRenderer::GetCurrentActiveCamera()
 	return m_pCurrentCamera;
 }
 
+triebWerk::CMeshDrawable* triebWerk::CRenderer::CreateMeshDrawable()
+{
+	CMeshDrawable* drawable = new CMeshDrawable();
+
+	return drawable;
+}
+
 void triebWerk::CRenderer::DrawScene()
 {
 	m_pGraphicsHandle->ClearRenderTarget();
@@ -74,27 +81,27 @@ void triebWerk::CRenderer::DrawScene()
 	{
 		switch (pRenderCommand->GetType())
 		{
-		case IRenderCommand::ECommandType::Mesh:
+		case IDrawable::EDrawableType::Mesh:
 		{
-			CRenderCommandMesh* meshCommand = reinterpret_cast<CRenderCommandMesh*>(pRenderCommand);
+			CMeshDrawable* meshCommand = reinterpret_cast<CMeshDrawable*>(pRenderCommand);
 			
-			this->m_pGraphicsHandle->GetDeviceContext()->VSSetShader(meshCommand->m_pMaterial->m_pVertexShader->m_pD3DVertexShader, 0, 0);
+			//Set Vertex and InputLayout
+			this->m_pGraphicsHandle->GetDeviceContext()->VSSetShader(meshCommand->m_Material.m_pVertexShader.m_pD3DVertexShader, 0, 0);
+			this->m_pGraphicsHandle->GetDeviceContext()->IASetInputLayout(meshCommand->m_Material.m_pVertexShader.GetInputLayout());
 
-			this->m_pGraphicsHandle->GetDeviceContext()->PSSetShader(meshCommand->m_pMaterial->m_pPixelShader->m_pD3DPixelShader, 0, 0);
+			this->m_pGraphicsHandle->GetDeviceContext()->PSSetShader(meshCommand->m_Material.m_pPixelShader.m_pD3DPixelShader, 0, 0);
 
-			meshCommand->m_pMaterial->m_ConstantBuffer.SetConstantBuffer(this->m_pGraphicsHandle->GetDeviceContext(), meshCommand->m_Transformation, m_pCurrentCamera->GetViewMatrix(), m_pCurrentCamera->GetProjection());
+			meshCommand->m_Material.m_ConstantBuffer.SetConstantBuffer(this->m_pGraphicsHandle->GetDeviceContext(), meshCommand->m_Transformation, m_pCurrentCamera->GetViewMatrix(), m_pCurrentCamera->GetProjection());
 
-			this->m_pGraphicsHandle->GetDeviceContext()->IASetInputLayout(meshCommand->m_pMaterial->m_pVertexShader->GetInputLayout());
-
-			for(size_t i = 0; i <  meshCommand->m_pMaterial->m_pVertexShader->m_Textures.size(); i++)
+			for(size_t i = 0; i <  meshCommand->m_Material.m_pVertexShader.m_Textures.size(); i++)
 			{
-				ID3D11ShaderResourceView* pResourceView = meshCommand->m_pMaterial->m_pVertexShader->m_Textures[i]->GetShaderResourceView();
+				ID3D11ShaderResourceView* pResourceView = meshCommand->m_Material.m_pVertexShader.m_Textures[i]->GetShaderResourceView();
 				m_pGraphicsHandle->GetDeviceContext()->PSSetShaderResources(i, 1, &pResourceView);
 			}
 
-			for (size_t i = 0; i < meshCommand->m_pMaterial->m_pPixelShader->m_Textures.size(); i++)
+			for (size_t i = 0; i < meshCommand->m_Material.m_pPixelShader.m_Textures.size(); i++)
 			{
-				ID3D11ShaderResourceView* pResourceView = meshCommand->m_pMaterial->m_pPixelShader->m_Textures[i]->GetShaderResourceView();
+				ID3D11ShaderResourceView* pResourceView = meshCommand->m_Material.m_pPixelShader.m_Textures[i]->GetShaderResourceView();
 				m_pGraphicsHandle->GetDeviceContext()->PSSetShaderResources(i, 1, &pResourceView);
 			}
 

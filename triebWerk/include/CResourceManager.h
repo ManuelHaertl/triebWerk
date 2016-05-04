@@ -103,10 +103,10 @@ namespace triebWerk
 		std::vector<SFile> SearchFolderForAllFiles(const char* a_FolderToLoad);
 
 		//String helper functions
-		bool CompareFileTypes(std::string a_Name, const char* a_ExpectedType);
-		std::string RemoveFileType(std::string a_Name);
-		std::string AbstractFileNameFromPath(std::string a_Path);
-		std::string AbstractFolderFromPath(std::string a_Path);
-		EFileType GetFileType(std::string a_FileName);
+		bool CompareFileTypes(const std::string& a_Name, const char* a_ExpectedType);
+		std::string RemoveFileType(const std::string& a_Name);
+		std::string AbstractFileNameFromPath(const std::string& a_Path);
+		std::string AbstractFolderFromPath(const std::string& a_Path);
+		EFileType GetFileType(const std::string& a_FileName);
 	};
 }
