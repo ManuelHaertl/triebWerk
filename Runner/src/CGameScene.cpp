@@ -16,12 +16,12 @@ CGameScene::~CGameScene()
 
 void CGameScene::Start()
 {
-    LoadAllPattern();
-    CreateFloorAndSidewalls();
-    CreatePattern();
-    //CreateTestCubes();
+    //LoadAllPattern();
+    //CreateFloorAndSidewalls();
+    //CreatePattern();
+    CreateTestCubes();
 
-    CreatePlayer();
+    //CreatePlayer();
 
     // camera settings
     auto camera = twEngine.m_pRenderer->GetCurrentActiveCamera();
@@ -66,13 +66,17 @@ void CGameScene::LoadAllPattern()
 
 void CGameScene::CreateFloorAndSidewalls()
 {
+    DirectX::XMFLOAT3 colorSideWalls = { 1.0f, 0.5f, 0.5f };
+    DirectX::XMFLOAT3 colorFloor = { 0.1f, 0.1f, 0.1f };
+
     auto wallLeft = twWorld->CreateEntity();
     wallLeft->m_Transform.SetPosition(-24.5f, 2.5f, 50.0f);
     wallLeft->m_Transform.SetScale(1.0f, 5.0f, 1000.0f);
 
     triebWerk::CMeshDrawable* meshLeft = twRenderer->CreateMeshDrawable();
     meshLeft->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube");
-    meshLeft->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardRed"));
+    meshLeft->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
+    meshLeft->m_Material.m_ConstantBuffer.SetValueInBuffer(3, &colorSideWalls);
     wallLeft->SetDrawable(meshLeft);
     twWorld->AddEntity(wallLeft);
 
@@ -82,7 +86,8 @@ void CGameScene::CreateFloorAndSidewalls()
 
     triebWerk::CMeshDrawable* meshRight = twRenderer->CreateMeshDrawable();
     meshRight->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube");
-    meshRight->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardRed"));
+    meshRight->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
+    meshRight->m_Material.m_ConstantBuffer.SetValueInBuffer(3, &colorSideWalls);
     wallRight->SetDrawable(meshRight);
     twWorld->AddEntity(wallRight);
 
@@ -92,7 +97,8 @@ void CGameScene::CreateFloorAndSidewalls()
 
     triebWerk::CMeshDrawable* meshBottom = twRenderer->CreateMeshDrawable();
     meshBottom->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube");
-    meshBottom->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardGray"));
+    meshBottom->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
+    meshBottom->m_Material.m_ConstantBuffer.SetValueInBuffer(3, &colorFloor);
     floor->SetDrawable(meshBottom);
     twWorld->AddEntity(floor);
 }
@@ -100,6 +106,7 @@ void CGameScene::CreateFloorAndSidewalls()
 void CGameScene::CreatePattern()
 {
     CPattern& pattern = m_pPattern[0];
+    DirectX::XMFLOAT3 colorBlock = { 0.9f, 0.9f, 0.9f };
 
     for (size_t i = 0; i < pattern.m_Tiles.size(); ++i)
     {
@@ -115,7 +122,8 @@ void CGameScene::CreatePattern()
 
             triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
             mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube");
-            mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardDarkGray"));
+            mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
+            mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(3, &colorBlock);
             entity->SetDrawable(mesh);
             twWorld->AddEntity(entity);
             break;
@@ -128,7 +136,8 @@ void CGameScene::CreatePattern()
 
             triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
             mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube");
-            mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardGray"));
+            mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
+            mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(3, &colorBlock);
             entity->SetDrawable(mesh);
             twWorld->AddEntity(entity);
             break;
@@ -139,9 +148,10 @@ void CGameScene::CreatePattern()
 
 void CGameScene::CreateTestCubes()
 {
-    const int range = 40;
+    const int range = 20;
     const int incrementer = 5;
     const int freeArea = 1;
+    DirectX::XMFLOAT3 colorBlock = { 0.5f, 0.5f, 0.5f };
 
     for (int x = -range; x < range; x += incrementer)
     {
@@ -154,7 +164,8 @@ void CGameScene::CreateTestCubes()
 
                 triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
                 mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube");
-                mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardGray"));
+                mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
+                mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(3, &colorBlock);
                 entity->SetDrawable(mesh);
                 twWorld->AddEntity(entity);
             }
@@ -164,6 +175,8 @@ void CGameScene::CreateTestCubes()
 
 void CGameScene::CreatePlayer()
 {
+    DirectX::XMFLOAT3 colorPlayer = { 0.0f, 0.0f, 1.0f };
+
     auto player = twWorld->CreateEntity();
 
     // Transform
@@ -177,7 +190,8 @@ void CGameScene::CreatePlayer()
     // Drawable
     triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
     mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube");
-    mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("Standard"));
+    mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
+    mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(3, &colorPlayer);
     player->SetDrawable(mesh);
 
     // Physic
