@@ -70,9 +70,9 @@ void CGameScene::CreateFloorAndSidewalls()
     wallLeft->m_Transform.SetPosition(-24.5f, 2.5f, 50.0f);
     wallLeft->m_Transform.SetScale(1.0f, 5.0f, 1000.0f);
 
-    triebWerk::CMeshDrawable* meshLeft = new triebWerk::CMeshDrawable();
-    meshLeft->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube.obj");
-    meshLeft->m_Material = twEngine.m_pResourceManager->GetMaterial("StandardRed");
+    triebWerk::CMeshDrawable* meshLeft = twRenderer->CreateMeshDrawable();
+    meshLeft->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube");
+    meshLeft->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardRed"));
     wallLeft->SetDrawable(meshLeft);
     twWorld->AddEntity(wallLeft);
 
@@ -80,9 +80,9 @@ void CGameScene::CreateFloorAndSidewalls()
     wallRight->m_Transform.SetPosition(25.5f, 2.5f, 50.0f);
     wallRight->m_Transform.SetScale(1.0f, 5.0f, 1000.0f);
 
-    triebWerk::CMeshDrawable* meshRight = new triebWerk::CMeshDrawable();
-    meshRight->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube.obj");
-    meshRight->m_Material = twEngine.m_pResourceManager->GetMaterial("StandardRed");
+    triebWerk::CMeshDrawable* meshRight = twRenderer->CreateMeshDrawable();
+    meshRight->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube");
+    meshRight->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardRed"));
     wallRight->SetDrawable(meshRight);
     twWorld->AddEntity(wallRight);
 
@@ -90,9 +90,9 @@ void CGameScene::CreateFloorAndSidewalls()
     floor->m_Transform.SetPosition(0.0f, -0.5f, 0.0f);
     floor->m_Transform.SetScale(1000.0f, 1.0f, 1000.0f);
 
-    triebWerk::CMeshDrawable* meshBottom = new triebWerk::CMeshDrawable();
-    meshBottom->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube.obj");
-    meshBottom->m_Material = twEngine.m_pResourceManager->GetMaterial("StandardGray");
+    triebWerk::CMeshDrawable* meshBottom = twRenderer->CreateMeshDrawable();
+    meshBottom->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube");
+    meshBottom->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardGray"));
     floor->SetDrawable(meshBottom);
     twWorld->AddEntity(floor);
 }
@@ -113,9 +113,9 @@ void CGameScene::CreatePattern()
             entity->m_Transform.SetPosition(tile.m_X, 1.5f, tile.m_Y);
             entity->m_Transform.SetScale(1.0f, 3.0f, 1.0f);
 
-            triebWerk::CMeshDrawable* mesh = new triebWerk::CMeshDrawable();
-            mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube.obj");
-            mesh->m_Material = twEngine.m_pResourceManager->GetMaterial("StandardDarkGray");
+            triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
+            mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube");
+            mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardDarkGray"));
             entity->SetDrawable(mesh);
             twWorld->AddEntity(entity);
             break;
@@ -126,9 +126,9 @@ void CGameScene::CreatePattern()
             entity->m_Transform.SetPosition(tile.m_X, 0.0f, tile.m_Y);
             entity->m_Transform.SetScale(2.0f, 1.0f, 2.0f);
 
-            triebWerk::CMeshDrawable* mesh = new triebWerk::CMeshDrawable();
-            mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube.obj");
-            mesh->m_Material = twEngine.m_pResourceManager->GetMaterial("StandardGray");
+            triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
+            mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube");
+            mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardGray"));
             entity->SetDrawable(mesh);
             twWorld->AddEntity(entity);
             break;
@@ -152,9 +152,9 @@ void CGameScene::CreateTestCubes()
                 auto entity = twWorld->CreateEntity();
                 entity->m_Transform.SetPosition(x, y, z);
 
-                triebWerk::CMeshDrawable* mesh = new triebWerk::CMeshDrawable();
-                mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube.obj");
-                mesh->m_Material = twEngine.m_pResourceManager->GetMaterial("StandardGray");
+                triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
+                mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube");
+                mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardGray"));
                 entity->SetDrawable(mesh);
                 twWorld->AddEntity(entity);
             }
@@ -175,9 +175,9 @@ void CGameScene::CreatePlayer()
     player->SetBehaviour(new CPlayer());
 
     // Drawable
-    triebWerk::CMeshDrawable* mesh = new triebWerk::CMeshDrawable();
-    mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube.obj");
-    mesh->m_Material = twEngine.m_pResourceManager->GetMaterial("Standard");
+    triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
+    mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube");
+    mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("Standard"));
     player->SetDrawable(mesh);
 
     // Physic

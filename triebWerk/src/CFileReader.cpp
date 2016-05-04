@@ -29,7 +29,7 @@ bool triebWerk::CFileReader::ReachedEndOfFile()
 	return this->m_ReachedEnd;
 }
 
-std::string& triebWerk::CFileReader::GetLine()
+std::string triebWerk::CFileReader::GetLine()
 {
 	//Search for next backspace and return this Line
 	size_t nextLine = m_Data.find("\n", m_StringIterator);
