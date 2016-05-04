@@ -17,7 +17,7 @@ triebWerk::CGraphics::CGraphics() :
 	m_pSwapChain(nullptr),
 	m_pBlendState(nullptr)
 {
-	m_ClearColor = DirectX::XMVectorSet(0.2, 0.2, 0.2, 1);
+	m_ClearColor = DirectX::XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
 }
 
 triebWerk::CGraphics::~CGraphics()

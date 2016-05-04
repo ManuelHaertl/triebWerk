@@ -17,6 +17,9 @@ namespace triebWerk
 		};
 
 	public:
+		//BEBUG
+		float DEBUG_Distance;
+
 		CMaterial m_Material;
 		CMesh* m_pMesh;
 

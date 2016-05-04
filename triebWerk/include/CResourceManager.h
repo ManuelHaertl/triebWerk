@@ -4,6 +4,7 @@
 #include <Windows.h>
 #include <unordered_map>
 #include <d3d11.h>
+#include <assert.h>
 
 #include <CGraphics.h>
 #include <EFileType.h>

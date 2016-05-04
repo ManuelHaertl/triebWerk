@@ -34,6 +34,12 @@ void CGameScene::Start()
 
 void CGameScene::Update()
 {
+	for (size_t i = 0; i < twWorld->GetEntityCount(); ++i)
+	{
+		twWorld->GetEntity(i)->m_Transform.RotateDegrees(40 * twTime->GetDeltaTime(), 40 * twTime->GetDeltaTime(), 40 * twTime->GetDeltaTime());
+	}
+
+
     if (twKeyboard.IsState(triebWerk::EKey::F3, triebWerk::EButtonState::Down))
     {
         if (!twDebug->IsInDebug())
@@ -148,10 +154,11 @@ void CGameScene::CreatePattern()
 
 void CGameScene::CreateTestCubes()
 {
-    const int range = 20;
+    const int range = 10;
     const int incrementer = 5;
     const int freeArea = 1;
-    DirectX::XMFLOAT3 colorBlock = { 0.5f, 0.5f, 0.5f };
+
+	DirectX::XMFLOAT3 colorBlock = { 0.5f, 0.5f, 0.5f };
 
     for (int x = -range; x < range; x += incrementer)
     {
@@ -161,11 +168,14 @@ void CGameScene::CreateTestCubes()
             {
                 auto entity = twWorld->CreateEntity();
                 entity->m_Transform.SetPosition(x, y, z);
+				entity->m_Transform.SetScale(2, 2, 2);
 
                 triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
                 mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube");
-                mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
-                mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(3, &colorBlock);
+                mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardTexture"));
+               // mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(3, &colorBlock);
+				mesh->m_Material.m_pPixelShader.m_Textures.push_back(twResourceManager->GetTexture2D("texture3"));
+				mesh->m_Transparency = true;
                 entity->SetDrawable(mesh);
                 twWorld->AddEntity(entity);
             }

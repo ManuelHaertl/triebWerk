@@ -51,7 +51,7 @@ void triebWerk::CKeyboard::UpdateMSG(const MSG & a_rMSG)
         {
             m_KeyState[a_rMSG.wParam] = EButtonState::Up;
             m_UpdateKey = true;
-            m_UpdateKeyValue = a_rMSG.wParam;
+            m_UpdateKeyValue = static_cast<unsigned int>(a_rMSG.wParam);
             m_UpdateButtonState = EButtonState::Released;
         }
         else

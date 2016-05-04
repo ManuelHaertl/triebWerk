@@ -72,10 +72,63 @@ triebWerk::CMeshDrawable* triebWerk::CRenderer::CreateMeshDrawable()
 	return drawable;
 }
 
+void triebWerk::CRenderer::ZSortTransparency()
+{
+	for (size_t i = 0; i < m_CommandList.size(); ++i)
+	{
+		switch (m_CommandList[i]->GetType())
+		{
+		case IDrawable::EDrawableType::Mesh:
+		{
+			CMeshDrawable* meshCommand = reinterpret_cast<CMeshDrawable*>(m_CommandList[i]);
+
+			if (meshCommand->m_Transparency == true)
+			{
+				for (size_t j = 0; j < m_Transperency.size(); ++j)
+				{
+					DirectX::XMVECTOR test = meshCommand->m_Transformation.r[3];
+
+					DirectX::XMVECTOR dis = DirectX::XMVector4LengthEst(DirectX::XMVectorSubtract(test, m_pCurrentCamera->m_Transform.GetPosition()));
+					if (m_Transperency[j]->DEBUG_Distance > dis.m128_f32[0])
+					{
+						meshCommand->DEBUG_Distance = dis.m128_f32[0];
+						m_Transperency.push_back(meshCommand);
+						break;
+					}
+					else
+					{
+						meshCommand->DEBUG_Distance = dis.m128_f32[0];
+						m_Transperency.insert(m_Transperency.begin() + j, meshCommand);
+						break;
+					}
+
+					int a = 0;
+				}
+
+				if (m_Transperency.size() == 0)
+				{
+					DirectX::XMVECTOR dis = DirectX::XMVector4LengthEst(DirectX::XMVectorSubtract(meshCommand->m_Transformation.r[3], m_pCurrentCamera->m_Transform.GetPosition()));
+					
+					meshCommand->DEBUG_Distance = dis.m128_f32[0];
+					m_Transperency.push_back(meshCommand);
+
+				}
+
+				m_CommandList.erase(m_CommandList.begin()+ i);
+				--i;
+			}
+
+		}break;
+		}
+	}
+}
+
 void triebWerk::CRenderer::DrawScene()
 {
 	m_pGraphicsHandle->ClearRenderTarget();
 	m_pCurrentCamera->Update();
+
+	ZSortTransparency();
 
 	for (auto pRenderCommand : m_CommandList)
 	{
@@ -96,26 +149,56 @@ void triebWerk::CRenderer::DrawScene()
 			for(size_t i = 0; i <  meshCommand->m_Material.m_pVertexShader.m_Textures.size(); i++)
 			{
 				ID3D11ShaderResourceView* pResourceView = meshCommand->m_Material.m_pVertexShader.m_Textures[i]->GetShaderResourceView();
-				m_pGraphicsHandle->GetDeviceContext()->PSSetShaderResources(i, 1, &pResourceView);
+				m_pGraphicsHandle->GetDeviceContext()->PSSetShaderResources(static_cast<UINT>(i), 1, &pResourceView);
 			}
 
 			for (size_t i = 0; i < meshCommand->m_Material.m_pPixelShader.m_Textures.size(); i++)
 			{
 				ID3D11ShaderResourceView* pResourceView = meshCommand->m_Material.m_pPixelShader.m_Textures[i]->GetShaderResourceView();
-				m_pGraphicsHandle->GetDeviceContext()->PSSetShaderResources(i, 1, &pResourceView);
+				m_pGraphicsHandle->GetDeviceContext()->PSSetShaderResources(static_cast<UINT>(i), 1, &pResourceView);
 			}
 
 			UINT offset = 0;
 			m_pGraphicsHandle->GetDeviceContext()->IASetVertexBuffers(0, 1, &meshCommand->m_pMesh->m_pVertexBuffer, &meshCommand->m_Stride, &offset);
 
 			m_pGraphicsHandle->GetDeviceContext()->IASetPrimitiveTopology(meshCommand->m_Topology);
-			m_pGraphicsHandle->GetDeviceContext()->Draw(meshCommand->m_pMesh->m_VertexCount, 0);
+			m_pGraphicsHandle->GetDeviceContext()->Draw(static_cast<UINT>(meshCommand->m_pMesh->m_VertexCount), 0);
 
 		}break;
 		}
 	}
 
+	for (auto meshCommand : m_Transperency)
+	{
+		//Set Vertex and InputLayout
+		this->m_pGraphicsHandle->GetDeviceContext()->VSSetShader(meshCommand->m_Material.m_pVertexShader.m_pD3DVertexShader, 0, 0);
+		this->m_pGraphicsHandle->GetDeviceContext()->IASetInputLayout(meshCommand->m_Material.m_pVertexShader.GetInputLayout());
+
+		this->m_pGraphicsHandle->GetDeviceContext()->PSSetShader(meshCommand->m_Material.m_pPixelShader.m_pD3DPixelShader, 0, 0);
+
+		meshCommand->m_Material.m_ConstantBuffer.SetConstantBuffer(this->m_pGraphicsHandle->GetDeviceContext(), meshCommand->m_Transformation, m_pCurrentCamera->GetViewMatrix(), m_pCurrentCamera->GetProjection());
+
+		for (size_t i = 0; i < meshCommand->m_Material.m_pVertexShader.m_Textures.size(); i++)
+		{
+			ID3D11ShaderResourceView* pResourceView = meshCommand->m_Material.m_pVertexShader.m_Textures[i]->GetShaderResourceView();
+			m_pGraphicsHandle->GetDeviceContext()->PSSetShaderResources(static_cast<UINT>(i), 1, &pResourceView);
+		}
+
+		for (size_t i = 0; i < meshCommand->m_Material.m_pPixelShader.m_Textures.size(); i++)
+		{
+			ID3D11ShaderResourceView* pResourceView = meshCommand->m_Material.m_pPixelShader.m_Textures[i]->GetShaderResourceView();
+			m_pGraphicsHandle->GetDeviceContext()->PSSetShaderResources(static_cast<UINT>(i), 1, &pResourceView);
+		}
+
+		UINT offset = 0;
+		m_pGraphicsHandle->GetDeviceContext()->IASetVertexBuffers(0, 1, &meshCommand->m_pMesh->m_pVertexBuffer, &meshCommand->m_Stride, &offset);
+
+		m_pGraphicsHandle->GetDeviceContext()->IASetPrimitiveTopology(meshCommand->m_Topology);
+		m_pGraphicsHandle->GetDeviceContext()->Draw(static_cast<UINT>(meshCommand->m_pMesh->m_VertexCount), 0);
+	}
+
 	m_pGraphicsHandle->Present();
 
+	m_Transperency.clear();
 	m_CommandList.clear();
 }

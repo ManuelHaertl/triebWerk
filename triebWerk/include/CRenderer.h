@@ -11,6 +11,7 @@ namespace triebWerk
 	{
 	private:
 		std::vector<IDrawable*> m_CommandList;
+		std::vector<CMeshDrawable*> m_Transperency;
 		std::vector<CCamera*> m_CameraBuffer;
 		CGraphics* m_pGraphicsHandle;
 		CCamera* m_pCurrentCamera;
@@ -33,6 +34,8 @@ namespace triebWerk
 		CCamera* GetCurrentActiveCamera();
 
 		CMeshDrawable* CreateMeshDrawable();
+
+		void ZSortTransparency();
 
 		//Command Functions
 		void AddRenderCommand(IDrawable* a_pRenderCommand);

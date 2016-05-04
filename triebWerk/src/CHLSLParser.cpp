@@ -1,7 +1,13 @@
 #include <CHLSLParser.h>
 #include <iostream>
 
-triebWerk::CHLSLParser::CHLSLParser()
+triebWerk::CHLSLParser::CHLSLParser() :
+	m_pVSByteCode(nullptr),
+	m_pPSByteCode(nullptr),
+	m_pHSByteCode(nullptr),
+	m_pGSByteCode(nullptr),
+	m_pDSByteCode(nullptr),
+	m_pCSByteCode(nullptr)
 {
 }
 
@@ -12,6 +18,12 @@ triebWerk::CHLSLParser::~CHLSLParser()
 void triebWerk::CHLSLParser::ParseShader(const char* a_pShaderPath, CGraphics* a_pGraphicHandle, CMaterial* a_pMaterialOut)
 {
 	CompileShader(a_pShaderPath);
+
+	std::string name = a_pShaderPath;
+	name = name.substr(name.rfind("\\") + 1, name.size() - name.rfind("\\"));
+	name = name.substr(0, name.find("."));
+
+	a_pMaterialOut->m_ID.Setname(name);
 
 	SetConstantBuffers(m_pVSByteCode, &a_pMaterialOut->m_ConstantBuffer);
 
@@ -64,7 +76,7 @@ void triebWerk::CHLSLParser::CompileShader(const char * a_pShaderPath)
 
 	//Cast shader path to widechar 
 	WCHAR shaderPath[MAX_PATH] = { 0 };
-	MultiByteToWideChar(0, 0, a_pShaderPath, strlen(a_pShaderPath), shaderPath, MAX_PATH);
+	MultiByteToWideChar(0, 0, a_pShaderPath, static_cast<int>(strlen(a_pShaderPath)), shaderPath, MAX_PATH);
 
 	//Try to find EntryPoint for specific Shader if found compile the Shader
 
@@ -188,7 +200,7 @@ void triebWerk::CHLSLParser::SetBoundResources(ID3DBlob * a_pShaderByteCode, ISh
 	for (size_t i = 0; i < shaderDescription.BoundResources; ++i)
 	{
 		D3D11_SHADER_INPUT_BIND_DESC resourceDesc;
-		pReflector->GetResourceBindingDesc(i, &resourceDesc);
+		pReflector->GetResourceBindingDesc(static_cast<UINT>(i), &resourceDesc);
 
 		if (resourceDesc.Type == D3D_SIT_TEXTURE)
 		{
