@@ -7,7 +7,6 @@ triebWerk::CPixelShader::CPixelShader()
 
 triebWerk::CPixelShader::~CPixelShader()
 {
-	m_pD3DPixelShader->Release();
 }
 
 void * triebWerk::CPixelShader::GetD3D11Shader()

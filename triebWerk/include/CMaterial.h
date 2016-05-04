@@ -9,12 +9,15 @@ namespace triebWerk
 	class CMaterial
 	{
 	public:
-		CVertexShader* m_pVertexShader;
-		CPixelShader* m_pPixelShader;
+		CVertexShader m_pVertexShader;
+		CPixelShader m_pPixelShader;
 		CConstantBuffer m_ConstantBuffer;
 
 	public:
 		CMaterial();
 		~CMaterial();
+
+	public:
+		void SetMaterial(const CMaterial* a_pMaterial);
 	};
 }

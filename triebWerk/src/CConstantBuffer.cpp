@@ -9,7 +9,11 @@ triebWerk::CConstantBuffer::CConstantBuffer() :
 triebWerk::CConstantBuffer::~CConstantBuffer()
 {
 	if (m_pBuffer != nullptr)
+	{
 		delete m_pBuffer;
+		m_pBuffer = nullptr;
+	}
+
 }
 
 void triebWerk::CConstantBuffer::FillConstantBufferWithSpecialValues(int a_NumberOfArguments ...)
@@ -63,9 +67,14 @@ void triebWerk::CConstantBuffer::SetConstantBuffer(ID3D11DeviceContext * a_pDevi
 
 void triebWerk::CConstantBuffer::InitializeConstantBufffer(ID3D11Device * a_pDevice)
 {
-	m_pBuffer = new char[BuffferDescription.Size];
-
 	HRESULT hr;
+	if (m_pBuffer != nullptr)
+	{
+		delete m_pBuffer;
+		m_pBuffer = nullptr;
+	}
+
+	m_pBuffer = new char[BuffferDescription.Size];
 
 	D3D11_BUFFER_DESC constantBufferDescription;
 	constantBufferDescription.ByteWidth = BuffferDescription.Size;

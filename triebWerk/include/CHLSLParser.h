@@ -35,7 +35,7 @@ namespace triebWerk
 		~CHLSLParser();
 
 	public:
-		CMaterial* ParseShader(const char* a_pShaderPath, CGraphics* a_pGraphicHandle);
+		void ParseShader(const char* a_pShaderPath, CGraphics* a_pGraphicHandle, CMaterial* a_pMaterialOut);
 	
 	private:
 		//TODO: Write this errors into the log
@@ -45,8 +45,8 @@ namespace triebWerk
 		ID3D11InputLayout* GetInputLayout(ID3DBlob* a_pShaderByteCode, CGraphics* a_pGraphicHandle);
 		void SetConstantBuffers(ID3DBlob* a_pShaderByteCode, CConstantBuffer* a_pConstantBuffer);
 		void SetBoundResources(ID3DBlob* a_pShaderbyteCode, IShader* a_PShader);
-		CVertexShader* CreateVertexShader(CGraphics* a_pGraphicHandle);
-		CPixelShader* CreatePixelShader(CGraphics* a_pGraphicHandle);
+		void CreateVertexShader(CGraphics* a_pGraphicHandle, CVertexShader* a_pShaderOut);
+		void CreatePixelShader(CGraphics* a_pGraphicHandle, CPixelShader* a_PShaderOut);
 		void CreateHullShader();
 		void CreateGeometryShader();
 		void CreateDomainShader();

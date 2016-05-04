@@ -54,7 +54,8 @@ bool triebWerk::CWorld::Update(const float a_DeltaTime)
     // Update Order #3: Collect all Entities that shall be rendered
     for (size_t i = 0; i < m_EntitiesToDraw; ++i)
     {
-        m_pRenderingHandle->AddRenderCommand(m_DrawEntities[i]->GetDrawable()->GetRenderCommand(m_DrawEntities[i]));
+		m_DrawEntities[i]->GetDrawable()->SetTransform(m_DrawEntities[i]->m_Transform.GetTransformation());
+        m_pRenderingHandle->AddRenderCommand(m_DrawEntities[i]->GetDrawable());
     }
 
     // Update Order #4: Draw all Entities

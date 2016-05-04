@@ -9,55 +9,41 @@ triebWerk::CHLSLParser::~CHLSLParser()
 {
 }
 
-triebWerk::CMaterial* triebWerk::CHLSLParser::ParseShader(const char* a_pShaderPath, CGraphics* a_pGraphicHandle)
+void triebWerk::CHLSLParser::ParseShader(const char* a_pShaderPath, CGraphics* a_pGraphicHandle, CMaterial* a_pMaterialOut)
 {
 	CompileShader(a_pShaderPath);
 
-	CMaterial* pMaterial = new CMaterial();
+	SetConstantBuffers(m_pVSByteCode, &a_pMaterialOut->m_ConstantBuffer);
 
-	SetConstantBuffers(m_pVSByteCode, &pMaterial->m_ConstantBuffer);
-
-	pMaterial->m_ConstantBuffer.InitializeConstantBufffer(a_pGraphicHandle->GetDevice());
-
-	//Now create the specific Shader if they could be compiled
+	a_pMaterialOut->m_ConstantBuffer.InitializeConstantBufffer(a_pGraphicHandle->GetDevice());
 
 	if (m_pVSByteCode != nullptr)
-		pMaterial->m_pVertexShader = CreateVertexShader(a_pGraphicHandle);
+		CreateVertexShader(a_pGraphicHandle, &a_pMaterialOut->m_pVertexShader);
 
 	if (m_pPSByteCode != nullptr)
-		pMaterial->m_pPixelShader = CreatePixelShader(a_pGraphicHandle);
-
-	return pMaterial;
+		CreatePixelShader(a_pGraphicHandle, &a_pMaterialOut->m_pPixelShader);
 }
 
-triebWerk::CVertexShader* triebWerk::CHLSLParser::CreateVertexShader(CGraphics* a_pGraphicHandle)
+void triebWerk::CHLSLParser::CreateVertexShader(CGraphics* a_pGraphicHandle, CVertexShader* a_pShaderOut)
 {
 	HRESULT hResult;
 
-	CVertexShader* pVertexShader = new CVertexShader();
+	a_pShaderOut->SetInputLayout(GetInputLayout(m_pVSByteCode, a_pGraphicHandle));
 
-	pVertexShader->SetInputLayout(GetInputLayout(m_pVSByteCode, a_pGraphicHandle));
+	SetBoundResources(m_pVSByteCode, a_pShaderOut);
 
-	SetBoundResources(m_pVSByteCode, pVertexShader);
-
-	hResult = a_pGraphicHandle->GetDevice()->CreateVertexShader(m_pVSByteCode->GetBufferPointer(), m_pVSByteCode->GetBufferSize(), NULL, &pVertexShader->m_pD3DVertexShader);
-
-	return pVertexShader;
+	hResult = a_pGraphicHandle->GetDevice()->CreateVertexShader(m_pVSByteCode->GetBufferPointer(), m_pVSByteCode->GetBufferSize(), NULL, &a_pShaderOut->m_pD3DVertexShader);
 }
 
-triebWerk::CPixelShader* triebWerk::CHLSLParser::CreatePixelShader(CGraphics* a_pGraphicHandle)
+void triebWerk::CHLSLParser::CreatePixelShader(CGraphics* a_pGraphicHandle, CPixelShader* a_pShaderOut)
 {
 	HRESULT hResult;
 
-	CPixelShader* pPixelShader = new CPixelShader();
+	a_pShaderOut->SetInputLayout(GetInputLayout(m_pPSByteCode, a_pGraphicHandle));
 
-	pPixelShader->SetInputLayout(GetInputLayout(m_pPSByteCode, a_pGraphicHandle));
+	SetBoundResources(m_pPSByteCode, a_pShaderOut);
 
-	SetBoundResources(m_pPSByteCode, pPixelShader);
-
-	hResult = a_pGraphicHandle->GetDevice()->CreatePixelShader(m_pPSByteCode->GetBufferPointer(), m_pPSByteCode->GetBufferSize(), NULL, &pPixelShader->m_pD3DPixelShader);
-
-	return pPixelShader;
+	hResult = a_pGraphicHandle->GetDevice()->CreatePixelShader(m_pPSByteCode->GetBufferPointer(), m_pPSByteCode->GetBufferSize(), NULL, &a_pShaderOut->m_pD3DPixelShader);
 }
 
 
@@ -168,26 +154,23 @@ void triebWerk::CHLSLParser::SetConstantBuffers(ID3DBlob* a_pShaderByteCode, tri
 
 	for (UINT i = 0; i < shaderDescription.ConstantBuffers; i++)
 	{
-		CConstantBuffer constantBuffer;
 		ID3D11ShaderReflectionConstantBuffer* pConstantBuffer = pReflector->GetConstantBufferByIndex(i);
-		pConstantBuffer->GetDesc(&constantBuffer.BuffferDescription);
+		pConstantBuffer->GetDesc(&a_pConstantBuffer->BuffferDescription);
 		 
-		for (UINT j = 0; j < constantBuffer.BuffferDescription.Variables; j++)
+		for (UINT j = 0; j < a_pConstantBuffer->BuffferDescription.Variables; j++)
 		{
 			ID3D11ShaderReflectionVariable* pVariable = pConstantBuffer->GetVariableByIndex(j);
 			D3D11_SHADER_VARIABLE_DESC variableDesc;
 			pVariable->GetDesc(&variableDesc);
 
-			constantBuffer.Variables.push_back(variableDesc);
+			a_pConstantBuffer->Variables.push_back(variableDesc);
 
 			ID3D11ShaderReflectionType* pType = pVariable->GetType();
 			D3D11_SHADER_TYPE_DESC typeDesc;
 			pType->GetDesc(&typeDesc);
 
-			constantBuffer.Types.push_back(typeDesc);
+			a_pConstantBuffer->Types.push_back(typeDesc);
 		}
-
-		*a_pConstantBuffer = constantBuffer;
 	}
 }
 

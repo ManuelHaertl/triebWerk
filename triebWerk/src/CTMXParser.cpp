@@ -58,7 +58,6 @@ triebWerk::CTilesetMap* triebWerk::CTMXParser::ParseData(const char * a_pFilePat
 
 	} while (!BeginLineWith(line, "</map>"));
 
-	this->RecalculateTilesetLayerIndices();
 
 	CloseFile();
 
@@ -324,45 +323,45 @@ void triebWerk::CTMXParser::ReadObject(std::string& a_Line)
 
 }
 
-void triebWerk::CTMXParser::RecalculateTilesetLayerIndices()
-{
-	short value = 0;
-	for (size_t i = 0; i < m_TilesetMap->m_Layers.size(); i++)
-	{
-
-
-		if (m_TilesetMap->m_Layers[i]->GetType() == IMapLayer::ETypes::MapLayer)
-		{
-			CMapLayer* maplayer = (CMapLayer*)m_TilesetMap->m_Layers[i];
-
-
-			for (size_t c = 0; c < maplayer->m_Indices.size(); c++)
-			{
-				if (maplayer->m_Indices[c] > 0)
-				{
-					value = maplayer->m_Indices[c];
-					break;
-				}
-			}
-
-			for (size_t x = 0; x < m_TilesetMap->m_Tilesets.size(); x++)
-			{
-				if (value >= m_TilesetMap->m_Tilesets[x]->m_FirstGid && value <= m_TilesetMap->m_Tilesets[x]->m_TileCount + m_TilesetMap->m_Tilesets[x]->m_FirstGid)
-				{
-					maplayer->m_TilesetName = m_TilesetMap->m_Tilesets[x]->m_ImageName.substr(m_TilesetMap->m_Tilesets[x]->m_ImageName.rfind("/") + 1, m_TilesetMap->m_Tilesets[x]->m_ImageName.size() - m_TilesetMap->m_Tilesets[x]->m_ImageName.rfind("/") + 1);
-
-					for (size_t y = 0; y < maplayer->m_Indices.size(); y++)
-					{
-						if (maplayer->m_Indices[y] > 0)
-						{
-							maplayer->m_Indices[y] = maplayer->m_Indices[y] - m_TilesetMap->m_Tilesets[x]->m_FirstGid;
-						}
-					}
-				}
-			}
-		}
-	}	
-}
+//void triebWerk::CTMXParser::RecalculateTilesetLayerIndices()
+//{
+//	short value = 0;
+//	for (size_t i = 0; i < m_TilesetMap->m_Layers.size(); i++)
+//	{
+//
+//
+//		if (m_TilesetMap->m_Layers[i]->GetType() == IMapLayer::ETypes::MapLayer)
+//		{
+//			CMapLayer* maplayer = (CMapLayer*)m_TilesetMap->m_Layers[i];
+//
+//
+//			for (size_t c = 0; c < maplayer->m_Indices.size(); c++)
+//			{
+//				if (maplayer->m_Indices[c] > 0)
+//				{
+//					value = maplayer->m_Indices[c];
+//					break;
+//				}
+//			}
+//
+//			for (size_t x = 0; x < m_TilesetMap->m_Tilesets.size(); x++)
+//			{
+//				if (value >= m_TilesetMap->m_Tilesets[x]->m_FirstGid && value <= m_TilesetMap->m_Tilesets[x]->m_TileCount + m_TilesetMap->m_Tilesets[x]->m_FirstGid)
+//				{
+//					maplayer->m_TilesetName = m_TilesetMap->m_Tilesets[x]->m_ImageName.substr(m_TilesetMap->m_Tilesets[x]->m_ImageName.rfind("/") + 1, m_TilesetMap->m_Tilesets[x]->m_ImageName.size() - m_TilesetMap->m_Tilesets[x]->m_ImageName.rfind("/") + 1);
+//
+//					for (size_t y = 0; y < maplayer->m_Indices.size(); y++)
+//					{
+//						if (maplayer->m_Indices[y] > 0)
+//						{
+//							maplayer->m_Indices[y] = maplayer->m_Indices[y] - m_TilesetMap->m_Tilesets[x]->m_FirstGid;
+//						}
+//					}
+//				}
+//			}
+//		}
+//	}	
+//}
 
 void triebWerk::CTMXParser::ReadMap(std::string& a_Line)
 {
