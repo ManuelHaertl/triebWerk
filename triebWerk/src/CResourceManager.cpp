@@ -33,7 +33,7 @@ void triebWerk::CResourceManager::CleanUp()
 	for (auto mesh : m_MeshBuffer)
 	{
 		mesh.second->m_pVertexBuffer->Release();
-		delete mesh.second->m_pVertices;
+		//delete mesh.second->m_pVertices;
 		delete mesh.second;
 	}
 
@@ -58,6 +58,13 @@ void triebWerk::CResourceManager::CleanUp()
 	m_TilesetBuffer.clear();
 	m_MeshBuffer.clear();
 	m_MaterialBuffer.clear();
+
+	m_FileWatcher.StopWatching();
+}
+
+void triebWerk::CResourceManager::Update()
+{
+
 }
 
 const char& triebWerk::CResourceManager::GetModulPath()
@@ -238,7 +245,7 @@ void triebWerk::CResourceManager::UnloadMesh(const char * a_pMeshName)
 	else
 	{
 		foundIterator->second->m_pVertexBuffer->Release();
-		delete foundIterator->second->m_pVertices;
+		//delete foundIterator->second->m_pVertices;
 		delete foundIterator->second;
 		m_MeshBuffer.erase(StringHasher(RemoveFileType(a_pMeshName)));
 	}
@@ -272,17 +279,18 @@ void triebWerk::CResourceManager::LoadFile(SFile a_File)
 void triebWerk::CResourceManager::LoadPNG(SFile a_File)
 {
 	CTexture2D* texture = new CTexture2D();
+	std::vector<unsigned char> imageBuffer;
 
 	unsigned int width;
 	unsigned int height;
 
-	unsigned int error = lodepng::decode(texture->m_PixelData, width, height, a_File.FilePath);
+	unsigned int error = lodepng::decode(imageBuffer, width, height, a_File.FilePath);
 
 	if (error != 0)
 		return;
 	else
 	{
-		ID3D11Texture2D* d3dtexture = m_pGraphicsHandle->CreateD3D11Texture2D(&texture->m_PixelData[0], width, height);
+		ID3D11Texture2D* d3dtexture = m_pGraphicsHandle->CreateD3D11Texture2D(&imageBuffer[0], width, height);
 
 		ID3D11ShaderResourceView* resourceView = m_pGraphicsHandle->CreateID3D11ShaderResourceView(d3dtexture);
 
@@ -301,8 +309,9 @@ void triebWerk::CResourceManager::LoadOBJ(SFile a_File)
 	CMesh* mesh = new CMesh();
 	mesh->m_VertexCount = objParser.m_VertexCount;
 	mesh->m_pVertices = objParser.m_pVertices;
-
-	mesh->m_pVertexBuffer = m_pGraphicsHandle->CreateVertexBuffer(mesh->m_pVertices, static_cast<unsigned int>(mesh->m_VertexCount));
+	mesh->m_IndexCount = objParser.m_IndexCount;
+	mesh->m_pVertexBuffer = m_pGraphicsHandle->CreateVertexBuffer(mesh->m_pVertices, mesh->m_VertexCount);
+	mesh->m_pIndexBuffer = m_pGraphicsHandle->CreateIndexBuffer(objParser.m_pIndices, sizeof(unsigned int) * objParser.m_IndexCount);
 
 	m_MeshBuffer.insert(CMeshPair(StringHasher(RemoveFileType(a_File.FileName)), mesh));
 }

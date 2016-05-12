@@ -47,6 +47,22 @@ std::string triebWerk::CFileReader::GetLine()
 	return t;
 }
 
+void triebWerk::CFileReader::GetLineFast(std::string & a_rString)
+{
+	//Search for next backspace and return this Line
+	size_t nextLine = m_Data.find("\n", m_StringIterator);
+	if (nextLine == std::string::npos)
+	{
+		m_ReachedEnd = true;
+	}
+
+	a_rString = m_Data.substr(m_StringIterator, nextLine - m_StringIterator);
+
+	m_StringIterator = nextLine + strlen("\n");
+
+	m_LineCounter++;
+}
+
 std::string triebWerk::CFileReader::GetAllData()
 {
 	return this->m_Data;

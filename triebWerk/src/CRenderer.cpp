@@ -160,9 +160,10 @@ void triebWerk::CRenderer::DrawScene()
 
 			UINT offset = 0;
 			m_pGraphicsHandle->GetDeviceContext()->IASetVertexBuffers(0, 1, &meshCommand->m_pMesh->m_pVertexBuffer, &meshCommand->m_Stride, &offset);
+			m_pGraphicsHandle->GetDeviceContext()->IASetIndexBuffer(meshCommand->m_pMesh->m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
 			m_pGraphicsHandle->GetDeviceContext()->IASetPrimitiveTopology(meshCommand->m_Topology);
-			m_pGraphicsHandle->GetDeviceContext()->Draw(static_cast<UINT>(meshCommand->m_pMesh->m_VertexCount), 0);
+			m_pGraphicsHandle->GetDeviceContext()->DrawIndexed(static_cast<UINT>(meshCommand->m_pMesh->m_IndexCount), 0, 0);
 
 		}break;
 		}
@@ -193,8 +194,10 @@ void triebWerk::CRenderer::DrawScene()
 		UINT offset = 0;
 		m_pGraphicsHandle->GetDeviceContext()->IASetVertexBuffers(0, 1, &meshCommand->m_pMesh->m_pVertexBuffer, &meshCommand->m_Stride, &offset);
 
+		m_pGraphicsHandle->GetDeviceContext()->IASetIndexBuffer(meshCommand->m_pMesh->m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+
 		m_pGraphicsHandle->GetDeviceContext()->IASetPrimitiveTopology(meshCommand->m_Topology);
-		m_pGraphicsHandle->GetDeviceContext()->Draw(static_cast<UINT>(meshCommand->m_pMesh->m_VertexCount), 0);
+		m_pGraphicsHandle->GetDeviceContext()->DrawIndexed(static_cast<UINT>(meshCommand->m_pMesh->m_IndexCount), 0, 0);
 	}
 
 	m_pGraphicsHandle->Present();

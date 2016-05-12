@@ -184,6 +184,12 @@
     <Filter Include="Headerdateien\Resource\Resources\TilesetMap\Layers\Object">
       <UniqueIdentifier>{61897cbc-e838-4925-8451-c1868aae1fcb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Quelldateien\Resource\FileWatcher">
+      <UniqueIdentifier>{302ecbc8-5fdd-4c60-9949-3fe3758874e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Resource\FileWatcher">
+      <UniqueIdentifier>{d0bebe81-538d-4b5d-9409-1a3a3694cfdd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CEngine.cpp">
@@ -338,6 +344,9 @@
     </ClCompile>
     <ClCompile Include="src\CID.cpp">
       <Filter>Quelldateien\World\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CFileWatcher.cpp">
+      <Filter>Quelldateien\Resource\FileWatcher</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -520,6 +529,9 @@
     </ClInclude>
     <ClInclude Include="include\CID.h">
       <Filter>Headerdateien\World\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CFileWatcher.h">
+      <Filter>Headerdateien\Resource\FileWatcher</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
