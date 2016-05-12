@@ -211,7 +211,7 @@ void triebWerk::CPhysicWorld::CheckCollisionEvents()
     {
         ICollider* collider = m_DynamicCollider[i];
 
-        for (size_t j = collider->m_CollisionEvents.size() - 1; j >= 0; --j)
+        for (int j = collider->m_CollisionEvents.size() - 1; j >= 0; --j)
         {
             CCollisionEvent& collEvent = collider->m_CollisionEvents[j];
 
