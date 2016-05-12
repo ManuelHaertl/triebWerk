@@ -26,7 +26,7 @@ void triebWerk::CID::SetName(const char* a_pName)
     HashName();
 }
 
-void triebWerk::CID::Setname(const std::string a_Name)
+void triebWerk::CID::SetName(const std::string a_Name)
 {
     m_Name = a_Name;
     HashName();

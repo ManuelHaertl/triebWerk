@@ -16,7 +16,9 @@ triebWerk::CDebugCamera::~CDebugCamera()
 void triebWerk::CDebugCamera::StartDebugging()
 {
     m_pMainCamera = CEngine::Instance().m_pRenderer->GetCurrentActiveCamera();
+
     m_PreviousMousePosition = twMouse.GetPosition();
+    m_pMainCamera->m_Transform.SetRotationDegrees(m_RotationY, m_RotationX, 0.0f);
 }
 
 void triebWerk::CDebugCamera::EndDebugging()

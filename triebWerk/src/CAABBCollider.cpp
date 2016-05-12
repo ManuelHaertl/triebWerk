@@ -1,3 +1,5 @@
+#include "..\include\CAABBCollider.h"
+#include "..\include\CAABBCollider.h"
 #include <CAABBCollider.h>
 #include <CEntity.h>
 
@@ -61,6 +63,28 @@ void triebWerk::CAABBCollider::SetMin(const DirectX::XMVECTOR a_Min)
 void triebWerk::CAABBCollider::SetMax(const DirectX::XMVECTOR a_Max)
 {
     m_Max = a_Max;
+
+    SafeUpdateWorldCollider();
+}
+
+void triebWerk::CAABBCollider::SetSize(const DirectX::XMVECTOR a_Size)
+{
+    SetSize(a_Size.m128_f32[0], a_Size.m128_f32[1], a_Size.m128_f32[2]);
+}
+
+void triebWerk::CAABBCollider::SetSize(const float a_X, const float a_Y, const float a_Z)
+{
+    float xHalf = a_X / 2.0f;
+    float yHalf = a_Y / 2.0f;
+    float zHalf = a_Z / 2.0f;
+
+    m_Min.m128_f32[0] = -xHalf;
+    m_Min.m128_f32[1] = -yHalf;
+    m_Min.m128_f32[2] = -zHalf;
+
+    m_Max.m128_f32[0] = xHalf;
+    m_Max.m128_f32[1] = yHalf;
+    m_Max.m128_f32[2] = zHalf;
 
     SafeUpdateWorldCollider();
 }

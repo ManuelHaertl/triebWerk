@@ -12,8 +12,6 @@ triebWerk::CCamera::CCamera() :
 {
 	m_ProjectionMatrix = DirectX::XMMatrixIdentity();
 	m_ViewMatrix = DirectX::XMMatrixIdentity();
-    m_Forward = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
-    m_Up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 }
 
 triebWerk::CCamera::CCamera(float a_Aspect, float a_FOV, float a_Near, float a_Far, unsigned int a_ScreenHeight, unsigned int a_ScreenWidth)
@@ -25,12 +23,8 @@ triebWerk::CCamera::CCamera(float a_Aspect, float a_FOV, float a_Near, float a_F
 	m_ScreenHeight = a_ScreenHeight;
 	m_ScreenWidth = a_ScreenWidth;
 
-    m_Forward = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
-    m_Up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-
+    CalculateView();
 	CalculateProjection();
-
-	DetermineViewport();
 }
 
 triebWerk::CCamera::~CCamera()
@@ -39,21 +33,19 @@ triebWerk::CCamera::~CCamera()
 
 void triebWerk::CCamera::Update()
 {
+    // calculate View Matrix
     if (m_Transform.IsModified())
     {
-        DirectX::XMVECTOR lookAt = DirectX::XMVectorAdd(m_Transform.GetPosition(), m_Transform.GetForward());
-
-        m_ViewMatrix = DirectX::XMMatrixLookAtLH(m_Transform.GetPosition(), lookAt, m_Transform.GetUp());
-
+        CalculateView();
         m_Transform.SetModifiedStateFalse();
     }
 
-
-	if (m_Modified)
-	{
-		CalculateProjection();
-		m_Modified = false;
-	}
+    // calculate Projection Matrix
+    if (m_Modified)
+    {
+        CalculateProjection();
+        m_Modified = false;
+    }
 }
 
 DirectX::XMMATRIX & triebWerk::CCamera::GetViewMatrix()
@@ -90,11 +82,6 @@ void triebWerk::CCamera::SetFar(const float a_FarPlane)
 	m_Modified = true;
 }
 
-void triebWerk::CCamera::SetUp(const DirectX::XMVECTOR a_Up)
-{
-    m_Up = a_Up;
-}
-
 float triebWerk::CCamera::GetAspect() const
 {
 	return m_Aspect;
@@ -115,22 +102,13 @@ float triebWerk::CCamera::GetFar() const
 	return m_FarPlane;
 }
 
-DirectX::XMVECTOR triebWerk::CCamera::GetForward() const
+void triebWerk::CCamera::CalculateView()
 {
-    return m_Forward;
-}
-
-DirectX::XMVECTOR triebWerk::CCamera::GetUp() const
-{
-    return m_Up;
+    DirectX::XMVECTOR lookAt = DirectX::XMVectorAdd(m_Transform.GetPosition(), m_Transform.GetForward());
+    m_ViewMatrix = DirectX::XMMatrixLookAtLH(m_Transform.GetPosition(), lookAt, m_Transform.GetUp());
 }
 
 void triebWerk::CCamera::CalculateProjection()
 {
-	m_ProjectionMatrix = DirectX::XMMatrixPerspectiveFovLH(m_FOV, m_Aspect, m_NearPlane, m_FarPlane);
-}
-
-void triebWerk::CCamera::DetermineViewport()
-{
-
+    m_ProjectionMatrix = DirectX::XMMatrixPerspectiveFovLH(m_FOV, m_Aspect, m_NearPlane, m_FarPlane);
 }

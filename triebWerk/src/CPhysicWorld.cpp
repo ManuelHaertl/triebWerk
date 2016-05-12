@@ -45,12 +45,15 @@ triebWerk::CSphereCollider* triebWerk::CPhysicWorld::CreateSphereCollider() cons
 void triebWerk::CPhysicWorld::AddPhysicEntity(CPhysicEntity* const a_pPhysicEntity)
 {
     // add the entity and all sub categories in it's specific vector
-    a_pPhysicEntity->GetBody()->m_pTransform = &(a_pPhysicEntity->m_pEntity->m_Transform);
-
     m_Entities.push_back(a_pPhysicEntity);
     a_pPhysicEntity->SetInPhysicWorldState(true);
 
-    AddBody(a_pPhysicEntity->GetBody());
+    CBody* body = a_pPhysicEntity->GetBody();
+    if (body != nullptr)
+    {
+        body->m_pTransform = &(a_pPhysicEntity->m_pEntity->m_Transform);
+        AddBody(body);
+    }
 
     for (ICollider* pCollider : a_pPhysicEntity->m_Collider)
     {
@@ -161,15 +164,20 @@ void triebWerk::CPhysicWorld::Update(const float a_DeltaTime)
 
     CCollision collision;
 
-    for (size_t i = 0; i < m_DynamicCollider.size(); ++i)
+    size_t dynamicSice = m_DynamicCollider.size();
+    size_t staticSize = m_StaticCollider.size();
+
+    for (size_t i = 0; i < dynamicSice; ++i)
     {
+        auto dynCollider = m_DynamicCollider[i];
+
         // check for other dynamic collider
-        for (size_t j = i + 1; j < m_DynamicCollider.size(); ++j)
-            collision.CheckCollision(m_DynamicCollider[i], m_DynamicCollider[j]);
+        for (size_t j = i + 1; j < dynamicSice; ++j)
+            collision.CheckCollision(dynCollider, m_DynamicCollider[j]);
 
         // and for all static ones
-        for (size_t j = 0; j < m_StaticCollider.size(); ++j)
-            collision.CheckCollision(m_DynamicCollider[i], m_StaticCollider[j]);
+        for (size_t j = 0; j < staticSize; ++j)
+            collision.CheckCollision(dynCollider, m_StaticCollider[j]);
     }
 
     CheckCollisionEvents();
@@ -177,16 +185,23 @@ void triebWerk::CPhysicWorld::Update(const float a_DeltaTime)
 
 void triebWerk::CPhysicWorld::UpdateCollider()
 {
-    for (size_t i = 0; i < m_StaticCollider.size(); ++i)
+    size_t sizeStatic = m_StaticCollider.size();
+    size_t sizeDynamic = m_DynamicCollider.size();
+
+    for (size_t i = 0; i < sizeStatic; ++i)
     {
-        if (m_StaticCollider[i]->m_pEntity->m_Transform.IsModified())
-            m_StaticCollider[i]->UpdateWorldCollider();
+        auto& collider = *m_StaticCollider[i];
+
+        if (collider.m_pEntity->m_Transform.IsModified())
+            collider.UpdateWorldCollider();
     }
 
-    for (size_t i = 0; i < m_DynamicCollider.size(); ++i)
+    for (size_t i = 0; i < sizeDynamic; ++i)
     {
-        if (m_DynamicCollider[i]->m_pEntity->m_Transform.IsModified())
-            m_DynamicCollider[i]->UpdateWorldCollider();
+        auto& collider = *m_DynamicCollider[i];
+
+        if (collider.m_pEntity->m_Transform.IsModified())
+            collider.UpdateWorldCollider();
     }
 }
 

@@ -17,7 +17,7 @@ namespace triebWerk
         size_t GetHash() const;
 
         void SetName(const char* a_pName);
-        void Setname(const std::string a_Name);
+        void SetName(const std::string a_Name);
 
     private:
         void HashName();

@@ -68,6 +68,19 @@ void triebWerk::CTime::SetTimeScale(const float a_TimeStamp)
     m_TimeScale = a_TimeStamp;
 }
 
+void triebWerk::CTime::StartPerformanceCounter()
+{
+    m_PerformanceStart = std::chrono::high_resolution_clock::now();
+}
+
+float triebWerk::CTime::EndPerformanceCounter()
+{
+    auto now = std::chrono::high_resolution_clock::now();
+    auto elapsedTime = std::chrono::duration_cast<std::chrono::duration<float>>(now - m_PerformanceStart);
+
+    return elapsedTime.count();
+}
+
 int triebWerk::CTime::GetFPS() const
 {
     return m_FPS;

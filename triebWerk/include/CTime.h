@@ -10,6 +10,7 @@ namespace triebWerk
 
         std::chrono::high_resolution_clock::time_point m_StartupTime;
         std::chrono::high_resolution_clock::time_point m_LastTime;
+        std::chrono::high_resolution_clock::time_point m_PerformanceStart;
         float m_DeltaTime;
         float m_UnscaledDeltaTime;
         float m_TimeSinceStartup;
@@ -33,6 +34,9 @@ namespace triebWerk
 
         float GetTimeScale() const;
         void SetTimeScale(const float a_TimeScale);
+
+        void StartPerformanceCounter();
+        float EndPerformanceCounter();
 
         int GetFPS() const;
     };

@@ -96,12 +96,14 @@ void CPatternLoader::SetMapLayer(triebWerk::CMapLayer* const a_pLayer, const siz
         {
             size_t current = y * width + x;
             short tile = a_pLayer->m_Indices[current];
-            float xPos = static_cast<float>(x - pattern.m_Width / 2.0f + 1);
-            float yPos = static_cast<float>(height - y - 1);
+            float xPos = static_cast<float>(x) - pattern.m_Width / 2.0f + 0.5f;
+            float yPos = static_cast<float>(height - y - 1) + 0.5f;
 
             SetMapLayerTile(tile, xPos, yPos, a_Index);
         }
     }
+
+    int bla = 5;
 }
 
 void CPatternLoader::SetMapLayerTile(const short a_Tile, const float a_X, const float a_Y, const size_t a_Index)
@@ -155,11 +157,11 @@ void CPatternLoader::SetObjectLayer(triebWerk::CObjectLayer* const a_pLayer, con
         if (type != ETileType::Invalid)
         {
             int xPos = objectProperty.m_X / objectProperty.m_Width;
-            int yPos = m_pPattern[a_Index].m_Height - objectProperty.m_Y / objectProperty.m_Height;
+            int yPos = static_cast<int>(m_pPattern[a_Index].m_Height) - objectProperty.m_Y / objectProperty.m_Height;
 
             SPatternTile patternTile;
-            patternTile.m_X = static_cast<float>(xPos - m_pPattern[a_Index].m_Width / 2.0f + 1);
-            patternTile.m_Y = static_cast<float>(yPos);
+            patternTile.m_X = static_cast<float>(xPos) - m_pPattern[a_Index].m_Width / 2.0f + 0.5f;
+            patternTile.m_Y = static_cast<float>(yPos) + 0.5f;
             patternTile.m_Type = type;
 
             InsertPatternTile(patternTile, a_Index);
@@ -222,7 +224,7 @@ void CPatternLoader::SetDefaultValues()
     }
 }
 
-void CPatternLoader::SetMinMaxDifficulty(const int a_Difficulty)
+void CPatternLoader::SetMinMaxDifficulty(const size_t a_Difficulty)
 {
     if (m_HasSetDifficulty == false)
     {
@@ -239,7 +241,7 @@ void CPatternLoader::SetMinMaxDifficulty(const int a_Difficulty)
         m_MaxDifficulty = a_Difficulty;
 }
 
-void CPatternLoader::SetMinMaxPriority(const int a_Priority)
+void CPatternLoader::SetMinMaxPriority(const size_t a_Priority)
 {
     if (m_HasSetPriority == false)
     {

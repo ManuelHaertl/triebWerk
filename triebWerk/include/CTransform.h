@@ -9,8 +9,6 @@ namespace triebWerk
     private:
         CTransform* m_pParent;
         std::vector<CTransform*> m_Children;
-
-    private:
 		bool m_Modified;
 
         DirectX::XMVECTOR m_Position;

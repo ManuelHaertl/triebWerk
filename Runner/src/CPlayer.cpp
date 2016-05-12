@@ -31,8 +31,12 @@ void CPlayer::LateUpdate()
 
 void CPlayer::CollisionEnter(triebWerk::CCollisionEvent a_Collision)
 {
-    std::cout << "Enter with: " << a_Collision.m_pPartner << std::endl;
-    twWorld->RemoveEntity(a_Collision.m_pPartner);
+    CheckSideWall(a_Collision);
+}
+
+void CPlayer::CollisionStay(triebWerk::CCollisionEvent a_Collision)
+{
+    CheckSideWall(a_Collision);
 }
 
 void CPlayer::SetSpeed()
@@ -57,9 +61,10 @@ void CPlayer::SetSpeed()
         else
         {
             m_CurrentMaxSpeedValue += deadZone;
-            m_CurrentMaxSpeedValue /= (32767.0f - deadZone);
+            m_CurrentMaxSpeedValue /= (32768.0f - deadZone);
         }
 
+        std::cout << m_CurrentMaxSpeedValue << std::endl;
         currentMaxSpeed = MaxSpeed * m_CurrentMaxSpeedValue;
     }
 
@@ -93,6 +98,7 @@ void CPlayer::SetSpeed()
         }
     }
 
+    velocity.m128_f32[2] = FlySpeed;
     m_pEntity->GetPhysicEntity()->GetBody()->m_Velocity = velocity;
 }
 
@@ -102,6 +108,7 @@ void CPlayer::SetCamera()
     DirectX::XMVECTOR pos = m_pEntity->m_Transform.GetPosition();
 
     camPos.m128_f32[0] = pos.m128_f32[0];
+    camPos.m128_f32[2] = pos.m128_f32[2] - 10.0f;
     m_pMainCamera->m_Transform.SetPosition(camPos);
 }
 
@@ -140,4 +147,32 @@ void CPlayer::SetRotation()
 
     m_pEntity->m_Transform.SetRotationDegrees(rotationPlayer);
     m_pMainCamera->m_Transform.SetRotationDegrees(rotationCamera);
+}
+
+void CPlayer::CheckSideWall(triebWerk::CCollisionEvent a_Collision)
+{
+    if (a_Collision.m_pPartner->m_ID.GetName() == "SideLeft")
+    {
+        DirectX::XMVECTOR pos = m_pEntity->m_Transform.GetPosition();
+        triebWerk::CAABBCollider* coll = static_cast<triebWerk::CAABBCollider*>(a_Collision.m_pPartner->GetPhysicEntity()->m_Collider[0]);
+        float boundary = coll->GetWorldMax().m128_f32[0];
+
+        if (pos.m128_f32[0] < boundary)
+        {
+            pos.m128_f32[0] = boundary;
+            m_pEntity->m_Transform.SetPosition(pos);
+        }
+    }
+    else if (a_Collision.m_pPartner->m_ID.GetName() == "SideRight")
+    {
+        DirectX::XMVECTOR pos = m_pEntity->m_Transform.GetPosition();
+        triebWerk::CAABBCollider* coll = static_cast<triebWerk::CAABBCollider*>(a_Collision.m_pPartner->GetPhysicEntity()->m_Collider[0]);
+        float boundary = coll->GetWorldMin().m128_f32[0];
+
+        if (pos.m128_f32[0] > boundary)
+        {
+            pos.m128_f32[0] = boundary;
+            m_pEntity->m_Transform.SetPosition(pos);
+        }
+    }
 }

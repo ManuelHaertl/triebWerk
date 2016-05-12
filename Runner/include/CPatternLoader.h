@@ -40,6 +40,6 @@ private:
     void InsertPatternTile(const SPatternTile& a_rPatternTile, const size_t a_Index);
     void SetPatternProperties(triebWerk::CObjectLayer* const a_pLayer, const size_t a_Index);
     void SetDefaultValues();
-    void SetMinMaxDifficulty(const int a_Difficulty);
-    void SetMinMaxPriority(const int a_Priority);
+    void SetMinMaxDifficulty(const size_t a_Difficulty);
+    void SetMinMaxPriority(const size_t a_Priority);
 };

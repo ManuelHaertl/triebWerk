@@ -85,7 +85,7 @@ void triebWerk::CConstantBuffer::InitializeConstantBufffer(ID3D11Device * a_pDev
 	constantBufferDescription.StructureByteStride = 0;
 
 	D3D11_SUBRESOURCE_DATA initData;
-	initData.pSysMem = &m_pBuffer;
+	initData.pSysMem = m_pBuffer;
 	initData.SysMemPitch = 0;
 	initData.SysMemSlicePitch = 0;
 

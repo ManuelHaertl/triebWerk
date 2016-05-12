@@ -22,6 +22,8 @@ namespace triebWerk
 
         void SetMin(const DirectX::XMVECTOR a_Min);
         void SetMax(const DirectX::XMVECTOR a_Max);
+        void SetSize(const DirectX::XMVECTOR a_Size);
+        void SetSize(const float a_X, const float a_Y, const float a_Z);
 
         DirectX::XMVECTOR& GetMin();
         DirectX::XMVECTOR& GetMax();

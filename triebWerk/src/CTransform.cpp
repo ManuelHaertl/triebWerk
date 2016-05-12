@@ -1,5 +1,8 @@
 #include <CTransform.h>
 
+
+
+
 triebWerk::CTransform::CTransform() :
     m_pParent(nullptr),
 	m_Modified(true)
@@ -134,7 +137,7 @@ DirectX::XMMATRIX& triebWerk::CTransform::GetTransformation()
     {
         m_Transformation = DirectX::XMMatrixTransformation(m_Pivot, DirectX::XMQuaternionIdentity(), m_Scale, m_Pivot, m_Rotation, m_Position);
     }
-
+    
     return m_Transformation;
 }
 
@@ -307,9 +310,9 @@ void triebWerk::CTransform::CalculateForwardUpAndSideVector()
 
 void triebWerk::CTransform::UpdateChildPosition()
 {
-    for (auto child : m_Children)
+    for (size_t i = 0; i < m_Children.size(); ++i)
     {
-        DirectX::XMVECTOR newPosition = DirectX::XMVectorAdd(m_Position, child->GetLocalPosition());
-        child->SetPosition(newPosition);
+        DirectX::XMVECTOR newPosition = DirectX::XMVectorAdd(m_Position, m_Children[i]->GetLocalPosition());
+        m_Children[i]->SetPosition(newPosition);
     }
 }
