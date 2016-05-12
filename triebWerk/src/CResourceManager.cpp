@@ -33,7 +33,7 @@ void triebWerk::CResourceManager::CleanUp()
 	for (auto mesh : m_MeshBuffer)
 	{
 		mesh.second->m_pVertexBuffer->Release();
-		//delete mesh.second->m_pVertices;
+		delete mesh.second->m_pVertices;
 		delete mesh.second;
 	}
 
@@ -307,8 +307,11 @@ void triebWerk::CResourceManager::LoadOBJ(SFile a_File)
 	objParser.LoadOBJ(a_File.FilePath.c_str());
 
 	CMesh* mesh = new CMesh();
+	mesh->m_pVertices = new CMesh::SVertex[objParser.m_VertexCount];
 	mesh->m_VertexCount = objParser.m_VertexCount;
-	mesh->m_pVertices = objParser.m_pVertices;
+	
+	memcpy(mesh->m_pVertices, objParser.m_pVertices, sizeof(CMesh::SVertex) * objParser.m_VertexCount);
+
 	mesh->m_IndexCount = objParser.m_IndexCount;
 	mesh->m_pVertexBuffer = m_pGraphicsHandle->CreateVertexBuffer(mesh->m_pVertices, mesh->m_VertexCount);
 	mesh->m_pIndexBuffer = m_pGraphicsHandle->CreateIndexBuffer(objParser.m_pIndices, sizeof(unsigned int) * objParser.m_IndexCount);
