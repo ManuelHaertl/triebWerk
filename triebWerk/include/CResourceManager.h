@@ -4,6 +4,7 @@
 #include <Windows.h>
 #include <unordered_map>
 #include <d3d11.h>
+#include <assert.h>
 
 #include <CGraphics.h>
 #include <EFileType.h>
@@ -14,6 +15,7 @@
 #include <CTexture2D.h>
 #include <COBJParser.h>
 #include <CHLSLParser.h>
+#include <CFileWatcher.h>
 #include <CMaterial.h>
 #include <loadPNG\lodepng.h>
 
@@ -49,6 +51,10 @@ namespace triebWerk
 		typedef std::unordered_map<size_t, CMaterial*> CMaterialMap;
 		typedef std::pair<size_t, CMaterial*> CMaterialPair;
 
+	public:
+		//Use this to update files on runtime
+		CFileWatcher m_FileWatcher;
+
 	private:
 		CTilesetHashMap m_TilesetBuffer;
 		CConfigurationMap m_ConfigurationBuffer;
@@ -67,7 +73,8 @@ namespace triebWerk
 	public:
 		bool Initialize(CGraphics* a_pGraphics);
 		void CleanUp();
-		
+		void Update();
+
 		const char& GetModulPath();
 
 		//Load Interface User

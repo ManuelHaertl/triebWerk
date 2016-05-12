@@ -52,7 +52,7 @@ bool triebWerk::CWindow::Initialize(const CWindow::SWindowConfiguration& a_rConf
 
 	RegisterClassEx(&mainWindowDescription);
 
-	RECT windowRectangle = { 0, 0, a_rConfiguration.m_ScreenWidth ,a_rConfiguration.m_ScreenHeight };
+	RECT windowRectangle = { 0, 0, static_cast<long>(a_rConfiguration.m_ScreenWidth), static_cast<long>(a_rConfiguration.m_ScreenHeight) };
 	AdjustWindowRect(&windowRectangle, WindowStyleWindowed, FALSE);
 
 	//Create window 

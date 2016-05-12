@@ -33,7 +33,7 @@ void triebWerk::CResourceManager::CleanUp()
 	for (auto mesh : m_MeshBuffer)
 	{
 		mesh.second->m_pVertexBuffer->Release();
-		delete mesh.second->m_pVertices;
+		//delete mesh.second->m_pVertices;
 		delete mesh.second;
 	}
 
@@ -58,6 +58,13 @@ void triebWerk::CResourceManager::CleanUp()
 	m_TilesetBuffer.clear();
 	m_MeshBuffer.clear();
 	m_MaterialBuffer.clear();
+
+	m_FileWatcher.StopWatching();
+}
+
+void triebWerk::CResourceManager::Update()
+{
+
 }
 
 const char& triebWerk::CResourceManager::GetModulPath()
@@ -98,7 +105,7 @@ void triebWerk::CResourceManager::LoadSpecificFile(const char * a_pPath)
 
 triebWerk::CTilesetMap * triebWerk::CResourceManager::GetTileset(const char * TilesetName)
 {
-	auto foundIterator = m_TilesetBuffer.find(StringHasher(TilesetName));
+	auto foundIterator = m_TilesetBuffer.find(StringHasher(RemoveFileType(TilesetName)));
 
 	if (foundIterator == m_TilesetBuffer.end())
 	{
@@ -124,7 +131,7 @@ std::vector<triebWerk::CTilesetMap*> triebWerk::CResourceManager::GetAllTilesets
 
 triebWerk::CConfiguration* triebWerk::CResourceManager::GetConfiguration(const char * a_pConfiguration)
 {
-	auto foundIterator = m_ConfigurationBuffer.find(StringHasher(a_pConfiguration));
+	auto foundIterator = m_ConfigurationBuffer.find(StringHasher(RemoveFileType(a_pConfiguration)));
 
 	if (foundIterator == m_ConfigurationBuffer.end())
 	{
@@ -138,7 +145,7 @@ triebWerk::CConfiguration* triebWerk::CResourceManager::GetConfiguration(const c
 
 triebWerk::CTexture2D * triebWerk::CResourceManager::GetTexture2D(const char * a_pTexture2DName)
 {
-	auto foundIterator = m_TextureBuffer.find(StringHasher(a_pTexture2DName));
+	auto foundIterator = m_TextureBuffer.find(StringHasher(RemoveFileType(a_pTexture2DName)));
 
 	if (foundIterator == m_TextureBuffer.end())
 	{
@@ -152,7 +159,7 @@ triebWerk::CTexture2D * triebWerk::CResourceManager::GetTexture2D(const char * a
 
 triebWerk::CMesh * triebWerk::CResourceManager::GetMesh(const char * a_pMeshName)
 {
-	auto foundIterator = m_MeshBuffer.find(StringHasher(a_pMeshName));
+	auto foundIterator = m_MeshBuffer.find(StringHasher(RemoveFileType(a_pMeshName)));
 
 	if (foundIterator == m_MeshBuffer.end())
 	{
@@ -166,7 +173,7 @@ triebWerk::CMesh * triebWerk::CResourceManager::GetMesh(const char * a_pMeshName
 
 triebWerk::CMaterial* triebWerk::CResourceManager::GetMaterial(const char * a_pEffectName)
 {
-	auto foundIterator = m_MaterialBuffer.find(StringHasher(a_pEffectName));
+	auto foundIterator = m_MaterialBuffer.find(StringHasher(RemoveFileType(a_pEffectName)));
 
 	if (foundIterator == m_MaterialBuffer.end())
 	{
@@ -178,9 +185,9 @@ triebWerk::CMaterial* triebWerk::CResourceManager::GetMaterial(const char * a_pE
 	}
 }
 
-void triebWerk::CResourceManager::UnloadTileset(const char * a_TilesetName)
+void triebWerk::CResourceManager::UnloadTileset(const char * a_pTilesetName)
 {
-	auto foundIterator = m_TilesetBuffer.find(StringHasher(a_TilesetName));
+	auto foundIterator = m_TilesetBuffer.find(StringHasher(RemoveFileType(a_pTilesetName)));
 
 	if (foundIterator == m_TilesetBuffer.end())
 	{
@@ -190,13 +197,13 @@ void triebWerk::CResourceManager::UnloadTileset(const char * a_TilesetName)
 	{
 		foundIterator->second->ClearMap();
 		delete foundIterator->second;
-		m_TilesetBuffer.erase(StringHasher(a_TilesetName));
+		m_TilesetBuffer.erase(StringHasher(RemoveFileType(a_pTilesetName)));
 	}
 }
 
 void triebWerk::CResourceManager::UnloadConfiguration(const char * a_pConfigurationName)
 {
-	auto foundIterator = m_ConfigurationBuffer.find(StringHasher(a_pConfigurationName));
+	auto foundIterator = m_ConfigurationBuffer.find(StringHasher(RemoveFileType(a_pConfigurationName)));
 
 	if (foundIterator == m_ConfigurationBuffer.end())
 	{
@@ -205,13 +212,13 @@ void triebWerk::CResourceManager::UnloadConfiguration(const char * a_pConfigurat
 	else
 	{
 		delete foundIterator->second;
-		m_ConfigurationBuffer.erase(StringHasher(a_pConfigurationName));
+		m_ConfigurationBuffer.erase(StringHasher(RemoveFileType(a_pConfigurationName)));
 	}
 }
 
 void triebWerk::CResourceManager::UnloadTexture2D(const char * a_pTexture2DName)
 {
-	auto foundIterator = m_TextureBuffer.find(StringHasher(a_pTexture2DName));
+	auto foundIterator = m_TextureBuffer.find(StringHasher(RemoveFileType(a_pTexture2DName)));
 
 	if (foundIterator == m_TextureBuffer.end())
 	{
@@ -223,13 +230,13 @@ void triebWerk::CResourceManager::UnloadTexture2D(const char * a_pTexture2DName)
 		foundIterator->second->GetShaderResourceView()->Release();
 		delete foundIterator->second;
 
-		m_TextureBuffer.erase(StringHasher(a_pTexture2DName));
+		m_TextureBuffer.erase(StringHasher(RemoveFileType(a_pTexture2DName)));
 	}
 }
 
 void triebWerk::CResourceManager::UnloadMesh(const char * a_pMeshName)
 {
-	auto foundIterator = m_MeshBuffer.find(StringHasher(a_pMeshName));
+	auto foundIterator = m_MeshBuffer.find(StringHasher(RemoveFileType(a_pMeshName)));
 
 	if (foundIterator == m_MeshBuffer.end())
 	{
@@ -238,9 +245,9 @@ void triebWerk::CResourceManager::UnloadMesh(const char * a_pMeshName)
 	else
 	{
 		foundIterator->second->m_pVertexBuffer->Release();
-		delete foundIterator->second->m_pVertices;
+		//delete foundIterator->second->m_pVertices;
 		delete foundIterator->second;
-		m_MeshBuffer.erase(StringHasher(a_pMeshName));
+		m_MeshBuffer.erase(StringHasher(RemoveFileType(a_pMeshName)));
 	}
 }
 
@@ -272,17 +279,18 @@ void triebWerk::CResourceManager::LoadFile(SFile a_File)
 void triebWerk::CResourceManager::LoadPNG(SFile a_File)
 {
 	CTexture2D* texture = new CTexture2D();
+	std::vector<unsigned char> imageBuffer;
 
 	unsigned int width;
 	unsigned int height;
 
-	unsigned int error = lodepng::decode(texture->m_PixelData, width, height, a_File.FilePath);
+	unsigned int error = lodepng::decode(imageBuffer, width, height, a_File.FilePath);
 
 	if (error != 0)
 		return;
 	else
 	{
-		ID3D11Texture2D* d3dtexture = m_pGraphicsHandle->CreateD3D11Texture2D(&texture->m_PixelData[0], width, height);
+		ID3D11Texture2D* d3dtexture = m_pGraphicsHandle->CreateD3D11Texture2D(&imageBuffer[0], width, height);
 
 		ID3D11ShaderResourceView* resourceView = m_pGraphicsHandle->CreateID3D11ShaderResourceView(d3dtexture);
 
@@ -301,8 +309,9 @@ void triebWerk::CResourceManager::LoadOBJ(SFile a_File)
 	CMesh* mesh = new CMesh();
 	mesh->m_VertexCount = objParser.m_VertexCount;
 	mesh->m_pVertices = objParser.m_pVertices;
-
+	mesh->m_IndexCount = objParser.m_IndexCount;
 	mesh->m_pVertexBuffer = m_pGraphicsHandle->CreateVertexBuffer(mesh->m_pVertices, mesh->m_VertexCount);
+	mesh->m_pIndexBuffer = m_pGraphicsHandle->CreateIndexBuffer(objParser.m_pIndices, sizeof(unsigned int) * objParser.m_IndexCount);
 
 	m_MeshBuffer.insert(CMeshPair(StringHasher(RemoveFileType(a_File.FileName)), mesh));
 }

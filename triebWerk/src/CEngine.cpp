@@ -51,6 +51,7 @@ bool triebWerk::CEngine::Run()
     m_pInput->Update(m_pTime->GetUnscaledDeltaTime());
     MSG msg = m_pWindow->GetWindowEvent();
     ProcessMessage(msg);
+	m_pResourceManager->Update();
 
 	m_pDebug->Update();
 	m_pWindow->UpdateWindow();

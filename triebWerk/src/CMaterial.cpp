@@ -18,4 +18,7 @@ void triebWerk::CMaterial::SetMaterial(const CMaterial * a_pMaterial)
 
 	m_pPixelShader = a_pMaterial->m_pPixelShader;
 	m_pVertexShader = a_pMaterial->m_pVertexShader;
+
+	m_ID = a_pMaterial->m_ID;
+
 }

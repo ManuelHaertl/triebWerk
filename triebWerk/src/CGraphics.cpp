@@ -17,7 +17,7 @@ triebWerk::CGraphics::CGraphics() :
 	m_pSwapChain(nullptr),
 	m_pBlendState(nullptr)
 {
-	m_ClearColor = DirectX::XMVectorSet(0.2, 0.2, 0.2, 1);
+	m_ClearColor = DirectX::XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
 }
 
 triebWerk::CGraphics::~CGraphics()
@@ -332,14 +332,14 @@ ID3D11ShaderResourceView * triebWerk::CGraphics::CreateID3D11ShaderResourceView(
 		return temp;
 }
 
-ID3D11Buffer * triebWerk::CGraphics::CreateVertexBuffer(void* a_pVertexData, unsigned int a_VertexCount)
+ID3D11Buffer * triebWerk::CGraphics::CreateVertexBuffer(void* a_pVertexData, size_t a_VertexCount)
 {
 	ID3D11Buffer* pVertexBuffer;
 
 	D3D11_BUFFER_DESC vertexBufferDescription;
 	ZeroMemory(&vertexBufferDescription, sizeof(D3D11_BUFFER_DESC));
 	vertexBufferDescription.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDescription.ByteWidth = sizeof(CMesh::SVertex) * a_VertexCount;
+	vertexBufferDescription.ByteWidth = static_cast<UINT>(sizeof(CMesh::SVertex) * a_VertexCount);
 	vertexBufferDescription.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDescription.CPUAccessFlags = 0;
 
@@ -353,6 +353,28 @@ ID3D11Buffer * triebWerk::CGraphics::CreateVertexBuffer(void* a_pVertexData, uns
 		return nullptr;
 
 	return pVertexBuffer;
+}
+
+ID3D11Buffer * triebWerk::CGraphics::CreateIndexBuffer(void * a_pIndexData, size_t a_ByteWidth)
+{
+	ID3D11Buffer* pIndexBuffer;
+
+	D3D11_BUFFER_DESC indexBufferDescription;
+	ZeroMemory(&indexBufferDescription, sizeof(D3D11_BUFFER_DESC));
+	indexBufferDescription.ByteWidth = static_cast<UINT>(a_ByteWidth);
+	indexBufferDescription.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	indexBufferDescription.CPUAccessFlags = 0;
+
+	D3D11_SUBRESOURCE_DATA subresourceData;
+	ZeroMemory(&subresourceData, sizeof(D3D11_SUBRESOURCE_DATA));
+	subresourceData.pSysMem = a_pIndexData;
+
+	HRESULT hr = m_pDevice->CreateBuffer(&indexBufferDescription, &subresourceData, &pIndexBuffer);
+
+	if (FAILED(hr))
+		return nullptr;
+
+	return pIndexBuffer;
 }
 
 void triebWerk::CGraphics::SetDisplayProperties(const unsigned int a_ScreenHeight, const unsigned int a_ScreenWidth)

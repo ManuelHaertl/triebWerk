@@ -13,10 +13,6 @@ namespace triebWerk
 		unsigned int m_Width;
 
 	public:
-		std::vector<unsigned char>m_PixelData;
-
-
-	public:
 		CTexture2D();
 		~CTexture2D();
 

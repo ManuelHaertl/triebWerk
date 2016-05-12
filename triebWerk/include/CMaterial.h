@@ -3,6 +3,7 @@
 #include <CVertexShader.h>
 #include <CPixelShader.h>
 #include <CConstantBuffer.h>
+#include <CID.h>
 
 namespace triebWerk
 {
@@ -12,6 +13,7 @@ namespace triebWerk
 		CVertexShader m_pVertexShader;
 		CPixelShader m_pPixelShader;
 		CConstantBuffer m_ConstantBuffer;
+		CID m_ID;
 
 	public:
 		CMaterial();

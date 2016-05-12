@@ -46,7 +46,7 @@ namespace triebWerk
 		void SetConstantBuffers(ID3DBlob* a_pShaderByteCode, CConstantBuffer* a_pConstantBuffer);
 		void SetBoundResources(ID3DBlob* a_pShaderbyteCode, IShader* a_PShader);
 		void CreateVertexShader(CGraphics* a_pGraphicHandle, CVertexShader* a_pShaderOut);
-		void CreatePixelShader(CGraphics* a_pGraphicHandle, CPixelShader* a_PShaderOut);
+		void CreatePixelShader(CGraphics* a_pGraphicHandle, CPixelShader* a_pShaderOut);
 		void CreateHullShader();
 		void CreateGeometryShader();
 		void CreateDomainShader();
