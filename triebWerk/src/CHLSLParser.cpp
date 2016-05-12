@@ -23,7 +23,7 @@ void triebWerk::CHLSLParser::ParseShader(const char* a_pShaderPath, CGraphics* a
 	name = name.substr(name.rfind("\\") + 1, name.size() - name.rfind("\\"));
 	name = name.substr(0, name.find("."));
 
-	a_pMaterialOut->m_ID.Setname(name);
+	a_pMaterialOut->m_ID.SetName(name);
 
 	SetConstantBuffers(m_pVSByteCode, &a_pMaterialOut->m_ConstantBuffer);
 

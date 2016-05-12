@@ -164,15 +164,15 @@ void triebWerk::CPhysicWorld::Update(const float a_DeltaTime)
 
     CCollision collision;
 
-    size_t dynamicSice = m_DynamicCollider.size();
+    size_t dynamicSize = m_DynamicCollider.size();
     size_t staticSize = m_StaticCollider.size();
 
-    for (size_t i = 0; i < dynamicSice; ++i)
+    for (size_t i = 0; i < dynamicSize; ++i)
     {
         auto dynCollider = m_DynamicCollider[i];
 
         // check for other dynamic collider
-        for (size_t j = i + 1; j < dynamicSice; ++j)
+        for (size_t j = i + 1; j < dynamicSize; ++j)
             collision.CheckCollision(dynCollider, m_DynamicCollider[j]);
 
         // and for all static ones
