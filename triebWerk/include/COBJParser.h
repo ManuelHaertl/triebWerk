@@ -32,7 +32,7 @@ namespace triebWerk
 		~COBJParser();
 
 	public:
-		void LoadOBJ(const char* a_pPath);
+		bool LoadOBJ(const char* a_pPath);
 
 	private:
 		unsigned int CreateVertex(CMesh::SVertex& a_rVertex);

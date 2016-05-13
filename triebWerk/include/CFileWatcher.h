@@ -34,10 +34,12 @@ namespace triebWerk
 	public:
 		void Watch(const char* a_pDirectory, bool a_WatchSubDirectory);
 		void StopWatching();
+		void GetLastestEvents(std::vector<SFileEvent>* a_pOutEvents);
+		std::string m_PathWatching;
 
 	private:
 		void Spectate(const char* a_pDirectory);
-		void GetLastestEvents(std::vector<SFileEvent>* a_pOutEvents);
+
 
 	public:
 		CFileWatcher();

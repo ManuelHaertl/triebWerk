@@ -66,6 +66,8 @@ namespace triebWerk
 
 		std::string m_ModulPath;
 
+		int DEBUG_counter = 0;
+
 	public:
 		CResourceManager();
 		~CResourceManager();

@@ -8,9 +8,12 @@ triebWerk::CFileReader::~CFileReader()
 {
 }
 
+#include <iostream>
+#include <Windows.h>
+
 bool triebWerk::CFileReader::ReadData(const char * a_pLoadPath)
 {
-
+	//Sleep(1);
 	//Read the complete File into one String
 	std::ifstream input(a_pLoadPath);
 	m_Data.assign((std::istreambuf_iterator<char>(input)),(std::istreambuf_iterator<char>()));

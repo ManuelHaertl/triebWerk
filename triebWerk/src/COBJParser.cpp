@@ -17,10 +17,13 @@ triebWerk::COBJParser::~COBJParser()
 
 //Alexander new code:
 
-void triebWerk::COBJParser::LoadOBJ(const char * a_pPath)
+bool triebWerk::COBJParser::LoadOBJ(const char * a_pPath)
 {
 	//Let the FileReader preload the data
-	ReadData(a_pPath);
+	bool success = ReadData(a_pPath);
+	
+	if (!success)
+		return false;
 
 	//Reserve memory for the string
 	std::string line;
@@ -71,22 +74,30 @@ void triebWerk::COBJParser::LoadOBJ(const char * a_pPath)
 	} while (ReachedEndOfFile() != true);
 
 	m_VertexCount = m_Vertices.size();
-	m_pVertices = &m_Vertices[0];
-	m_pIndices = &m_Indices[0];
+	if (m_Vertices.size() > 0 && m_Indices.size() > 0)
+	{
+		m_pVertices = &m_Vertices[0];
+		m_pIndices = &m_Indices[0];
+	}
+
 	m_IndexCount = m_Indices.size();
+
+	CloseFile();
+
+	return true;
 }
 
 void triebWerk::COBJParser::AddVertexPoint(std::string & a_Text)
 {
 	DirectX::XMFLOAT3 vertex;
 	
-	size_t pos1 = a_Text.find_first_of(' ', 0);
+	size_t pos1 = a_Text.find_first_of(' ', 0) +1;
 	size_t pos2 = a_Text.find(' ', pos1+1);
 	size_t pos3 = a_Text.find(' ', pos2+1);
 
 	vertex.x = std::stof(a_Text.substr(pos1, pos2-pos1));
 	vertex.y = std::stof(a_Text.substr(pos2, pos3-pos2));
-	vertex.z = std::stof(a_Text.substr(pos3, a_Text.size()-pos3));
+	vertex.z = std::stof(a_Text.substr(pos3, a_Text.size()-pos3)) * -1.0f; //transfer to lh
 	
 	m_VertexPoint.push_back(vertex);
 }
@@ -99,7 +110,7 @@ void triebWerk::COBJParser::AddUV(std::string & a_Text)
 	size_t pos2 = a_Text.find(' ', pos1 + 1);
 
 	uv.x = std::stof(a_Text.substr(pos1, pos2 - pos1));
-	uv.y = std::stof(a_Text.substr(pos2, a_Text.size() - pos2));
+	uv.y = 1.0f - std::stof(a_Text.substr(pos2, a_Text.size() - pos2)); //transfer to lh
 
 	m_UV.push_back(uv);
 	m_ContainsUVs = true;
@@ -113,10 +124,9 @@ void triebWerk::COBJParser::AddNormal(std::string & a_Text)
 	size_t pos2 = a_Text.find(' ', pos1 + 1);
 	size_t pos3 = a_Text.find(' ', pos2 + 1);
 
-
 	normal.x = std::stof(a_Text.substr(pos1, pos2 - pos1));
 	normal.y = std::stof(a_Text.substr(pos2, pos3 - pos2));
-	normal.z = std::stof(a_Text.substr(pos3, a_Text.size() - pos3));
+	normal.z = std::stof(a_Text.substr(pos3, a_Text.size() - pos3)) * -1.0f; //transfer to lh
 
 	m_Normal.push_back(normal);
 	m_ContainsNormals = true;
