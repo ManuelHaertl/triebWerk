@@ -13,6 +13,7 @@ bool triebWerk::CResourceManager::Initialize(CGraphics* a_pGraphics)
 {
 	//bool error = SetModulPath();
 	m_pGraphicsHandle = a_pGraphics;
+	m_FileWatcher.Watch("data\\Models", true);
 	//return error;
     return true;
 }
@@ -51,8 +52,6 @@ void triebWerk::CResourceManager::CleanUp()
 		delete material.second;
 	}
 
-
-
 	m_ConfigurationBuffer.clear();
 	m_TextureBuffer.clear();
 	m_TilesetBuffer.clear();
@@ -64,7 +63,90 @@ void triebWerk::CResourceManager::CleanUp()
 
 void triebWerk::CResourceManager::Update()
 {
+	//Get events from FileWatcher
+	std::vector<CFileWatcher::SFileEvent> events;
+	m_FileWatcher.GetLastestEvents(&events);
 
+	for (size_t i = 0; i < events.size(); i++)
+	{
+		EFileType type = GetFileType(events[i].FileName);
+		switch (type)
+		{
+		case EFileType::PNG:
+		{
+			//Load and update the texture
+			CTexture2D* texture = GetTexture2D(events[i].FileName.c_str());
+			if (texture != nullptr)
+			{
+				SFile fileToLoad;
+				fileToLoad.FileName = events[0].FileName;
+				fileToLoad.FilePath = m_FileWatcher.m_PathWatching + "\\" + events[0].FileName;
+				fileToLoad.FileType = EFileType::PNG;
+
+				std::vector<unsigned char> imageBuffer;
+
+				unsigned int width;
+				unsigned int height;
+
+				unsigned int error = lodepng::decode(imageBuffer, width, height, fileToLoad.FilePath);
+
+				if (error != 0)
+					return;
+				else
+				{
+					ID3D11Texture2D* d3dtexture = m_pGraphicsHandle->CreateD3D11Texture2D(&imageBuffer[0], width, height);
+
+					ID3D11ShaderResourceView* resourceView = m_pGraphicsHandle->CreateID3D11ShaderResourceView(d3dtexture);
+
+					texture->SetTexture(width, height, d3dtexture, resourceView);
+				}
+			}
+		}break;
+		case EFileType::OBJ:
+		{
+			//Assamble OBJFile to load 
+			SFile fileToLoad;
+			fileToLoad.FileName = events[i].FileName;
+			fileToLoad.FilePath = m_FileWatcher.m_PathWatching + "\\" + events[0].FileName;
+			fileToLoad.FileType = EFileType::OBJ;
+			
+			//Is the Mesh in the ResourceManager
+			CMesh* meshIn = GetMesh(events[i].FileName.c_str());
+			if (meshIn != nullptr)
+			{
+				//Parse the modifed Mesh
+				COBJParser objParser;
+				
+
+				if (objParser.LoadOBJ(fileToLoad.FilePath.c_str()))
+				{
+					//Delete the old Mesh
+					meshIn->m_pIndexBuffer->Release();
+					meshIn->m_pVertexBuffer->Release();
+					delete meshIn->m_pVertices;
+					meshIn->m_pVertices = nullptr;
+					meshIn->m_pIndexBuffer = nullptr;
+					meshIn->m_pVertexBuffer = nullptr;
+
+					//Create the new Mesh
+					meshIn->m_IndexCount = objParser.m_IndexCount;
+					meshIn->m_VertexCount = objParser.m_VertexCount;
+					meshIn->m_pVertices = new CMesh::SVertex[objParser.m_VertexCount];
+					std::cout << fileToLoad.FilePath << std::endl;
+					std::cout << meshIn->m_VertexCount << std::endl;
+					std::cout << meshIn->m_IndexCount << std::endl;
+					memcpy(meshIn->m_pVertices, objParser.m_pVertices, sizeof(CMesh::SVertex) * objParser.m_VertexCount);
+
+					meshIn->m_pVertexBuffer = m_pGraphicsHandle->CreateVertexBuffer(meshIn->m_pVertices, meshIn->m_VertexCount);
+					meshIn->m_pIndexBuffer = m_pGraphicsHandle->CreateIndexBuffer(objParser.m_pIndices, sizeof(unsigned int) * objParser.m_IndexCount);
+				}
+			}
+
+		}break;
+		}
+	}
+
+	events.clear();
 }
 
 const char& triebWerk::CResourceManager::GetModulPath()
