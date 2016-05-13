@@ -1,12 +1,7 @@
 #include <CGameScene.h>
 
 CGameScene::CGameScene() :
-    m_pPattern(nullptr),
-    m_PatternCount(0),
-    m_MinDifficulty(0),
-    m_MaxDifficulty(0),
-    m_MinPriority(0),
-    m_MaxPriority(0)
+    m_pPlayer(nullptr)
 {
 }
 
@@ -16,9 +11,9 @@ CGameScene::~CGameScene()
 
 void CGameScene::Start()
 {
-    LoadAllPattern();
+    m_PatternManager.LoadPattern();
     CreateFloorAndSidewalls();
-    CreatePattern();
+
     //CreateTestCubes();
 
     CreatePlayer();
@@ -41,27 +36,13 @@ void CGameScene::Update()
         else
             twDebug->Disable();
     }
+
+    m_PatternManager.Update(m_pPlayer->GetMetersFlewn());
 }
 
 void CGameScene::End()
 {
-    if (m_pPattern != nullptr)
-    {
-        delete[] m_pPattern;
-    }
-}
-
-void CGameScene::LoadAllPattern()
-{
-    CPatternLoader patternLoader;
-    patternLoader.LoadPattern();
-
-    m_pPattern = patternLoader.GetPattern();
-    m_PatternCount = patternLoader.GetPatternCount();
-    m_MinDifficulty = patternLoader.GetMinDifficulty();
-    m_MaxDifficulty = patternLoader.GetMaxDifficulty();
-    m_MinPriority = patternLoader.GetMinPriority();
-    m_MaxPriority = patternLoader.GetMaxPriority();
+    
 }
 
 void CGameScene::CreateFloorAndSidewalls()
@@ -124,57 +105,6 @@ void CGameScene::CreateFloorAndSidewalls()
     twWorld->AddEntity(floor);
 }
 
-void CGameScene::CreatePattern()
-{
-    CPattern& pattern = m_pPattern[0];
-    DirectX::XMFLOAT3 colorBlock = { 0.9f, 0.9f, 0.9f };
-
-    for (size_t i = 0; i < pattern.m_Tiles.size(); ++i)
-    {
-        SPatternTile& tile = pattern.m_Tiles[i];
-
-        switch (tile.m_Type)
-        {
-        case ETileType::Block1x1:
-        {
-            auto entity = twWorld->CreateEntity();
-            entity->m_Transform.SetPosition(tile.m_X, 1.5f, tile.m_Y);
-            entity->m_Transform.SetScale(1.0f, 3.0f, 1.0f);
-
-            triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
-            mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube");
-            mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
-            mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(3, &colorBlock);
-            entity->SetDrawable(mesh);
-
-            auto physicEntity = twPhysic->CreatePhysicEntity();
-            auto collider = twPhysic->CreateAABBCollider();
-            collider->CreateFromVertices(mesh->m_pMesh->m_pVertices, mesh->m_pMesh->m_VertexCount);
-            collider->m_CheckCollision = false;
-            physicEntity->AddCollider(collider);
-            entity->SetPhysicEntity(physicEntity);
-
-            twWorld->AddEntity(entity);
-            break;
-        }
-        case ETileType::Block2x2:
-        {
-            auto entity = twWorld->CreateEntity();
-            entity->m_Transform.SetPosition(tile.m_X, 0.0f, tile.m_Y);
-            entity->m_Transform.SetScale(2.0f, 1.0f, 2.0f);
-
-            triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
-            mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube");
-            mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
-            mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(3, &colorBlock);
-            entity->SetDrawable(mesh);
-            twWorld->AddEntity(entity);
-            break;
-        }
-        }
-    }
-}
-
 void CGameScene::CreateTestCubes()
 {
     const int range = 30;
@@ -214,7 +144,8 @@ void CGameScene::CreatePlayer()
     player->m_Transform.SetScale(1.5f, 0.7f, 2.0f);
 
     // Behaviour
-    player->SetBehaviour(new CPlayer());
+    m_pPlayer = new CPlayer();
+    player->SetBehaviour(m_pPlayer);
 
     // Drawable
     triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();

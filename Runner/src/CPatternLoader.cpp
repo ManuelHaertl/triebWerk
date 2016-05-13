@@ -102,8 +102,6 @@ void CPatternLoader::SetMapLayer(triebWerk::CMapLayer* const a_pLayer, const siz
             SetMapLayerTile(tile, xPos, yPos, a_Index);
         }
     }
-
-    int bla = 5;
 }
 
 void CPatternLoader::SetMapLayerTile(const short a_Tile, const float a_X, const float a_Y, const size_t a_Index)

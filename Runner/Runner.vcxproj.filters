@@ -54,6 +54,12 @@
     <ClCompile Include="src\CPatternLoader.cpp">
       <Filter>Quelldateien\Game\Pattern</Filter>
     </ClCompile>
+    <ClCompile Include="src\CPatternManager.cpp">
+      <Filter>Quelldateien\Game\Pattern</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CGameInfo.cpp">
+      <Filter>Quelldateien\Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\IScene.h">
@@ -82,6 +88,12 @@
     </ClInclude>
     <ClInclude Include="include\ETileType.h">
       <Filter>Headerdateien\Game\Pattern</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CPatternManager.h">
+      <Filter>Headerdateien\Game\Pattern</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CGameInfo.h">
+      <Filter>Headerdateien\Game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

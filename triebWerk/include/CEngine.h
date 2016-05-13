@@ -6,6 +6,7 @@
 #include <CWindow.h>
 #include <CResourceManager.h>
 #include <CGraphics.h>
+#include <CRandom.h>
 #include <CRenderer.h>
 #include <CDebug.h>
 

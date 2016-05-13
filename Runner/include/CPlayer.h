@@ -6,7 +6,7 @@
 class CPlayer : public triebWerk::IBehaviour
 {
 private:
-    const float FlySpeed = 15.0f;
+    const float FlySpeed = 75.0f;
 
     const float Acceleration = 250.0f;
     const float Drag = 150.0f;
@@ -18,6 +18,9 @@ private:
     triebWerk::CCamera* m_pMainCamera;
     float m_CurrentMaxSpeedValue;
 
+    float m_MetersFlewn;
+    float m_LastZ;
+
 public:
     CPlayer();
     ~CPlayer();
@@ -28,6 +31,8 @@ public:
 
     void CollisionEnter(triebWerk::CCollisionEvent a_Collision) final;
     void CollisionStay(triebWerk::CCollisionEvent a_Collision) final;
+
+    float GetMetersFlewn() const;
 
 private:
     void SetSpeed();

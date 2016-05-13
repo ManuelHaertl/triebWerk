@@ -170,6 +170,7 @@
     <ClCompile Include="src\CPhysicEntity.cpp" />
     <ClCompile Include="src\CPhysicWorld.cpp" />
     <ClCompile Include="src\CPixelShader.cpp" />
+    <ClCompile Include="src\CRandom.cpp" />
     <ClCompile Include="src\CRenderer.cpp" />
     <ClCompile Include="src\CResourceManager.cpp" />
     <ClCompile Include="src\CSphereCollider.cpp" />
@@ -223,6 +224,7 @@
     <ClInclude Include="include\CPhysicEntity.h" />
     <ClInclude Include="include\CPhysicWorld.h" />
     <ClInclude Include="include\CPixelShader.h" />
+    <ClInclude Include="include\CRandom.h" />
     <ClInclude Include="include\CRenderer.h" />
     <ClInclude Include="include\CResourceManager.h" />
     <ClInclude Include="include\CSphereCollider.h" />

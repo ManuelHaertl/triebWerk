@@ -12,3 +12,5 @@
 #define twTime triebWerk::CEngine::Instance().m_pTime
 #define twPhysic triebWerk::CEngine::Instance().m_pWorld->m_pPhysicWorld
 #define twWorld triebWerk::CEngine::Instance().m_pWorld
+
+#define twRandom triebWerk::CRandom

@@ -190,6 +190,12 @@
     <Filter Include="Headerdateien\Resource\FileWatcher">
       <UniqueIdentifier>{d0bebe81-538d-4b5d-9409-1a3a3694cfdd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headerdateien\Core">
+      <UniqueIdentifier>{c76f5eab-6c62-4f30-af4e-9d1a895eb114}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Core">
+      <UniqueIdentifier>{7c930c32-da65-489a-a228-b0b342a55fc6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CEngine.cpp">
@@ -348,6 +354,9 @@
     <ClCompile Include="src\CFileWatcher.cpp">
       <Filter>Quelldateien\Resource\FileWatcher</Filter>
     </ClCompile>
+    <ClCompile Include="src\CRandom.cpp">
+      <Filter>Quelldateien\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\CEngine.h">
@@ -427,9 +436,6 @@
     </ClInclude>
     <ClInclude Include="include\CFileReader.h">
       <Filter>Headerdateien\Resource\Parser</Filter>
-    </ClInclude>
-    <ClInclude Include="include\CStringHasher.h">
-      <Filter>Headerdateien\Resource</Filter>
     </ClInclude>
     <ClInclude Include="include\CTexture2D.h">
       <Filter>Headerdateien\Resource\Resources\Texture</Filter>
@@ -532,6 +538,12 @@
     </ClInclude>
     <ClInclude Include="include\CFileWatcher.h">
       <Filter>Headerdateien\Resource\FileWatcher</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CRandom.h">
+      <Filter>Headerdateien\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CStringHasher.h">
+      <Filter>Headerdateien\Core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
