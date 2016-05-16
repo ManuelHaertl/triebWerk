@@ -17,8 +17,10 @@ void CValueUpdater::Start()
 
 void CValueUpdater::Update()
 {
-    if (m_pValues != nullptr)
+    if (m_pValues != nullptr && m_pValues->m_IsModified == true)
     {
+        m_pValues->m_IsModified = false;
+
         for (auto value : m_pValues->m_ConfigurationTable)
         {
             if (value.first == "FlySpeed")
