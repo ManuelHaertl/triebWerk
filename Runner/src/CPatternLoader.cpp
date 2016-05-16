@@ -23,7 +23,9 @@ void CPatternLoader::LoadPattern()
     if (m_pPattern != nullptr)
         delete[] m_pPattern;
 
-    auto tilesets = twResourceManager->GetAllTilesets();
+	std::vector<triebWerk::CTilesetMap*> tilesets;
+
+   twResourceManager->GetAll<triebWerk::CTilesetMap>("data\\Pattern", &tilesets);
 
     m_PatternCount = tilesets.size();
     m_pPattern = new CPattern[m_PatternCount];

@@ -143,6 +143,7 @@
     <ClCompile Include="src\CCamera.cpp" />
     <ClCompile Include="src\CCollision.cpp" />
     <ClCompile Include="src\CCollisionEvent.cpp" />
+    <ClCompile Include="src\CDebugLogfile.cpp" />
     <ClCompile Include="src\CTWFData.cpp" />
     <ClCompile Include="src\CConstantBuffer.cpp" />
     <ClCompile Include="src\CDebug.cpp" />
@@ -197,6 +198,7 @@
     <ClInclude Include="include\CBody.h" />
     <ClInclude Include="include\CCollision.h" />
     <ClInclude Include="include\CCollisionEvent.h" />
+    <ClInclude Include="include\CDebugLogfile.h" />
     <ClInclude Include="include\CTWFData.h" />
     <ClInclude Include="include\CConstantBuffer.h" />
     <ClInclude Include="include\CDebug.h" />
@@ -253,6 +255,7 @@
     <ClInclude Include="include\ICollider.h" />
     <ClInclude Include="include\IMapLayer.h" />
     <ClInclude Include="include\IShader.h" />
+    <ClInclude Include="src\CResourceManager.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

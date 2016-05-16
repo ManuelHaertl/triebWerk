@@ -35,7 +35,7 @@ namespace triebWerk
 		typedef std::unordered_map<size_t, CTilesetMap*> CTilesetHashMap;
 		typedef std::pair<size_t, CTilesetMap*> CTilesetPair;
 
-		//Config INI
+		//TWF - triebWerk Format
 		typedef std::unordered_map<size_t, CTWFData*> CTWFDataMap;
 		typedef std::pair<size_t, CTWFData*> CTWFDataPair;
 
@@ -52,7 +52,7 @@ namespace triebWerk
 		typedef std::pair<size_t, CMaterial*> CMaterialPair;
 
 	public:
-		//Use this to update files on runtime
+		//FileWatcher observs the data directory and returns events 
 		CFileWatcher m_FileWatcher;
 
 	private:
@@ -66,8 +66,6 @@ namespace triebWerk
 
 		std::string m_ModulPath;
 
-		int DEBUG_counter = 0;
-
 	public:
 		CResourceManager();
 		~CResourceManager();
@@ -77,7 +75,7 @@ namespace triebWerk
 		void CleanUp();
 		void Update();
 
-		const char& GetModulPath();
+		const char* GetModulPath();
 
 		//Load Interface User
 		void LoadAllFilesInFolder(const char* a_pPath);
@@ -86,11 +84,13 @@ namespace triebWerk
 
 		//Get Interface
 		CTilesetMap* GetTileset(const char* a_pTilesetName);
-        std::vector<CTilesetMap*> GetAllTilesets();
 		CTWFData* GetTWFData(const char* a_pConfigurationName);
 		CTexture2D* GetTexture2D(const char* a_pTexture2DName);
 		CMesh* GetMesh(const char* a_pMeshName);
 		CMaterial* GetMaterial(const char* a_pMaterialName);
+
+		template<typename T>
+		void GetAll(const char* a_pPath, std::vector<T*>* a_pOutData);
 
 		//Unload
 		void UnloadTileset(const char* a_pTilesetName);
@@ -122,3 +122,6 @@ namespace triebWerk
 		void UpdateResourceChanges();
 	};
 }
+
+//Template Implementions
+#include "../src/CResourceManager.hpp"

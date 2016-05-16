@@ -13,7 +13,9 @@ bool triebWerk::CResourceManager::Initialize(CGraphics* a_pGraphics)
 {
 	//bool error = SetModulPath();
 	m_pGraphicsHandle = a_pGraphics;
+#ifdef _DEBUG
 	m_FileWatcher.Watch("data", true);
+#endif //DEBUG
 	//return error;
     return true;
 }
@@ -63,12 +65,14 @@ void triebWerk::CResourceManager::CleanUp()
 
 void triebWerk::CResourceManager::Update()
 {
+#ifdef _DEBUG
 	UpdateResourceChanges();
+#endif // DEBUG
 }
 
-const char& triebWerk::CResourceManager::GetModulPath()
+const char* triebWerk::CResourceManager::GetModulPath()
 {
-	return *m_ModulPath.c_str();
+	return m_ModulPath.c_str();
 }
 
 void triebWerk::CResourceManager::LoadAllFilesInFolder(const char * a_pPath)
@@ -114,18 +118,6 @@ triebWerk::CTilesetMap * triebWerk::CResourceManager::GetTileset(const char * Ti
 	{
 		return foundIterator->second;
 	}
-}
-
-std::vector<triebWerk::CTilesetMap*> triebWerk::CResourceManager::GetAllTilesets()
-{
-    std::vector<CTilesetMap*> allTilesets;
-
-    for (auto map : m_TilesetBuffer)
-    {
-        allTilesets.push_back(map.second);
-    }
-
-    return allTilesets;
 }
 
 triebWerk::CTWFData* triebWerk::CResourceManager::GetTWFData(const char * a_pConfiguration)
