@@ -614,6 +614,7 @@ void triebWerk::CResourceManager::UpdateResourceChanges()
 					
 					CTWFParser twfParser;
 					twfParser.ParseData(fileToLoad.FilePath.c_str(), data);
+					data->m_IsModified = true;
 				}
 			}
 		}break;
