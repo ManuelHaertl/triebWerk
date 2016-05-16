@@ -1,7 +1,8 @@
 #include <CValueUpdater.h>
 #include <CPlayer.h>
 
-CValueUpdater::CValueUpdater()
+CValueUpdater::CValueUpdater() :
+    m_pValues(nullptr)
 {
 }
 
@@ -12,14 +13,39 @@ CValueUpdater::~CValueUpdater()
 void CValueUpdater::Start()
 {
     m_pValues = twResourceManager->GetTWFData("values");
-    int bla = 5;
 }
 
 void CValueUpdater::Update()
 {
-    for (auto value : m_pValues->m_ConfigurationTable)
+    if (m_pValues != nullptr)
     {
-
+        for (auto value : m_pValues->m_ConfigurationTable)
+        {
+            if (value.first == "FlySpeed")
+            {
+                CPlayer::FlySpeed = std::stof(value.second);
+            }
+            else if (value.first == "Acceleration")
+            {
+                CPlayer::Acceleration = std::stof(value.second);
+            }
+            else if (value.first == "Drag")
+            {
+                CPlayer::Drag = std::stof(value.second);
+            }
+            else if (value.first == "MaxSpeed")
+            {
+                CPlayer::MaxSpeed = std::stof(value.second);
+            }
+            else if (value.first == "MaxRotation")
+            {
+                CPlayer::MaxRotation = std::stof(value.second);
+            }
+            else if (value.first == "RotationCameraFactor")
+            {
+                CPlayer::RotationCameraFactor = std::stof(value.second);
+            }
+        }
     }
 }
 
