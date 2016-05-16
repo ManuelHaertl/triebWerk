@@ -1,5 +1,12 @@
 #include <CPlayer.h>
 
+float CPlayer::FlySpeed = 75.0f;
+float CPlayer::Acceleration = 250.0f;
+float CPlayer::Drag = 150.0f;
+float CPlayer::MaxSpeed = 30.0f;
+float CPlayer::MaxRotation = 25.0f;
+float CPlayer::RotationCameraFactor = 0.03f;
+
 CPlayer::CPlayer() :
     m_CurrentMaxSpeedValue(0.0f),
     m_pMainCamera(nullptr),

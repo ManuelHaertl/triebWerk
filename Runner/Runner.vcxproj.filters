@@ -31,6 +31,12 @@
     <Filter Include="Quelldateien\Game\Pattern">
       <UniqueIdentifier>{aa138ba1-39c8-442b-aac7-62f27618f94f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headerdateien\Debug">
+      <UniqueIdentifier>{84259346-b869-4820-b850-34b671d92f66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Debug">
+      <UniqueIdentifier>{098fd8ba-73b4-4a7e-b0a9-3dbd73d7e85d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -59,6 +65,9 @@
     </ClCompile>
     <ClCompile Include="src\CGameInfo.cpp">
       <Filter>Quelldateien\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CValueUpdater.cpp">
+      <Filter>Quelldateien\Debug</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -94,6 +103,9 @@
     </ClInclude>
     <ClInclude Include="include\CGameInfo.h">
       <Filter>Headerdateien\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CValueUpdater.h">
+      <Filter>Headerdateien\Debug</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
