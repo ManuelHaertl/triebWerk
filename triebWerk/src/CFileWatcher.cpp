@@ -49,7 +49,7 @@ triebWerk::CFileWatcher::~CFileWatcher()
 
 void triebWerk::CFileWatcher::Spectate(const char * a_pDirectory)
 {
-	FILE_NOTIFY_INFORMATION buffer[256] = { 0 };
+	FILE_NOTIFY_INFORMATION buffer[1024] = { 0 };
 
 	DWORD returnSize = 0;
 
@@ -59,7 +59,7 @@ void triebWerk::CFileWatcher::Spectate(const char * a_pDirectory)
 	{
 		SFileEvent fileEvent;
 
-		bool result = ReadDirectoryChangesW(m_FileHandle, (LPVOID)&buffer, sizeof(buffer), FALSE, FILE_NOTIFY_CHANGE_LAST_WRITE, &returnSize, 0, 0);
+		bool result = ReadDirectoryChangesW(m_FileHandle, (LPVOID)&buffer, sizeof(buffer), TRUE, FILE_NOTIFY_CHANGE_CREATION | FILE_NOTIFY_CHANGE_LAST_WRITE | FILE_NOTIFY_CHANGE_FILE_NAME, &returnSize, 0, 0);
 
 		switch (buffer[0].Action)
 		{

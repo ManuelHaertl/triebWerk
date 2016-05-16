@@ -13,7 +13,7 @@ bool triebWerk::CResourceManager::Initialize(CGraphics* a_pGraphics)
 {
 	//bool error = SetModulPath();
 	m_pGraphicsHandle = a_pGraphics;
-	m_FileWatcher.Watch("data\\Models", true);
+	m_FileWatcher.Watch("data", true);
 	//return error;
     return true;
 }
@@ -26,7 +26,7 @@ void triebWerk::CResourceManager::CleanUp()
 		delete Tileset.second;
 	}
 
-	for (auto config : m_ConfigurationBuffer)
+	for (auto config : m_TWFBuffer)
 	{
 		delete config.second;
 	}
@@ -52,7 +52,7 @@ void triebWerk::CResourceManager::CleanUp()
 		delete material.second;
 	}
 
-	m_ConfigurationBuffer.clear();
+	m_TWFBuffer.clear();
 	m_TextureBuffer.clear();
 	m_TilesetBuffer.clear();
 	m_MeshBuffer.clear();
@@ -63,90 +63,7 @@ void triebWerk::CResourceManager::CleanUp()
 
 void triebWerk::CResourceManager::Update()
 {
-	//Get events from FileWatcher
-	std::vector<CFileWatcher::SFileEvent> events;
-	m_FileWatcher.GetLastestEvents(&events);
-
-	for (size_t i = 0; i < events.size(); i++)
-	{
-		EFileType type = GetFileType(events[i].FileName);
-		switch (type)
-		{
-		case EFileType::PNG:
-		{
-			//Load and update the texture
-			CTexture2D* texture = GetTexture2D(events[i].FileName.c_str());
-			if (texture != nullptr)
-			{
-				SFile fileToLoad;
-				fileToLoad.FileName = events[0].FileName;
-				fileToLoad.FilePath = m_FileWatcher.m_PathWatching + "\\" + events[0].FileName;
-				fileToLoad.FileType = EFileType::PNG;
-
-				std::vector<unsigned char> imageBuffer;
-
-				unsigned int width;
-				unsigned int height;
-
-				unsigned int error = lodepng::decode(imageBuffer, width, height, fileToLoad.FilePath);
-
-				if (error != 0)
-					return;
-				else
-				{
-					ID3D11Texture2D* d3dtexture = m_pGraphicsHandle->CreateD3D11Texture2D(&imageBuffer[0], width, height);
-
-					ID3D11ShaderResourceView* resourceView = m_pGraphicsHandle->CreateID3D11ShaderResourceView(d3dtexture);
-
-					texture->SetTexture(width, height, d3dtexture, resourceView);
-				}
-			}
-		}break;
-		case EFileType::OBJ:
-		{
-			//Assamble OBJFile to load 
-			SFile fileToLoad;
-			fileToLoad.FileName = events[i].FileName;
-			fileToLoad.FilePath = m_FileWatcher.m_PathWatching + "\\" + events[0].FileName;
-			fileToLoad.FileType = EFileType::OBJ;
-			
-			//Is the Mesh in the ResourceManager
-			CMesh* meshIn = GetMesh(events[i].FileName.c_str());
-			if (meshIn != nullptr)
-			{
-				//Parse the modifed Mesh
-				COBJParser objParser;
-				
-
-				if (objParser.LoadOBJ(fileToLoad.FilePath.c_str()))
-				{
-					//Delete the old Mesh
-					meshIn->m_pIndexBuffer->Release();
-					meshIn->m_pVertexBuffer->Release();
-					delete meshIn->m_pVertices;
-					meshIn->m_pVertices = nullptr;
-					meshIn->m_pIndexBuffer = nullptr;
-					meshIn->m_pVertexBuffer = nullptr;
-
-					//Create the new Mesh
-					meshIn->m_IndexCount = objParser.m_IndexCount;
-					meshIn->m_VertexCount = objParser.m_VertexCount;
-					meshIn->m_pVertices = new CMesh::SVertex[objParser.m_VertexCount];
-					std::cout << fileToLoad.FilePath << std::endl;
-					std::cout << meshIn->m_VertexCount << std::endl;
-					std::cout << meshIn->m_IndexCount << std::endl;
-					memcpy(meshIn->m_pVertices, objParser.m_pVertices, sizeof(CMesh::SVertex) * objParser.m_VertexCount);
-
-					meshIn->m_pVertexBuffer = m_pGraphicsHandle->CreateVertexBuffer(meshIn->m_pVertices, meshIn->m_VertexCount);
-					meshIn->m_pIndexBuffer = m_pGraphicsHandle->CreateIndexBuffer(objParser.m_pIndices, sizeof(unsigned int) * objParser.m_IndexCount);
-				}
-			}
-
-		}break;
-		}
-	}
-
-	events.clear();
+	UpdateResourceChanges();
 }
 
 const char& triebWerk::CResourceManager::GetModulPath()
@@ -211,11 +128,11 @@ std::vector<triebWerk::CTilesetMap*> triebWerk::CResourceManager::GetAllTilesets
     return allTilesets;
 }
 
-triebWerk::CConfiguration* triebWerk::CResourceManager::GetConfiguration(const char * a_pConfiguration)
+triebWerk::CTWFData* triebWerk::CResourceManager::GetTWFData(const char * a_pConfiguration)
 {
-	auto foundIterator = m_ConfigurationBuffer.find(StringHasher(RemoveFileType(a_pConfiguration)));
+	auto foundIterator = m_TWFBuffer.find(StringHasher(RemoveFileType(a_pConfiguration)));
 
-	if (foundIterator == m_ConfigurationBuffer.end())
+	if (foundIterator == m_TWFBuffer.end())
 	{
 		return nullptr;
 	}
@@ -285,16 +202,16 @@ void triebWerk::CResourceManager::UnloadTileset(const char * a_pTilesetName)
 
 void triebWerk::CResourceManager::UnloadConfiguration(const char * a_pConfigurationName)
 {
-	auto foundIterator = m_ConfigurationBuffer.find(StringHasher(RemoveFileType(a_pConfigurationName)));
+	auto foundIterator = m_TWFBuffer.find(StringHasher(RemoveFileType(a_pConfigurationName)));
 
-	if (foundIterator == m_ConfigurationBuffer.end())
+	if (foundIterator == m_TWFBuffer.end())
 	{
 		return;
 	}
 	else
 	{
 		delete foundIterator->second;
-		m_ConfigurationBuffer.erase(StringHasher(RemoveFileType(a_pConfigurationName)));
+		m_TWFBuffer.erase(StringHasher(RemoveFileType(a_pConfigurationName)));
 	}
 }
 
@@ -340,8 +257,8 @@ void triebWerk::CResourceManager::LoadFile(SFile a_File)
 	case EFileType::HLSL:
 		LoadHLSL(a_File);
 		break;
-	case EFileType::INI:
-		LoadINI(a_File);
+	case EFileType::TWF:
+		LoadTWF(a_File);
 		break;
 	case EFileType::MP3:
 		LoadMP3(a_File);
@@ -447,15 +364,13 @@ void triebWerk::CResourceManager::LoadHLSL(SFile a_File)
 	m_MaterialBuffer.insert(CMaterialPair(StringHasher(RemoveFileType(a_File.FileName)), temp));
 }
 
-void triebWerk::CResourceManager::LoadINI(SFile a_File)
+void triebWerk::CResourceManager::LoadTWF(SFile a_File)
 {
-	CINIParser iniParser;
-	CConfiguration* configuration = iniParser.ParseData(a_File.FilePath.c_str());
+	CTWFParser twfParser;
+	CTWFData* twfData = new CTWFData();
+	twfParser.ParseData(a_File.FilePath.c_str(), twfData);
 	
-	if (configuration == nullptr)
-		return;
-
-	m_ConfigurationBuffer.insert(CConfigurationPair(StringHasher(RemoveFileType(a_File.FileName)), configuration));
+	m_TWFBuffer.insert(CTWFDataPair(StringHasher(RemoveFileType(a_File.FileName)), twfData));
 }
 
 bool triebWerk::CResourceManager::SetModulPath()
@@ -565,9 +480,9 @@ triebWerk::EFileType triebWerk::CResourceManager::GetFileType(const std::string&
 {
 	std::string fileType = a_FileName.substr(a_FileName.find("."), a_FileName.size() - a_FileName.find("."));
 
-	if (fileType == ".ini")
+	if (fileType == ".twf")
 	{
-		return EFileType::INI;
+		return EFileType::TWF;
 	}
 	else if(fileType == ".hlsl")
 	{
@@ -591,4 +506,119 @@ triebWerk::EFileType triebWerk::CResourceManager::GetFileType(const std::string&
 	}
 
 	return EFileType::NONE;
+}
+
+void triebWerk::CResourceManager::UpdateResourceChanges()
+{
+	//Get events from FileWatcher
+	std::vector<CFileWatcher::SFileEvent> events;
+	m_FileWatcher.GetLastestEvents(&events);
+
+	for (size_t i = 0; i < events.size(); i++)
+	{
+		EFileType type = GetFileType(events[i].FileName);
+		switch (type)
+		{
+		case EFileType::PNG:
+		{
+			if (events[i].Event == CFileWatcher::EFileEventTypes::Modified)
+			{
+				SFile fileToLoad;
+				fileToLoad.FileName = AbstractFileNameFromPath(events[0].FileName);
+				fileToLoad.FilePath = m_FileWatcher.m_PathWatching + "\\" + events[0].FileName;
+				fileToLoad.FileType = EFileType::PNG;
+
+				//Load and update the texture
+				CTexture2D* texture = GetTexture2D(fileToLoad.FileName.c_str());
+				if (texture != nullptr)
+				{
+					std::vector<unsigned char> imageBuffer;
+
+					unsigned int width;
+					unsigned int height;
+
+					unsigned int error = lodepng::decode(imageBuffer, width, height, fileToLoad.FilePath);
+
+					if (error != 0)
+						return;
+					else
+					{
+						ID3D11Texture2D* d3dtexture = m_pGraphicsHandle->CreateD3D11Texture2D(&imageBuffer[0], width, height);
+
+						ID3D11ShaderResourceView* resourceView = m_pGraphicsHandle->CreateID3D11ShaderResourceView(d3dtexture);
+
+						texture->SetTexture(width, height, d3dtexture, resourceView);
+					}
+				}
+			}	
+		}break;
+		case EFileType::OBJ:
+		{
+			if (events[i].Event == CFileWatcher::EFileEventTypes::Modified)
+			{
+				//Assamble OBJFile to load 
+				SFile fileToLoad;
+				fileToLoad.FileName = AbstractFileNameFromPath(events[i].FileName);
+				fileToLoad.FilePath = m_FileWatcher.m_PathWatching + "\\" + events[0].FileName;
+				fileToLoad.FileType = EFileType::OBJ;
+
+				//Is the Mesh in the ResourceManager
+				CMesh* meshIn = GetMesh(fileToLoad.FileName.c_str());
+				if (meshIn != nullptr)
+				{
+					//Parse the modifed Mesh
+					COBJParser objParser;
+
+
+					if (objParser.LoadOBJ(fileToLoad.FilePath.c_str()))
+					{
+						//Delete the old Mesh
+						meshIn->m_pIndexBuffer->Release();
+						meshIn->m_pVertexBuffer->Release();
+						delete meshIn->m_pVertices;
+						meshIn->m_pVertices = nullptr;
+						meshIn->m_pIndexBuffer = nullptr;
+						meshIn->m_pVertexBuffer = nullptr;
+
+						//Create the new Mesh
+						meshIn->m_IndexCount = objParser.m_IndexCount;
+						meshIn->m_VertexCount = objParser.m_VertexCount;
+						meshIn->m_pVertices = new CMesh::SVertex[objParser.m_VertexCount];
+						std::cout << fileToLoad.FilePath << std::endl;
+						std::cout << meshIn->m_VertexCount << std::endl;
+						std::cout << meshIn->m_IndexCount << std::endl;
+						memcpy(meshIn->m_pVertices, objParser.m_pVertices, sizeof(CMesh::SVertex) * objParser.m_VertexCount);
+
+						meshIn->m_pVertexBuffer = m_pGraphicsHandle->CreateVertexBuffer(meshIn->m_pVertices, meshIn->m_VertexCount);
+						meshIn->m_pIndexBuffer = m_pGraphicsHandle->CreateIndexBuffer(objParser.m_pIndices, sizeof(unsigned int) * objParser.m_IndexCount);
+					}
+				}
+			}
+		}break;
+
+		case EFileType::TWF:
+		{
+			if (events[i].Event == CFileWatcher::EFileEventTypes::Modified)
+			{
+				//Assamble the twffile to load 
+				SFile fileToLoad;
+				fileToLoad.FileName = AbstractFileNameFromPath(events[i].FileName);
+				fileToLoad.FilePath = m_FileWatcher.m_PathWatching + "\\" + events[0].FileName;
+				fileToLoad.FileType = EFileType::TWF;
+
+				CTWFData* data = GetTWFData(fileToLoad.FileName.c_str());
+
+				if (data != nullptr)
+				{
+					data->m_ConfigurationTable.clear();
+					
+					CTWFParser twfParser;
+					twfParser.ParseData(fileToLoad.FilePath.c_str(), data);
+				}
+			}
+		}break;
+		}
+	}
+
+	events.clear();
 }

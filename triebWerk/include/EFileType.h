@@ -12,7 +12,7 @@ namespace triebWerk
 		MP3,
 		TMX,
 		HLSL,
-		INI,
+		TWF,
 		NONE
 	};
 }

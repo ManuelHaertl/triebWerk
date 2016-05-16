@@ -97,12 +97,6 @@
     <Filter Include="Quelldateien\Resource\Resources\Texture">
       <UniqueIdentifier>{cd2f12d8-ea9e-4038-a36f-c589f3510dec}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Quelldateien\Resource\Resources\INI">
-      <UniqueIdentifier>{3fdd0573-8369-480c-9b01-a7abd84594c3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Headerdateien\Resource\Resources\INI">
-      <UniqueIdentifier>{65014bff-8141-4e1a-995c-09379eaad0b6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Headerdateien\Physic">
       <UniqueIdentifier>{c883ff63-5aae-45b1-8dcf-f9a980ca995f}</UniqueIdentifier>
     </Filter>
@@ -196,6 +190,12 @@
     <Filter Include="Quelldateien\Core">
       <UniqueIdentifier>{7c930c32-da65-489a-a228-b0b342a55fc6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Quelldateien\Resource\Resources\TWF">
+      <UniqueIdentifier>{3fdd0573-8369-480c-9b01-a7abd84594c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Resource\Resources\TWF">
+      <UniqueIdentifier>{65014bff-8141-4e1a-995c-09379eaad0b6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CEngine.cpp">
@@ -269,12 +269,6 @@
     </ClCompile>
     <ClCompile Include="src\CTexture2D.cpp">
       <Filter>Quelldateien\Resource\Resources\Texture</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CINIParser.cpp">
-      <Filter>Quelldateien\Resource\Parser</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CConfiguration.cpp">
-      <Filter>Quelldateien\Resource\Resources\INI</Filter>
     </ClCompile>
     <ClCompile Include="src\CGraphics.cpp">
       <Filter>Quelldateien\Graphics</Filter>
@@ -356,6 +350,12 @@
     </ClCompile>
     <ClCompile Include="src\CRandom.cpp">
       <Filter>Quelldateien\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CTWFParser.cpp">
+      <Filter>Quelldateien\Resource\Parser</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CTWFData.cpp">
+      <Filter>Quelldateien\Resource\Resources\TWF</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -439,12 +439,6 @@
     </ClInclude>
     <ClInclude Include="include\CTexture2D.h">
       <Filter>Headerdateien\Resource\Resources\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="include\CINIParser.h">
-      <Filter>Headerdateien\Resource\Parser</Filter>
-    </ClInclude>
-    <ClInclude Include="include\CConfiguration.h">
-      <Filter>Headerdateien\Resource\Resources\INI</Filter>
     </ClInclude>
     <ClInclude Include="include\IBehaviour.h">
       <Filter>Headerdateien\World\Entity</Filter>
@@ -544,6 +538,12 @@
     </ClInclude>
     <ClInclude Include="include\CStringHasher.h">
       <Filter>Headerdateien\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CTWFParser.h">
+      <Filter>Headerdateien\Resource\Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CTWFData.h">
+      <Filter>Headerdateien\Resource\Resources\TWF</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

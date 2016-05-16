@@ -11,7 +11,7 @@
 #include <CTilesetMap.h>
 #include <CTMXParser.h>
 #include <CStringHasher.h>
-#include <CINIParser.h>
+#include <CTWFParser.h>
 #include <CTexture2D.h>
 #include <COBJParser.h>
 #include <CHLSLParser.h>
@@ -36,8 +36,8 @@ namespace triebWerk
 		typedef std::pair<size_t, CTilesetMap*> CTilesetPair;
 
 		//Config INI
-		typedef std::unordered_map<size_t, CConfiguration*> CConfigurationMap;
-		typedef std::pair<size_t, CConfiguration*> CConfigurationPair;
+		typedef std::unordered_map<size_t, CTWFData*> CTWFDataMap;
+		typedef std::pair<size_t, CTWFData*> CTWFDataPair;
 
 		//Texture2D
 		typedef std::unordered_map<size_t, CTexture2D*> CTextureMap;
@@ -57,7 +57,7 @@ namespace triebWerk
 
 	private:
 		CTilesetHashMap m_TilesetBuffer;
-		CConfigurationMap m_ConfigurationBuffer;
+		CTWFDataMap m_TWFBuffer;
 		CTextureMap m_TextureBuffer;
 		CMeshMap m_MeshBuffer;
 		CMaterialMap m_MaterialBuffer;
@@ -87,7 +87,7 @@ namespace triebWerk
 		//Get Interface
 		CTilesetMap* GetTileset(const char* a_pTilesetName);
         std::vector<CTilesetMap*> GetAllTilesets();
-		CConfiguration* GetConfiguration(const char* a_pConfigurationName);
+		CTWFData* GetTWFData(const char* a_pConfigurationName);
 		CTexture2D* GetTexture2D(const char* a_pTexture2DName);
 		CMesh* GetMesh(const char* a_pMeshName);
 		CMaterial* GetMaterial(const char* a_pMaterialName);
@@ -106,7 +106,7 @@ namespace triebWerk
 		void LoadMP3(SFile a_File);
 		void LoadTMX(SFile a_File);
 		void LoadHLSL(SFile a_File);
-		void LoadINI(SFile a_File);
+		void LoadTWF(SFile a_File);
 
 		bool SetModulPath();
 		std::vector<SFile> SearchFolderForAllFiles(const char* a_FolderToLoad);
@@ -117,5 +117,8 @@ namespace triebWerk
 		std::string AbstractFileNameFromPath(const std::string& a_Path);
 		std::string AbstractFolderFromPath(const std::string& a_Path);
 		EFileType GetFileType(const std::string& a_FileName);
+
+		//FileWatcher Update
+		void UpdateResourceChanges();
 	};
 }
