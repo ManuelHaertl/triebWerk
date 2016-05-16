@@ -36,7 +36,7 @@ void triebWerk::CTWFParser::ParseData(const char * a_pFilePath, CTWFData* a_pDat
 
 
 			key = line.substr(0, equalPos);
-			value = line.substr(equalPos + 1, line.size() - equalPos);
+			value = line.substr(equalPos + 3, line.size() - equalPos);
 			a_pDataOut->AddConfigurationPair(key, value);
 		}
 
