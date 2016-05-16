@@ -5,15 +5,16 @@
 
 class CPlayer : public triebWerk::IBehaviour
 {
+public:
+    static float FlySpeed;
+    static float Acceleration;
+    static float Drag;
+    static float MaxSpeed;
+
+    static float MaxRotation;
+    static float RotationCameraFactor;
+
 private:
-    const float FlySpeed = 75.0f;
-
-    const float Acceleration = 250.0f;
-    const float Drag = 150.0f;
-    const float MaxSpeed = 30.0f;
-
-    const float MaxRotation = 25.0f;
-    const float RotationCameraFactor = 0.03f;
 
     triebWerk::CCamera* m_pMainCamera;
     float m_CurrentMaxSpeedValue;

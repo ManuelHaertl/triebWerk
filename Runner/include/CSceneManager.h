@@ -2,11 +2,13 @@
 #include <IScene.h>
 #include <EScenes.h>
 #include <CGameScene.h>
+#include <CValueUpdater.h>
 
 class CSceneManager
 {
 private:
     IScene* m_pActiveScene;
+    CValueUpdater m_ValueUpdater;
 
 public:
     CSceneManager();

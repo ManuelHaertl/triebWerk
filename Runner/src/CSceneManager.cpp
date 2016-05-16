@@ -12,6 +12,7 @@ CSceneManager::~CSceneManager()
 void CSceneManager::Initialize()
 {
     twEngine.m_pResourceManager->LoadAllFilesInFolder("data");
+    m_ValueUpdater.Start();
 }
 
 bool CSceneManager::Update()
@@ -19,11 +20,13 @@ bool CSceneManager::Update()
     if (m_pActiveScene != nullptr)
         m_pActiveScene->Update();
 
+    m_ValueUpdater.Update();
     return true;
 }
 
 void CSceneManager::Shutdown()
 {
+    m_ValueUpdater.End();
     EndActiveScene();
 }
 
