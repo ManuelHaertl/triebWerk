@@ -2,17 +2,18 @@
 
 CPatternLoader::CPatternLoader()
 {
-    
+
 }
 
 CPatternLoader::~CPatternLoader()
 {
-    
+
 }
 
-void CPatternLoader::LoadPattern(std::vector<CPattern*> (&a_pPattern)[CPattern::MaxDifficulty])
+void CPatternLoader::LoadPattern(std::vector<CPattern*>(&a_pPattern)[CPattern::MaxDifficulty])
 {
-    auto tilesets = twResourceManager->GetAllTilesets();
+    std::vector<triebWerk::CTilesetMap*> tilesets;
+    twResourceManager->GetAll<triebWerk::CTilesetMap>("data\\Pattern", &tilesets);
 
     // loop through all tilesets
     for (size_t i = 0; i < tilesets.size(); ++i)

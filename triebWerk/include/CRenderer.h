@@ -10,7 +10,13 @@ namespace triebWerk
 	class CRenderer
 	{
 	private:
-		std::vector<IDrawable*> m_CommandList;
+		const size_t m_MaxDrawables = 10000;
+
+	private:
+		IDrawable** m_CommandList;
+		size_t m_CommandCounter;
+
+		//std::vector<IDrawable*> m_CommandList;
 		std::vector<CMeshDrawable*> m_Transperency;
 		std::vector<CCamera*> m_CameraBuffer;
 		CGraphics* m_pGraphicsHandle;
@@ -35,10 +41,12 @@ namespace triebWerk
 
 		CMeshDrawable* CreateMeshDrawable();
 
-		void ZSortTransparency();
+		//void ZSortTransparency();
 
 		//Command Functions
 		void AddRenderCommand(IDrawable* a_pRenderCommand);
+
+		void RenderMesh(CMeshDrawable* a_pDrawable);
 
 		void DrawScene();
 	};

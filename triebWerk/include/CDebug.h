@@ -1,5 +1,6 @@
 #pragma once
 #include <CDebugCamera.h>
+#include <CDebugLogfile.h>
 
 namespace triebWerk
 {

@@ -13,12 +13,15 @@ triebWerk::COBJParser::COBJParser() :
 
 triebWerk::COBJParser::~COBJParser()
 {
+	delete[] m_Vertices;
 }
 
 //Alexander new code:
 
 bool triebWerk::COBJParser::LoadOBJ(const char * a_pPath)
 {
+	m_Vertices = new CMesh::SVertex[m_MAX_VERTICES];
+
 	//Let the FileReader preload the data
 	bool success = ReadData(a_pPath);
 	
@@ -73,11 +76,14 @@ bool triebWerk::COBJParser::LoadOBJ(const char * a_pPath)
 
 	} while (ReachedEndOfFile() != true);
 
-	m_VertexCount = m_Vertices.size();
-	if (m_Vertices.size() > 0 && m_Indices.size() > 0)
+	if (m_VertexCount > 0 && m_Indices.size() > 0)
 	{
-		m_pVertices = &m_Vertices[0];
+		m_pVertices = m_Vertices;
 		m_pIndices = &m_Indices[0];
+	}
+	else
+	{
+		return false;
 	}
 
 	m_IndexCount = m_Indices.size();
@@ -134,16 +140,18 @@ void triebWerk::COBJParser::AddNormal(std::string & a_Text)
 
 unsigned int triebWerk::COBJParser::CreateVertex(CMesh::SVertex & a_rVertex)
 {
-	for (size_t i = 0; i < m_Vertices.size(); i++)
+
+	for (size_t i = 0; i < m_VertexCount; i++)
 	{
 		if (CMesh::SVertex::IsEqual(m_Vertices[i], a_rVertex) == true)
 		{
-			return i;
+			return static_cast<unsigned int>(i);
 		}
 	}
 
-	m_Vertices.push_back(a_rVertex);
-	return m_Vertices.size()-1;
+	m_Vertices[m_VertexCount] = a_rVertex;
+	m_VertexCount++;
+	return static_cast<unsigned int>(m_VertexCount -1);
 }
 
 void triebWerk::COBJParser::AddVertex(std::string & a_Text)

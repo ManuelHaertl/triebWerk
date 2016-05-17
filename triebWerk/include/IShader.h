@@ -25,7 +25,10 @@ namespace triebWerk
 		std::vector<D3D11_SHADER_INPUT_BIND_DESC> m_SamplerDescriptions;
 		EShaderType m_ShaderType;
 
-		std::vector<CTexture2D*> m_Textures;
+		//Holds the texture pointers
+		CTexture2D** m_pTextures;
+		//Number of textures required by the shader
+		size_t m_TextureCount;
 
 	public:
 		IShader();
@@ -33,10 +36,13 @@ namespace triebWerk
 
 	public:
 		void SetInputLayout(ID3D11InputLayout* a_pInputLayout);
+		void InitializeTextureBuffer();
 		ID3D11InputLayout* GetInputLayout();
 
 	public:
 		virtual void* GetD3D11Shader() = 0;
+		//Set a texture with the same index as in the hlsl file
+		void SetTexture(const size_t a_Index, CTexture2D* a_pTexture);
 
 	};
 }

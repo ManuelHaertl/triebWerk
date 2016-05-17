@@ -18,6 +18,7 @@
 #include <CFileWatcher.h>
 #include <CMaterial.h>
 #include <loadPNG\lodepng.h>
+#include <CDebugLogfile.h>
 
 namespace triebWerk
 {
@@ -35,7 +36,7 @@ namespace triebWerk
 		typedef std::unordered_map<size_t, CTilesetMap*> CTilesetHashMap;
 		typedef std::pair<size_t, CTilesetMap*> CTilesetPair;
 
-		//Config INI
+		//TWF - triebWerk Format
 		typedef std::unordered_map<size_t, CTWFData*> CTWFDataMap;
 		typedef std::pair<size_t, CTWFData*> CTWFDataPair;
 
@@ -51,11 +52,8 @@ namespace triebWerk
 		typedef std::unordered_map<size_t, CMaterial*> CMaterialMap;
 		typedef std::pair<size_t, CMaterial*> CMaterialPair;
 
-	public:
-		//Use this to update files on runtime
-		CFileWatcher m_FileWatcher;
-
 	private:
+		CFileWatcher m_FileWatcher;
 		CTilesetHashMap m_TilesetBuffer;
 		CTWFDataMap m_TWFBuffer;
 		CTextureMap m_TextureBuffer;
@@ -66,8 +64,6 @@ namespace triebWerk
 
 		std::string m_ModulPath;
 
-		int DEBUG_counter = 0;
-
 	public:
 		CResourceManager();
 		~CResourceManager();
@@ -77,20 +73,29 @@ namespace triebWerk
 		void CleanUp();
 		void Update();
 
-		const char& GetModulPath();
+		const char* GetModulPath();
 
 		//Load Interface User
+
+		//Load all files supported in a specific directory and subdirectory
 		void LoadAllFilesInFolder(const char* a_pPath);
+
+		//Loads only the EFileType in a specific directory and subdirectory
 		void LoadAllSpecificFilesInFolder(EFileType a_FileType, const char* a_pPath);
+
+		//Loads only the one file specified in the path
 		void LoadSpecificFile(const char* a_pPath);
 
 		//Get Interface
 		CTilesetMap* GetTileset(const char* a_pTilesetName);
-        std::vector<CTilesetMap*> GetAllTilesets();
 		CTWFData* GetTWFData(const char* a_pConfigurationName);
 		CTexture2D* GetTexture2D(const char* a_pTexture2DName);
 		CMesh* GetMesh(const char* a_pMeshName);
 		CMaterial* GetMaterial(const char* a_pMaterialName);
+
+		//Get all data in this directory and subdirectory which were previous loaded 
+		template<typename T>
+		void GetAll(const char* a_pPath, std::vector<T*>* a_pOutData);
 
 		//Unload
 		void UnloadTileset(const char* a_pTilesetName);
@@ -118,7 +123,10 @@ namespace triebWerk
 		std::string AbstractFolderFromPath(const std::string& a_Path);
 		EFileType GetFileType(const std::string& a_FileName);
 
-		//FileWatcher Update
+		//If a Filewatcher event occures, load resource new and replace the previous one 
 		void UpdateResourceChanges();
 	};
 }
+
+//Template Implementions
+#include "../src/CResourceManager.hpp"

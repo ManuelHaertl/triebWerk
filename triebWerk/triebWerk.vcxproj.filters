@@ -196,6 +196,9 @@
     <Filter Include="Headerdateien\Resource\Resources\TWF">
       <UniqueIdentifier>{65014bff-8141-4e1a-995c-09379eaad0b6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Quelldateien\Resource\Resources\ResourceManager">
+      <UniqueIdentifier>{e1f2f63d-4c1f-4073-b9eb-40580430343e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CEngine.cpp">
@@ -239,9 +242,6 @@
     </ClCompile>
     <ClCompile Include="src\CPhysicWorld.cpp">
       <Filter>Quelldateien\Physic</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CResourceManager.cpp">
-      <Filter>Quelldateien\Resource</Filter>
     </ClCompile>
     <ClCompile Include="src\CMapLayer.cpp">
       <Filter>Quelldateien\Resource\Resources\TilesetMap\Layers</Filter>
@@ -356,6 +356,12 @@
     </ClCompile>
     <ClCompile Include="src\CTWFData.cpp">
       <Filter>Quelldateien\Resource\Resources\TWF</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CResourceManager.cpp">
+      <Filter>Quelldateien\Resource\Resources\ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CDebugLogfile.cpp">
+      <Filter>Quelldateien\Debug</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -544,6 +550,12 @@
     </ClInclude>
     <ClInclude Include="include\CTWFData.h">
       <Filter>Headerdateien\Resource\Resources\TWF</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CResourceManager.hpp">
+      <Filter>Quelldateien\Resource\Resources\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CDebugLogfile.h">
+      <Filter>Headerdateien\Debug</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

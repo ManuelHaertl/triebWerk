@@ -1,10 +1,12 @@
 #include <CDebug.h>
 #include <CEngine.h>
+#include <CDebugLogfile.h>
 #include <iostream>
 
 triebWerk::CDebug::CDebug() :
 	m_DebugMode(false)
 {
+	CDebugLogfile::Instance().CreateLogfile("twLog.html");
 }
 
 triebWerk::CDebug::~CDebug()

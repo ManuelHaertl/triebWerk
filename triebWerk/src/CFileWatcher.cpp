@@ -10,7 +10,7 @@ void triebWerk::CFileWatcher::Watch(const char * a_pDirectory, bool a_WatchSubDi
 	m_Active = true;
 	m_PathWatching = a_pDirectory;
 
-	m_Thread = std::thread(&CFileWatcher::Spectate,this, a_pDirectory);
+	m_Thread = std::thread(&CFileWatcher::Spectate,this, a_pDirectory, a_WatchSubDirectory);
 }
 
 void triebWerk::CFileWatcher::StopWatching()
@@ -47,7 +47,7 @@ triebWerk::CFileWatcher::~CFileWatcher()
 {
 }
 
-void triebWerk::CFileWatcher::Spectate(const char * a_pDirectory)
+void triebWerk::CFileWatcher::Spectate(const char * a_pDirectory, bool a_WatchSub)
 {
 	FILE_NOTIFY_INFORMATION buffer[1024] = { 0 };
 
@@ -59,7 +59,7 @@ void triebWerk::CFileWatcher::Spectate(const char * a_pDirectory)
 	{
 		SFileEvent fileEvent;
 
-		bool result = ReadDirectoryChangesW(m_FileHandle, (LPVOID)&buffer, sizeof(buffer), TRUE, FILE_NOTIFY_CHANGE_CREATION | FILE_NOTIFY_CHANGE_LAST_WRITE | FILE_NOTIFY_CHANGE_FILE_NAME, &returnSize, 0, 0);
+		ReadDirectoryChangesW(m_FileHandle, (LPVOID)&buffer, sizeof(buffer), a_WatchSub, FILE_NOTIFY_CHANGE_CREATION | FILE_NOTIFY_CHANGE_LAST_WRITE | FILE_NOTIFY_CHANGE_FILE_NAME, &returnSize, 0, 0);
 
 		switch (buffer[0].Action)
 		{
