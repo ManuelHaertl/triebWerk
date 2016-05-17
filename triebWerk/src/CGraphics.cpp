@@ -26,7 +26,7 @@ triebWerk::CGraphics::~CGraphics()
 
 bool triebWerk::CGraphics::Initialize(HWND & a_rWindowHandle, const unsigned int a_ScreenWidth, const unsigned int a_ScreenHeight, const bool a_Fullscreen, const bool a_VSync)
 {
-	SetDisplayProperties(a_ScreenHeight, a_ScreenWidth);
+	SetDisplayProperties();
 
 	HRESULT result;
 	DXGI_SWAP_CHAIN_DESC swapChainDesc;
@@ -377,7 +377,7 @@ ID3D11Buffer * triebWerk::CGraphics::CreateIndexBuffer(void * a_pIndexData, size
 	return pIndexBuffer;
 }
 
-void triebWerk::CGraphics::SetDisplayProperties(const unsigned int a_ScreenHeight, const unsigned int a_ScreenWidth)
+void triebWerk::CGraphics::SetDisplayProperties()
 {
 	IDXGIFactory* factory;
 	IDXGIAdapter* adapter;

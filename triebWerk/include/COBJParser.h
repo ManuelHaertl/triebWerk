@@ -10,6 +10,9 @@ namespace triebWerk
 {
 	class COBJParser : CFileReader
 	{
+	private:
+		const size_t m_MAX_VERTICES = 10000;
+
 	public:
 		CMesh::SVertex* m_pVertices;
 		unsigned int* m_pIndices;
@@ -21,7 +24,7 @@ namespace triebWerk
 		std::vector<DirectX::XMFLOAT2> m_UV;
 		std::vector<DirectX::XMFLOAT3> m_Normal;
 
-		std::vector<CMesh::SVertex> m_Vertices;
+		CMesh::SVertex* m_Vertices;
 		std::vector<unsigned int> m_Indices;
 
 		bool m_ContainsNormals;

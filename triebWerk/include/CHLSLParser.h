@@ -7,6 +7,8 @@
 #include <CVertexShader.h>
 #include <CPixelShader.h>
 #include <CMaterial.h>
+#include <string>
+#include <CDebugLogfile.h>
 
 namespace triebWerk
 {
@@ -22,6 +24,8 @@ namespace triebWerk
 		const std::string m_DSEntryPoint = "DS_Main";
 		const std::string m_CSEntryPoint = "CS_Main";
 
+		bool m_CompileErrors;
+
 	private:
 		ID3DBlob* m_pVSByteCode;
 		ID3DBlob* m_pPSByteCode;
@@ -35,7 +39,7 @@ namespace triebWerk
 		~CHLSLParser();
 
 	public:
-		void ParseShader(const char* a_pShaderPath, CGraphics* a_pGraphicHandle, CMaterial* a_pMaterialOut);
+		bool ParseShader(const char* a_pShaderPath, CGraphics* a_pGraphicHandle, CMaterial* a_pMaterialOut);
 	
 	private:
 		//TODO: Write this errors into the log
@@ -51,6 +55,8 @@ namespace triebWerk
 		void CreateGeometryShader();
 		void CreateDomainShader();
 		void CreateComputeShader();
+
+		void LogErrors(const char* a_pErrorMessage, const char* a_pShaderPath);
 
 	private:
 		DXGI_FORMAT DetermineInputFormat(const D3D11_SIGNATURE_PARAMETER_DESC& a_rSignature);

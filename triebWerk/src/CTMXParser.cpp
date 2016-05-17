@@ -53,6 +53,7 @@ triebWerk::CTilesetMap* triebWerk::CTMXParser::ParseData(const char * a_pFilePat
 
 		if (ReachedEndOfFile())
 		{
+			delete m_TilesetMap;
 			return nullptr;
 		}
 
@@ -108,10 +109,13 @@ void triebWerk::CTMXParser::ReadLayer(std::string& a_Line)
 	layer->m_LayerHeight = (short)stoi(GetProportie(a_Line, "height"));
 	layer->m_LayerWidth = (short)stoi(GetProportie(a_Line, "width"));
 	layer->m_LayerName = GetProportie(a_Line, "name");
+	layer->m_Indices = new short[layer->m_LayerWidth * layer->m_LayerHeight];
 
 	bool runState = true;
 	std::string line;
 	size_t begin = 0;
+
+	std::string data = GetAllData();
 
 	do
 	{
@@ -133,12 +137,16 @@ void triebWerk::CTMXParser::ReadLayer(std::string& a_Line)
 					if (startPos == std::string::npos)
 					{
 						startPos = line.size();
-						layer->m_Indices.push_back(static_cast<short>(stoi(line.substr(begin, startPos - begin))));
+						layer->m_Indices[layer->m_IndicesIterator] = static_cast<short>(stoi(line.substr(begin, startPos - begin)));
+						layer->m_IndicesIterator++;
 						break;
 					}
 
-					layer->m_Indices.push_back(static_cast<short>(stoi(line.substr(begin, startPos - begin))));
+					layer->m_Indices[layer->m_IndicesIterator] = static_cast<short>(stoi(line.substr(begin, startPos - begin)));
 					begin = startPos + 1;
+
+					layer->m_IndicesIterator++;
+
 					if (line.size() == begin)
 					{
 						begin = 0;

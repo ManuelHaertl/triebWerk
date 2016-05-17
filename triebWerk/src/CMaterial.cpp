@@ -17,7 +17,9 @@ void triebWerk::CMaterial::SetMaterial(const CMaterial * a_pMaterial)
 	m_ConstantBuffer.InitializeConstantBufffer(CEngine::Instance().m_pGraphics->GetDevice());
 
 	m_pPixelShader = a_pMaterial->m_pPixelShader;
+	m_pPixelShader.InitializeTextureBuffer();
 	m_pVertexShader = a_pMaterial->m_pVertexShader;
+	m_pVertexShader.InitializeTextureBuffer();
 
 	m_ID = a_pMaterial->m_ID;
 

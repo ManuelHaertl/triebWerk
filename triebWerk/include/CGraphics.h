@@ -73,7 +73,7 @@ namespace triebWerk
 		ID3D11Buffer* CreateIndexBuffer(void* a_pIndexData, size_t a_ByteWidth);
 
 	private:
-		void SetDisplayProperties(const unsigned int a_ScreenWidth, const unsigned int a_ScreenHeight);
+		void SetDisplayProperties();
 		void ReleaseBackBuffer();
 		void ConfigureBackBuffer();
 	};

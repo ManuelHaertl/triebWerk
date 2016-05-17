@@ -38,7 +38,7 @@ namespace triebWerk
 		std::string m_PathWatching;
 
 	private:
-		void Spectate(const char* a_pDirectory);
+		void Spectate(const char* a_pDirectory, bool a_WatchSub);
 
 
 	public:

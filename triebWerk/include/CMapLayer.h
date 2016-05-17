@@ -13,10 +13,10 @@ namespace triebWerk
 		std::string m_LayerName;
 		unsigned short m_LayerWidth;
 		unsigned short m_LayerHeight;
-		std::vector<short>m_Indices;
+		short* m_Indices;
+		short m_IndicesIterator;
 		std::unordered_map<std::string, std::string>m_Properties;
 		std::string m_TilesetName;
-		//CTexture2D* m_TileSetTexture;
 
 	public:
 		CMapLayer();

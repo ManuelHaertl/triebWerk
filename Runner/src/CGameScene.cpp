@@ -11,12 +11,23 @@ CGameScene::~CGameScene()
 
 void CGameScene::Start()
 {
-    m_PatternManager.LoadPattern();
-    CreateFloorAndSidewalls();
+	//triebWerk::CMesh::SVertex t1;
+	//t1.normal = DirectX::XMFLOAT3(0, 0, 0);
+	//t1.position = DirectX::XMFLOAT3(0, 1, 0);
+	//t1.uv = DirectX::XMFLOAT2(0, 0);
 
-    //CreateTestCubes();
+	//triebWerk::CMesh::SVertex t2;
+	//t2.normal = DirectX::XMFLOAT3(0, 0, 0);
+	//t2.position = DirectX::XMFLOAT3(0, 0, 0);
+	//t2.uv = DirectX::XMFLOAT2(0, 0);
 
-    CreatePlayer();
+	//bool s = triebWerk::CMesh::SVertex::IsEqual(t1, t2);
+    //m_PatternManager.LoadPattern();
+    //CreateFloorAndSidewalls();
+
+    CreateTestCubes();
+
+    //CreatePlayer();
 
     // camera settings
     auto camera = twEngine.m_pRenderer->GetCurrentActiveCamera();
@@ -37,7 +48,9 @@ void CGameScene::Update()
             twDebug->Disable();
     }
 
-    m_PatternManager.Update(m_pPlayer->GetMetersFlewn());
+    //m_PatternManager.Update(m_pPlayer->GetMetersFlewn());
+
+
 }
 
 void CGameScene::End()
@@ -107,29 +120,41 @@ void CGameScene::CreateFloorAndSidewalls()
 
 void CGameScene::CreateTestCubes()
 {
-    const int range = 30;
-    const int incrementer = 5;
-    const int freeArea = 1;
-    DirectX::XMFLOAT3 colorBlock = { 0.5f, 0.5f, 0.5f };
+	auto entity = twWorld->CreateEntity();
+	entity->m_Transform.SetPosition(0,0,0);
+	triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
+	mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_snakeloop_01");
+	mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardTexture"));
+	mesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_snakeloop_diff"));
+	//mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(3, &colorBlock);
+	entity->SetDrawable(mesh);
+	twWorld->AddEntity(entity);
 
-    for (int x = -range; x < range; x += incrementer)
-    {
-        for (int y = -range; y < range; y += incrementer)
-        {
-            for (int z = -range; z < range; z += incrementer)
-            {
-                auto entity = twWorld->CreateEntity();
-                entity->m_Transform.SetPosition(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z));
 
-                triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
-                mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube");
-                mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
-                mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(3, &colorBlock);
-                entity->SetDrawable(mesh);
-                twWorld->AddEntity(entity);
-            }
-        }
-    }
+    //const int range = 30;
+    //const int incrementer = 5;
+    //const int freeArea = 1;
+    //DirectX::XMFLOAT3 colorBlock = { 0.5f, 0.5f, 0.5f };
+
+    //for (int x = -range; x < range; x += incrementer)
+    //{
+    //    for (int y = -range; y < range; y += incrementer)
+    //    {
+    //        for (int z = -range; z < range; z += incrementer)
+    //        {
+    //            auto entity = twWorld->CreateEntity();
+    //            entity->m_Transform.SetPosition(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z));
+
+    //            triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
+    //            mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube");
+    //            mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardTexture"));
+				//mesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("images"));
+    //            //mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(3, &colorBlock);
+    //            entity->SetDrawable(mesh);
+    //            twWorld->AddEntity(entity);
+    //        }
+    //    }
+    //}
 }
 
 void CGameScene::CreatePlayer()

@@ -2,6 +2,7 @@
 #include <iostream>
 
 triebWerk::CHLSLParser::CHLSLParser() :
+	m_CompileErrors(false),
 	m_pVSByteCode(nullptr),
 	m_pPSByteCode(nullptr),
 	m_pHSByteCode(nullptr),
@@ -15,13 +16,18 @@ triebWerk::CHLSLParser::~CHLSLParser()
 {
 }
 
-void triebWerk::CHLSLParser::ParseShader(const char* a_pShaderPath, CGraphics* a_pGraphicHandle, CMaterial* a_pMaterialOut)
+bool triebWerk::CHLSLParser::ParseShader(const char* a_pShaderPath, CGraphics* a_pGraphicHandle, CMaterial* a_pMaterialOut)
 {
 	CompileShader(a_pShaderPath);
 
 	std::string name = a_pShaderPath;
 	name = name.substr(name.rfind("\\") + 1, name.size() - name.rfind("\\"));
 	name = name.substr(0, name.find("."));
+
+	if (m_pPSByteCode == nullptr || m_pVSByteCode == nullptr)
+	{
+		return false;
+	}
 
 	a_pMaterialOut->m_ID.SetName(name);
 
@@ -34,6 +40,8 @@ void triebWerk::CHLSLParser::ParseShader(const char* a_pShaderPath, CGraphics* a
 
 	if (m_pPSByteCode != nullptr)
 		CreatePixelShader(a_pGraphicHandle, &a_pMaterialOut->m_pPixelShader);
+
+	return true;
 }
 
 void triebWerk::CHLSLParser::CreateVertexShader(CGraphics* a_pGraphicHandle, CVertexShader* a_pShaderOut)
@@ -44,7 +52,10 @@ void triebWerk::CHLSLParser::CreateVertexShader(CGraphics* a_pGraphicHandle, CVe
 
 	SetBoundResources(m_pVSByteCode, a_pShaderOut);
 
+	a_pShaderOut->InitializeTextureBuffer();
+
 	hResult = a_pGraphicHandle->GetDevice()->CreateVertexShader(m_pVSByteCode->GetBufferPointer(), m_pVSByteCode->GetBufferSize(), NULL, &a_pShaderOut->m_pD3DVertexShader);
+
 }
 
 void triebWerk::CHLSLParser::CreatePixelShader(CGraphics* a_pGraphicHandle, CPixelShader* a_pShaderOut)
@@ -54,6 +65,8 @@ void triebWerk::CHLSLParser::CreatePixelShader(CGraphics* a_pGraphicHandle, CPix
 	a_pShaderOut->SetInputLayout(GetInputLayout(m_pPSByteCode, a_pGraphicHandle));
 
 	SetBoundResources(m_pPSByteCode, a_pShaderOut);
+
+	a_pShaderOut->InitializeTextureBuffer();
 
 	hResult = a_pGraphicHandle->GetDevice()->CreatePixelShader(m_pPSByteCode->GetBufferPointer(), m_pPSByteCode->GetBufferSize(), NULL, &a_pShaderOut->m_pD3DPixelShader);
 }
@@ -83,32 +96,80 @@ void triebWerk::CHLSLParser::CompileShader(const char * a_pShaderPath)
 	//Vertex Shader----------------------------
 	hResult = D3DCompileFromFile(shaderPath, 0, 0, m_VSEntryPoint.c_str(), "vs_5_0", m_CompileFlags, 0, &m_pVSByteCode, &pErrorMessage);
 	if (FAILED(hResult))
+	{
+		LogErrors((char*)pErrorMessage->GetBufferPointer(), a_pShaderPath);
 		m_pVSByteCode = nullptr;
+	}
+
 
 	//Pixel Shader----------------------------
 	hResult = D3DCompileFromFile(shaderPath, 0, 0, m_PSEntryPoint.c_str(), "ps_5_0", m_CompileFlags, 0, &m_pPSByteCode, &pErrorMessage);
 	if (FAILED(hResult))
+	{
+		LogErrors((char*)pErrorMessage->GetBufferPointer(), a_pShaderPath);
 		m_pPSByteCode = nullptr;
+	}
 
 	//Hull Shader----------------------------
 	hResult = D3DCompileFromFile(shaderPath, 0, 0, m_HSEntryPoint.c_str(), "hs_5_0", m_CompileFlags, 0, &m_pHSByteCode, &pErrorMessage);
 	if (FAILED(hResult))
+	{
+		std::string errorString = (char*)pErrorMessage->GetBufferPointer();
+
+		//Ignore entry point error because this is a optional shader
+		if (errorString.find("X3501") == std::string::npos)
+		{
+			LogErrors((char*)pErrorMessage->GetBufferPointer(), a_pShaderPath);
+		}
+
 		m_pHSByteCode = nullptr;
+	}
+
 
 	//Geometry Shader------------------------
 	hResult = D3DCompileFromFile(shaderPath, 0, 0, m_HSEntryPoint.c_str(), "gs_5_0", m_CompileFlags, 0, &m_pHSByteCode, &pErrorMessage);
 	if (FAILED(hResult))
+	{
+		std::string errorString = (char*)pErrorMessage->GetBufferPointer();
+
+		//Ignore entry point error because this is a optional shader
+		if (errorString.find("X3501") == std::string::npos)
+		{
+			LogErrors((char*)pErrorMessage->GetBufferPointer(), a_pShaderPath);
+		}
+
 		m_pHSByteCode = nullptr;
+	}
 
 	//Domain Shader------------------------
 	hResult = D3DCompileFromFile(shaderPath, 0, 0, m_DSEntryPoint.c_str(), "ds_5_0", m_CompileFlags, 0, &m_pDSByteCode, &pErrorMessage);
 	if (FAILED(hResult))
+	{
+		std::string errorString = (char*)pErrorMessage->GetBufferPointer();
+
+		//Ignore entry point error because this is a optional shader
+		if (errorString.find("X3501") == std::string::npos)
+		{
+			LogErrors((char*)pErrorMessage->GetBufferPointer(), a_pShaderPath);
+		}
+
 		m_pDSByteCode = nullptr;
+	}
 
 	//Compute Shader------------------------
 	hResult = D3DCompileFromFile(shaderPath, 0, 0, m_CSEntryPoint.c_str(), "cs_5_0", m_CompileFlags, 0, &m_pCSByteCode, &pErrorMessage);
 	if (FAILED(hResult))
+	{
+		std::string errorString = (char*)pErrorMessage->GetBufferPointer();
+
+		//Ignore entry point error because this is a optional shader
+		if (errorString.find("X3501") == std::string::npos)
+		{
+			LogErrors((char*)pErrorMessage->GetBufferPointer(), a_pShaderPath);
+		}
+
 		m_pCSByteCode = nullptr;
+	}
 }
 
 ID3D11InputLayout* triebWerk::CHLSLParser::GetInputLayout(ID3DBlob * a_pShaderByteCode, CGraphics* a_pGraphicHandle)
@@ -211,6 +272,16 @@ void triebWerk::CHLSLParser::SetBoundResources(ID3DBlob * a_pShaderByteCode, ISh
 		{
 			a_PShader->m_SamplerDescriptions.push_back(resourceDesc);
 		}
+	}
+}
+
+void triebWerk::CHLSLParser::LogErrors(const char * a_pErrorMessage, const char* a_pShaderPath)
+{
+	if (m_CompileErrors == false)
+	{
+		DebugLogfile.LogfText(CDebugLogfile::EColor::Red, false, "Critical error: Could not compile Shader: ");
+		DebugLogfile.LogfText(CDebugLogfile::EColor::Red, false, a_pErrorMessage);
+		m_CompileErrors = true;
 	}
 }
 

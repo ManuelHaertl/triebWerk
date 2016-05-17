@@ -18,7 +18,7 @@ public:
 	CTilesetMap* ParseData(const char* a_pFilePath);
 
 private:
-        std::string GetProportie(std::string& a_Line, const char* a_pProportieName);
+    std::string GetProportie(std::string& a_Line, const char* a_pProportieName);
 	bool BeginLineWith(std::string& a_Line, const char* a_pLineStart);
 	bool ExistsProperty(std::string& a_Line, const char* a_pProportieName);
 

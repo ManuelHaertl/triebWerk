@@ -31,12 +31,12 @@ triebWerk::CWindow::~CWindow()
 bool triebWerk::CWindow::Initialize(const CWindow::SWindowConfiguration& a_rConfiguration)
 {
 	//Get the default user screen resolution
-	m_DefaultWidth = GetSystemMetrics(SM_CXSCREEN);
-	m_DefaultHeight = GetSystemMetrics(SM_CYSCREEN);
+	m_DefaultWidth = static_cast<unsigned short>(GetSystemMetrics(SM_CXSCREEN));
+	m_DefaultHeight = static_cast<unsigned short>(GetSystemMetrics(SM_CYSCREEN));
 
 	//Set initialize values
-	m_Height = a_rConfiguration.m_ScreenWidth;
-	m_Width = a_rConfiguration.m_ScreenHeight;
+	m_Height = static_cast<unsigned short>(a_rConfiguration.m_ScreenWidth);
+	m_Width = static_cast<unsigned short>(a_rConfiguration.m_ScreenHeight);
 	m_IsFullscreen = a_rConfiguration.m_Fullscreen;
 
 	//window sytle
@@ -134,10 +134,10 @@ LRESULT triebWerk::CWindow::HandleMessage(UINT a_Message, WPARAM wParam, LPARAM 
 
 		if (wParam == SIZE_MAXIMIZED)
 		{
-			MSG msg = { 0 };
-			msg.message = WM_EXITSIZEMOVE;
-			msg.lParam = lParam;
-			msg.wParam = wParam;
+			MSG msgMax = { 0 };
+			msgMax.message = WM_EXITSIZEMOVE;
+			msgMax.lParam = lParam;
+			msgMax.wParam = wParam;
 			m_MessageQueue.push(msg);
 		}
 	}break;

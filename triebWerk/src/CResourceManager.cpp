@@ -104,6 +104,8 @@ void triebWerk::CResourceManager::LoadSpecificFile(const char * a_pPath)
 	fileToLoad.FileType = GetFileType(a_pPath);
 	fileToLoad.FilePath = m_ModulPath + a_pPath;
 	fileToLoad.FileName = AbstractFileNameFromPath(a_pPath);
+
+	LoadFile(fileToLoad);
 }
 
 triebWerk::CTilesetMap * triebWerk::CResourceManager::GetTileset(const char * TilesetName)
@@ -112,6 +114,7 @@ triebWerk::CTilesetMap * triebWerk::CResourceManager::GetTileset(const char * Ti
 
 	if (foundIterator == m_TilesetBuffer.end())
 	{
+		DebugLogfile.LogfText(CDebugLogfile::EColor::Yellow, false, "Warning: No Tileset was loaded with the Name: %s", TilesetName);
 		return nullptr;
 	}
 	else
@@ -126,6 +129,7 @@ triebWerk::CTWFData* triebWerk::CResourceManager::GetTWFData(const char * a_pCon
 
 	if (foundIterator == m_TWFBuffer.end())
 	{
+		DebugLogfile.LogfText(CDebugLogfile::EColor::Yellow, false, "Warning: No TWF was loaded with the Name: %s", a_pConfiguration);
 		return nullptr;
 	}
 	else
@@ -140,6 +144,7 @@ triebWerk::CTexture2D * triebWerk::CResourceManager::GetTexture2D(const char * a
 
 	if (foundIterator == m_TextureBuffer.end())
 	{
+		DebugLogfile.LogfText(CDebugLogfile::EColor::Yellow, false, "Warning: No Texture2D was loaded with the Name: %s", a_pTexture2DName);
 		return nullptr;
 	}
 	else
@@ -154,6 +159,7 @@ triebWerk::CMesh * triebWerk::CResourceManager::GetMesh(const char * a_pMeshName
 
 	if (foundIterator == m_MeshBuffer.end())
 	{
+		DebugLogfile.LogfText(CDebugLogfile::EColor::Yellow, false, "Warning: No Mesh was loaded with the Name: %s", a_pMeshName);
 		return nullptr;
 	}
 	else
@@ -168,6 +174,7 @@ triebWerk::CMaterial* triebWerk::CResourceManager::GetMaterial(const char * a_pE
 
 	if (foundIterator == m_MaterialBuffer.end())
 	{
+		DebugLogfile.LogfText(CDebugLogfile::EColor::Yellow, false, "Warning: No Material was loaded with the Name: %s", a_pEffectName);
 		return nullptr;
 	}
 	else
@@ -269,7 +276,7 @@ void triebWerk::CResourceManager::LoadFile(SFile a_File)
 
 void triebWerk::CResourceManager::LoadPNG(SFile a_File)
 {
-	CTexture2D* texture = new CTexture2D();
+	//PixelBuffer
 	std::vector<unsigned char> imageBuffer;
 
 	unsigned int width;
@@ -278,9 +285,15 @@ void triebWerk::CResourceManager::LoadPNG(SFile a_File)
 	unsigned int error = lodepng::decode(imageBuffer, width, height, a_File.FilePath);
 
 	if (error != 0)
+	{
+		DebugLogfile.LogfText(CDebugLogfile::EColor::Red, false, "Critical error: PNG could not be loaded! File: %s", a_File.FilePath.c_str());
 		return;
+	}
 	else
 	{
+		//Create Texture and load it to the graphic card
+		CTexture2D* texture = new CTexture2D();
+
 		ID3D11Texture2D* d3dtexture = m_pGraphicsHandle->CreateD3D11Texture2D(&imageBuffer[0], width, height);
 
 		ID3D11ShaderResourceView* resourceView = m_pGraphicsHandle->CreateID3D11ShaderResourceView(d3dtexture);
@@ -295,7 +308,13 @@ void triebWerk::CResourceManager::LoadPNG(SFile a_File)
 void triebWerk::CResourceManager::LoadOBJ(SFile a_File)
 {
 	COBJParser objParser;
-	objParser.LoadOBJ(a_File.FilePath.c_str());
+	bool success = objParser.LoadOBJ(a_File.FilePath.c_str());
+
+	if (!success)
+	{
+		DebugLogfile.LogfText(CDebugLogfile::EColor::Red, false, "Critical error: OBJ could not be loaded! File: %s", a_File.FilePath.c_str());
+		return;
+	}
 
 	CMesh* mesh = new CMesh();
 	mesh->m_pVertices = new CMesh::SVertex[objParser.m_VertexCount];
@@ -319,31 +338,37 @@ void triebWerk::CResourceManager::LoadTMX(SFile a_File)
 	CTMXParser parserTMX = CTMXParser();
 	CTilesetMap* tileset = parserTMX.ParseData(a_File.FilePath.c_str());
 
-	for (size_t i = 0; i < tileset->m_Layers.size(); i++)
+	if (tileset == nullptr)
 	{
-		if (tileset->m_Layers[i]->GetType() == IMapLayer::ETypes::Type::MapImageLayer)
-		{
-			CMapImageLayer* t = (CMapImageLayer*)tileset->m_Layers[i];
-			//std::string imageName = AbstractFileNameFromPath(t->m_ImageName).c_str();
-			//LoadTexture(AbstractFolderFromPath(t->m_ImageName).c_str(), imageName.c_str());
-			//t->m_ImageHeight = GetTextureByName(imageName.c_str())->GetHeight();
-			//t->m_ImageWidth = GetTextureByName(imageName.c_str())->GetWidth();
-		}
-
-		if (tileset->m_Layers[i]->GetType() == IMapLayer::ETypes::Type::MapLayer)
-		{
-			CMapLayer* t = (CMapLayer*)tileset->m_Layers[i];
-			//t->m_TileSetTexture = GetTextureByName(t->m_TilesetName.c_str());
-		}
-
-		if (tileset->m_Layers[i]->GetType() == IMapLayer::ETypes::Type::ObjectLayer)
-		{
-			CObjectLayer* t = (CObjectLayer*)tileset->m_Layers[i];
-			//t->m_TileSetTexture = GetTextureByName(t->m_TilesetName.c_str());
-			int a = 0;
-		}
+		DebugLogfile.LogfText(CDebugLogfile::EColor::Red, false, "Critical error: TMX could not be loaded! File: %s", a_File.FilePath.c_str());
+		return;
 	}
 
+//	for (size_t i = 0; i < tileset->m_Layers.size(); i++)
+//	{
+//		if (tileset->m_Layers[i]->GetType() == IMapLayer::ETypes::Type::MapImageLayer)
+//		{
+////			CMapImageLayer* t = (CMapImageLayer*)tileset->m_Layers[i];
+//			//std::string imageName = AbstractFileNameFromPath(t->m_ImageName).c_str();
+//			//LoadTexture(AbstractFolderFromPath(t->m_ImageName).c_str(), imageName.c_str());
+//			//t->m_ImageHeight = GetTextureByName(imageName.c_str())->GetHeight();
+//			//t->m_ImageWidth = GetTextureByName(imageName.c_str())->GetWidth();
+//		}
+//
+//		if (tileset->m_Layers[i]->GetType() == IMapLayer::ETypes::Type::MapLayer)
+//		{
+//			CMapLayer* t = (CMapLayer*)tileset->m_Layers[i];
+//			//t->m_TileSetTexture = GetTextureByName(t->m_TilesetName.c_str());
+//		}
+//
+//		if (tileset->m_Layers[i]->GetType() == IMapLayer::ETypes::Type::ObjectLayer)
+//		{
+//			CObjectLayer* t = (CObjectLayer*)tileset->m_Layers[i];
+//			//t->m_TileSetTexture = GetTextureByName(t->m_TilesetName.c_str());
+//			int a = 0;
+//		}
+//	}
+//
 	m_TilesetBuffer.insert(CTilesetPair(StringHasher(RemoveFileType(a_File.FileName)), tileset));
 }
 
@@ -351,7 +376,13 @@ void triebWerk::CResourceManager::LoadHLSL(SFile a_File)
 {
 	CMaterial* temp = new CMaterial();
 	CHLSLParser hlslParser;
-	hlslParser.ParseShader(a_File.FilePath.c_str(), m_pGraphicsHandle, temp);
+	bool success = hlslParser.ParseShader(a_File.FilePath.c_str(), m_pGraphicsHandle, temp);
+
+	if (!success)
+	{
+		delete temp;
+		return;
+	}
 
 	m_MaterialBuffer.insert(CMaterialPair(StringHasher(RemoveFileType(a_File.FileName)), temp));
 }
@@ -400,7 +431,7 @@ std::vector<triebWerk::CResourceManager::SFile> triebWerk::CResourceManager::Sea
 
 	if (INVALID_HANDLE_VALUE == hFindHandle)
 	{
-		//Debug.m_Logfile.LogfText(Debug.m_Logfile.Red, false, "Folder not found! Name: %s", a_FolderToLoad);
+		//DebugLogfile.LogfText(Debug.m_Logfile.Red, false, "Folder not found! Name: %s", a_FolderToLoad);
 		return filesToLoad;
 	}
 
@@ -444,8 +475,12 @@ std::vector<triebWerk::CResourceManager::SFile> triebWerk::CResourceManager::Sea
 
 bool triebWerk::CResourceManager::CompareFileTypes(const std::string& a_Name, const char * a_ExpectedType)
 {
-	int a = a_Name.compare(a_Name.find("."), std::string::npos, a_ExpectedType);
-	if (a == 0)
+	size_t fileExtensionPosition = a_Name.find(".");
+	if (fileExtensionPosition == std::string::npos)
+		return false;
+
+	int isSame = a_Name.compare(fileExtensionPosition, std::string::npos, a_ExpectedType);
+	if (isSame == 0)
 		return true;
 
 	return false;
@@ -470,7 +505,12 @@ std::string triebWerk::CResourceManager::AbstractFolderFromPath(const std::strin
 
 triebWerk::EFileType triebWerk::CResourceManager::GetFileType(const std::string& a_FileName)
 {
-	std::string fileType = a_FileName.substr(a_FileName.find("."), a_FileName.size() - a_FileName.find("."));
+	size_t fileExtensionPosition = a_FileName.find(".");
+
+	if (fileExtensionPosition == std::string::npos)
+		return EFileType::NONE;
+
+	std::string fileType = a_FileName.substr(fileExtensionPosition, a_FileName.size() - fileExtensionPosition);
 
 	if (fileType == ".twf")
 	{
@@ -502,19 +542,23 @@ triebWerk::EFileType triebWerk::CResourceManager::GetFileType(const std::string&
 
 void triebWerk::CResourceManager::UpdateResourceChanges()
 {
-	//Get events from FileWatcher
+	//Get the events from FileWatcher
 	std::vector<CFileWatcher::SFileEvent> events;
 	m_FileWatcher.GetLastestEvents(&events);
 
+	//iterate over all events
 	for (size_t i = 0; i < events.size(); i++)
 	{
+		//if the event type is supported and a existing file was modified reload the data
 		EFileType type = GetFileType(events[i].FileName);
 		switch (type)
 		{
+
 		case EFileType::PNG:
 		{
 			if (events[i].Event == CFileWatcher::EFileEventTypes::Modified)
 			{
+				//Create a the PNGFile to load
 				SFile fileToLoad;
 				fileToLoad.FileName = AbstractFileNameFromPath(events[0].FileName);
 				fileToLoad.FilePath = m_FileWatcher.m_PathWatching + "\\" + events[0].FileName;
@@ -544,11 +588,12 @@ void triebWerk::CResourceManager::UpdateResourceChanges()
 				}
 			}	
 		}break;
+
 		case EFileType::OBJ:
 		{
 			if (events[i].Event == CFileWatcher::EFileEventTypes::Modified)
 			{
-				//Assamble OBJFile to load 
+				//Create the OBJFile to load 
 				SFile fileToLoad;
 				fileToLoad.FileName = AbstractFileNameFromPath(events[i].FileName);
 				fileToLoad.FilePath = m_FileWatcher.m_PathWatching + "\\" + events[0].FileName;
@@ -564,7 +609,7 @@ void triebWerk::CResourceManager::UpdateResourceChanges()
 
 					if (objParser.LoadOBJ(fileToLoad.FilePath.c_str()))
 					{
-						//Delete the old Mesh
+						//Release the old Mesh
 						meshIn->m_pIndexBuffer->Release();
 						meshIn->m_pVertexBuffer->Release();
 						delete meshIn->m_pVertices;
@@ -592,7 +637,7 @@ void triebWerk::CResourceManager::UpdateResourceChanges()
 		{
 			if (events[i].Event == CFileWatcher::EFileEventTypes::Modified)
 			{
-				//Assamble the twffile to load 
+				//Create the TWFFile to load 
 				SFile fileToLoad;
 				fileToLoad.FileName = AbstractFileNameFromPath(events[i].FileName);
 				fileToLoad.FilePath = m_FileWatcher.m_PathWatching + "\\" + events[0].FileName;
@@ -602,8 +647,10 @@ void triebWerk::CResourceManager::UpdateResourceChanges()
 
 				if (data != nullptr)
 				{
+					//Clear the old data
 					data->m_ConfigurationTable.clear();
-					
+#
+					//Fill twfData with the updated values
 					CTWFParser twfParser;
 					twfParser.ParseData(fileToLoad.FilePath.c_str(), data);
 					data->m_IsModified = true;

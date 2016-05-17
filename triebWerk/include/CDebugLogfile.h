@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <string>
 
+#define DebugLogfile CDebugLogfile::Instance()
+
 #define MAX_BUFFER 1024
 #define L_FAIL false
 #define L_OK true
@@ -19,7 +21,7 @@ namespace triebWerk
 			Red,
 			Green,
 			Blue,
-			Purple
+			Yellow
 		};
 
 	private:
