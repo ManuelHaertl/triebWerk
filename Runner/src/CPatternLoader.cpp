@@ -1,14 +1,6 @@
 #include <CPatternLoader.h>
 
-CPatternLoader::CPatternLoader() :
-    m_pPattern(nullptr),
-    m_PatternCount(0),
-    m_MinDifficulty(0),
-    m_MaxDifficulty(0),
-    m_HasSetDifficulty(false),
-    m_MinPriority(0),
-    m_MaxPriority(0),
-    m_HasSetPriority(false)
+CPatternLoader::CPatternLoader()
 {
     
 }
@@ -18,25 +10,20 @@ CPatternLoader::~CPatternLoader()
     
 }
 
-void CPatternLoader::LoadPattern()
+void CPatternLoader::LoadPattern(std::vector<CPattern*> (&a_pPattern)[CPattern::MaxDifficulty])
 {
-    if (m_pPattern != nullptr)
-        delete[] m_pPattern;
-
     auto tilesets = twResourceManager->GetAllTilesets();
 
-    m_PatternCount = tilesets.size();
-    m_pPattern = new CPattern[m_PatternCount];
-
-    SetDefaultValues();
-
-    for (size_t i = 0; i < m_PatternCount; ++i)
+    // loop through all tilesets
+    for (size_t i = 0; i < tilesets.size(); ++i)
     {
         auto& tileset = *tilesets[i];
 
-        m_pPattern[i].m_Width = tileset.m_Map.m_Width;
-        m_pPattern[i].m_Height = tileset.m_Map.m_Height;
+        CPattern* pattern = new CPattern();
+        pattern->m_Width = tileset.m_Map.m_Width;
+        pattern->m_Height = tileset.m_Map.m_Height;
 
+        // loop through all layers in a tileset
         for (size_t j = 0; j < tileset.m_Layers.size(); ++j)
         {
             auto* layer = tileset.m_Layers[j];
@@ -44,79 +31,93 @@ void CPatternLoader::LoadPattern()
             switch (layer->GetType())
             {
             case triebWerk::IMapLayer::ETypes::MapLayer:
-                SetMapLayer(static_cast<triebWerk::CMapLayer*>(layer), i);
+                SetMapLayer(static_cast<triebWerk::CMapLayer*>(layer), pattern);
                 break;
             case triebWerk::IMapLayer::ETypes::ObjectLayer:
-                SetObjectLayer(static_cast<triebWerk::CObjectLayer*>(layer), i);
+                SetObjectLayer(static_cast<triebWerk::CObjectLayer*>(layer), pattern);
                 break;
+            }
+        }
+
+        m_AllPattern.push_back(pattern);
+        a_pPattern[pattern->m_Difficulty - 1].push_back(pattern);
+    }
+
+    SetConnectedPattern();
+}
+
+void CPatternLoader::SetMapLayer(triebWerk::CMapLayer* const a_pLayer, CPattern* a_pPattern)
+{
+    int layerWidth = static_cast<int>(a_pLayer->m_LayerWidth);
+    int layerHeight = static_cast<int>(a_pLayer->m_LayerHeight);
+
+    for (int y = layerHeight - 1; y >= 0; --y)
+    {
+        for (int x = layerWidth - 1; x >= 0; --x)
+        {
+            // get the Tile type
+            size_t current = y * layerWidth + x;
+            short tile = a_pLayer->m_Indices[current];
+            ETileType::Type type = GetTileType(tile);
+
+            if (type != ETileType::Invalid)
+            {
+                // convert the .TMX Map Layer coordinates to our
+                float xPos = static_cast<float>(x) - a_pPattern->m_Width / 2.0f + 0.5f;
+                float yPos = static_cast<float>(layerHeight - y - 1) + 0.5f;
+
+                SetTile(type, xPos, yPos, a_pPattern);
             }
         }
     }
 }
 
-CPattern* CPatternLoader::GetPattern() const
+void CPatternLoader::SetObjectLayer(triebWerk::CObjectLayer* const a_pLayer, CPattern* a_pPattern)
 {
-    return m_pPattern;
-}
-
-size_t CPatternLoader::GetPatternCount() const
-{
-    return m_PatternCount;
-}
-
-size_t CPatternLoader::GetMinDifficulty() const
-{
-    return m_MinDifficulty;
-}
-
-size_t CPatternLoader::GetMaxDifficulty() const
-{
-    return m_MaxDifficulty;
-}
-
-size_t CPatternLoader::GetMinPriority() const
-{
-    return m_MinPriority;
-}
-
-size_t CPatternLoader::GetMaxPriority() const
-{
-    return m_MaxPriority;
-}
-
-void CPatternLoader::SetMapLayer(triebWerk::CMapLayer* const a_pLayer, const size_t a_Index)
-{
-    CPattern& pattern = m_pPattern[a_Index];
-    int width = static_cast<int>(a_pLayer->m_LayerWidth);
-    int height = static_cast<int>(a_pLayer->m_LayerHeight);
-
-    for (int y = height - 1; y >= 0; --y)
+    if (a_pLayer->m_Name == StringGame)
     {
-        for (int x = width - 1; x >= 0; --x)
-        {
-            size_t current = y * width + x;
-            short tile = a_pLayer->m_Indices[current];
-            float xPos = static_cast<float>(x) - pattern.m_Width / 2.0f + 0.5f;
-            float yPos = static_cast<float>(height - y - 1) + 0.5f;
+        SetPatternProperties(a_pLayer, a_pPattern);
+        return;
+    }
 
-            SetMapLayerTile(tile, xPos, yPos, a_Index);
+    for (size_t i = 0; i < a_pLayer->m_Objects.size(); ++i)
+    {
+        auto& objectProperty = a_pLayer->m_Objects[i];
+        ETileType::Type type = GetTileType(objectProperty.m_GID);
+
+        if (type != ETileType::Invalid)
+        {
+            // convert the .TMX Object Layer coordinates to our
+            float xPos = static_cast<float>(objectProperty.m_X) / static_cast<float>(objectProperty.m_Width) - a_pPattern->m_Width / 2.0f + 0.5f;
+            float yPos = a_pPattern->m_Height - static_cast<float>(objectProperty.m_Y) / static_cast<float>(objectProperty.m_Height) + 0.5f;
+
+            SetTile(type, xPos, yPos, a_pPattern);
         }
     }
 }
 
-void CPatternLoader::SetMapLayerTile(const short a_Tile, const float a_X, const float a_Y, const size_t a_Index)
-{ 
-    ETileType::Type type = GetTileType(a_Tile);
+void CPatternLoader::SetTile(const ETileType::Type a_Type, const float a_X, const float a_Y, CPattern* a_pPattern)
+{
+    SPatternTile patternTile;
+    patternTile.m_X = a_X;
+    patternTile.m_Y = a_Y;
+    patternTile.m_Type = a_Type;
 
-    if (type != ETileType::Invalid)
+    InsertPatternTile(patternTile, a_pPattern);
+}
+
+void CPatternLoader::InsertPatternTile(const SPatternTile& a_rPatternTile, CPattern* a_pPattern)
+{
+    for (int i = a_pPattern->m_Tiles.size() - 1; i >= 0; --i)
     {
-        SPatternTile patternTile;
-        patternTile.m_X = a_X;
-        patternTile.m_Y = a_Y;
-        patternTile.m_Type = type;
-
-        InsertPatternTile(patternTile, a_Index);
+        if (a_pPattern->m_Tiles[i].m_Y <= a_rPatternTile.m_Y)
+        {
+            a_pPattern->m_Tiles.insert(a_pPattern->m_Tiles.begin() + i + 1, a_rPatternTile);
+            return;
+        }
     }
+
+    a_pPattern->m_Tiles.insert(a_pPattern->m_Tiles.begin(), a_rPatternTile);
 }
 
 ETileType::Type CPatternLoader::GetTileType(const short a_Tile) const
@@ -138,120 +139,59 @@ ETileType::Type CPatternLoader::GetTileType(const short a_Tile) const
     return ETileType::Invalid;
 }
 
-void CPatternLoader::SetObjectLayer(triebWerk::CObjectLayer* const a_pLayer, const size_t a_Index)
+void CPatternLoader::SetPatternProperties(triebWerk::CObjectLayer* const a_pLayer, CPattern* a_pPattern)
 {
-    if (a_pLayer->m_Name == StringGame)
-    {
-        SetPatternProperties(a_pLayer, a_Index);
-        return;
-    }
-
-    for (size_t i = 0; i < a_pLayer->m_Objects.size(); ++i)
-    {
-        auto& objectProperty = a_pLayer->m_Objects[i];
-        
-        ETileType::Type type = GetTileType(objectProperty.m_GID);
-
-        if (type != ETileType::Invalid)
-        {
-            int xPos = objectProperty.m_X / objectProperty.m_Width;
-            int yPos = static_cast<int>(m_pPattern[a_Index].m_Height) - objectProperty.m_Y / objectProperty.m_Height;
-
-            SPatternTile patternTile;
-            patternTile.m_X = static_cast<float>(xPos) - m_pPattern[a_Index].m_Width / 2.0f + 0.5f;
-            patternTile.m_Y = static_cast<float>(yPos) + 0.5f;
-            patternTile.m_Type = type;
-
-            InsertPatternTile(patternTile, a_Index);
-        }
-    }
-}
-
-void CPatternLoader::InsertPatternTile(const SPatternTile& a_rPatternTile, const size_t a_Index)
-{
-    CPattern& pattern = m_pPattern[a_Index];
-
-    for (int i = pattern.m_Tiles.size() - 1; i >= 0; --i)
-    {
-        if (pattern.m_Tiles[i].m_Y <= a_rPatternTile.m_Y)
-        {
-            pattern.m_Tiles.insert(pattern.m_Tiles.begin() + i + 1, a_rPatternTile);
-            return;
-        }
-    }
-
-    pattern.m_Tiles.insert(pattern.m_Tiles.begin(), a_rPatternTile);
-}
-
-void CPatternLoader::SetPatternProperties(triebWerk::CObjectLayer* const a_pLayer, const size_t a_Index)
-{
-    CPattern& pattern = m_pPattern[a_Index];
-
     for (auto& prop : a_pLayer->Properties)
     {
         if (prop.first == StringDifficulty)
         {
             int difficulty = std::stoi(prop.second);
-            pattern.m_Difficulty = difficulty;
-
-            SetMinMaxDifficulty(difficulty);
+            a_pPattern->m_Difficulty = difficulty;
         }
 
         else if (prop.first == StringPriority)
         {
             int priority = std::stoi(prop.second);
-            pattern.m_Priority = priority;
-
-            SetMinMaxPriority(priority);
+            a_pPattern->m_Priority = CPattern::MaxPriorities + 1 - priority;
         }
     }
 }
 
-void CPatternLoader::SetDefaultValues()
+void CPatternLoader::SetConnectedPattern()
 {
-    std::vector<CPattern*> connectedPattern;
-
-    for (size_t i = 0; i < m_PatternCount; ++i)
-        connectedPattern.push_back(&m_pPattern[i]);
-
-    for (size_t i = 0; i < m_PatternCount; ++i)
+    size_t patternCount = m_AllPattern.size();
+    for (size_t i = 0; i < patternCount; ++i)
     {
-        m_pPattern[i].m_ConnectedPattern = connectedPattern;
-        m_pPattern[i].m_Difficulty = 0;
-        m_pPattern[i].m_Priority = 0;
+        CPattern* current = m_AllPattern[i];
+
+        for (size_t j = 0; j < patternCount; ++j)
+        {
+            size_t difficulty = current->m_Difficulty - 1;
+            size_t priority = current->m_Priority - 1;
+
+            m_AllPattern[j]->m_ConnectedPattern[difficulty][priority].push_back(m_AllPattern[i]);
+            AddPriority(m_AllPattern[j]->m_Priorities[difficulty], priority);
+        }
     }
 }
 
-void CPatternLoader::SetMinMaxDifficulty(const size_t a_Difficulty)
+void CPatternLoader::AddPriority(std::vector<size_t>& a_Priorities, const size_t a_Priority)
 {
-    if (m_HasSetDifficulty == false)
+    size_t count = a_Priorities.size();
+
+    for (size_t i = 0; i < count; ++i)
     {
-        m_MinDifficulty = a_Difficulty;
-        m_MaxDifficulty = a_Difficulty;
-        m_HasSetDifficulty = true;
-        return;
+        if (a_Priority < a_Priorities[i])
+        {
+            a_Priorities.insert(a_Priorities.begin() + i, a_Priority);
+            return;
+        }
+        else if (a_Priority == a_Priorities[i])
+        {
+            return;
+        }
     }
 
-    if (a_Difficulty < m_MinDifficulty)
-        m_MinDifficulty = a_Difficulty;
-
-    if (a_Difficulty > m_MaxDifficulty)
-        m_MaxDifficulty = a_Difficulty;
+    a_Priorities.push_back(a_Priority);
 }
 
-void CPatternLoader::SetMinMaxPriority(const size_t a_Priority)
-{
-    if (m_HasSetPriority == false)
-    {
-        m_MinPriority = a_Priority;
-        m_MaxPriority = a_Priority;
-        m_HasSetPriority = true;
-        return;
-    }
-
-    if (a_Priority < m_MinPriority)
-        m_MinPriority = a_Priority;
-
-    if (a_Priority > m_MaxPriority)
-        m_MaxPriority = a_Priority;
-}

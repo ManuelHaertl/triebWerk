@@ -9,18 +9,9 @@ private:
     const float SpawnDistance = 300.0f;
     const float DeleteDistance = 10.0f;
 
-    const int DifficultyMinRange = 1;
-    const int DifficultyMaxRange = 1;
-
     std::list<triebWerk::CEntity*> m_Entities;
 
-    // all information about all pattern that can be spawned
-    CPattern* m_pPattern;
-    size_t m_PatternCount;
-    int m_MinDifficulty;
-    int m_MaxDifficulty;
-    int m_MinPriority;
-    int m_MaxPriority;
+    std::vector<CPattern*> m_Pattern[CPattern::MaxDifficulty];
 
     float m_IsSpawned;
     float m_SpawnTo;
@@ -42,4 +33,5 @@ private:
     void SetNextPattern();
     void DeleteEntities();
     void SpawnPatternTile(const SPatternTile& a_rPatternTile);
+    void SetRandomPattern(size_t a_Difficulty);
 };

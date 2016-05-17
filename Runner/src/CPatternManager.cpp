@@ -1,12 +1,6 @@
 #include <CPatternManager.h>
 
 CPatternManager::CPatternManager() :
-    m_pPattern(nullptr),
-    m_PatternCount(0),
-    m_MinDifficulty(0),
-    m_MaxDifficulty(0),
-    m_MinPriority(0),
-    m_MaxPriority(0),
     m_IsSpawned(0.0f),
     m_SpawnTo(SpawnDistance),
     m_PatternSpawnBegin(0.0f),
@@ -19,27 +13,25 @@ CPatternManager::CPatternManager() :
 
 CPatternManager::~CPatternManager()
 {
-    if (m_pPattern != nullptr)
+    for (size_t i = 0; i < CPattern::MaxDifficulty; ++i)
     {
-        delete[] m_pPattern;
+        for (size_t j = 0; j < m_Pattern[i].size(); ++j)
+        {
+            delete m_Pattern[i][j];
+        }
     }
 }
 
 void CPatternManager::LoadPattern()
 {
+    triebWerk::CTime time;
+    time.StartPerformanceCounter();
+
     CPatternLoader patternLoader;
-    patternLoader.LoadPattern();
+    patternLoader.LoadPattern(m_Pattern);
 
-    m_pPattern = patternLoader.GetPattern();
-    m_PatternCount = patternLoader.GetPatternCount();
-    m_MinDifficulty = patternLoader.GetMinDifficulty();
-    m_MaxDifficulty = patternLoader.GetMaxDifficulty();
-    m_MinPriority = patternLoader.GetMinPriority();
-    m_MaxPriority = patternLoader.GetMaxPriority();
-
-    CGameInfo::Instance().m_Difficulty = m_MinDifficulty;
-
-    m_pCurrentPattern = &m_pPattern[0];
+    std::cout << "Time for loading Pattern: " << time.EndPerformanceCounter() << "s" << std::endl;
+    SetRandomPattern(0);
 }
 
 void CPatternManager::Update(const float a_MetersFlewn)
@@ -79,60 +71,39 @@ void CPatternManager::SpawnNextTile()
 
 void CPatternManager::SetNextPattern()
 {
-    //CPattern& pattern = *m_pCurrentPattern;
-    //size_t size = pattern.m_ConnectedPattern.size();
+    size_t difficulty = CGameInfo::Instance().m_Difficulty - 1;
+    size_t priority = 0;
 
-    //// pick any random pattern if the current one has no connected pattern
-    //if (size == 0)
-    //{
-    //    m_pCurrentPattern = &m_pPattern[twRandom::GetNumber(0, m_PatternCount - 1)];
-    //    return;
-    //}
+    size_t allPriorities = 0;
 
-    //// get the range of difficulty pattern that can spawn
-    //int minDifficulty = CGameInfo::Instance().m_Difficulty - DifficultyMinRange;
-    //int maxDifficulty = CGameInfo::Instance().m_Difficulty + DifficultyMaxRange;
+    // all this to get a random priority
+    for (size_t i = 0; i < m_pCurrentPattern->m_Priorities[difficulty].size(); ++i)
+    {
+        allPriorities += m_pCurrentPattern->m_Priorities[difficulty][i];
+    }
 
-    //// clamp the difficulty to those that really exist
-    //if (minDifficulty < m_MinDifficulty)
-    //    minDifficulty = m_MinDifficulty;
+    size_t randomNumber = twRandom::GetNumber(0, allPriorities);
 
-    //if (maxDifficulty > m_MaxDifficulty)
-    //    maxDifficulty = m_MaxDifficulty;
+    for (size_t i = 0; i < m_pCurrentPattern->m_Priorities[difficulty].size(); ++i)
+    {
+        size_t curPrio = m_pCurrentPattern->m_Priorities[difficulty][i];
+        if (randomNumber <= curPrio)
+        {
+            priority = curPrio;
+            break;
+        }
+        else
+        {
+            randomNumber -= curPrio;
+        }
+    }
 
-    //std::vector<CPattern*> possiblePattern;
-    //int maxPriority = 0;
 
-    //// add all pattern that are in the difficulty range 
-    //for (size_t i = 0; i < size; ++i)
-    //{
-    //    CPattern* curPattern = pattern.m_ConnectedPattern[i];
+    // pick a random pattern based on the diffulty and priority
+    size_t patternCount = m_pCurrentPattern->m_ConnectedPattern[difficulty][priority].size() - 1;
+    int randomPatternNumber = twRandom::GetNumber(0, patternCount);
 
-    //    int difficulty = curPattern->m_Difficulty;
-    //    if (difficulty >= minDifficulty &&
-    //        difficulty <= maxDifficulty)
-    //    {
-    //        possiblePattern.push_back(curPattern);
-
-    //        // add the priority
-    //        maxPriority += curPattern->m_Priority;
-    //    }
-    //}
-
-    //// pick a random pattern depending on the priority
-    //int randomNumber = twRandom::GetNumber(0, maxPriority);
-    //int possiblePatternSize = possiblePattern.size();
-
-    //for (size_t i = 0; i < possiblePatternSize; ++i)
-    //{
-    //    if (randomNumber <= maxPriority)
-    //    {
-    //        m_pCurrentPattern = possiblePattern[i];
-    //        break;
-    //    }
-
-    //    randomNumber += possiblePattern[i]->m_Priority;
-    //}
+    m_pCurrentPattern = m_pCurrentPattern->m_ConnectedPattern[difficulty][priority][randomPatternNumber];
 }
 
 void CPatternManager::DeleteEntities()
@@ -197,4 +168,12 @@ void CPatternManager::SpawnPatternTile(const SPatternTile& a_rPatternTile)
         break;
     }
     }
+}
+
+void CPatternManager::SetRandomPattern(size_t a_Difficulty)
+{
+    size_t max = m_Pattern[a_Difficulty].size();
+    int random = twRandom::GetNumber(0, max - 1);
+
+    m_pCurrentPattern = m_Pattern[a_Difficulty][random];
 }

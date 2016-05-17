@@ -17,5 +17,5 @@ CGameInfo& CGameInfo::Instance()
 
 void CGameInfo::Reset()
 {
-    m_Difficulty = 0;
+    m_Difficulty = 1;
 }

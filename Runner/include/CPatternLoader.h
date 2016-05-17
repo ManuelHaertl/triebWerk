@@ -9,37 +9,22 @@ private:
     const std::string StringDifficulty = "Difficulty";
     const std::string StringPriority = "Priority";
 
-    CPattern* m_pPattern;
-    size_t m_PatternCount;
-
-    size_t m_MinDifficulty;
-    size_t m_MaxDifficulty;
-    bool m_HasSetDifficulty;
-
-    size_t m_MinPriority;
-    size_t m_MaxPriority;
-    bool m_HasSetPriority;
+    std::vector<CPattern*> m_AllPattern;
 
 public:
     CPatternLoader();
     ~CPatternLoader();
 
-    void LoadPattern();
-    CPattern* GetPattern() const;
-    size_t GetPatternCount() const;
-    size_t GetMinDifficulty() const;
-    size_t GetMaxDifficulty() const;
-    size_t GetMinPriority() const;
-    size_t GetMaxPriority() const;
+    void LoadPattern(std::vector<CPattern*>(&a_pPattern)[CPattern::MaxDifficulty]);
 
 private:
-    void SetMapLayer(triebWerk::CMapLayer* const a_pLayer, const size_t a_Index);
-    void SetMapLayerTile(const short a_Tile, const float a_X, const float a_Y, const size_t a_Index);
+    void SetMapLayer(triebWerk::CMapLayer* const a_pLayer, CPattern* a_pPattern);
+    void SetObjectLayer(triebWerk::CObjectLayer* const a_pLayer, CPattern* a_pPattern);
+    void SetTile(const ETileType::Type a_Type, const float a_X, const float a_Y, CPattern* a_pPattern);
+    void InsertPatternTile(const SPatternTile& a_rPatternTile, CPattern* a_pPattern);
     ETileType::Type GetTileType(const short a_Tile) const;
-    void SetObjectLayer(triebWerk::CObjectLayer* const a_pLayer, const size_t a_Index);
-    void InsertPatternTile(const SPatternTile& a_rPatternTile, const size_t a_Index);
-    void SetPatternProperties(triebWerk::CObjectLayer* const a_pLayer, const size_t a_Index);
-    void SetDefaultValues();
-    void SetMinMaxDifficulty(const size_t a_Difficulty);
-    void SetMinMaxPriority(const size_t a_Priority);
+    void SetPatternProperties(triebWerk::CObjectLayer* const a_pLayer, CPattern* a_pPattern);
+
+    void SetConnectedPattern();
+    void AddPriority(std::vector<size_t>& a_Priorities, const size_t a_Priority);
 };

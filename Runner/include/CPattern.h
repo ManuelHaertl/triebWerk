@@ -5,17 +5,17 @@
 class CPattern
 {
 public:
+    static const size_t MaxDifficulty = 5;
+    static const size_t MaxPriorities = 10;
+
     size_t m_Priority;
     size_t m_Difficulty;
     float m_Width;
     float m_Height;
 
     std::vector<SPatternTile> m_Tiles;
-    std::vector<CPattern*> m_ConnectedPattern;
-
-    std::vector<size_t> m_Difficulties;
-    std::vector<std::vector<size_t>> m_Priorities;
-    std::vector<std::vector<CPattern*>> m_ConnectedDifficulty;
+    std::vector<CPattern*> m_ConnectedPattern[MaxDifficulty][MaxPriorities];
+    std::vector<size_t> m_Priorities[MaxDifficulty];
 
 public:
     CPattern();
