@@ -7,7 +7,6 @@ namespace triebWerk
 	class CDebugCamera
 	{
 	private:
-        const float FOVZoomSpeed = 0.01f;
         const float RotateSpeed = 0.3f;
         const float MovementSpeed = 10.0f;
         const float FastMovementSpeedFactor = 3.0f;
@@ -29,7 +28,6 @@ namespace triebWerk
 
     private:
         void MouseRotation();
-        void MouseFOV();
         void KeyboardMovement();
 	};
 }

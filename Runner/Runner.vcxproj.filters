@@ -69,6 +69,9 @@
     <ClCompile Include="src\CValueUpdater.cpp">
       <Filter>Quelldateien\Debug</Filter>
     </ClCompile>
+    <ClCompile Include="src\CEnvironmentCreator.cpp">
+      <Filter>Quelldateien\Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\IScene.h">
@@ -106,6 +109,9 @@
     </ClInclude>
     <ClInclude Include="include\CValueUpdater.h">
       <Filter>Headerdateien\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CEnvironmentCreator.h">
+      <Filter>Headerdateien\Game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
