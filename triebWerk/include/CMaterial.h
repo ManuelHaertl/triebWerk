@@ -4,6 +4,7 @@
 #include <CPixelShader.h>
 #include <CConstantBuffer.h>
 #include <CID.h>
+#include <CDebugLogfile.h>
 
 namespace triebWerk
 {

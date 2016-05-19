@@ -42,6 +42,9 @@ namespace triebWerk
 		~CMeshDrawable();
 
 	public:
+		//Return if this is a valid drawable to render properly
+		static bool IsValidDrawable(const CMeshDrawable* a_pDrawableToTest);
+	public:
 		EDrawableType GetType() final;
 		void SetTransform(const DirectX::XMMATRIX& a_rTransform);
 	};

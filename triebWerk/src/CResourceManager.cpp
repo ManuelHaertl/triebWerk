@@ -286,7 +286,7 @@ void triebWerk::CResourceManager::LoadPNG(SFile a_File)
 
 	if (error != 0)
 	{
-		DebugLogfile.LogfText(CDebugLogfile::EColor::Red, false, "Critical error: PNG could not be loaded! File: %s", a_File.FilePath.c_str());
+		DebugLogfile.LogfText(CDebugLogfile::EColor::Yellow, false, "Warning: PNG could not be loaded! File: %s", a_File.FilePath.c_str());
 		return;
 	}
 	else
@@ -312,7 +312,7 @@ void triebWerk::CResourceManager::LoadOBJ(SFile a_File)
 
 	if (!success)
 	{
-		DebugLogfile.LogfText(CDebugLogfile::EColor::Red, false, "Critical error: OBJ could not be loaded! File: %s", a_File.FilePath.c_str());
+		DebugLogfile.LogfText(CDebugLogfile::EColor::Yellow, false, "Warning: OBJ could not be loaded! File: %s", a_File.FilePath.c_str());
 		return;
 	}
 
@@ -341,7 +341,7 @@ void triebWerk::CResourceManager::LoadTMX(SFile a_File)
 
 	if (!success)
 	{
-		DebugLogfile.LogfText(CDebugLogfile::EColor::Red, false, "Critical error: TMX could not be loaded! File: %s", a_File.FilePath.c_str());
+		DebugLogfile.LogfText(CDebugLogfile::EColor::Yellow, false, "Warning: TMX could not be loaded! File: %s", a_File.FilePath.c_str());
 		delete tileset;
 		return;
 	}
