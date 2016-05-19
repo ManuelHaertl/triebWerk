@@ -1,4 +1,5 @@
 #include <CEnvironmentCreator.h>
+#include <CPlayer.h>
 
 CEnvironmentCreator::CEnvironmentCreator() :
     m_RoadAllLength(0.0f),
@@ -23,12 +24,16 @@ void CEnvironmentCreator::Start()
     CreateFloor();
     CreateCollisionSideWalls();
     CreateEndWall();
+    CreateGround();
+    CreateSnakeLoops();
 }
 
 void CEnvironmentCreator::Update(const float a_MetersFlewn)
 {
     m_FeathersSpawnTo += a_MetersFlewn;
     m_FeathersDeleteZone += a_MetersFlewn;
+    m_pEndWall->GetPhysicEntity()->GetBody()->m_Velocity.m128_f32[2] = CPlayer::FlySpeed;
+    RotateSnakes();
 
     while (m_FeathersIsSpawnedTo < m_FeathersSpawnTo)
     {
@@ -38,7 +43,6 @@ void CEnvironmentCreator::Update(const float a_MetersFlewn)
     DeleteFeathers();
 
     CheckFloorPosition(a_MetersFlewn);
-    MoveEndWall(a_MetersFlewn);
 }
 
 void CEnvironmentCreator::End()
@@ -145,19 +149,100 @@ void CEnvironmentCreator::CreateCollisionSideWalls()
     twWorld->AddEntity(wallRight);
 }
 
+void CEnvironmentCreator::CreateGround()
+{
+    DirectX::XMFLOAT3 color{ 0.3f, 0.3f, 0.3f };
+    m_pGround = twWorld->CreateEntity();
+    m_pEndWall->m_Transform.AddChild(&m_pGround->m_Transform);
+    m_pGround->m_Transform.SetPosition(0.0f, -5.0f, 0.0f);
+    m_pGround->m_Transform.SetScale(1000.0f, 1.0f, 1000.0f);
+
+    auto mesh = twRenderer->CreateMeshDrawable();
+    mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube");
+    mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
+    mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(3, &color);
+    m_pGround->SetDrawable(mesh);
+
+    twWorld->AddEntity(m_pGround);
+}
+
 void CEnvironmentCreator::CreateEndWall()
 {
     m_pEndWall = twWorld->CreateEntity();
     m_pEndWall->m_Transform.SetPosition(0.0f, -500.0f, 500.0f);
     m_pEndWall->m_Transform.SetScale(3000.0f, 2500.0f, 1.0f);
 
-    triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
+    auto mesh = twRenderer->CreateMeshDrawable();
     mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube");
     mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardTexture"));
     mesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_endwall"));
     m_pEndWall->SetDrawable(mesh);
 
+    auto physicEntity = twPhysic->CreatePhysicEntity();
+    auto body = twPhysic->CreateBody();
+    body->m_GravityFactor = 0.0f;
+    body->m_Velocity.m128_f32[2] = CPlayer::FlySpeed;
+    physicEntity->SetBody(body);
+    m_pEndWall->SetPhysicEntity(physicEntity);
+
     twWorld->AddEntity(m_pEndWall);
+}
+
+void CEnvironmentCreator::CreateSnakeLoops()
+{
+    // snake 1
+    m_pSnake1 = twWorld->CreateEntity();
+    m_pEndWall->m_Transform.AddChild(&m_pSnake1->m_Transform);
+    m_pSnake1->m_Transform.SetPosition(-100.0f, -15.0f, 90.0f);
+    m_pSnake1->m_Transform.SetScale(0.6f, 0.6f, 0.6f);
+    m_SnakeRotation1.m128_f32[0] = 0.0f;
+    m_SnakeRotation1.m128_f32[1] = 340.0f;
+    m_SnakeRotation1.m128_f32[2] = 0.0f;
+    m_pSnake1->m_Transform.SetRotationDegrees(m_SnakeRotation1);
+
+    auto mesh1 = twRenderer->CreateMeshDrawable();
+    mesh1->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_snakeloop_01");
+    mesh1->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardTexture"));
+    mesh1->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_snakeloop_diff"));
+    m_pSnake1->SetDrawable(mesh1);    
+
+    twWorld->AddEntity(m_pSnake1);
+
+    // snake 2
+    m_pSnake2 = twWorld->CreateEntity();
+    m_pEndWall->m_Transform.AddChild(&m_pSnake2->m_Transform);
+    m_pSnake2->m_Transform.SetPosition(120.0f, -20.0f, 170.0f);
+    m_pSnake2->m_Transform.SetScale(0.8f, 0.8f, 0.8f);
+    m_SnakeRotation2.m128_f32[0] = 0.0f;
+    m_SnakeRotation2.m128_f32[1] = 90.0f;
+    m_SnakeRotation2.m128_f32[2] = 350.0f;
+    m_pSnake2->m_Transform.SetRotationDegrees(m_SnakeRotation2);
+
+    auto mesh2 = twRenderer->CreateMeshDrawable();
+    mesh2->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_snakeloop_01");
+    mesh2->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardTexture"));
+    mesh2->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_snakeloop_diff"));
+    m_pSnake2->SetDrawable(mesh2);
+
+    twWorld->AddEntity(m_pSnake2);
+
+    // snake 3
+    m_pSnake3 = twWorld->CreateEntity();
+    m_pEndWall->m_Transform.AddChild(&m_pSnake3->m_Transform);
+    m_pSnake3->m_Transform.SetPosition(370.0f, 0.0f, 200.0f);
+    m_pSnake3->m_Transform.SetScale(1.2f, 1.2f, 1.2f);
+    m_SnakeRotation3.m128_f32[0] = 0.0f;
+    m_SnakeRotation3.m128_f32[1] = 90.0f;
+    m_SnakeRotation3.m128_f32[2] = 350.0f;
+    m_pSnake3->m_Transform.SetRotationDegrees(m_SnakeRotation3);
+
+    auto mesh3 = twRenderer->CreateMeshDrawable();
+    mesh3->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_snakeloop_01");
+    mesh3->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardTexture"));
+    mesh3->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_snakeloop_diff"));
+    m_pSnake3->SetDrawable(mesh3);
+
+    twWorld->AddEntity(m_pSnake3);
 }
 
 void CEnvironmentCreator::CheckFloorPosition(const float a_MetersFlewn)
@@ -175,9 +260,13 @@ void CEnvironmentCreator::CheckFloorPosition(const float a_MetersFlewn)
     }
 }
 
-void CEnvironmentCreator::MoveEndWall(const float a_MetersFlewn)
+void CEnvironmentCreator::RotateSnakes()
 {
-    DirectX::XMVECTOR position = m_pEndWall->m_Transform.GetPosition();
-    position.m128_f32[2] += a_MetersFlewn;
-    m_pEndWall->m_Transform.SetPosition(position);
+    float dt = twTime->GetDeltaTime();
+    m_SnakeRotation1.m128_f32[0] += dt * SnakeRotateSpeed1;
+    m_SnakeRotation2.m128_f32[0] += dt * SnakeRotateSpeed2;
+    m_SnakeRotation3.m128_f32[0] += dt * SnakeRotateSpeed3;
+    m_pSnake1->m_Transform.SetRotationDegrees(m_SnakeRotation1);
+    m_pSnake2->m_Transform.SetRotationDegrees(m_SnakeRotation2);
+    m_pSnake3->m_Transform.SetRotationDegrees(m_SnakeRotation3);
 }

@@ -29,8 +29,22 @@ private:
     float m_FeathersDeleteZone;
     std::list<triebWerk::CEntity*> m_FeathersEntities;
 
+    // Ground Plane
+    triebWerk::CEntity* m_pGround;
+
     // End Wall
     triebWerk::CEntity* m_pEndWall;
+
+    // Snake Loop
+    const float SnakeRotateSpeed1 = 3.0f;
+    const float SnakeRotateSpeed2 = 2.0f;
+    const float SnakeRotateSpeed3 = 1.0f;
+    DirectX::XMVECTOR m_SnakeRotation1;
+    DirectX::XMVECTOR m_SnakeRotation2;
+    DirectX::XMVECTOR m_SnakeRotation3;
+    triebWerk::CEntity* m_pSnake1;
+    triebWerk::CEntity* m_pSnake2;
+    triebWerk::CEntity* m_pSnake3;
 
 public:
     CEnvironmentCreator();
@@ -46,7 +60,9 @@ private:
     void DeleteFeathers();
     void CreateFloor();
     void CreateCollisionSideWalls();
+    void CreateGround();
     void CreateEndWall();
+    void CreateSnakeLoops();
     void CheckFloorPosition(const float a_MetersFlewn);
-    void MoveEndWall(const float a_MetersFlewn);
+    void RotateSnakes();
 };
