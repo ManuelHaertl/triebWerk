@@ -43,13 +43,13 @@ void triebWerk::CConstantBuffer::SetValueInBuffer(int a_IndexOfValue, void * a_p
 void triebWerk::CConstantBuffer::SetConstantBuffer(ID3D11DeviceContext * a_pDeviceContext, const DirectX::XMMATRIX & a_rWorldMatrix, const DirectX::XMMATRIX & a_rViewMatrix, const DirectX::XMMATRIX & a_rProjectionMatrix)
 {
 	//Force algin 16-bit to transpose
-	DirectX::XMMATRIX world = a_rWorldMatrix;
-	DirectX::XMMATRIX proj = a_rProjectionMatrix;
-	DirectX::XMMATRIX view = a_rViewMatrix;
+	DirectX::XMMATRIX world = DirectX::XMMatrixTranspose(a_rWorldMatrix);
+	DirectX::XMMATRIX proj = DirectX::XMMatrixTranspose(a_rProjectionMatrix);
+	DirectX::XMMATRIX view = DirectX::XMMatrixTranspose(a_rViewMatrix);
 
-	world = DirectX::XMMatrixTranspose(world);
-	proj = DirectX::XMMatrixTranspose(proj);
-	view = DirectX::XMMatrixTranspose(view);
+	//world = DirectX::XMMatrixTranspose(world);
+	//proj = DirectX::XMMatrixTranspose(proj);
+	//view = DirectX::XMMatrixTranspose(view);
 
 	memcpy(m_pBuffer, &world, 64);
 	memcpy(m_pBuffer + 64, &proj, 64);

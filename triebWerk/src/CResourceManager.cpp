@@ -291,7 +291,7 @@ void triebWerk::CResourceManager::LoadPNG(SFile a_File)
 	}
 	else
 	{
-		//Create Texture and load it to the graphic card
+		//Create Texture and load it on the graphics card
 		CTexture2D* texture = new CTexture2D();
 
 		ID3D11Texture2D* d3dtexture = m_pGraphicsHandle->CreateD3D11Texture2D(&imageBuffer[0], width, height);
@@ -336,39 +336,16 @@ void triebWerk::CResourceManager::LoadMP3(SFile a_File)
 void triebWerk::CResourceManager::LoadTMX(SFile a_File)
 {
 	CTMXParser parserTMX = CTMXParser();
-	CTilesetMap* tileset = parserTMX.ParseData(a_File.FilePath.c_str());
+	CTilesetMap* tileset = new CTilesetMap();
+	bool success = parserTMX.ParseData(a_File.FilePath.c_str(), tileset);
 
-	if (tileset == nullptr)
+	if (!success)
 	{
 		DebugLogfile.LogfText(CDebugLogfile::EColor::Red, false, "Critical error: TMX could not be loaded! File: %s", a_File.FilePath.c_str());
+		delete tileset;
 		return;
 	}
 
-//	for (size_t i = 0; i < tileset->m_Layers.size(); i++)
-//	{
-//		if (tileset->m_Layers[i]->GetType() == IMapLayer::ETypes::Type::MapImageLayer)
-//		{
-////			CMapImageLayer* t = (CMapImageLayer*)tileset->m_Layers[i];
-//			//std::string imageName = AbstractFileNameFromPath(t->m_ImageName).c_str();
-//			//LoadTexture(AbstractFolderFromPath(t->m_ImageName).c_str(), imageName.c_str());
-//			//t->m_ImageHeight = GetTextureByName(imageName.c_str())->GetHeight();
-//			//t->m_ImageWidth = GetTextureByName(imageName.c_str())->GetWidth();
-//		}
-//
-//		if (tileset->m_Layers[i]->GetType() == IMapLayer::ETypes::Type::MapLayer)
-//		{
-//			CMapLayer* t = (CMapLayer*)tileset->m_Layers[i];
-//			//t->m_TileSetTexture = GetTextureByName(t->m_TilesetName.c_str());
-//		}
-//
-//		if (tileset->m_Layers[i]->GetType() == IMapLayer::ETypes::Type::ObjectLayer)
-//		{
-//			CObjectLayer* t = (CObjectLayer*)tileset->m_Layers[i];
-//			//t->m_TileSetTexture = GetTextureByName(t->m_TilesetName.c_str());
-//			int a = 0;
-//		}
-//	}
-//
 	m_TilesetBuffer.insert(CTilesetPair(StringHasher(RemoveFileType(a_File.FileName)), tileset));
 }
 
@@ -654,6 +631,38 @@ void triebWerk::CResourceManager::UpdateResourceChanges()
 					CTWFParser twfParser;
 					twfParser.ParseData(fileToLoad.FilePath.c_str(), data);
 					data->m_IsModified = true;
+				}
+			}
+		}break;
+
+		case EFileType::TMX:
+		{
+			if (events[i].Event == CFileWatcher::EFileEventTypes::Modified)
+			{
+				//Create the TWFFile to load 
+				SFile fileToLoad;
+				std::string t = events[i].FileName;
+				fileToLoad.FileName = AbstractFileNameFromPath(events[i].FileName);
+				fileToLoad.FilePath = m_FileWatcher.m_PathWatching + "\\" + t;
+				fileToLoad.FileType = EFileType::TMX;
+
+				CTMXParser parser;
+
+				//Is the tileset in memory 
+				CTilesetMap* pTilesetMap = GetTileset(fileToLoad.FileName.c_str());
+				
+				if (pTilesetMap != nullptr)
+				{
+					//Clear the old data
+					pTilesetMap->ClearMap();
+
+					//Load the new data
+					bool success = parser.ParseData(fileToLoad.FilePath.c_str(), pTilesetMap);
+
+					if (success)
+					{
+						pTilesetMap->m_Modified = true;
+					}
 				}
 			}
 		}break;

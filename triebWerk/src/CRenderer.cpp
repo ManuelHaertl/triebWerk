@@ -1,5 +1,6 @@
 #include <CRenderer.h>
 #include <iostream>
+#include <algorithm>
 
 
 triebWerk::CRenderer::CRenderer()
@@ -12,7 +13,9 @@ triebWerk::CRenderer::~CRenderer()
 
 void triebWerk::CRenderer::Initialize(CGraphics * a_pGraphicsHandle, unsigned int a_ScreenWidth, unsigned int a_ScreenHeight)
 {
-	m_CommandList = new IDrawable*[m_MaxDrawables];
+	m_pCommandBuffer = new IDrawable*[m_MaxDrawables];
+	m_pTransparentMeshBuffer = new CMeshDrawable*[m_MaxDrawables];
+	m_pOpaqueMeshBuffer = new CMeshDrawable*[m_MaxDrawables];
 	m_CommandCounter = 0;
 
 	m_ScreenHeight = a_ScreenHeight;
@@ -28,7 +31,9 @@ void triebWerk::CRenderer::Initialize(CGraphics * a_pGraphicsHandle, unsigned in
 
 void triebWerk::CRenderer::Shutdown()
 {
-	delete[] m_CommandList;
+	delete[] m_pCommandBuffer;
+	delete[] m_pOpaqueMeshBuffer;
+	delete[] m_pTransparentMeshBuffer;
 
 	for (auto pCamera : m_CameraBuffer)
 	{
@@ -42,8 +47,50 @@ void triebWerk::CRenderer::AddRenderCommand(IDrawable* a_pRenderCommand)
 {
 	if (m_CommandCounter < m_MaxDrawables - 1)
 	{
-		m_CommandList[m_CommandCounter] = a_pRenderCommand;
-		m_CommandCounter++;
+		switch (a_pRenderCommand->GetType())
+		{
+		case IDrawable::EDrawableType::Mesh:
+		{
+			CMeshDrawable* pMeshDrawable = reinterpret_cast<CMeshDrawable*>(a_pRenderCommand);
+
+			switch (pMeshDrawable->m_RenderMode)
+			{
+			case CMeshDrawable::ERenderMode::CutOut:
+			case CMeshDrawable::ERenderMode::Opaque:
+			{
+				m_pOpaqueMeshBuffer[m_OpaqueMeshCounter] = pMeshDrawable;
+				m_OpaqueMeshCounter++;
+				m_CommandCounter++;
+			}break;
+			case CMeshDrawable::ERenderMode::Transparent:
+			{
+				SortInsertTransperent(pMeshDrawable);
+				m_TransparentMeshCounter++;
+				m_CommandCounter++;
+			}
+			}
+
+		}break;
+		}
+
+	}
+}
+
+void triebWerk::CRenderer::RenderMeshDrawables()
+{
+	//Sort transparent object from far to near
+	SortTransparentObjects();
+
+	//First draw the opaque objects
+	for (size_t i = 0; i < m_OpaqueMeshCounter; i++)
+	{
+		RenderMesh(m_pOpaqueMeshBuffer[i]);
+	}
+
+	//Second draw now the sorted transparent objects
+	for (size_t i = 0; i < m_TransparentMeshCounter; i++)
+	{
+		RenderMesh(m_pTransparentMeshBuffer[i]);
 	}
 }
 
@@ -84,57 +131,6 @@ triebWerk::CMeshDrawable* triebWerk::CRenderer::CreateMeshDrawable()
 	return drawable;
 }
 
-//void triebWerk::CRenderer::ZSortTransparency()
-//{
-//	for (size_t i = 0; i < m_CommandList.size(); ++i)
-//	{
-//		switch (m_CommandList[i]->GetType())
-//		{
-//		case IDrawable::EDrawableType::Mesh:
-//		{
-//			CMeshDrawable* meshCommand = reinterpret_cast<CMeshDrawable*>(m_CommandList[i]);
-//
-//			if (meshCommand->m_Transparency == true)
-//			{
-//				for (size_t j = 0; j < m_Transperency.size(); ++j)
-//				{
-//					DirectX::XMVECTOR test = meshCommand->m_Transformation.r[3];
-//
-//					DirectX::XMVECTOR dis = DirectX::XMVector4LengthEst(DirectX::XMVectorSubtract(test, m_pCurrentCamera->m_Transform.GetPosition()));
-//					if (m_Transperency[j]->DEBUG_Distance > dis.m128_f32[0])
-//					{
-//						meshCommand->DEBUG_Distance = dis.m128_f32[0];
-//						m_Transperency.push_back(meshCommand);
-//						break;
-//					}
-//					else
-//					{
-//						meshCommand->DEBUG_Distance = dis.m128_f32[0];
-//						m_Transperency.insert(m_Transperency.begin() + j, meshCommand);
-//						break;
-//					}
-//
-//					int a = 0;
-//				}
-//
-//				if (m_Transperency.size() == 0)
-//				{
-//					DirectX::XMVECTOR dis = DirectX::XMVector4LengthEst(DirectX::XMVectorSubtract(meshCommand->m_Transformation.r[3], m_pCurrentCamera->m_Transform.GetPosition()));
-//					
-//					meshCommand->DEBUG_Distance = dis.m128_f32[0];
-//					m_Transperency.push_back(meshCommand);
-//
-//				}
-//
-//				m_CommandList.erase(m_CommandList.begin()+ i);
-//				--i;
-//			}
-//
-//		}break;
-//		}
-//	}
-//}
-
 void triebWerk::CRenderer::DrawScene()
 {
 	m_pGraphicsHandle->ClearRenderTarget();
@@ -142,27 +138,14 @@ void triebWerk::CRenderer::DrawScene()
 	//Update the camera to draw with
 	m_pCurrentCamera->Update();
 
-	//ZSortTransparency();
+	RenderMeshDrawables();
 
-	size_t commandCount = m_CommandCounter;
-
-	for (size_t i = 0; i < commandCount; i++)
-	{
-		switch (m_CommandList[i]->GetType())
-		{
-		case IDrawable::EDrawableType::Mesh:
-		{
-			CMeshDrawable* meshCommand = reinterpret_cast<CMeshDrawable*>(m_CommandList[i]);
-			
-			RenderMesh(meshCommand);
-
-		}break;
-		}
-	}
 
 	m_pGraphicsHandle->Present();
 
 	m_Transperency.clear();
+	m_OpaqueMeshCounter = 0;
+	m_TransparentMeshCounter = 0;
 	m_CommandCounter = 0;
 }
 
@@ -174,8 +157,10 @@ void triebWerk::CRenderer::RenderMesh(CMeshDrawable * a_pDrawable)
 	pDeviceContext->VSSetShader(a_pDrawable->m_Material.m_pVertexShader.m_pD3DVertexShader, 0, 0);
 	pDeviceContext->IASetInputLayout(a_pDrawable->m_Material.m_pVertexShader.GetInputLayout());
 
+	//Set pixelshader to use
 	pDeviceContext->PSSetShader(a_pDrawable->m_Material.m_pPixelShader.m_pD3DPixelShader, 0, 0);
 
+	//Set constantbuffer
 	a_pDrawable->m_Material.m_ConstantBuffer.SetConstantBuffer(pDeviceContext, a_pDrawable->m_Transformation, m_pCurrentCamera->GetViewMatrix(), m_pCurrentCamera->GetProjection());
 
 	//for (size_t i = 0; i < a_pDrawable->m_Material.m_pVertexShader.m_Textures.size(); i++)
@@ -184,16 +169,42 @@ void triebWerk::CRenderer::RenderMesh(CMeshDrawable * a_pDrawable)
 	//	m_pGraphicsHandle->GetDeviceContext()->PSSetShaderResources(static_cast<UINT>(i), 1, &pResourceView);
 	//}
 
+	//Draw all set textures
 	for (size_t i = 0; i < a_pDrawable->m_Material.m_pPixelShader.m_TextureCount; i++)
 	{
 		ID3D11ShaderResourceView* pResourceView = a_pDrawable->m_Material.m_pPixelShader.m_pTextures[i]->GetShaderResourceView();
 		pDeviceContext->PSSetShaderResources(static_cast<UINT>(i), 1, &pResourceView);
 	}
 
+	//set the vertex buffer and index buffer
 	UINT offset = 0;
 	pDeviceContext->IASetVertexBuffers(0, 1, &a_pDrawable->m_pMesh->m_pVertexBuffer, &a_pDrawable->m_Stride, &offset);
 	pDeviceContext->IASetIndexBuffer(a_pDrawable->m_pMesh->m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
 	pDeviceContext->IASetPrimitiveTopology(a_pDrawable->m_Topology);
 	pDeviceContext->DrawIndexed(static_cast<UINT>(a_pDrawable->m_pMesh->m_IndexCount), 0, 0);
+}
+
+void triebWerk::CRenderer::SortInsertTransperent(CMeshDrawable * a_pDrawable)
+{
+	a_pDrawable->DEBUG_Distance = DirectX::XMVector4LengthEst(DirectX::XMVectorSubtract(a_pDrawable->m_Transformation.r[3], m_pCurrentCamera->m_Transform.GetPosition())).m128_f32[0];
+
+	m_pTransparentMeshBuffer[m_TransparentMeshCounter] = a_pDrawable;
+}
+
+bool HowToSort(triebWerk::CMeshDrawable * a_pDraw1, triebWerk::CMeshDrawable * a_pDraw2)
+{
+	if (a_pDraw1->DEBUG_Distance > a_pDraw2->DEBUG_Distance)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+void triebWerk::CRenderer::SortTransparentObjects()
+{
+	std::sort(m_pTransparentMeshBuffer, m_pTransparentMeshBuffer + m_TransparentMeshCounter, HowToSort);
 }

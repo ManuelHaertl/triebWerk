@@ -13,7 +13,7 @@ triebWerk::CWindow::CWindow() :
 
 triebWerk::CWindow::~CWindow()
 {
-	//If screen resolution is not user default, change it to user default before 
+	//If screen resolution is not user default, change it to user default before the engine started
 	if (m_DefaultHeight != GetSystemMetrics(SM_CYSCREEN) || m_DefaultWidth != GetSystemMetrics(SM_CXSCREEN))
 	{
 		DEVMODE dmScreenSettings = { 0 };
@@ -52,6 +52,7 @@ bool triebWerk::CWindow::Initialize(const CWindow::SWindowConfiguration& a_rConf
 
 	RegisterClassEx(&mainWindowDescription);
 
+	//Adjust the window rect
 	RECT windowRectangle = { 0, 0, static_cast<long>(a_rConfiguration.m_ScreenWidth), static_cast<long>(a_rConfiguration.m_ScreenHeight) };
 	AdjustWindowRect(&windowRectangle, WindowStyleWindowed, FALSE);
 
@@ -87,6 +88,7 @@ const MSG triebWerk::CWindow::GetWindowEvent()
 	MSG msg = { 0 };
 	if (m_MessageQueue.size() != 0)
 	{
+		//Get the first message in queue and remove it from the queue
 		msg = m_MessageQueue.front();
 		m_MessageQueue.pop();
 	}
@@ -98,6 +100,7 @@ LRESULT triebWerk::CWindow::WindowProcedure(HWND a_HWnd, UINT a_Message, WPARAM 
 {
 		CWindow *pThis = nullptr;
 
+		//Handle messages with the class own function HandleMessage
 		if (a_Message == WM_NCCREATE)
 		{
 			CREATESTRUCT* pCreate = reinterpret_cast<CREATESTRUCT*>(a_LParam);
@@ -122,6 +125,7 @@ LRESULT triebWerk::CWindow::WindowProcedure(HWND a_HWnd, UINT a_Message, WPARAM 
 
 LRESULT triebWerk::CWindow::HandleMessage(UINT a_Message, WPARAM wParam, LPARAM lParam)
 {
+	//Handle all windows messages
 	switch (a_Message)
 	{
 	case WM_SIZE:
@@ -164,6 +168,7 @@ LRESULT triebWerk::CWindow::HandleMessage(UINT a_Message, WPARAM wParam, LPARAM 
 	
 	case WM_DESTROY:
 	{
+		//Quit window
 		PostQuitMessage(0);
 		return 0;
 	}break;
@@ -269,6 +274,7 @@ void triebWerk::CWindow::ChangeWindowSettings(const bool a_IsFullscreen, const u
 	//Resize the window and draw it new
 	SetWindowPos(m_WindowHandle, NULL, 0, 0, windowRectangle.right - windowRectangle.left, windowRectangle.bottom - windowRectangle.top, SWP_FRAMECHANGED | SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_SHOWWINDOW);
 
+	//Sadly the ShowCursor parameter is a incrementing bool  
 	//Disable Cursor if Fullscreen enable if window
 	if (m_ShowCursor == true && a_IsFullscreen)
 	{

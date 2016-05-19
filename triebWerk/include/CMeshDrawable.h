@@ -16,6 +16,13 @@ namespace triebWerk
 			DrawIndexedInstanced,
 		};
 
+		enum class ERenderMode
+		{
+			Opaque,
+			CutOut,
+			Transparent
+		};
+
 	public:
 		//BEBUG
 		float DEBUG_Distance;
@@ -24,10 +31,11 @@ namespace triebWerk
 		CMesh* m_pMesh;
 
 		CMeshDrawable::EDrawType m_DrawType;
+		CMeshDrawable::ERenderMode m_RenderMode;
+
 		D3D11_PRIMITIVE_TOPOLOGY m_Topology;
 		DirectX::XMMATRIX m_Transformation;
 		UINT m_Stride;
-		bool m_Transparency;
 
 	public:
 		CMeshDrawable();

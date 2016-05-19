@@ -16,6 +16,9 @@ namespace triebWerk
 		typedef std::pair<std::string, std::string>PropertyPair;
 
 	public:
+
+		bool m_Modified;
+
 		struct SMap
 		{
 			std::string m_MapName;

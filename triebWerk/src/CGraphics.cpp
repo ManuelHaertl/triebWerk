@@ -17,7 +17,7 @@ triebWerk::CGraphics::CGraphics() :
 	m_pSwapChain(nullptr),
 	m_pBlendState(nullptr)
 {
-	m_ClearColor = DirectX::XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
+	SetClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 }
 
 triebWerk::CGraphics::~CGraphics()
@@ -177,8 +177,6 @@ bool triebWerk::CGraphics::Initialize(HWND & a_rWindowHandle, const unsigned int
 
 	m_pDeviceContext->RSSetViewports(1, &viewport);
 	
-	//Debug function: loading simple shader
-	//InitShaders();
 
 	return true;
 }
@@ -224,7 +222,7 @@ void triebWerk::CGraphics::Shutdown()
 
 void triebWerk::CGraphics::ClearRenderTarget()
 {
-	m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView, m_ClearColor.m128_f32);
+	m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView, m_ClearColor);
 
 	m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
@@ -239,15 +237,10 @@ void triebWerk::CGraphics::Present()
 
 void triebWerk::CGraphics::SetClearColor(const float a_R, const float a_G, const float a_B, const float a_A)
 {
-	m_ClearColor.m128_f32[0] = a_R;
-	m_ClearColor.m128_f32[1] = a_G;
-	m_ClearColor.m128_f32[2] = a_B;
-	m_ClearColor.m128_f32[3] = a_A;
-}
-
-void triebWerk::CGraphics::SetClearColor(DirectX::XMVECTOR a_Color)
-{
-	m_ClearColor = a_Color;
+	m_ClearColor[0] = a_R;
+	m_ClearColor[1] = a_G;
+	m_ClearColor[2] = a_B;
+	m_ClearColor[3] = a_A;
 }
 
 ID3D11Device * triebWerk::CGraphics::GetDevice()
@@ -272,6 +265,11 @@ void triebWerk::CGraphics::UpdateSwapchainConfiguration()
 	ReleaseBackBuffer();
 
 	hr = m_pSwapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
+
+	if (FAILED(hr))
+	{
+		DebugLogfile.LogfText(CDebugLogfile::EColor::Red, false, "Critical Error: Graphics failed to resize swapchain buffers!");
+	}
 
 	ConfigureBackBuffer();
 

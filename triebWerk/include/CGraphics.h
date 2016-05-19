@@ -5,6 +5,7 @@
 #include <string>
 #include <cfloat>
 #include <CMesh.h>
+#include <CDebugLogfile.h>
 
 namespace triebWerk
 {
@@ -37,7 +38,7 @@ namespace triebWerk
 		ID3D11VertexShader* m_pVertexShader;
 		ID3D11PixelShader* m_pPixelShader;
 
-		DirectX::XMVECTOR m_ClearColor;
+		float m_ClearColor[4];
 
 		unsigned int m_VideoCardMemory;
 		std::wstring m_VideoCardDescription;
@@ -46,24 +47,27 @@ namespace triebWerk
 		~CGraphics();
 
 	public:
+		//Initialize the graphics d3d11 device and set all graphics related options
 		bool Initialize(HWND &a_rWindowHandle, const unsigned int a_ScreenHeight, const unsigned int a_ScreenWidth, const bool a_Fullscreen, const bool a_VSync);
 		void Shutdown();
+		
 		void ClearRenderTarget();
 		void Present();
 
+		//Set the clearcolor of the rendertarget
 		void SetClearColor(const float a_R, const float a_G, const float a_B, const float a_A);
-		void SetClearColor(DirectX::XMVECTOR a_Color);
 
 		ID3D11Device* GetDevice();
 		ID3D11DeviceContext* GetDeviceContext();
 
+		//Get the amount of videomemory from the system
 		unsigned int GetVideoCardMemory();
 
 		//Only debug function
 		//TODO: Intigrate this into resource manager and shader reflection
 		//void InitShaders();
 
-		//TODO: Resize viewport !
+		//Updates all devices and the swapchain with the current client rect
 		void UpdateSwapchainConfiguration();
 		
 		//Factory functions

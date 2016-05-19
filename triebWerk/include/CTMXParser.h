@@ -15,7 +15,7 @@ public:
 	~CTMXParser();
 
 public:
-	CTilesetMap* ParseData(const char* a_pFilePath);
+	bool ParseData(const char* a_pFilePath, CTilesetMap* m_pOutTilesetMap);
 
 private:
     std::string GetProportie(std::string& a_Line, const char* a_pProportieName);

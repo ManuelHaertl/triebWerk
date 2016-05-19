@@ -8,9 +8,9 @@ triebWerk::CTMXParser::~CTMXParser()
 {
 }
 
-triebWerk::CTilesetMap* triebWerk::CTMXParser::ParseData(const char * a_pFilePath)
+bool triebWerk::CTMXParser::ParseData(const char * a_pFilePath, CTilesetMap* a_pOutTilesetMap)
 {
-	m_TilesetMap = new CTilesetMap();
+	m_TilesetMap = a_pOutTilesetMap;
 	ReadData(a_pFilePath);
 	std::string name(a_pFilePath);
 
@@ -53,8 +53,7 @@ triebWerk::CTilesetMap* triebWerk::CTMXParser::ParseData(const char * a_pFilePat
 
 		if (ReachedEndOfFile())
 		{
-			delete m_TilesetMap;
-			return nullptr;
+			return false;
 		}
 
 	} while (!BeginLineWith(line, "</map>"));

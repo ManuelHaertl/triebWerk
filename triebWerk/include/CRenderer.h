@@ -13,8 +13,12 @@ namespace triebWerk
 		const size_t m_MaxDrawables = 10000;
 
 	private:
-		IDrawable** m_CommandList;
+		IDrawable** m_pCommandBuffer;
+		CMeshDrawable** m_pOpaqueMeshBuffer;
+		CMeshDrawable** m_pTransparentMeshBuffer;
 		size_t m_CommandCounter;
+		size_t m_OpaqueMeshCounter;
+		size_t m_TransparentMeshCounter;
 
 		//std::vector<IDrawable*> m_CommandList;
 		std::vector<CMeshDrawable*> m_Transperency;
@@ -46,7 +50,13 @@ namespace triebWerk
 		//Command Functions
 		void AddRenderCommand(IDrawable* a_pRenderCommand);
 
+		void RenderMeshDrawables();
+
 		void RenderMesh(CMeshDrawable* a_pDrawable);
+
+		void SortInsertTransperent(CMeshDrawable* a_pDrawable);
+
+		void SortTransparentObjects();
 
 		void DrawScene();
 	};

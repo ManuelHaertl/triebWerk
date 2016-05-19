@@ -37,12 +37,15 @@ namespace triebWerk
 		~CWindow();
 
 	public:
+		//Initialize the window and displays it in focus
 		bool Initialize(const SWindowConfiguration& a_rWindowConfig);
 
+		//Get the first window event in queue
 		const MSG GetWindowEvent();
 
 		LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
+		//Resizes the window to the given paramenter
 		void ChangeWindowSettings(const bool a_IsFullscreen, const unsigned short a_ScreenWidth, const unsigned short a_ScreenHeight);
 		
 		HWND& GetWindowHandle();

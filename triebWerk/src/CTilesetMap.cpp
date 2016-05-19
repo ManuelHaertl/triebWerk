@@ -1,6 +1,7 @@
 #include <CTilesetMap.h>
 
-triebWerk::CTilesetMap::CTilesetMap()
+triebWerk::CTilesetMap::CTilesetMap() :
+	m_Modified(false)
 {
 }
 
