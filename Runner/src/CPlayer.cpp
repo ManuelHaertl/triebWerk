@@ -127,14 +127,15 @@ void CPlayer::SetCamera()
     DirectX::XMVECTOR pos = m_pEntity->m_Transform.GetPosition();
 
     camPos.m128_f32[0] = pos.m128_f32[0];
-    camPos.m128_f32[2] = pos.m128_f32[2] - 10.0f;
+    camPos.m128_f32[1] = CameraPosY;
+    camPos.m128_f32[2] = pos.m128_f32[2] - CameraMinusPosZ;
     m_pMainCamera->m_Transform.SetPosition(camPos);
 }
 
 void CPlayer::SetRotation()
 {
-    DirectX::XMVECTOR rotationPlayer = DirectX::XMVectorSet(347.0f, 0.0f, 0.0f, 0.0f);
-    DirectX::XMVECTOR rotationCamera = DirectX::XMVectorSet(5.7f, 0.0f, 0.0f, 0.0f);
+    DirectX::XMVECTOR rotationPlayer = DirectX::XMVectorSet(RotationX, 0.0f, 0.0f, 0.0f);
+    DirectX::XMVECTOR rotationCamera = DirectX::XMVectorSet(CameraRotationX, 0.0f, 0.0f, 0.0f);
 
     float lrValue = -1.0f;
     float speed = m_pEntity->GetPhysicEntity()->GetBody()->m_Velocity.m128_f32[0];

@@ -157,6 +157,7 @@
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\CEnvironmentCreator.cpp" />
     <ClCompile Include="src\CGameInfo.cpp" />
     <ClCompile Include="src\CGameScene.cpp" />
     <ClCompile Include="src\CPattern.cpp" />
@@ -169,6 +170,7 @@
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\CEnvironmentCreator.h" />
     <ClInclude Include="include\CGameInfo.h" />
     <ClInclude Include="include\CGameScene.h" />
     <ClInclude Include="include\CPattern.h" />

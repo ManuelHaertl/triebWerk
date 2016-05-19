@@ -28,7 +28,6 @@ void triebWerk::CDebugCamera::EndDebugging()
 void triebWerk::CDebugCamera::Update()
 {
     MouseRotation();
-    MouseFOV();
     KeyboardMovement();
 }
 
@@ -45,21 +44,6 @@ void triebWerk::CDebugCamera::MouseRotation()
     }
 
     m_PreviousMousePosition = currentMousePosition;
-}
-
-void triebWerk::CDebugCamera::MouseFOV()
-{
-    float amount = static_cast<float>(twMouse.GetWheelMovement());
-
-    if (twKeyboard.IsState(triebWerk::EKey::Shift, triebWerk::EButtonState::Pressed))
-        amount *= FastMovementSpeedFactor;
-
-    if (amount != 0)
-    {
-        float fov = m_pMainCamera->GetFOV() + DirectX::XMConvertToRadians(amount * FOVZoomSpeed);
-        m_pMainCamera->SetFOV(fov);
-        std::cout << "FOV: " << DirectX::XMConvertToDegrees(fov) << std::endl;
-    }
 }
 
 void triebWerk::CDebugCamera::KeyboardMovement()

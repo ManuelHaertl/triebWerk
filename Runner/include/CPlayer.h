@@ -14,6 +14,12 @@ public:
     static float MaxRotation;
     static float RotationCameraFactor;
 
+    static float RotationX;
+
+    static float CameraRotationX;
+    static float CameraPosY;
+    static float CameraMinusPosZ;
+
 private:
 
     triebWerk::CCamera* m_pMainCamera;

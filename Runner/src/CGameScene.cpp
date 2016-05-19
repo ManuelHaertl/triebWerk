@@ -11,19 +11,11 @@ CGameScene::~CGameScene()
 
 void CGameScene::Start()
 {
+    m_EnvironmentCreator.Start();
     m_PatternManager.LoadPattern();
-    CreateFloorAndSidewalls();
     CreatePlayer();
 
     //CreateTestCubes();
-
-    // camera settings
-    auto camera = twEngine.m_pRenderer->GetCurrentActiveCamera();
-    camera->m_Transform.SetPosition(0.0f, 4.32f, -9.23f);
-    camera->m_Transform.SetRotationDegrees(5.7f, 0.0f, 0.0f);
-    camera->SetNear(0.1f);
-    camera->SetFar(1000.0f);
-    camera->SetFOV(DirectX::XMConvertToRadians(44.0f));
 }
 
 void CGameScene::Update()
@@ -36,72 +28,14 @@ void CGameScene::Update()
             twDebug->Disable();
     }
 
-    m_PatternManager.Update(m_pPlayer->GetMetersFlewn());
+    const float metersFlewn = m_pPlayer->GetMetersFlewn();
+    m_EnvironmentCreator.Update(metersFlewn);
+    m_PatternManager.Update(metersFlewn);
 }
 
 void CGameScene::End()
 {
-    
-}
-
-void CGameScene::CreateFloorAndSidewalls()
-{
-    DirectX::XMFLOAT3 colorSideWalls = { 1.0f, 0.5f, 0.5f };
-    DirectX::XMFLOAT3 colorFloor = { 0.1f, 0.1f, 0.1f };
-
-    // left side wall
-    auto wallLeft = twWorld->CreateEntity();
-    wallLeft->m_Transform.SetPosition(-30.0f, 2.5f, 50.0f);
-    wallLeft->m_Transform.SetScale(10.0f, 5.0f, 1000.0f);
-    wallLeft->m_ID.SetName("SideLeft");
-
-    triebWerk::CMeshDrawable* meshLeft = twRenderer->CreateMeshDrawable();
-    meshLeft->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube");
-    meshLeft->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
-    meshLeft->m_Material.m_ConstantBuffer.SetValueInBuffer(3, &colorSideWalls);
-    wallLeft->SetDrawable(meshLeft);
-
-    auto physicEntityLeft = twPhysic->CreatePhysicEntity();
-    auto collLeft = twPhysic->CreateAABBCollider();
-    collLeft->SetSize(1.2f, 1.0f, 1.0f);
-    collLeft->m_CheckCollision = false;
-    physicEntityLeft->AddCollider(collLeft);
-    wallLeft->SetPhysicEntity(physicEntityLeft);
-
-    twWorld->AddEntity(wallLeft);
-
-    // right side wall
-    auto wallRight = twWorld->CreateEntity();
-    wallRight->m_Transform.SetPosition(30.0f, 2.5f, 50.0f);
-    wallRight->m_Transform.SetScale(10.0f, 5.0f, 1000.0f);
-    wallRight->m_ID.SetName("SideRight");
-
-    triebWerk::CMeshDrawable* meshRight = twRenderer->CreateMeshDrawable();
-    meshRight->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube");
-    meshRight->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
-    meshRight->m_Material.m_ConstantBuffer.SetValueInBuffer(3, &colorSideWalls);
-    wallRight->SetDrawable(meshRight);
-
-    auto physicEntityRight = twPhysic->CreatePhysicEntity();
-    auto collRight = twPhysic->CreateAABBCollider();
-    collRight->SetSize(1.2f, 1.0f, 1.0f);
-    collRight->m_CheckCollision = false;
-    physicEntityRight->AddCollider(collRight);
-    wallRight->SetPhysicEntity(physicEntityRight);
-
-    twWorld->AddEntity(wallRight);
-
-    // ground
-    auto floor = twWorld->CreateEntity();
-    floor->m_Transform.SetPosition(0.0f, -0.5f, 0.0f);
-    floor->m_Transform.SetScale(1000.0f, 1.0f, 1000.0f);
-
-    triebWerk::CMeshDrawable* meshBottom = twRenderer->CreateMeshDrawable();
-    meshBottom->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube");
-    meshBottom->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
-    meshBottom->m_Material.m_ConstantBuffer.SetValueInBuffer(3, &colorFloor);
-    floor->SetDrawable(meshBottom);
-    twWorld->AddEntity(floor);
+    m_EnvironmentCreator.End();
 }
 
 void CGameScene::CreateTestCubes()

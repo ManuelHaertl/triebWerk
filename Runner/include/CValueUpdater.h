@@ -5,6 +5,7 @@ class CValueUpdater
 {
 private:
     triebWerk::CTWFData* m_pValues;
+    triebWerk::CCamera* m_pMainCamera;
 
 public:
     CValueUpdater();
