@@ -199,6 +199,12 @@
     <Filter Include="Quelldateien\Resource\Resources\ResourceManager">
       <UniqueIdentifier>{e1f2f63d-4c1f-4073-b9eb-40580430343e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headerdateien\Rendering\Batches">
+      <UniqueIdentifier>{fc406d33-5d51-4cf0-a1ab-2bf1e08d633b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Rendering\Batches">
+      <UniqueIdentifier>{f3239fb4-5c94-41a6-8602-71d65ffafa8b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CEngine.cpp">
@@ -362,6 +368,9 @@
     </ClCompile>
     <ClCompile Include="src\CDebugLogfile.cpp">
       <Filter>Quelldateien\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CInstancedMeshBatch.cpp">
+      <Filter>Quelldateien\Rendering\Batches</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -556,6 +565,9 @@
     </ClInclude>
     <ClInclude Include="include\CDebugLogfile.h">
       <Filter>Headerdateien\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CInstancedMeshBatch.h">
+      <Filter>Headerdateien\Rendering\Batches</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
