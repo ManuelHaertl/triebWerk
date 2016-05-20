@@ -26,12 +26,17 @@ namespace triebWerk
 
 		CRenderer* m_pRenderingHandle;
 
+        float m_TimePerFrame;
+        float m_CurrentRenderTime;
+        float m_PhysicTimeStamp;
+        float m_CurrentPhysicTime;
+
     public:
         CWorld();
         ~CWorld();
 
     public:
-        bool Initialize(CRenderer* a_pRenderer);
+        bool Initialize(CRenderer* a_pRenderer, const float a_TargetFPS, const float a_PhysicTimeStamp);
         bool Update(const float a_DeltaTime);
         void Shutdown();
 
@@ -43,7 +48,14 @@ namespace triebWerk
         size_t GetEntityCount() const;
 
     private:
+        void GetEntityBehaviour();
+        void GetEntityBehaviourAndDrawable();
+        void UpdateEntityBehaviour();
+        void UpdatePhysic();
+        void LateUpdateEntityBehaviour();
+        void RenderEntities();
         void DeleteRemoveEntities();
+
         void DeleteEntity(CEntity* a_pEntity);
     };
 }

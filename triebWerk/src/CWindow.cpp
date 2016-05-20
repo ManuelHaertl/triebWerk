@@ -28,16 +28,16 @@ triebWerk::CWindow::~CWindow()
 	}
 }
 
-bool triebWerk::CWindow::Initialize(const CWindow::SWindowConfiguration& a_rConfiguration)
+bool triebWerk::CWindow::Initialize(const bool a_Fullscreen, const unsigned short a_ScreenWidth, const unsigned short a_ScreenHeight, const char* a_Name)
 {
 	//Get the default user screen resolution
 	m_DefaultWidth = static_cast<unsigned short>(GetSystemMetrics(SM_CXSCREEN));
 	m_DefaultHeight = static_cast<unsigned short>(GetSystemMetrics(SM_CYSCREEN));
 
 	//Set initialize values
-	m_Height = static_cast<unsigned short>(a_rConfiguration.m_ScreenWidth);
-	m_Width = static_cast<unsigned short>(a_rConfiguration.m_ScreenHeight);
-	m_IsFullscreen = a_rConfiguration.m_Fullscreen;
+	m_Width = a_ScreenWidth;
+	m_Height = a_ScreenHeight;
+	m_IsFullscreen = a_Fullscreen;
 
 	//window sytle
 	WNDCLASSEX mainWindowDescription;
@@ -48,18 +48,18 @@ bool triebWerk::CWindow::Initialize(const CWindow::SWindowConfiguration& a_rConf
 	mainWindowDescription.hInstance = GetModuleHandle(NULL);
 	mainWindowDescription.hCursor = LoadCursor(NULL, IDC_ARROW);
 	mainWindowDescription.hbrBackground = (HBRUSH)COLOR_WINDOW;
-	mainWindowDescription.lpszClassName = a_rConfiguration.m_WindowName;
+	mainWindowDescription.lpszClassName = a_Name;
 
 	RegisterClassEx(&mainWindowDescription);
 
 	//Adjust the window rect
-	RECT windowRectangle = { 0, 0, static_cast<long>(a_rConfiguration.m_ScreenWidth), static_cast<long>(a_rConfiguration.m_ScreenHeight) };
+	RECT windowRectangle = { 0, 0, static_cast<long>(a_ScreenWidth), static_cast<long>(a_ScreenHeight) };
 	AdjustWindowRect(&windowRectangle, WindowStyleWindowed, FALSE);
 
 	//Create window 
 	m_WindowHandle = CreateWindowEx(NULL,
-		a_rConfiguration.m_WindowName,
-		a_rConfiguration.m_WindowName,
+		a_Name,
+		a_Name,
 		WindowStyleWindowed,
 		0,
 		0,
@@ -77,7 +77,7 @@ bool triebWerk::CWindow::Initialize(const CWindow::SWindowConfiguration& a_rConf
 	m_ShowCursor = true;
 
 	//If fullscreen change normal "default" window above to fullscreen
-	if (a_rConfiguration.m_Fullscreen)
+	if (a_Fullscreen)
 		ChangeWindowSettings(true, m_Width, m_Height);
 
 	return true;

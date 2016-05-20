@@ -3,10 +3,19 @@
 
 int main()
 {
-    //_crtBreakAlloc = 53368;
+    //_crtBreakAlloc = 220;
 
     // Initialize the engine
-    if (twEngine.Initialize() == false)
+    triebWerk::SEngineConfiguration config;
+    config.m_Name = "AZ-TecRunner";
+    config.m_Width = 1200;
+    config.m_Height = 800;
+    config.m_Fullscreen = false;
+    config.m_VSync = false;
+    config.m_TargetFPS = 60;
+    config.m_PhysicTimeStamp = 0.016666f;
+
+    if (twEngine.Initialize(config) == false)
     {
         twEngine.Shutdown();
         return 0;

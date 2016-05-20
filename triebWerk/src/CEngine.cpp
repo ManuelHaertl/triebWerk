@@ -25,22 +25,34 @@ triebWerk::CEngine & triebWerk::CEngine::Instance()
 
 bool triebWerk::CEngine::Initialize()
 {
+    SEngineConfiguration config;
+    config.m_Name = "triebWerk";
+    config.m_Width = 800;
+    config.m_Height = 600;
+    config.m_Fullscreen = false;
+    config.m_VSync = true;
+    config.m_TargetFPS = 0;
+    config.m_PhysicTimeStamp = 0.15f;
+
+    return Initialize(config);
+}
+
+bool triebWerk::CEngine::Initialize(SEngineConfiguration a_Config)
+{
     m_pTime = new CTime();
     m_pInput = new CInput();
     m_pWorld = new CWorld();
-	m_pWindow = new CWindow();
-	m_pResourceManager = new CResourceManager();
-	m_pGraphics = new CGraphics();
-	m_pRenderer = new CRenderer();
-	m_pDebug = new CDebug();
+    m_pWindow = new CWindow();
+    m_pResourceManager = new CResourceManager();
+    m_pGraphics = new CGraphics();
+    m_pRenderer = new CRenderer();
+    m_pDebug = new CDebug();
 
-	CWindow::SWindowConfiguration conifg = { false, 1200, 800, "Engine" };
-
-	m_pWindow->Initialize(conifg);
-	m_pGraphics->Initialize(m_pWindow->GetWindowHandle(), conifg.m_ScreenWidth, conifg.m_ScreenHeight, false, false);
-	m_pResourceManager->Initialize(m_pGraphics);
-	m_pRenderer->Initialize(m_pGraphics, conifg.m_ScreenWidth, conifg.m_ScreenHeight);
-	m_pWorld->Initialize(m_pRenderer);
+    m_pWindow->Initialize(a_Config.m_Fullscreen, a_Config.m_Width, a_Config.m_Height, a_Config.m_Name);
+    m_pGraphics->Initialize(m_pWindow->GetWindowHandle(), a_Config.m_Width, a_Config.m_Height, a_Config.m_Fullscreen, a_Config.m_VSync);
+    m_pResourceManager->Initialize(m_pGraphics);
+    m_pRenderer->Initialize(m_pGraphics, a_Config.m_Width, a_Config.m_Height);
+    m_pWorld->Initialize(m_pRenderer, a_Config.m_TargetFPS, a_Config.m_PhysicTimeStamp);
     return true;
 }
 

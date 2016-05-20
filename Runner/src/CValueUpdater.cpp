@@ -1,4 +1,5 @@
 #include <CValueUpdater.h>
+#include <CGameInfo.h>
 #include <CPlayer.h>
 #include <CEnvironmentCreator.h>
 
@@ -29,6 +30,10 @@ CValueUpdater::~CValueUpdater()
 
 void CValueUpdater::Start()
 {
+    auto startValues = twResourceManager->GetTWFData("start_values");
+    if (startValues != nullptr)
+        UpdateStartValues(startValues);
+
     m_pValues = twResourceManager->GetTWFData("values");
     m_pMainCamera = twRenderer->GetCurrentActiveCamera();
 
@@ -47,6 +52,17 @@ void CValueUpdater::Update()
 
 void CValueUpdater::End()
 {
+}
+
+void CValueUpdater::UpdateStartValues(triebWerk::CTWFData* a_pValues)
+{
+    for (auto value : a_pValues->m_ConfigurationTable)
+    {
+        if (value.first == "g_Difficulty")
+        {
+            CGameInfo::Instance().m_Difficulty = std::stoi(value.second);
+        }
+    }
 }
 
 void CValueUpdater::UpdateValues()

@@ -6,7 +6,11 @@ triebWerk::CWorld::CWorld() :
     m_EntitiesToUpdate(0),
     m_EntitiesToDraw(0),
     m_EntitiesToRemove(0),
-    m_pRenderingHandle(nullptr)
+    m_pRenderingHandle(nullptr),
+    m_TimePerFrame(0.0f),
+    m_CurrentRenderTime(0.0f),
+    m_PhysicTimeStamp(0.0f),
+    m_CurrentPhysicTime(0.0f)
 {
 }
 
@@ -14,7 +18,7 @@ triebWerk::CWorld::~CWorld()
 {
 }
 
-bool triebWerk::CWorld::Initialize(CRenderer* a_pRenderer)
+bool triebWerk::CWorld::Initialize(CRenderer * a_pRenderer, const float a_TargetFPS, const float a_PhysicTimeStamp)
 {
     m_pPhysicWorld = new CPhysicWorld();
 
@@ -25,66 +29,77 @@ bool triebWerk::CWorld::Initialize(CRenderer* a_pRenderer)
     m_DrawEntities.resize(Start_Reserve_Size);
     m_RemoveEntities.resize(Start_Reserve_Size);
 
-	m_pRenderingHandle = a_pRenderer;
+    m_pRenderingHandle = a_pRenderer;
+    m_PhysicTimeStamp = a_PhysicTimeStamp;
+
+    m_TimePerFrame = 1.0f / a_TargetFPS;
 
     return true;
 }
 
 bool triebWerk::CWorld::Update(const float a_DeltaTime)
 {
-    // check what behaviour the entity has
-    for (size_t i = 0; i < m_Entities.size(); ++i)
+    m_CurrentRenderTime += a_DeltaTime;
+    m_CurrentPhysicTime += a_DeltaTime;
+
+    bool renderUpdate = false;
+    bool physicUpdate = false;
+
+    if (m_CurrentRenderTime >= m_TimePerFrame)
     {
-        CEntity* pEntity = m_Entities[i];
-
-        if (pEntity->GetBehaviour() != nullptr)
-        {
-            m_UpdateEntities[m_EntitiesToUpdate] = pEntity->GetBehaviour();
-            m_EntitiesToUpdate++;
-        }
-
-        if (pEntity->GetDrawable() != nullptr)
-        {
-            m_DrawEntities[m_EntitiesToDraw] = pEntity;
-            m_EntitiesToDraw++;
-        }
+        m_CurrentRenderTime -= m_TimePerFrame;
+        renderUpdate = true;
     }
 
-    // Update Order #1: Update the Game Script
-    for (size_t i = 0; i < m_EntitiesToUpdate; ++i)
+    if (m_CurrentPhysicTime >= m_PhysicTimeStamp)
     {
-        m_UpdateEntities[i]->Update();
+        m_CurrentPhysicTime -= m_PhysicTimeStamp;
+        physicUpdate = true;
     }
 
-    // Update Order #2: Update the Phyisc
-    m_pPhysicWorld->Update(a_DeltaTime);
-
-    // Update Order #3: Late Update the Game Script
-    for (size_t i = 0; i < m_EntitiesToUpdate; ++i)
+    if (renderUpdate && physicUpdate)
     {
-        m_UpdateEntities[i]->LateUpdate();
+        GetEntityBehaviourAndDrawable();
+        UpdateEntityBehaviour();
+        UpdatePhysic();
+        LateUpdateEntityBehaviour();
+        RenderEntities();
+        DeleteRemoveEntities();
+
+        m_EntitiesToUpdate = 0;
+        m_EntitiesToDraw = 0;
+    }
+    else if (renderUpdate)
+    {
+        GetEntityBehaviourAndDrawable();
+        UpdateEntityBehaviour();
+        LateUpdateEntityBehaviour();
+        RenderEntities();
+        DeleteRemoveEntities();
+
+        m_EntitiesToUpdate = 0;
+        m_EntitiesToDraw = 0;
+    }
+    else if (physicUpdate)
+    {
+        GetEntityBehaviour();
+        UpdateEntityBehaviour();
+        UpdatePhysic();
+        LateUpdateEntityBehaviour();
+        DeleteRemoveEntities();
+
+        m_EntitiesToUpdate = 0;
+    }
+    else
+    {
+        GetEntityBehaviour();
+        UpdateEntityBehaviour();
+        LateUpdateEntityBehaviour();
+        DeleteRemoveEntities();
+
+        m_EntitiesToUpdate = 0;
     }
 
-    // Update Order #4: Collect all Entities that shall be rendered
-    for (size_t i = 0; i < m_EntitiesToDraw; ++i)
-    {
-		m_DrawEntities[i]->GetDrawable()->SetTransform(m_DrawEntities[i]->m_Transform.GetTransformation());
-        m_pRenderingHandle->AddRenderCommand(m_DrawEntities[i]->GetDrawable());
-    }
-
-    // Update Order #5: Draw all Entities
-    m_pRenderingHandle->DrawScene();
-
-    // Update Order #6: Delete all entities what have been removed this frame
-    DeleteRemoveEntities();
-
-    for (size_t i = 0; i < m_Entities.size(); ++i)
-    {
-        m_Entities[i]->m_Transform.SetModifiedStateFalse();
-    }
-
-    m_EntitiesToUpdate = 0;
-    m_EntitiesToDraw = 0;
     return true;
 }
 
@@ -160,6 +175,72 @@ triebWerk::CEntity* triebWerk::CWorld::GetEntity(size_t a_ID) const
 size_t triebWerk::CWorld::GetEntityCount() const
 {
     return m_Entities.size();
+}
+
+void triebWerk::CWorld::GetEntityBehaviour()
+{
+    for (size_t i = 0; i < m_Entities.size(); ++i)
+    {
+        CEntity* pEntity = m_Entities[i];
+
+        if (pEntity->GetBehaviour() != nullptr)
+        {
+            m_UpdateEntities[m_EntitiesToUpdate] = pEntity->GetBehaviour();
+            m_EntitiesToUpdate++;
+        }
+    }
+}
+
+void triebWerk::CWorld::GetEntityBehaviourAndDrawable()
+{
+    for (size_t i = 0; i < m_Entities.size(); ++i)
+    {
+        CEntity* pEntity = m_Entities[i];
+
+        if (pEntity->GetBehaviour() != nullptr)
+        {
+            m_UpdateEntities[m_EntitiesToUpdate] = pEntity->GetBehaviour();
+            m_EntitiesToUpdate++;
+        }
+
+        if (pEntity->GetDrawable() != nullptr)
+        {
+            m_DrawEntities[m_EntitiesToDraw] = pEntity;
+            m_EntitiesToDraw++;
+        }
+    }
+}
+
+void triebWerk::CWorld::UpdateEntityBehaviour()
+{
+    for (size_t i = 0; i < m_EntitiesToUpdate; ++i)
+    {
+        m_UpdateEntities[i]->Update();
+    }
+}
+
+void triebWerk::CWorld::UpdatePhysic()
+{
+    m_pPhysicWorld->Update(m_PhysicTimeStamp);
+}
+
+void triebWerk::CWorld::LateUpdateEntityBehaviour()
+{
+    for (size_t i = 0; i < m_EntitiesToUpdate; ++i)
+    {
+        m_UpdateEntities[i]->LateUpdate();
+    }
+}
+
+void triebWerk::CWorld::RenderEntities()
+{
+    for (size_t i = 0; i < m_EntitiesToDraw; ++i)
+    {
+        m_DrawEntities[i]->GetDrawable()->SetTransform(m_DrawEntities[i]->m_Transform.GetTransformation());
+        m_pRenderingHandle->AddRenderCommand(m_DrawEntities[i]->GetDrawable());
+    }
+
+    m_pRenderingHandle->DrawScene();
 }
 
 void triebWerk::CWorld::DeleteRemoveEntities()
