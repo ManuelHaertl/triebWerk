@@ -39,6 +39,11 @@ void CSceneManager::ChangeScene(const EScenes::Type a_SceneType)
     case EScenes::Game:
         StartScene(new CGameScene());
         break;
+    case EScenes::Debug:
+        StartScene(new CDebugScene());
+        break;
+    default:
+        break;
     }
 }
 

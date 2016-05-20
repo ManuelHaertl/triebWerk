@@ -66,7 +66,7 @@ void CPatternManager::SpawnNextTile()
     SpawnPatternTile(patternTile);
 
     m_IsSpawned = m_PatternSpawnBegin + patternTile.m_Y;
-    m_CurrentTileIndex++;        
+    m_CurrentTileIndex++;
 }
 
 void CPatternManager::SetNextPattern()
@@ -104,6 +104,16 @@ void CPatternManager::SetNextPattern()
     int randomPatternNumber = twRandom::GetNumber(0, patternCount);
 
     m_pCurrentPattern = m_pCurrentPattern->m_ConnectedPattern[difficulty][priority][randomPatternNumber];
+
+    auto color = triebWerk::CDebugLogfile::EColor::Black;
+    int prio = CPattern::MaxPriorities + 1 - m_pCurrentPattern->m_Priority;
+    std::string log =
+        "Name: " + m_pCurrentPattern->m_Name +
+        " Difficulty: " + std::to_string(m_pCurrentPattern->m_Difficulty) +
+        " Priority: " + std::to_string(prio);
+
+
+    triebWerk::CDebugLogfile::Instance().LogfText(color, false, log.c_str());
 }
 
 void CPatternManager::DeleteEntities()
@@ -132,8 +142,8 @@ void CPatternManager::SpawnPatternTile(const SPatternTile& a_rPatternTile)
     case ETileType::Block1x1:
     {
         auto entity = twWorld->CreateEntity();
-        entity->m_Transform.SetPosition(a_rPatternTile.m_X, 1.5f, m_PatternSpawnBegin + a_rPatternTile.m_Y);
-        entity->m_Transform.SetScale(1.0f, 3.0f, 1.0f);
+        entity->m_Transform.SetPosition(a_rPatternTile.m_X, 5.0f, m_PatternSpawnBegin + a_rPatternTile.m_Y);
+        entity->m_Transform.SetScale(1.0f, 10.0f, 1.0f);
 
         triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
         mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube");

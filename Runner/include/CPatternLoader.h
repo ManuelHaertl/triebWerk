@@ -8,8 +8,14 @@ private:
     const std::string StringGame = "Game";
     const std::string StringDifficulty = "Difficulty";
     const std::string StringPriority = "Priority";
+    const std::string StringFollowing = "Following";
+    const std::string StringCategory = "Category";
+    const std::string StringCategorySingle = "Single";
+    const std::string StringCategoryTwice = "Twice";
+    const std::string StringCategoryVary = "Vary";
 
     std::vector<CPattern*> m_AllPattern;
+    std::vector<CPattern*> m_CategoriesPattern[CPattern::MaxCategories];
 
 public:
     CPatternLoader();

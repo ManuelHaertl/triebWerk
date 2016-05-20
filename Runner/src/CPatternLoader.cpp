@@ -21,6 +21,7 @@ void CPatternLoader::LoadPattern(std::vector<CPattern*>(&a_pPattern)[CPattern::M
         auto& tileset = *tilesets[i];
 
         CPattern* pattern = new CPattern();
+        pattern->m_Name = tileset.m_Map.m_MapName;
         pattern->m_Width = tileset.m_Map.m_Width;
         pattern->m_Height = tileset.m_Map.m_Height;
 
@@ -155,24 +156,77 @@ void CPatternLoader::SetPatternProperties(triebWerk::CObjectLayer* const a_pLaye
             int priority = std::stoi(prop.second);
             a_pPattern->m_Priority = CPattern::MaxPriorities + 1 - priority;
         }
+
+        else if (prop.first == StringCategory)
+        {
+            if (prop.second == StringCategorySingle)
+                a_pPattern->m_Category = EPatternCategories::Single;
+            else if (prop.second == StringCategoryTwice)
+                a_pPattern->m_Category = EPatternCategories::Twice;
+            else if (prop.second == StringCategoryVary)
+                a_pPattern->m_Category = EPatternCategories::Vary;
+
+            m_CategoriesPattern[a_pPattern->m_Category].push_back(a_pPattern);
+        }
+
+        else if (prop.first == StringFollowing)
+        {
+            std::string following = prop.second;
+            size_t next = 0;
+
+            while (next != std::string::npos)
+            {
+                next = following.find_first_of(' ');
+                std::string value = following.substr(0, next);
+                following.erase(0, next + 1);
+
+                if (value == StringCategorySingle)
+                    a_pPattern->m_ConnectedCategories[EPatternCategories::Single] = true;
+                else if (value == StringCategoryTwice)
+                    a_pPattern->m_ConnectedCategories[EPatternCategories::Twice] = true;
+                else if (value == StringCategoryVary)
+                    a_pPattern->m_ConnectedCategories[EPatternCategories::Vary] = true;
+            }
+        }
     }
 }
 
 void CPatternLoader::SetConnectedPattern()
 {
+    // go through all pattern
     size_t patternCount = m_AllPattern.size();
     for (size_t i = 0; i < patternCount; ++i)
     {
         CPattern* current = m_AllPattern[i];
 
-        for (size_t j = 0; j < patternCount; ++j)
+        // now go through all possible categories
+        for (size_t category = 0; category < CPattern::MaxCategories; ++category)
         {
-            size_t difficulty = current->m_Difficulty - 1;
-            size_t priority = current->m_Priority - 1;
+            // if the pattern is connected to the category
+            if (current->m_ConnectedCategories[category] == true)
+            {
+                // add those pattern to its connectedPattern
+                size_t categorySize = m_CategoriesPattern[category].size();
+                for (size_t j = 0; j < categorySize; ++j)
+                {
+                    CPattern* pattern = m_CategoriesPattern[category][j];
+                    size_t difficulty = pattern->m_Difficulty - 1;
+                    size_t priority = pattern->m_Priority - 1;
 
-            m_AllPattern[j]->m_ConnectedPattern[difficulty][priority].push_back(m_AllPattern[i]);
-            AddPriority(m_AllPattern[j]->m_Priorities[difficulty], priority);
+                    current->m_ConnectedPattern[difficulty][priority].push_back(pattern);
+                    AddPriority(current->m_Priorities[difficulty], priority);
+                }
+            }
         }
+
+        //for (size_t j = 0; j < patternCount; ++j)
+        //{
+        //    size_t difficulty = current->m_Difficulty - 1;
+        //    size_t priority = current->m_Priority - 1;
+
+        //    m_AllPattern[j]->m_ConnectedPattern[difficulty][priority].push_back(m_AllPattern[i]);
+        //    AddPriority(m_AllPattern[j]->m_Priorities[difficulty], priority);
+        //}
     }
 }
 

@@ -157,6 +157,7 @@
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\CDebugScene.cpp" />
     <ClCompile Include="src\CEnvironmentCreator.cpp" />
     <ClCompile Include="src\CGameInfo.cpp" />
     <ClCompile Include="src\CGameScene.cpp" />
@@ -170,6 +171,7 @@
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\CDebugScene.h" />
     <ClInclude Include="include\CEnvironmentCreator.h" />
     <ClInclude Include="include\CGameInfo.h" />
     <ClInclude Include="include\CGameScene.h" />
@@ -179,6 +181,7 @@
     <ClInclude Include="include\CPlayer.h" />
     <ClInclude Include="include\CSceneManager.h" />
     <ClInclude Include="include\CValueUpdater.h" />
+    <ClInclude Include="include\EPatternCategories.h" />
     <ClInclude Include="include\EScenes.h" />
     <ClInclude Include="include\ETileType.h" />
     <ClInclude Include="include\IScene.h" />

@@ -72,6 +72,9 @@
     <ClCompile Include="src\CEnvironmentCreator.cpp">
       <Filter>Quelldateien\Game</Filter>
     </ClCompile>
+    <ClCompile Include="src\CDebugScene.cpp">
+      <Filter>Quelldateien\Scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\IScene.h">
@@ -112,6 +115,12 @@
     </ClInclude>
     <ClInclude Include="include\CEnvironmentCreator.h">
       <Filter>Headerdateien\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EPatternCategories.h">
+      <Filter>Headerdateien\Game\Pattern</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CDebugScene.h">
+      <Filter>Headerdateien\Scenes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

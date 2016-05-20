@@ -14,8 +14,6 @@ void CGameScene::Start()
     m_EnvironmentCreator.Start();
     m_PatternManager.LoadPattern();
     CreatePlayer();
-
-    //CreateTestCubes();
 }
 
 void CGameScene::Update()
@@ -28,6 +26,21 @@ void CGameScene::Update()
             twDebug->Disable();
     }
 
+    if (twKeyboard.IsState(triebWerk::EKey::Up, triebWerk::EButtonState::Down))
+    {
+        if (CGameInfo::Instance().m_Difficulty < 5)
+            CGameInfo::Instance().m_Difficulty++;
+
+        std::cout << "Difficulty: " << CGameInfo::Instance().m_Difficulty << std::endl;
+    }
+    if (twKeyboard.IsState(triebWerk::EKey::Down, triebWerk::EButtonState::Down))
+    {
+        if (CGameInfo::Instance().m_Difficulty > 1)
+            CGameInfo::Instance().m_Difficulty--;
+
+        std::cout << "Difficulty: " << CGameInfo::Instance().m_Difficulty << std::endl;
+    }
+
     const float metersFlewn = m_pPlayer->GetMetersFlewn();
     m_EnvironmentCreator.Update(metersFlewn);
     m_PatternManager.Update(metersFlewn);
@@ -36,45 +49,6 @@ void CGameScene::Update()
 void CGameScene::End()
 {
     m_EnvironmentCreator.End();
-}
-
-void CGameScene::CreateTestCubes()
-{
-	auto entity = twWorld->CreateEntity();
-	entity->m_Transform.SetPosition(0,0,0);
-	triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
-	mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_snakeloop_01");
-	mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardTexture"));
-	mesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_snakeloop_diff"));
-	//mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(3, &colorBlock);
-	entity->SetDrawable(mesh);
-	twWorld->AddEntity(entity);
-
-
-    //const int range = 30;
-    //const int incrementer = 5;
-    //const int freeArea = 1;
-    //DirectX::XMFLOAT3 colorBlock = { 0.5f, 0.5f, 0.5f };
-
-    //for (int x = -range; x < range; x += incrementer)
-    //{
-    //    for (int y = -range; y < range; y += incrementer)
-    //    {
-    //        for (int z = -range; z < range; z += incrementer)
-    //        {
-    //            auto entity = twWorld->CreateEntity();
-    //            entity->m_Transform.SetPosition(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z));
-
-    //            triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
-    //            mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube");
-    //            mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardTexture"));
-				//mesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("images"));
-    //            //mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(3, &colorBlock);
-    //            entity->SetDrawable(mesh);
-    //            twWorld->AddEntity(entity);
-    //        }
-    //    }
-    //}
 }
 
 void CGameScene::CreatePlayer()

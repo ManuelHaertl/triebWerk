@@ -1,7 +1,6 @@
 #pragma once
 #include <IScene.h>
 #include <CEnvironmentCreator.h>
-#include <CPattern.h>
 #include <CPatternManager.h>
 #include <CPlayer.h>
 

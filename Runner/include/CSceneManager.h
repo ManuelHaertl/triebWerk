@@ -1,6 +1,7 @@
 #pragma once
 #include <IScene.h>
 #include <EScenes.h>
+#include <CDebugScene.h>
 #include <CGameScene.h>
 #include <CValueUpdater.h>
 

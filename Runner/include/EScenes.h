@@ -4,6 +4,7 @@ struct EScenes
     enum Type
     {
         Game,
-        MainMenu
+        MainMenu,
+        Debug
     };
 };

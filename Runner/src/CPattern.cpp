@@ -8,7 +8,10 @@ CPattern::CPattern() :
     m_ConnectedPattern(),
     m_Tiles()
 {
-
+    for (size_t i = 0; i < MaxCategories; ++i)
+    {
+        m_ConnectedCategories[i] = false;
+    }
 }
 
 CPattern::~CPattern()
