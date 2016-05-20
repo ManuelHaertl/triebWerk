@@ -4,6 +4,7 @@
 #include <CGraphics.h>
 #include <CCamera.h>
 #include <CMeshDrawable.h>
+#include <CInstancedMeshBatch.h>
 
 namespace triebWerk
 {
@@ -11,17 +12,18 @@ namespace triebWerk
 	{
 	private:
 		const size_t m_MaxDrawables = 10000;
+		const size_t m_MaxInstancedMeshBatch = 100;
 
 	private:
 		IDrawable** m_pCommandBuffer;
 		CMeshDrawable** m_pOpaqueMeshBuffer;
 		CMeshDrawable** m_pTransparentMeshBuffer;
+		CInstancedMeshBatch* m_pInstancedMeshBuffer;
 		size_t m_CommandCounter;
 		size_t m_OpaqueMeshCounter;
 		size_t m_TransparentMeshCounter;
+		size_t m_InstancedMeshBatchCount;
 
-		//std::vector<IDrawable*> m_CommandList;
-		std::vector<CMeshDrawable*> m_Transperency;
 		std::vector<CCamera*> m_CameraBuffer;
 		CGraphics* m_pGraphicsHandle;
 		CCamera* m_pCurrentCamera;

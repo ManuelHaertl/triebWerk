@@ -17,7 +17,13 @@ void triebWerk::CRenderer::Initialize(CGraphics * a_pGraphicsHandle, unsigned in
 	m_pCommandBuffer = new IDrawable*[m_MaxDrawables];
 	m_pTransparentMeshBuffer = new CMeshDrawable*[m_MaxDrawables];
 	m_pOpaqueMeshBuffer = new CMeshDrawable*[m_MaxDrawables];
-	m_CommandCounter = 0;
+	m_pInstancedMeshBuffer = new CInstancedMeshBatch[m_MaxInstancedMeshBatch];
+
+	//Initialize the InstancedBatches for later use
+	for (size_t i = 0; i < m_MaxInstancedMeshBatch; i++)
+	{
+		m_pInstancedMeshBuffer[0].Initialize(a_pGraphicsHandle);
+	}
 
 	m_ScreenHeight = a_ScreenHeight;
 	m_ScreenWidth = a_ScreenWidth;
@@ -35,6 +41,7 @@ void triebWerk::CRenderer::Shutdown()
 	delete[] m_pCommandBuffer;
 	delete[] m_pOpaqueMeshBuffer;
 	delete[] m_pTransparentMeshBuffer;
+	delete[] m_pInstancedMeshBuffer;
 
 	for (auto pCamera : m_CameraBuffer)
 	{
@@ -67,6 +74,16 @@ void triebWerk::CRenderer::AddRenderCommand(IDrawable* a_pRenderCommand)
 			case CMeshDrawable::ERenderMode::CutOut:
 			case CMeshDrawable::ERenderMode::Opaque:
 			{
+				for (size_t i = 0; i < m_InstancedMeshBatchCount; i++)
+				{
+					if (pMeshDrawable->m_pMesh == m_pInstancedMeshBuffer[i].m_pMeshDeterminer && pMeshDrawable->m_Material.m_ID.GetHash() == m_pInstancedMeshBuffer[i].m_pMaterialDeterminer)
+					{
+						m_pInstancedMeshBuffer[i].AddDrawable(pMeshDrawable);
+						break;
+					}
+				}
+
+
 				m_pOpaqueMeshBuffer[m_OpaqueMeshCounter] = pMeshDrawable;
 				m_OpaqueMeshCounter++;
 				m_CommandCounter++;
@@ -153,7 +170,7 @@ void triebWerk::CRenderer::DrawScene()
 
 	m_pGraphicsHandle->Present();
 
-	m_Transperency.clear();
+	//Reset all buffers
 	m_OpaqueMeshCounter = 0;
 	m_TransparentMeshCounter = 0;
 	m_CommandCounter = 0;

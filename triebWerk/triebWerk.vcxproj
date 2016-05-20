@@ -144,6 +144,7 @@
     <ClCompile Include="src\CCollision.cpp" />
     <ClCompile Include="src\CCollisionEvent.cpp" />
     <ClCompile Include="src\CDebugLogfile.cpp" />
+    <ClCompile Include="src\CInstancedMeshBatch.cpp" />
     <ClCompile Include="src\CTWFData.cpp" />
     <ClCompile Include="src\CConstantBuffer.cpp" />
     <ClCompile Include="src\CDebug.cpp" />
@@ -254,6 +255,7 @@
     <ClInclude Include="include\IDrawable.h" />
     <ClInclude Include="include\ICollider.h" />
     <ClInclude Include="include\IMapLayer.h" />
+    <ClInclude Include="include\CInstancedMeshBatch.h" />
     <ClInclude Include="include\IShader.h" />
     <ClInclude Include="src\CResourceManager.hpp" />
   </ItemGroup>
