@@ -23,7 +23,7 @@ triebWerk::CDebugLogfile::~CDebugLogfile()
 
 	if (m_ErrorOccurred)
 	{
-		ShellExecute(NULL, "open", "Logfile.html", NULL, NULL, SW_SHOWNORMAL);
+		ShellExecute(NULL, "open", "twLog.html", NULL, NULL, SW_SHOWNORMAL);
 	}
 }
 
@@ -85,13 +85,18 @@ void triebWerk::CDebugLogfile::LogText(EColor a_Color, bool a_List, const char *
 	case EColor::Black:
 		LogText("<font color=black>"); break;
 	case EColor::Red:
-		LogText("<font color=red>"); break;
+		LogText("<font color=red>"); 
+		m_ErrorOccurred = true;
+		break;
 	case EColor::Green:
 		LogText("<font color=green>"); break;
 	case EColor::Blue:
-		LogText("<font color=blue>"); break;
+		LogText("<font color=blue>"); 
+		break;
 	case EColor::Yellow:
-		LogText("<font color=#bfa904>"); break;
+		LogText("<font color=#bfa904>");
+		m_ErrorOccurred = true;
+		break;
 	};
 
 	LogText(a_Text);

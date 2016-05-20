@@ -228,21 +228,21 @@ void triebWerk::CHLSLParser::SetConstantBuffers(ID3DBlob* a_pShaderByteCode, tri
 	for (UINT i = 0; i < shaderDescription.ConstantBuffers; i++)
 	{
 		ID3D11ShaderReflectionConstantBuffer* pConstantBuffer = pReflector->GetConstantBufferByIndex(i);
-		pConstantBuffer->GetDesc(&a_pConstantBuffer->BuffferDescription);
+		pConstantBuffer->GetDesc(&a_pConstantBuffer->m_BuffferDescription);
 		 
-		for (UINT j = 0; j < a_pConstantBuffer->BuffferDescription.Variables; j++)
+		for (UINT j = 0; j < a_pConstantBuffer->m_BuffferDescription.Variables; j++)
 		{
 			ID3D11ShaderReflectionVariable* pVariable = pConstantBuffer->GetVariableByIndex(j);
 			D3D11_SHADER_VARIABLE_DESC variableDesc;
 			pVariable->GetDesc(&variableDesc);
 
-			a_pConstantBuffer->Variables.push_back(variableDesc);
+			a_pConstantBuffer->m_Variables.push_back(variableDesc);
 
 			ID3D11ShaderReflectionType* pType = pVariable->GetType();
 			D3D11_SHADER_TYPE_DESC typeDesc;
 			pType->GetDesc(&typeDesc);
 
-			a_pConstantBuffer->Types.push_back(typeDesc);
+			a_pConstantBuffer->m_Types.push_back(typeDesc);
 		}
 	}
 }

@@ -41,8 +41,17 @@ ID3D11InputLayout * triebWerk::IShader::GetInputLayout()
 
 void triebWerk::IShader::SetTexture(const size_t a_Index, CTexture2D * a_pTexture)
 {
-	if (a_Index < m_TextureCount)
+	if (a_pTexture == nullptr)
 	{
-		m_pTextures[a_Index] = a_pTexture;
+		DebugLogfile.LogfText(CDebugLogfile::EColor::Yellow, false, "Warning: Tried to add nullptr as Texture!");
+		return;
 	}
+	if (a_Index > m_TextureDescriptions.size())
+	{
+		DebugLogfile.LogfText(CDebugLogfile::EColor::Yellow, false, "Warning: Tried to add a Texture in a none a existing slot!");
+		return;
+	}
+
+	m_pTextures[a_Index] = a_pTexture;
+
 }

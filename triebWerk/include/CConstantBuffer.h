@@ -4,6 +4,7 @@
 #include <DirectXMath.h>
 #include <vector>
 #include <iostream>
+#include <CDebugLogfile.h>
 
 namespace triebWerk
 {
@@ -12,9 +13,9 @@ namespace triebWerk
 	public:
 		ID3D11Buffer* m_pConstantBuffer;
 
-		D3D11_SHADER_BUFFER_DESC BuffferDescription;
-		std::vector<D3D11_SHADER_VARIABLE_DESC> Variables;
-		std::vector<D3D11_SHADER_TYPE_DESC> Types;
+		D3D11_SHADER_BUFFER_DESC m_BuffferDescription;
+		std::vector<D3D11_SHADER_VARIABLE_DESC> m_Variables;
+		std::vector<D3D11_SHADER_TYPE_DESC> m_Types;
 
 
 	private:
@@ -26,8 +27,11 @@ namespace triebWerk
 
 
 	public:
-		void FillConstantBufferWithSpecialValues(int a_NumberOfArguments ...);
+		//
+		//void FillConstantBufferWithSpecialValues(int a_NumberOfArguments ...);
 		
+		//Set a index identical to the index in the hlsl conatant buffer and set a address to the value
+		//Keep in mind that the first three values will be set by the engine (view, world, projection)
 		void SetValueInBuffer(int a_IndexOfValue, void* a_pValueAdress);
 
 		void SetConstantBuffer(ID3D11DeviceContext* m_pDeviceContext, const DirectX::XMMATRIX& a_rWorldMatrix, const DirectX::XMMATRIX& a_rViewMatrix, const DirectX::XMMATRIX& a_rProjectionMatrix);

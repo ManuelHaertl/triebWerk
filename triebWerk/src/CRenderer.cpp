@@ -13,6 +13,7 @@ triebWerk::CRenderer::~CRenderer()
 
 void triebWerk::CRenderer::Initialize(CGraphics * a_pGraphicsHandle, unsigned int a_ScreenWidth, unsigned int a_ScreenHeight)
 {
+	//Initialize rendercommands buffer
 	m_pCommandBuffer = new IDrawable*[m_MaxDrawables];
 	m_pTransparentMeshBuffer = new CMeshDrawable*[m_MaxDrawables];
 	m_pOpaqueMeshBuffer = new CMeshDrawable*[m_MaxDrawables];
@@ -47,12 +48,20 @@ void triebWerk::CRenderer::AddRenderCommand(IDrawable* a_pRenderCommand)
 {
 	if (m_CommandCounter < m_MaxDrawables - 1)
 	{
+		//Sort the commands related to its type
 		switch (a_pRenderCommand->GetType())
 		{
 		case IDrawable::EDrawableType::Mesh:
 		{
 			CMeshDrawable* pMeshDrawable = reinterpret_cast<CMeshDrawable*>(a_pRenderCommand);
 
+			//Is the drawable valid if not dont add it to the buffer
+			if (!CMeshDrawable::IsValidDrawable(pMeshDrawable))
+			{
+				break;
+			}
+
+			//sort out opaque and transparent
 			switch (pMeshDrawable->m_RenderMode)
 			{
 			case CMeshDrawable::ERenderMode::CutOut:
@@ -138,6 +147,7 @@ void triebWerk::CRenderer::DrawScene()
 	//Update the camera to draw with
 	m_pCurrentCamera->Update();
 
+	//Renders all Meshes in buffer
 	RenderMeshDrawables();
 
 
@@ -172,8 +182,11 @@ void triebWerk::CRenderer::RenderMesh(CMeshDrawable * a_pDrawable)
 	//Draw all set textures
 	for (size_t i = 0; i < a_pDrawable->m_Material.m_pPixelShader.m_TextureCount; i++)
 	{
-		ID3D11ShaderResourceView* pResourceView = a_pDrawable->m_Material.m_pPixelShader.m_pTextures[i]->GetShaderResourceView();
-		pDeviceContext->PSSetShaderResources(static_cast<UINT>(i), 1, &pResourceView);
+		if (a_pDrawable->m_Material.m_pPixelShader.m_pTextures[i] != nullptr)
+		{
+			ID3D11ShaderResourceView* pResourceView = a_pDrawable->m_Material.m_pPixelShader.m_pTextures[i]->GetShaderResourceView();
+			pDeviceContext->PSSetShaderResources(static_cast<UINT>(i), 1, &pResourceView);
+		}
 	}
 
 	//set the vertex buffer and index buffer
@@ -187,6 +200,7 @@ void triebWerk::CRenderer::RenderMesh(CMeshDrawable * a_pDrawable)
 
 void triebWerk::CRenderer::SortInsertTransperent(CMeshDrawable * a_pDrawable)
 {
+	//Get the distance between object and camera
 	a_pDrawable->DEBUG_Distance = DirectX::XMVector4LengthEst(DirectX::XMVectorSubtract(a_pDrawable->m_Transformation.r[3], m_pCurrentCamera->m_Transform.GetPosition())).m128_f32[0];
 
 	m_pTransparentMeshBuffer[m_TransparentMeshCounter] = a_pDrawable;
@@ -206,5 +220,6 @@ bool HowToSort(triebWerk::CMeshDrawable * a_pDraw1, triebWerk::CMeshDrawable * a
 
 void triebWerk::CRenderer::SortTransparentObjects()
 {
+	//Sort transparent meshs form far to near
 	std::sort(m_pTransparentMeshBuffer, m_pTransparentMeshBuffer + m_TransparentMeshCounter, HowToSort);
 }

@@ -10,9 +10,14 @@ triebWerk::CMaterial::~CMaterial()
 
 void triebWerk::CMaterial::SetMaterial(const CMaterial * a_pMaterial)
 {
-	m_ConstantBuffer.BuffferDescription = a_pMaterial->m_ConstantBuffer.BuffferDescription;
-	m_ConstantBuffer.Types = a_pMaterial->m_ConstantBuffer.Types;
-	m_ConstantBuffer.Variables = a_pMaterial->m_ConstantBuffer.Variables;
+	if (a_pMaterial == nullptr)
+	{
+		DebugLogfile.LogfText(CDebugLogfile::EColor::Yellow, false, "Warning: You tried to set an empty Material!");
+		return;
+	}
+	m_ConstantBuffer.m_BuffferDescription = a_pMaterial->m_ConstantBuffer.m_BuffferDescription;
+	m_ConstantBuffer.m_Types = a_pMaterial->m_ConstantBuffer.m_Types;
+	m_ConstantBuffer.m_Variables = a_pMaterial->m_ConstantBuffer.m_Variables;
 
 	m_ConstantBuffer.InitializeConstantBufffer(CEngine::Instance().m_pGraphics->GetDevice());
 

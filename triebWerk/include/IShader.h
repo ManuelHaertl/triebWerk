@@ -27,7 +27,7 @@ namespace triebWerk
 
 		//Holds the texture pointers
 		CTexture2D** m_pTextures;
-		//Number of textures required by the shader
+		//Number of Textures set by the client
 		size_t m_TextureCount;
 
 	public:

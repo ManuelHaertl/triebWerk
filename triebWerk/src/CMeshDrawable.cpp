@@ -15,6 +15,18 @@ triebWerk::CMeshDrawable::~CMeshDrawable()
 {
 }
 
+bool triebWerk::CMeshDrawable::IsValidDrawable(const CMeshDrawable * a_pDrawableToTest)
+{
+	if (a_pDrawableToTest->m_pMesh == nullptr || a_pDrawableToTest->m_Material.m_ID.GetHash() == 0)
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
 triebWerk::IDrawable::EDrawableType triebWerk::CMeshDrawable::GetType()
 {
 	return IDrawable::EDrawableType::Mesh;

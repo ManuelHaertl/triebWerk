@@ -20,28 +20,45 @@ triebWerk::CConstantBuffer::~CConstantBuffer()
 	}
 }
 
-void triebWerk::CConstantBuffer::FillConstantBufferWithSpecialValues(int a_NumberOfArguments ...)
-{
-	va_list arguments;
-	va_start(arguments, a_NumberOfArguments);
-
-	for (int x = 0; x < a_NumberOfArguments; x++)
-	{
-		void* p = va_arg(arguments, void*);
-
-		memcpy(m_pBuffer + Variables[3 + x].StartOffset, p, Variables[3 + x].Size);
-	}
-
-	va_end(arguments);
-}
+//void triebWerk::CConstantBuffer::FillConstantBufferWithSpecialValues(int a_NumberOfArguments ...)
+//{
+//	va_list arguments;
+//	va_start(arguments, a_NumberOfArguments);
+//
+//	if (a_NumberOfArguments > m_Variables.size() - 3)
+//	{
+//		DebugLogfile.LogfText(CDebugLogfile::EColor::Yellow, false, "Warning: Tried to write in a none existing constant buffer index!");
+//		return;
+//	}
+//
+//	for (int x = 0; x < a_NumberOfArguments; x++)
+//	{
+//		void* p = va_arg(arguments, void*);
+//
+//		memcpy(m_pBuffer + m_Variables[3 + x].StartOffset, p, m_Variables[3 + x].Size);
+//	}
+//
+//	va_end(arguments);
+//}
 
 void triebWerk::CConstantBuffer::SetValueInBuffer(int a_IndexOfValue, void * a_pValueAdress)
 {
-	memcpy(m_pBuffer + Variables[a_IndexOfValue].StartOffset, a_pValueAdress, Variables[a_IndexOfValue].Size);
+	if (a_IndexOfValue >= m_Variables.size())
+	{
+		DebugLogfile.LogfText(CDebugLogfile::EColor::Yellow, false, "Warning: Tried to write in a none existing constant buffer index!");
+		return;
+	}
+
+	memcpy(m_pBuffer + m_Variables[a_IndexOfValue].StartOffset, a_pValueAdress, m_Variables[a_IndexOfValue].Size);
 }
 
 void triebWerk::CConstantBuffer::SetConstantBuffer(ID3D11DeviceContext * a_pDeviceContext, const DirectX::XMMATRIX & a_rWorldMatrix, const DirectX::XMMATRIX & a_rViewMatrix, const DirectX::XMMATRIX & a_rProjectionMatrix)
 {
+	if (m_pConstantBuffer == nullptr)
+	{
+		return;
+	}
+
 	//Force algin 16-bit to transpose
 	DirectX::XMMATRIX world = DirectX::XMMatrixTranspose(a_rWorldMatrix);
 	DirectX::XMMATRIX proj = DirectX::XMMatrixTranspose(a_rProjectionMatrix);
@@ -62,7 +79,7 @@ void triebWerk::CConstantBuffer::SetConstantBuffer(ID3D11DeviceContext * a_pDevi
 
 	D3D11_MAPPED_SUBRESOURCE subResourceConstantBuffer;
 	a_pDeviceContext->Map(this->m_pConstantBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &subResourceConstantBuffer);
-	memcpy(subResourceConstantBuffer.pData, m_pBuffer, BuffferDescription.Size);
+	memcpy(subResourceConstantBuffer.pData, m_pBuffer, m_BuffferDescription.Size);
 	a_pDeviceContext->Unmap(this->m_pConstantBuffer, NULL);
 
 	a_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
@@ -83,10 +100,10 @@ void triebWerk::CConstantBuffer::InitializeConstantBufffer(ID3D11Device * a_pDev
 		m_pConstantBuffer->Release();
 	}
 
-	m_pBuffer = new char[BuffferDescription.Size];
+	m_pBuffer = new char[m_BuffferDescription.Size];
 
 	D3D11_BUFFER_DESC constantBufferDescription;
-	constantBufferDescription.ByteWidth = BuffferDescription.Size;
+	constantBufferDescription.ByteWidth = m_BuffferDescription.Size;
 	constantBufferDescription.Usage = D3D11_USAGE_DYNAMIC;
 	constantBufferDescription.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	constantBufferDescription.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
@@ -99,4 +116,10 @@ void triebWerk::CConstantBuffer::InitializeConstantBufffer(ID3D11Device * a_pDev
 	initData.SysMemSlicePitch = 0;
 
 	hr = a_pDevice->CreateBuffer(&constantBufferDescription, &initData, &m_pConstantBuffer);
+
+	if (FAILED(hr))
+	{
+		m_pConstantBuffer;
+		DebugLogfile.LogfText(CDebugLogfile::EColor::Yellow, false, "Warning: constantbuffer creation failed!");
+	}
 }
