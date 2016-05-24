@@ -10,10 +10,6 @@ triebWerk::IDrawable::~IDrawable()
 {
 }
 
-void triebWerk::IDrawable::SetTransform(const DirectX::XMMATRIX & a_rTransform)
-{
-}
-
 void triebWerk::IDrawable::SetActive(bool a_State)
 {
 	m_ActiveState = a_State;

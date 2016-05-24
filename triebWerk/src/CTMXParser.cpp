@@ -110,9 +110,7 @@ void triebWerk::CTMXParser::ReadLayer(std::string& a_Line)
 	layer->m_LayerName = GetProportie(a_Line, "name");
 	layer->m_Indices = new short[layer->m_LayerWidth * layer->m_LayerHeight];
 
-	bool runState = true;
 	std::string line;
-	size_t begin = 0;
 
 	std::string data = GetAllData();
 
@@ -121,38 +119,32 @@ void triebWerk::CTMXParser::ReadLayer(std::string& a_Line)
 		line = GetLine();
 
 		if (BeginLineWith(line, "<data"))
-		{
+		{	
 			do
 			{
 				line = GetLine();
-				if (BeginLineWith(line, "</data>"))
+				const char* ptr = line.c_str();
+				int val = 0;
+				while (*ptr)
 				{
-					break;
+					if (*ptr == ',')
+					{
+						layer->m_Indices[layer->m_IndicesIterator] = (short)val;
+						val = 0;
+						++layer->m_IndicesIterator;
+					}
+					else
+					{
+						if (*ptr >= '0' && *ptr <= '9')
+						{
+							val *= 10;
+							val += *ptr - '0';
+						}
+					}
+
+					ptr++;
 				}
-				do
-				{
-					size_t startPos = line.find(",", begin);
-
-					if (startPos == std::string::npos)
-					{
-						startPos = line.size();
-						layer->m_Indices[layer->m_IndicesIterator] = static_cast<short>(stoi(line.substr(begin, startPos - begin)));
-						layer->m_IndicesIterator++;
-						break;
-					}
-
-					layer->m_Indices[layer->m_IndicesIterator] = static_cast<short>(stoi(line.substr(begin, startPos - begin)));
-					begin = startPos + 1;
-
-					layer->m_IndicesIterator++;
-
-					if (line.size() == begin)
-					{
-						begin = 0;
-						break;
-					}
-				} while (runState);
-            } while (!BeginLineWith(line, "</data>"));
+			} while (!BeginLineWith(line, "</data"));
 		}
 
 		if (BeginLineWith(line, "<properties>"))

@@ -40,7 +40,7 @@ void triebWerk::CDebugLogfile::CreateLogfile(const char * a_LogfileName)
 	timeS += "<br>";
 
 	char filename[MAX_PATH];
-	DWORD size = GetModuleFileNameA(NULL, filename, MAX_PATH);
+	GetModuleFileNameA(NULL, filename, MAX_PATH);
 
 	fopen_s(&m_pFile, a_LogfileName, "w");
 	LogText("<html><head><title>Logfile</title></head>");
