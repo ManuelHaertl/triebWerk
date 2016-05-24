@@ -1,0 +1,24 @@
+				//const char* ptr = line.c_str();
+
+				////Osama string parser
+				//int idx = 0;
+				//int val = 0;
+				//while (*ptr)
+				//{
+				//	if (*ptr == ',')
+				//	{
+				//		layer->m_Indices[idx] = val;
+				//		val = 0;
+				//		++idx;
+				//	}
+				//	else
+				//	{
+				//		if (*ptr >= '0' && *ptr <= '9')
+				//		{
+				//			val *= 10;
+				//			val += *ptr - '0';
+				//		}
+				//	}
+				//
+				//	++ptr;
+				//}

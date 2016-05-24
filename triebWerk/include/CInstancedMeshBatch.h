@@ -1,9 +1,11 @@
 #pragma once
 #include <CMeshDrawable.h>
 #include <CID.h>
+#include <CCamera.h>
 #include <CGraphics.h>
 
 #define MAX_INSTANCE_COUNT 8000
+#define MAX_DATA_PER_INSTANCE 64
 
 namespace triebWerk
 {
@@ -11,19 +13,27 @@ namespace triebWerk
 	class CInstancedMeshBatch
 	{
 	public:
-		struct SDataPerInstance
+		//This structure defines the batch 
+		struct SMeshIdentifier
 		{
-			DirectX::XMMATRIX Transformation;
+			//Material Hash
+			size_t m_pMaterialDeterminer;
+			//Mesh pointer
+			CMesh* m_pMeshDeterminer;
+			//Constant Buffer
+			char* m_pConstantBuffer;
 		};
 
 	public:
-		size_t m_pMaterialDeterminer;
-		CMesh* m_pMeshDeterminer;
+		CMeshDrawable* DEBUG_pDrawable;
+		CMaterial* m_pMaterial;
+		SMeshIdentifier m_Identifier;
+		size_t m_InstanceCount;
+		size_t m_SizeOfDataPerInstance;
 
 	private:
-		size_t m_InstanceCount;
 		ID3D11Buffer* m_pInstanceBuffer;
-		SDataPerInstance* m_pInstanceDataBuffer;
+		char* m_pInstanceDataBuffer;
 		CGraphics* m_pGraphicsHandle;
 
 	public:
@@ -32,6 +42,7 @@ namespace triebWerk
 
 	public:
 		void Initialize(CGraphics* a_pGraphicsHandle);
+		void Draw(CCamera* a_pCamera);
 		void AddDrawable(CMeshDrawable* a_pDrawable);
 		void Reset();
 

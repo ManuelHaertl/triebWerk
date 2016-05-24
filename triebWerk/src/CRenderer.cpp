@@ -22,7 +22,7 @@ void triebWerk::CRenderer::Initialize(CGraphics * a_pGraphicsHandle, unsigned in
 	//Initialize the InstancedBatches for later use
 	for (size_t i = 0; i < m_MaxInstancedMeshBatch; i++)
 	{
-		m_pInstancedMeshBuffer[0].Initialize(a_pGraphicsHandle);
+		m_pInstancedMeshBuffer[i].Initialize(a_pGraphicsHandle);
 	}
 
 	m_ScreenHeight = a_ScreenHeight;
@@ -60,6 +60,7 @@ void triebWerk::CRenderer::AddRenderCommand(IDrawable* a_pRenderCommand)
 		{
 		case IDrawable::EDrawableType::Mesh:
 		{
+			//Cast the drawable to a meshdrawable
 			CMeshDrawable* pMeshDrawable = reinterpret_cast<CMeshDrawable*>(a_pRenderCommand);
 
 			//Is the drawable valid if not dont add it to the buffer
@@ -74,23 +75,22 @@ void triebWerk::CRenderer::AddRenderCommand(IDrawable* a_pRenderCommand)
 			case CMeshDrawable::ERenderMode::CutOut:
 			case CMeshDrawable::ERenderMode::Opaque:
 			{
-				for (size_t i = 0; i < m_InstancedMeshBatchCount; i++)
+				//User defiend this to be instanced
+				if (pMeshDrawable->m_DrawType == CMeshDrawable::EDrawType::DrawIndexedInstanced || pMeshDrawable->m_DrawType == CMeshDrawable::EDrawType::DrawInstanced)
 				{
-					if (pMeshDrawable->m_pMesh == m_pInstancedMeshBuffer[i].m_pMeshDeterminer && pMeshDrawable->m_Material.m_ID.GetHash() == m_pInstancedMeshBuffer[i].m_pMaterialDeterminer)
-					{
-						m_pInstancedMeshBuffer[i].AddDrawable(pMeshDrawable);
-						break;
-					}
+					InstanceBatching(pMeshDrawable);
+					break;
 				}
 
-
+				//Add as normal command
 				m_pOpaqueMeshBuffer[m_OpaqueMeshCounter] = pMeshDrawable;
 				m_OpaqueMeshCounter++;
 				m_CommandCounter++;
 			}break;
 			case CMeshDrawable::ERenderMode::Transparent:
 			{
-				SortInsertTransperent(pMeshDrawable);
+				//add as transparent drawable
+				InsertTransparent(pMeshDrawable);
 				m_TransparentMeshCounter++;
 				m_CommandCounter++;
 			}
@@ -99,24 +99,6 @@ void triebWerk::CRenderer::AddRenderCommand(IDrawable* a_pRenderCommand)
 		}break;
 		}
 
-	}
-}
-
-void triebWerk::CRenderer::RenderMeshDrawables()
-{
-	//Sort transparent object from far to near
-	SortTransparentObjects();
-
-	//First draw the opaque objects
-	for (size_t i = 0; i < m_OpaqueMeshCounter; i++)
-	{
-		RenderMesh(m_pOpaqueMeshBuffer[i]);
-	}
-
-	//Second draw now the sorted transparent objects
-	for (size_t i = 0; i < m_TransparentMeshCounter; i++)
-	{
-		RenderMesh(m_pTransparentMeshBuffer[i]);
 	}
 }
 
@@ -174,6 +156,31 @@ void triebWerk::CRenderer::DrawScene()
 	m_OpaqueMeshCounter = 0;
 	m_TransparentMeshCounter = 0;
 	m_CommandCounter = 0;
+	m_InstancedMeshBatchCount = 0;
+}
+
+void triebWerk::CRenderer::RenderMeshDrawables()
+{
+	//Sort transparent object from far to near
+	SortTransparentObjects();
+	//std::cout << m_InstancedMeshBatchCount << std::endl;
+	for (size_t i = 0; i < m_InstancedMeshBatchCount; i++)
+	{
+		//if(m_pInstancedMeshBuffer[i].m_InstanceCount > 10)
+		RenderInstancedMeshBatch(i);
+	}
+
+	//First draw the opaque objects
+	for (size_t i = 0; i < m_OpaqueMeshCounter; i++)
+	{
+		RenderMesh(m_pOpaqueMeshBuffer[i]);
+	}
+
+	//Second draw now the sorted transparent objects
+	for (size_t i = 0; i < m_TransparentMeshCounter; i++)
+	{
+		RenderMesh(m_pTransparentMeshBuffer[i]);
+	}
 }
 
 void triebWerk::CRenderer::RenderMesh(CMeshDrawable * a_pDrawable)
@@ -188,7 +195,7 @@ void triebWerk::CRenderer::RenderMesh(CMeshDrawable * a_pDrawable)
 	pDeviceContext->PSSetShader(a_pDrawable->m_Material.m_pPixelShader.m_pD3DPixelShader, 0, 0);
 
 	//Set constantbuffer
-	a_pDrawable->m_Material.m_ConstantBuffer.SetConstantBuffer(pDeviceContext, a_pDrawable->m_Transformation, m_pCurrentCamera->GetViewMatrix(), m_pCurrentCamera->GetProjection());
+	a_pDrawable->m_Material.m_ConstantBuffer.SetConstantBuffer(pDeviceContext, a_pDrawable->m_Transformation, m_pCurrentCamera->GetViewMatrix(), m_pCurrentCamera->GetProjection(), false);
 
 	//for (size_t i = 0; i < a_pDrawable->m_Material.m_pVertexShader.m_Textures.size(); i++)
 	//{
@@ -215,8 +222,16 @@ void triebWerk::CRenderer::RenderMesh(CMeshDrawable * a_pDrawable)
 	pDeviceContext->DrawIndexed(static_cast<UINT>(a_pDrawable->m_pMesh->m_IndexCount), 0, 0);
 }
 
-void triebWerk::CRenderer::SortInsertTransperent(CMeshDrawable * a_pDrawable)
+void triebWerk::CRenderer::RenderInstancedMeshBatch(size_t a_Index)
 {
+	//Draw the InstanceBatch
+	m_pInstancedMeshBuffer[a_Index].Draw(m_pCurrentCamera);
+	//Resets the InstanceBatch for the next frame
+	m_pInstancedMeshBuffer[a_Index].Reset();
+}
+
+void triebWerk::CRenderer::InsertTransparent(CMeshDrawable * a_pDrawable)
+{	
 	//Get the distance between object and camera
 	a_pDrawable->DEBUG_Distance = DirectX::XMVector4LengthEst(DirectX::XMVectorSubtract(a_pDrawable->m_Transformation.r[3], m_pCurrentCamera->m_Transform.GetPosition())).m128_f32[0];
 
@@ -239,4 +254,36 @@ void triebWerk::CRenderer::SortTransparentObjects()
 {
 	//Sort transparent meshs form far to near
 	std::sort(m_pTransparentMeshBuffer, m_pTransparentMeshBuffer + m_TransparentMeshCounter, HowToSort);
+}
+
+void triebWerk::CRenderer::InstanceBatching(CMeshDrawable * a_pDrawable)
+{
+	bool createNewInstanceBatch = true;
+	size_t batchCount = m_InstancedMeshBatchCount;
+
+	//Can the drawable be instanced in any existing batch
+	for (size_t i = 0; i < batchCount; i++)
+	{
+		if (a_pDrawable->m_pMesh == m_pInstancedMeshBuffer[i].m_Identifier.m_pMeshDeterminer &&
+			a_pDrawable->m_Material.m_ID.GetHash() == m_pInstancedMeshBuffer[i].m_Identifier.m_pMaterialDeterminer &&
+			CConstantBuffer::CompareConstantBuffer(m_pInstancedMeshBuffer[i].m_Identifier.m_pConstantBuffer,
+				a_pDrawable->m_Material.m_ConstantBuffer.GetBufferPoint(), a_pDrawable->m_Material.m_ConstantBuffer.m_BufferSize))
+		{
+			m_pInstancedMeshBuffer[i].AddDrawable(a_pDrawable);
+			createNewInstanceBatch = false;
+			break;
+		}
+	}
+
+	//if not create a new instance batch and set the informations
+	if (createNewInstanceBatch && m_InstancedMeshBatchCount < m_MaxInstancedMeshBatch)
+	{
+		m_pInstancedMeshBuffer[m_InstancedMeshBatchCount].m_Identifier.m_pMaterialDeterminer = a_pDrawable->m_Material.m_ID.GetHash();
+		m_pInstancedMeshBuffer[m_InstancedMeshBatchCount].m_Identifier.m_pMeshDeterminer = a_pDrawable->m_pMesh;
+		m_pInstancedMeshBuffer[m_InstancedMeshBatchCount].m_pMaterial = &a_pDrawable->m_Material;
+		m_pInstancedMeshBuffer[m_InstancedMeshBatchCount].DEBUG_pDrawable = a_pDrawable;
+		m_pInstancedMeshBuffer[m_InstancedMeshBatchCount].m_Identifier.m_pConstantBuffer = a_pDrawable->m_Material.m_ConstantBuffer.GetBufferPoint();
+		m_pInstancedMeshBuffer[m_InstancedMeshBatchCount].AddDrawable(a_pDrawable);
+		m_InstancedMeshBatchCount++;
+	}
 }

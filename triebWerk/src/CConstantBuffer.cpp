@@ -2,7 +2,8 @@
 
 triebWerk::CConstantBuffer::CConstantBuffer() :
 	m_pConstantBuffer(nullptr),
-	m_pBuffer(nullptr)
+	m_pBuffer(nullptr),
+	m_BufferSize(0)
 {
 }
 
@@ -17,6 +18,25 @@ triebWerk::CConstantBuffer::~CConstantBuffer()
 	if (m_pConstantBuffer != nullptr)
 	{
 		m_pConstantBuffer->Release();
+	}
+}
+
+bool triebWerk::CConstantBuffer::CompareConstantBuffer(const char * a_pBufferA, const char * a_pBufferB, size_t a_BufferSize)
+{
+	if (a_BufferSize <= 196)
+	{
+		return true;
+	}
+	else
+	{
+		if (memcmp(a_pBufferA + 196, a_pBufferB + 196, a_BufferSize-196) == 0)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 }
 
@@ -52,7 +72,7 @@ void triebWerk::CConstantBuffer::SetValueInBuffer(int a_IndexOfValue, void * a_p
 	memcpy(m_pBuffer + m_Variables[a_IndexOfValue].StartOffset, a_pValueAdress, m_Variables[a_IndexOfValue].Size);
 }
 
-void triebWerk::CConstantBuffer::SetConstantBuffer(ID3D11DeviceContext * a_pDeviceContext, const DirectX::XMMATRIX & a_rWorldMatrix, const DirectX::XMMATRIX & a_rViewMatrix, const DirectX::XMMATRIX & a_rProjectionMatrix)
+void triebWerk::CConstantBuffer::SetConstantBuffer(ID3D11DeviceContext * a_pDeviceContext, const DirectX::XMMATRIX & a_rWorldMatrix, const DirectX::XMMATRIX & a_rViewMatrix, const DirectX::XMMATRIX & a_rProjectionMatrix, bool a_IsInstancing)
 {
 	if (m_pConstantBuffer == nullptr)
 	{
@@ -68,9 +88,12 @@ void triebWerk::CConstantBuffer::SetConstantBuffer(ID3D11DeviceContext * a_pDevi
 	//proj = DirectX::XMMatrixTranspose(proj);
 	//view = DirectX::XMMatrixTranspose(view);
 
+	float is = static_cast<float>(a_IsInstancing);
+
 	memcpy(m_pBuffer, &world, 64);
 	memcpy(m_pBuffer + 64, &proj, 64);
 	memcpy(m_pBuffer + 128, &view, 64);
+	memcpy(m_pBuffer + 192, &is, 4);
 
 	D3D11_SUBRESOURCE_DATA initData;
 	initData.pSysMem = m_pBuffer;
@@ -100,6 +123,7 @@ void triebWerk::CConstantBuffer::InitializeConstantBufffer(ID3D11Device * a_pDev
 		m_pConstantBuffer->Release();
 	}
 
+	GetBufferSize();
 	m_pBuffer = new char[m_BuffferDescription.Size];
 
 	D3D11_BUFFER_DESC constantBufferDescription;
@@ -122,4 +146,28 @@ void triebWerk::CConstantBuffer::InitializeConstantBufffer(ID3D11Device * a_pDev
 		m_pConstantBuffer;
 		DebugLogfile.LogfText(CDebugLogfile::EColor::Yellow, false, "Warning: constantbuffer creation failed!");
 	}
+}
+
+char* triebWerk::CConstantBuffer::GetBufferPoint()
+{
+	return m_pBuffer;
+}
+
+size_t triebWerk::CConstantBuffer::GetBufferSize()
+{
+	//If Buffer size was calculated earlier
+	if (m_BufferSize > 0)
+	{
+		return m_BufferSize;
+	}
+
+	//Calculate the precise size of the buffer without aligment 
+	size_t value = 0;
+	
+	for (size_t i = 0; i < m_Variables.size(); i++)
+	{
+		value += m_Variables[i].Size;
+	}
+	m_BufferSize = value;
+	return value;
 }

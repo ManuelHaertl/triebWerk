@@ -48,7 +48,7 @@ void triebWerk::CHLSLParser::CreateVertexShader(CGraphics* a_pGraphicHandle, CVe
 {
 	HRESULT hResult;
 
-	a_pShaderOut->SetInputLayout(GetInputLayout(m_pVSByteCode, a_pGraphicHandle));
+	SetInputLayout(m_pVSByteCode, a_pGraphicHandle, a_pShaderOut);
 
 	SetBoundResources(m_pVSByteCode, a_pShaderOut);
 
@@ -56,13 +56,14 @@ void triebWerk::CHLSLParser::CreateVertexShader(CGraphics* a_pGraphicHandle, CVe
 
 	hResult = a_pGraphicHandle->GetDevice()->CreateVertexShader(m_pVSByteCode->GetBufferPointer(), m_pVSByteCode->GetBufferSize(), NULL, &a_pShaderOut->m_pD3DVertexShader);
 
+	a_pShaderOut->CreateInstanceData();
 }
 
 void triebWerk::CHLSLParser::CreatePixelShader(CGraphics* a_pGraphicHandle, CPixelShader* a_pShaderOut)
 {
 	HRESULT hResult;
 
-	a_pShaderOut->SetInputLayout(GetInputLayout(m_pPSByteCode, a_pGraphicHandle));
+	SetInputLayout(m_pPSByteCode, a_pGraphicHandle, a_pShaderOut);
 
 	SetBoundResources(m_pPSByteCode, a_pShaderOut);
 
@@ -97,7 +98,7 @@ void triebWerk::CHLSLParser::CompileShader(const char * a_pShaderPath)
 	hResult = D3DCompileFromFile(shaderPath, 0, 0, m_VSEntryPoint.c_str(), "vs_5_0", m_CompileFlags, 0, &m_pVSByteCode, &pErrorMessage);
 	if (FAILED(hResult))
 	{
-		LogErrors((char*)pErrorMessage->GetBufferPointer(), a_pShaderPath);
+		LogErrors((char*)pErrorMessage->GetBufferPointer());
 		m_pVSByteCode = nullptr;
 	}
 
@@ -106,7 +107,7 @@ void triebWerk::CHLSLParser::CompileShader(const char * a_pShaderPath)
 	hResult = D3DCompileFromFile(shaderPath, 0, 0, m_PSEntryPoint.c_str(), "ps_5_0", m_CompileFlags, 0, &m_pPSByteCode, &pErrorMessage);
 	if (FAILED(hResult))
 	{
-		LogErrors((char*)pErrorMessage->GetBufferPointer(), a_pShaderPath);
+		LogErrors((char*)pErrorMessage->GetBufferPointer());
 		m_pPSByteCode = nullptr;
 	}
 
@@ -119,7 +120,7 @@ void triebWerk::CHLSLParser::CompileShader(const char * a_pShaderPath)
 		//Ignore entry point error because this is a optional shader
 		if (errorString.find("X3501") == std::string::npos)
 		{
-			LogErrors((char*)pErrorMessage->GetBufferPointer(), a_pShaderPath);
+			LogErrors((char*)pErrorMessage->GetBufferPointer());
 		}
 
 		m_pHSByteCode = nullptr;
@@ -135,7 +136,7 @@ void triebWerk::CHLSLParser::CompileShader(const char * a_pShaderPath)
 		//Ignore entry point error because this is a optional shader
 		if (errorString.find("X3501") == std::string::npos)
 		{
-			LogErrors((char*)pErrorMessage->GetBufferPointer(), a_pShaderPath);
+			LogErrors((char*)pErrorMessage->GetBufferPointer());
 		}
 
 		m_pHSByteCode = nullptr;
@@ -150,7 +151,7 @@ void triebWerk::CHLSLParser::CompileShader(const char * a_pShaderPath)
 		//Ignore entry point error because this is a optional shader
 		if (errorString.find("X3501") == std::string::npos)
 		{
-			LogErrors((char*)pErrorMessage->GetBufferPointer(), a_pShaderPath);
+			LogErrors((char*)pErrorMessage->GetBufferPointer());
 		}
 
 		m_pDSByteCode = nullptr;
@@ -165,14 +166,14 @@ void triebWerk::CHLSLParser::CompileShader(const char * a_pShaderPath)
 		//Ignore entry point error because this is a optional shader
 		if (errorString.find("X3501") == std::string::npos)
 		{
-			LogErrors((char*)pErrorMessage->GetBufferPointer(), a_pShaderPath);
+			LogErrors((char*)pErrorMessage->GetBufferPointer());
 		}
 
 		m_pCSByteCode = nullptr;
 	}
 }
 
-ID3D11InputLayout* triebWerk::CHLSLParser::GetInputLayout(ID3DBlob * a_pShaderByteCode, CGraphics* a_pGraphicHandle)
+void triebWerk::CHLSLParser::SetInputLayout(ID3DBlob * a_pShaderByteCode, CGraphics* a_pGraphicHandle, IShader* a_pShader)
 {
 	HRESULT hResult;
 
@@ -192,14 +193,31 @@ ID3D11InputLayout* triebWerk::CHLSLParser::GetInputLayout(ID3DBlob * a_pShaderBy
 		D3D11_SIGNATURE_PARAMETER_DESC inputDesc;
 		pReflector->GetInputParameterDesc(i, &inputDesc);
 
-		//TODO: Instacing ?
+		std::string semanticName = inputDesc.SemanticName;
+		size_t sematicInstancePosition = semanticName.find("INST"); //The "INST" declares this parameter as D3D11_INPUT_PER_INSTANCE_DATA
+
+		if (sematicInstancePosition != std::string::npos)
+		{
+			element.InputSlotClass = D3D11_INPUT_PER_INSTANCE_DATA;
+			element.InputSlot = 1;
+			element.InstanceDataStepRate = 1;
+		}
+		else
+		{
+			element.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+			element.InputSlot = 0;
+			element.InstanceDataStepRate = 0;
+		}
+
 		element.SemanticName = inputDesc.SemanticName;
 		element.SemanticIndex = inputDesc.SemanticIndex;
 		element.Format = DetermineInputFormat(inputDesc);
-		element.InputSlot = 0;
 		element.AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT; //convenience to define the current element directly after the previous one, including any packing if necessary.
-		element.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-		element.InstanceDataStepRate = 0;
+		
+		if (sematicInstancePosition != std::string::npos)
+		{
+			a_pShader->m_InputInstanceDescriptions.push_back(element);
+		}
 
 		inputLayoutDesc[i] = element;
 	}
@@ -211,7 +229,7 @@ ID3D11InputLayout* triebWerk::CHLSLParser::GetInputLayout(ID3DBlob * a_pShaderBy
 	delete inputLayoutDesc;
 	pReflector->Release();
 
-	return layout;
+	a_pShader->SetInputLayout(layout);
 }
 
 void triebWerk::CHLSLParser::SetConstantBuffers(ID3DBlob* a_pShaderByteCode, triebWerk::CConstantBuffer* a_pConstantBuffer)
@@ -275,7 +293,7 @@ void triebWerk::CHLSLParser::SetBoundResources(ID3DBlob * a_pShaderByteCode, ISh
 	}
 }
 
-void triebWerk::CHLSLParser::LogErrors(const char * a_pErrorMessage, const char* a_pShaderPath)
+void triebWerk::CHLSLParser::LogErrors(const char * a_pErrorMessage)
 {
 	if (m_CompileErrors == false)
 	{
@@ -284,6 +302,8 @@ void triebWerk::CHLSLParser::LogErrors(const char * a_pErrorMessage, const char*
 		m_CompileErrors = true;
 	}
 }
+
+
 
 //This function determine the format based on the mask and
 //component type of D3D11_SIGNATURE_PARAMETER_DESC
