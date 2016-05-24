@@ -1,9 +1,10 @@
 #include <CEngine.h>
-#include <CSceneManager.h>
+#include <CGameScene.h>
+#include <CDebugScene.h>
 
 int main()
 {
-    //_crtBreakAlloc = 220;
+    //_crtBreakAlloc = 217;
 
     // Initialize the engine
     triebWerk::SEngineConfiguration config;
@@ -13,7 +14,7 @@ int main()
     config.m_Fullscreen = false;
     config.m_VSync = false;
     config.m_TargetFPS = 60;
-    config.m_PhysicTimeStamp = 0.016666f;
+    config.m_PhysicTimeStamp = 0.01f;
 
     if (twEngine.Initialize(config) == false)
     {
@@ -21,25 +22,29 @@ int main()
         return 0;
     }
 
-    // initialize the scene manager (game)
-    CSceneManager sceneManager;
-    sceneManager.Initialize();
-    sceneManager.ChangeScene(EScenes::Game);
+    twResourceManager->LoadAllFilesInFolder("data");
+
+    twSceneManager->AddScene(new CGameScene(), "Game");
+    twSceneManager->AddScene(new CDebugScene(), "Debug");
+
+    twSceneManager->SetActiveScene("Game");
 
     // main loop, update game & engine
     bool run = true;
     while (run == true)
     {
-        run = false;
+        run = twEngine.Run();
 
-        run |= !sceneManager.Update();
-        run |= !twEngine.Run();
-
-        run = !run;
+        if (twKeyboard.IsState(triebWerk::EKey::D1, triebWerk::EButtonState::Down))
+        {
+            twSceneManager->SetActiveScene("Game");
+        }
+        if (twKeyboard.IsState(triebWerk::EKey::D2, triebWerk::EButtonState::Down))
+        {
+            twSceneManager->SetActiveScene("Debug");
+        }
     }
 
-    // shutdown first the game and then the engine
-    sceneManager.Shutdown();
     twEngine.Shutdown();
 
     _CrtDumpMemoryLeaks();

@@ -6,15 +6,6 @@ namespace triebWerk
 {
 	class CWindow
 	{
-	public:
-		struct SWindowConfiguration
-		{
-			bool m_Fullscreen;
-			unsigned m_ScreenWidth;
-			unsigned m_ScreenHeight;
-			const char* m_WindowName;
-		};
-
 	private:
 		static const DWORD WindowStyleFullscreen = WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP;
 		static const DWORD WindowStyleWindowed = WS_OVERLAPPEDWINDOW;
@@ -42,6 +33,7 @@ namespace triebWerk
 
 		//Get the first window event in queue
 		const MSG GetWindowEvent();
+        size_t GetWindowEventCount() const;
 
 		LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 

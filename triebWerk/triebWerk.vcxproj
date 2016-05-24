@@ -145,6 +145,8 @@
     <ClCompile Include="src\CCollisionEvent.cpp" />
     <ClCompile Include="src\CDebugLogfile.cpp" />
     <ClCompile Include="src\CInstancedMeshBatch.cpp" />
+    <ClCompile Include="src\CSceneHolder.cpp" />
+    <ClCompile Include="src\CSceneManager.cpp" />
     <ClCompile Include="src\CTWFData.cpp" />
     <ClCompile Include="src\CConstantBuffer.cpp" />
     <ClCompile Include="src\CDebug.cpp" />
@@ -190,6 +192,7 @@
     <ClCompile Include="src\ICollider.cpp" />
     <ClCompile Include="src\IDrawable.cpp" />
     <ClCompile Include="src\IMapLayer.cpp" />
+    <ClCompile Include="src\IScene.cpp" />
     <ClCompile Include="src\IShader.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -200,6 +203,8 @@
     <ClInclude Include="include\CCollision.h" />
     <ClInclude Include="include\CCollisionEvent.h" />
     <ClInclude Include="include\CDebugLogfile.h" />
+    <ClInclude Include="include\CSceneHolder.h" />
+    <ClInclude Include="include\CSceneManager.h" />
     <ClInclude Include="include\CTWFData.h" />
     <ClInclude Include="include\CConstantBuffer.h" />
     <ClInclude Include="include\CDebug.h" />
@@ -256,6 +261,7 @@
     <ClInclude Include="include\ICollider.h" />
     <ClInclude Include="include\IMapLayer.h" />
     <ClInclude Include="include\CInstancedMeshBatch.h" />
+    <ClInclude Include="include\IScene.h" />
     <ClInclude Include="include\IShader.h" />
     <ClInclude Include="include\SEngineConfiguration.h" />
     <ClInclude Include="src\CResourceManager.hpp" />

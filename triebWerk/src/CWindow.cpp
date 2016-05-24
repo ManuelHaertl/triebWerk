@@ -85,15 +85,16 @@ bool triebWerk::CWindow::Initialize(const bool a_Fullscreen, const unsigned shor
 
 const MSG triebWerk::CWindow::GetWindowEvent()
 {
-	MSG msg = { 0 };
-	if (m_MessageQueue.size() != 0)
-	{
-		//Get the first message in queue and remove it from the queue
-		msg = m_MessageQueue.front();
-		m_MessageQueue.pop();
-	}
+	//Get the first message in queue and remove it from the queue
+	MSG msg = m_MessageQueue.front();
+	m_MessageQueue.pop();
 
 	return msg;
+}
+
+size_t triebWerk::CWindow::GetWindowEventCount() const
+{
+    return m_MessageQueue.size();
 }
 
 LRESULT triebWerk::CWindow::WindowProcedure(HWND a_HWnd, UINT a_Message, WPARAM a_WParam, LPARAM a_LParam)

@@ -9,8 +9,9 @@
 #define twDebug triebWerk::CEngine::Instance().m_pDebug
 #define twRenderer triebWerk::CEngine::Instance().m_pRenderer
 #define twResourceManager triebWerk::CEngine::Instance().m_pResourceManager
+#define twSceneManager triebWerk::CEngine::Instance().m_pSceneManager
 #define twTime triebWerk::CEngine::Instance().m_pTime
-#define twPhysic triebWerk::CEngine::Instance().m_pWorld->m_pPhysicWorld
-#define twWorld triebWerk::CEngine::Instance().m_pWorld
+#define twActivePhysic triebWerk::CEngine::Instance().m_pSceneManager->m_pActiveScene->m_pScene->m_pWorld->m_pPhysicWorld
+#define twActiveWorld triebWerk::CEngine::Instance().m_pSceneManager->m_pActiveScene->m_pScene->m_pWorld
 
 #define twRandom triebWerk::CRandom

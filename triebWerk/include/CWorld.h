@@ -25,19 +25,15 @@ namespace triebWerk
         size_t m_EntitiesToRemove;
 
 		CRenderer* m_pRenderingHandle;
-
-        float m_TimePerFrame;
-        float m_CurrentRenderTime;
         float m_PhysicTimeStamp;
-        float m_CurrentPhysicTime;
 
     public:
         CWorld();
         ~CWorld();
 
     public:
-        bool Initialize(CRenderer* a_pRenderer, const float a_TargetFPS, const float a_PhysicTimeStamp);
-        bool Update(const float a_DeltaTime);
+        void Initialize(CRenderer* a_pRenderer, const float a_PhysicTimeStamp);
+        void Update(const bool a_Render, const bool a_UpdatePhysic);
         void Shutdown();
 
         CEntity* CreateEntity() const;

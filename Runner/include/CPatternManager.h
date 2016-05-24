@@ -25,8 +25,9 @@ public:
     CPatternManager();
     ~CPatternManager();
 
-    void LoadPattern();
+    void Start();
     void Update(const float a_MetersFlewn);
+    void End();
 
 private:
     void SpawnNextTile();

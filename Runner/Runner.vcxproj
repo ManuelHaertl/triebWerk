@@ -165,9 +165,7 @@
     <ClCompile Include="src\CPatternLoader.cpp" />
     <ClCompile Include="src\CPatternManager.cpp" />
     <ClCompile Include="src\CPlayer.cpp" />
-    <ClCompile Include="src\CSceneManager.cpp" />
     <ClCompile Include="src\CValueUpdater.cpp" />
-    <ClCompile Include="src\IScene.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -179,12 +177,9 @@
     <ClInclude Include="include\CPatternLoader.h" />
     <ClInclude Include="include\CPatternManager.h" />
     <ClInclude Include="include\CPlayer.h" />
-    <ClInclude Include="include\CSceneManager.h" />
     <ClInclude Include="include\CValueUpdater.h" />
     <ClInclude Include="include\EPatternCategories.h" />
-    <ClInclude Include="include\EScenes.h" />
     <ClInclude Include="include\ETileType.h" />
-    <ClInclude Include="include\IScene.h" />
     <ClInclude Include="include\SPatternTile.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

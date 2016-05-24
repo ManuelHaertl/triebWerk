@@ -42,13 +42,7 @@
     <ClCompile Include="src\main.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="src\IScene.cpp">
-      <Filter>Quelldateien\Scenes</Filter>
-    </ClCompile>
     <ClCompile Include="src\CGameScene.cpp">
-      <Filter>Quelldateien\Scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CSceneManager.cpp">
       <Filter>Quelldateien\Scenes</Filter>
     </ClCompile>
     <ClCompile Include="src\CPlayer.cpp">
@@ -77,16 +71,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\IScene.h">
-      <Filter>Headerdateien\Scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="include\EScenes.h">
-      <Filter>Headerdateien\Scenes</Filter>
-    </ClInclude>
     <ClInclude Include="include\CGameScene.h">
-      <Filter>Headerdateien\Scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="include\CSceneManager.h">
       <Filter>Headerdateien\Scenes</Filter>
     </ClInclude>
     <ClInclude Include="include\CPlayer.h">
