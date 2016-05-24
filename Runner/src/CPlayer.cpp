@@ -22,8 +22,10 @@ void CPlayer::Update()
 {
     SetSpeed();
 
-    m_MetersFlewn = m_pEntity->m_Transform.GetPosition().m128_f32[2] - m_LastZ;
-    m_LastZ = m_pEntity->m_Transform.GetPosition().m128_f32[2];
+    float currentZ = m_pEntity->m_Transform.GetPosition().m128_f32[2];
+
+    m_MetersFlewn = currentZ - m_LastZ;
+    m_LastZ = currentZ;
 }
 
 void CPlayer::LateUpdate()

@@ -1,7 +1,8 @@
 #include <CGameScene.h>
 
 CGameScene::CGameScene() :
-    m_pPlayer(nullptr)
+    m_pPlayer(nullptr),
+    m_LastPlayerPos(0.0f)
 {
 }
 
@@ -11,13 +12,16 @@ CGameScene::~CGameScene()
 
 void CGameScene::Start()
 {
+    m_ValueUpdater.Start();
     m_EnvironmentCreator.Start();
-    m_PatternManager.LoadPattern();
+    m_PatternManager.Start();
     CreatePlayer();
 }
 
 void CGameScene::Update()
 {
+    m_ValueUpdater.Update();
+
     if (twKeyboard.IsState(triebWerk::EKey::F3, triebWerk::EButtonState::Down))
     {
         if (!twDebug->IsInDebug())
@@ -42,6 +46,7 @@ void CGameScene::Update()
     }
 
     const float metersFlewn = m_pPlayer->GetMetersFlewn();
+
     m_EnvironmentCreator.Update(metersFlewn);
     m_PatternManager.Update(metersFlewn);
 }
@@ -49,13 +54,27 @@ void CGameScene::Update()
 void CGameScene::End()
 {
     m_EnvironmentCreator.End();
+    m_PatternManager.End();
+    m_ValueUpdater.End();
+}
+
+void CGameScene::Pause()
+{
+    std::cout << "GameScene has been paused" << std::endl;
+}
+
+void CGameScene::Resume()
+{
+    std::cout << "GameScene has been resumed" << std::endl;
 }
 
 void CGameScene::CreatePlayer()
 {
     DirectX::XMFLOAT3 colorPlayer = { 0.0f, 0.0f, 1.0f };
 
-    auto player = twWorld->CreateEntity();
+    auto player = m_pWorld->CreateEntity();
+
+    m_LastPlayerPos = 0.0f;
 
     // Transform
     player->m_Transform.SetPosition(0.0f, 1.0f, 0.0f);
@@ -70,22 +89,22 @@ void CGameScene::CreatePlayer()
     triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
     mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube");
     mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
-    mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(3, &colorPlayer);
+    mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &colorPlayer);
     player->SetDrawable(mesh);
 
     // Physic
-    auto physicEntity = twPhysic->CreatePhysicEntity();
+    auto physicEntity = m_pWorld->m_pPhysicWorld->CreatePhysicEntity();
 
-    auto collbox = twPhysic->CreateAABBCollider();
+    auto collbox = m_pWorld->m_pPhysicWorld->CreateAABBCollider();
     collbox->CreateFromVertices(mesh->m_pMesh->m_pVertices, mesh->m_pMesh->m_VertexCount);
     collbox->m_CheckCollision = true;
     physicEntity->AddCollider(collbox);
 
-    auto body = twPhysic->CreateBody();
+    auto body = m_pWorld->m_pPhysicWorld->CreateBody();
     body->m_GravityFactor = 0.0f;
     physicEntity->SetBody(body);
 
     player->SetPhysicEntity(physicEntity);
 
-    twWorld->AddEntity(player);
+    m_pWorld->AddEntity(player);
 }

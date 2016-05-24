@@ -1,16 +1,15 @@
 #pragma once
-#include <IScene.h>
 #include <CEngine.h>
 
-class CDebugScene : public IScene
+class CDebugScene : public triebWerk::IScene
 {
 public:
     CDebugScene();
     ~CDebugScene();
 
-    void Start() override;
-    void Update() override;
-    void End() override;
+    void Start();
+    void Update();
+    void End();
 
 private:
     void CreateTestCubes();

@@ -163,7 +163,7 @@ void triebWerk::CRenderer::RenderMeshDrawables()
 {
 	//Sort transparent object from far to near
 	SortTransparentObjects();
-	//std::cout << m_InstancedMeshBatchCount << std::endl;
+
 	for (size_t i = 0; i < m_InstancedMeshBatchCount; i++)
 	{
 		//if(m_pInstancedMeshBuffer[i].m_InstanceCount > 10)

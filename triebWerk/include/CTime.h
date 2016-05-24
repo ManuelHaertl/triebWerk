@@ -10,7 +10,9 @@ namespace triebWerk
 
         std::chrono::high_resolution_clock::time_point m_StartupTime;
         std::chrono::high_resolution_clock::time_point m_LastTime;
+        std::chrono::high_resolution_clock::time_point m_LastLoopTime;
         std::chrono::high_resolution_clock::time_point m_PerformanceStart;
+        
         float m_DeltaTime;
         float m_UnscaledDeltaTime;
         float m_TimeSinceStartup;
@@ -25,7 +27,8 @@ namespace triebWerk
         ~CTime();
 
     public:
-        void Update();
+        float Update();
+        void NextFrame();
 
         float GetDeltaTime() const;
         float GetUnscaledDeltaTime() const;

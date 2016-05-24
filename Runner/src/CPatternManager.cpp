@@ -13,24 +13,16 @@ CPatternManager::CPatternManager() :
 
 CPatternManager::~CPatternManager()
 {
-    for (size_t i = 0; i < CPattern::MaxDifficulty; ++i)
-    {
-        for (size_t j = 0; j < m_Pattern[i].size(); ++j)
-        {
-            delete m_Pattern[i][j];
-        }
-    }
+    
 }
 
-void CPatternManager::LoadPattern()
+void CPatternManager::Start()
 {
-    triebWerk::CTime time;
-    time.StartPerformanceCounter();
+    End();
 
     CPatternLoader patternLoader;
     patternLoader.LoadPattern(m_Pattern);
 
-    std::cout << "Time for loading Pattern: " << time.EndPerformanceCounter() << "s" << std::endl;
     SetRandomPattern(0);
 }
 
@@ -45,6 +37,29 @@ void CPatternManager::Update(const float a_MetersFlewn)
     }
 
     DeleteEntities();
+}
+
+void CPatternManager::End()
+{
+    // reset values
+    m_IsSpawned = 0.0f;
+    m_SpawnTo = SpawnDistance;
+    m_PatternSpawnBegin = 0.0f;
+    m_pCurrentPattern = nullptr;
+    m_CurrentTileIndex = 0;
+    m_DeleteZone = -DeleteDistance;
+
+    m_Entities.clear();
+
+    for (size_t i = 0; i < CPattern::MaxDifficulty; ++i)
+    {
+        for (size_t j = 0; j < m_Pattern[i].size(); ++j)
+        {
+            delete m_Pattern[i][j];
+        }
+
+        m_Pattern[i].clear();
+    }
 }
 
 void CPatternManager::SpawnNextTile()
@@ -123,7 +138,7 @@ void CPatternManager::DeleteEntities()
         auto entity = m_Entities.front();
         if (entity->m_Transform.GetPosition().m128_f32[2] < m_DeleteZone)
         {
-            twWorld->RemoveEntity(entity);
+            twActiveWorld->RemoveEntity(entity);
             m_Entities.erase(m_Entities.begin());
         }
         else
@@ -141,39 +156,39 @@ void CPatternManager::SpawnPatternTile(const SPatternTile& a_rPatternTile)
     {
     case ETileType::Block1x1:
     {
-        auto entity = twWorld->CreateEntity();
+        auto entity = twActiveWorld->CreateEntity();
         entity->m_Transform.SetPosition(a_rPatternTile.m_X, 5.0f, m_PatternSpawnBegin + a_rPatternTile.m_Y);
         entity->m_Transform.SetScale(1.0f, 10.0f, 1.0f);
 
         triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
         mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube");
         mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
-        mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(3, &colorBlock);
+        mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &colorBlock);
         entity->SetDrawable(mesh);
 
-        auto physicEntity = twPhysic->CreatePhysicEntity();
-        auto collider = twPhysic->CreateAABBCollider();
+        auto physicEntity = twActivePhysic->CreatePhysicEntity();
+        auto collider = twActivePhysic->CreateAABBCollider();
         collider->CreateFromVertices(mesh->m_pMesh->m_pVertices, mesh->m_pMesh->m_VertexCount);
         collider->m_CheckCollision = false;
         physicEntity->AddCollider(collider);
         entity->SetPhysicEntity(physicEntity);
 
-        twWorld->AddEntity(entity);
+        twActiveWorld->AddEntity(entity);
         m_Entities.push_back(entity);
         break;
     }
     case ETileType::Block2x2:
     {
-        auto entity = twWorld->CreateEntity();
+        auto entity = twActiveWorld->CreateEntity();
         entity->m_Transform.SetPosition(a_rPatternTile.m_X, 0.0f, m_PatternSpawnBegin + a_rPatternTile.m_Y);
         entity->m_Transform.SetScale(2.0f, 1.0f, 2.0f);
 
         triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
         mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube");
         mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
-        mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(3, &colorBlock);
+        mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &colorBlock);
         entity->SetDrawable(mesh);
-        twWorld->AddEntity(entity);
+        twActiveWorld->AddEntity(entity);
         m_Entities.push_back(entity);
         break;
     }

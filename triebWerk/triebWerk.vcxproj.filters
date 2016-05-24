@@ -205,6 +205,12 @@
     <Filter Include="Quelldateien\Rendering\Batches">
       <UniqueIdentifier>{f3239fb4-5c94-41a6-8602-71d65ffafa8b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headerdateien\Scenes">
+      <UniqueIdentifier>{30d16996-f41f-4f47-988b-b0ba17b99d3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Scenes">
+      <UniqueIdentifier>{fdd5977b-2356-40e5-89d8-bb491e573866}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CEngine.cpp">
@@ -371,6 +377,15 @@
     </ClCompile>
     <ClCompile Include="src\CInstancedMeshBatch.cpp">
       <Filter>Quelldateien\Rendering\Batches</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IScene.cpp">
+      <Filter>Quelldateien\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CSceneHolder.cpp">
+      <Filter>Quelldateien\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CSceneManager.cpp">
+      <Filter>Quelldateien\Scenes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -571,6 +586,15 @@
     </ClInclude>
     <ClInclude Include="include\SEngineConfiguration.h">
       <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="include\IScene.h">
+      <Filter>Headerdateien\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CSceneHolder.h">
+      <Filter>Headerdateien\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CSceneManager.h">
+      <Filter>Headerdateien\Scenes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

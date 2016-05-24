@@ -10,6 +10,7 @@ triebWerk::CTime::CTime() :
     m_CurrentFPSCounter(0)
 {
     m_StartupTime = std::chrono::high_resolution_clock::now();;
+    m_LastLoopTime = m_StartupTime;
     m_LastTime = m_StartupTime;
 }
 
@@ -17,14 +18,25 @@ triebWerk::CTime::~CTime()
 {
 }
 
-void triebWerk::CTime::Update()
+float triebWerk::CTime::Update()
+{
+    auto now = std::chrono::high_resolution_clock::now();
+
+    // Calculate Loop time
+    auto dt = std::chrono::duration_cast<std::chrono::duration<float>>(now - m_LastLoopTime);
+    m_LastLoopTime = now;
+
+    return dt.count();
+}
+
+void triebWerk::CTime::NextFrame()
 {
     auto now = std::chrono::high_resolution_clock::now();
 
     // Calculate delta time
     auto dt = std::chrono::duration_cast<std::chrono::duration<float>>(now - m_LastTime);
     m_LastTime = now;
-    
+
     m_UnscaledDeltaTime = dt.count();
     m_DeltaTime = m_UnscaledDeltaTime * m_TimeScale;
 

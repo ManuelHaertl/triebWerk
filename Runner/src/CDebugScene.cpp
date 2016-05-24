@@ -30,7 +30,7 @@ void CDebugScene::End()
 
 void CDebugScene::CreateTestCubes()
 {
-    auto entity = twWorld->CreateEntity();
+    auto entity = m_pWorld->CreateEntity();
     entity->m_Transform.SetPosition(0, 0, 0);
     triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
     mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_snakeloop_01");
@@ -38,7 +38,7 @@ void CDebugScene::CreateTestCubes()
     mesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_snakeloop_diff"));
     //mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(3, &colorBlock);
     entity->SetDrawable(mesh);
-    twWorld->AddEntity(entity);
+    m_pWorld->AddEntity(entity);
 
 
     //const int range = 30;

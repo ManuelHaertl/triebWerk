@@ -1,25 +1,28 @@
 #pragma once
-#include <IScene.h>
 #include <CEnvironmentCreator.h>
 #include <CPatternManager.h>
 #include <CPlayer.h>
+#include <CValueUpdater.h>
 
-class CGameScene : public IScene
+class CGameScene : public triebWerk::IScene
 {
 private:
+    CValueUpdater m_ValueUpdater;
     CEnvironmentCreator m_EnvironmentCreator;
     CPatternManager m_PatternManager;
     CPlayer* m_pPlayer;
+    float m_LastPlayerPos;
 
 public:
     CGameScene();
     ~CGameScene();
 
-    void Start() override;
-    void Update() override;
-    void End() override;
+    void Start();
+    void Update();
+    void End();
+    void Pause();
+    void Resume();
 
 private:
-    void CreateTestCubes();
     void CreatePlayer();
 };

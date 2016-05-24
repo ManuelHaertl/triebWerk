@@ -1,4 +1,5 @@
 #include <CWorld.h>
+#include <thread>
 
 triebWerk::CWorld::CWorld() :
     m_pPhysicWorld(nullptr),
@@ -7,10 +8,7 @@ triebWerk::CWorld::CWorld() :
     m_EntitiesToDraw(0),
     m_EntitiesToRemove(0),
     m_pRenderingHandle(nullptr),
-    m_TimePerFrame(0.0f),
-    m_CurrentRenderTime(0.0f),
-    m_PhysicTimeStamp(0.0f),
-    m_CurrentPhysicTime(0.0f)
+    m_PhysicTimeStamp(0.0f)
 {
 }
 
@@ -18,8 +16,10 @@ triebWerk::CWorld::~CWorld()
 {
 }
 
-bool triebWerk::CWorld::Initialize(CRenderer * a_pRenderer, const float a_TargetFPS, const float a_PhysicTimeStamp)
+void triebWerk::CWorld::Initialize(CRenderer* a_pRenderer, const float a_PhysicTimeStamp)
 {
+    Shutdown();
+
     m_pPhysicWorld = new CPhysicWorld();
 
     // reserve some spots so the vector doesn't need
@@ -31,33 +31,11 @@ bool triebWerk::CWorld::Initialize(CRenderer * a_pRenderer, const float a_Target
 
     m_pRenderingHandle = a_pRenderer;
     m_PhysicTimeStamp = a_PhysicTimeStamp;
-
-    m_TimePerFrame = 1.0f / a_TargetFPS;
-
-    return true;
 }
 
-bool triebWerk::CWorld::Update(const float a_DeltaTime)
+void triebWerk::CWorld::Update(const bool a_Render, const bool a_UpdatePhysic)
 {
-    m_CurrentRenderTime += a_DeltaTime;
-    m_CurrentPhysicTime += a_DeltaTime;
-
-    bool renderUpdate = false;
-    bool physicUpdate = false;
-
-    if (m_CurrentRenderTime >= m_TimePerFrame)
-    {
-        m_CurrentRenderTime -= m_TimePerFrame;
-        renderUpdate = true;
-    }
-
-    if (m_CurrentPhysicTime >= m_PhysicTimeStamp)
-    {
-        m_CurrentPhysicTime -= m_PhysicTimeStamp;
-        physicUpdate = true;
-    }
-
-    if (renderUpdate && physicUpdate)
+    if (a_Render && a_UpdatePhysic)
     {
         GetEntityBehaviourAndDrawable();
         UpdateEntityBehaviour();
@@ -69,7 +47,7 @@ bool triebWerk::CWorld::Update(const float a_DeltaTime)
         m_EntitiesToUpdate = 0;
         m_EntitiesToDraw = 0;
     }
-    else if (renderUpdate)
+    else if (a_Render)
     {
         GetEntityBehaviourAndDrawable();
         UpdateEntityBehaviour();
@@ -80,27 +58,10 @@ bool triebWerk::CWorld::Update(const float a_DeltaTime)
         m_EntitiesToUpdate = 0;
         m_EntitiesToDraw = 0;
     }
-    else if (physicUpdate)
+    else if (a_UpdatePhysic)
     {
-        GetEntityBehaviour();
-        UpdateEntityBehaviour();
         UpdatePhysic();
-        LateUpdateEntityBehaviour();
-        DeleteRemoveEntities();
-
-        m_EntitiesToUpdate = 0;
     }
-    else
-    {
-        GetEntityBehaviour();
-        UpdateEntityBehaviour();
-        LateUpdateEntityBehaviour();
-        DeleteRemoveEntities();
-
-        m_EntitiesToUpdate = 0;
-    }
-
-    return true;
 }
 
 void triebWerk::CWorld::Shutdown()
@@ -109,9 +70,13 @@ void triebWerk::CWorld::Shutdown()
     {
         DeleteEntity(m_Entities[i]);
     }
+    m_Entities.clear();
 
     if (m_pPhysicWorld != nullptr)
+    {
         delete m_pPhysicWorld;
+        m_pPhysicWorld = nullptr;
+    }
 }
 
 triebWerk::CEntity* triebWerk::CWorld::CreateEntity() const
