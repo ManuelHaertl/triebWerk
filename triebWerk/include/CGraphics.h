@@ -47,6 +47,10 @@ namespace triebWerk
 		~CGraphics();
 
 	public:
+		//Get the actual byte size of a DXGI_FORMAT
+		static int SizeOfFormatElement(DXGI_FORMAT a_Format);
+
+	public:
 		//Initialize the graphics d3d11 device and set all graphics related options
 		bool Initialize(HWND &a_rWindowHandle, const unsigned int a_ScreenHeight, const unsigned int a_ScreenWidth, const bool a_Fullscreen, const bool a_VSync);
 		void Shutdown();
@@ -62,10 +66,6 @@ namespace triebWerk
 
 		//Get the amount of videomemory from the system
 		unsigned int GetVideoCardMemory();
-
-		//Only debug function
-		//TODO: Intigrate this into resource manager and shader reflection
-		//void InitShaders();
 
 		//Updates all devices and the swapchain with the current client rect
 		void UpdateSwapchainConfiguration();

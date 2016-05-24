@@ -5,11 +5,14 @@
 #include <CCamera.h>
 #include <CMeshDrawable.h>
 #include <CInstancedMeshBatch.h>
+#include <unordered_map>
 
 namespace triebWerk
 {
 	class CRenderer
 	{
+	private:
+
 	private:
 		const size_t m_MaxDrawables = 10000;
 		const size_t m_MaxInstancedMeshBatch = 100;
@@ -23,6 +26,7 @@ namespace triebWerk
 		size_t m_OpaqueMeshCounter;
 		size_t m_TransparentMeshCounter;
 		size_t m_InstancedMeshBatchCount;
+
 
 		std::vector<CCamera*> m_CameraBuffer;
 		CGraphics* m_pGraphicsHandle;
@@ -55,10 +59,13 @@ namespace triebWerk
 		void RenderMeshDrawables();
 
 		void RenderMesh(CMeshDrawable* a_pDrawable);
+		void RenderInstancedMeshBatch(size_t a_Index);
 
-		void SortInsertTransperent(CMeshDrawable* a_pDrawable);
+		void InsertTransparent(CMeshDrawable* a_pDrawable);
 
 		void SortTransparentObjects();
+
+		void InstanceBatching(CMeshDrawable* a_pDrawable);
 
 		void DrawScene();
 	};

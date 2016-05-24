@@ -23,6 +23,7 @@ namespace triebWerk
 	public:
 		std::vector<D3D11_SHADER_INPUT_BIND_DESC> m_TextureDescriptions;
 		std::vector<D3D11_SHADER_INPUT_BIND_DESC> m_SamplerDescriptions;
+		std::vector<D3D11_INPUT_ELEMENT_DESC> m_InputInstanceDescriptions;
 		EShaderType m_ShaderType;
 
 		//Holds the texture pointers

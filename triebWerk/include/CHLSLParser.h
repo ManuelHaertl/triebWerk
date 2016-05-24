@@ -44,19 +44,20 @@ namespace triebWerk
 	private:
 		//TODO: Write this errors into the log
 		void WriteCompileError(ID3DBlob* a_pMessage);
-		//TODO: Handle Errors
 		void CompileShader(const char* a_pShaderPath);
-		ID3D11InputLayout* GetInputLayout(ID3DBlob* a_pShaderByteCode, CGraphics* a_pGraphicHandle);
+		void SetInputLayout(ID3DBlob* a_pShaderByteCode, CGraphics* a_pGraphicHandle, IShader* a_pShader);
 		void SetConstantBuffers(ID3DBlob* a_pShaderByteCode, CConstantBuffer* a_pConstantBuffer);
 		void SetBoundResources(ID3DBlob* a_pShaderbyteCode, IShader* a_PShader);
 		void CreateVertexShader(CGraphics* a_pGraphicHandle, CVertexShader* a_pShaderOut);
 		void CreatePixelShader(CGraphics* a_pGraphicHandle, CPixelShader* a_pShaderOut);
+
+		//TODO: Create all other shader
 		void CreateHullShader();
 		void CreateGeometryShader();
 		void CreateDomainShader();
 		void CreateComputeShader();
 
-		void LogErrors(const char* a_pErrorMessage, const char* a_pShaderPath);
+		void LogErrors(const char* a_pErrorMessage);
 
 	private:
 		DXGI_FORMAT DetermineInputFormat(const D3D11_SIGNATURE_PARAMETER_DESC& a_rSignature);

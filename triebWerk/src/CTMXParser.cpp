@@ -61,7 +61,7 @@ bool triebWerk::CTMXParser::ParseData(const char * a_pFilePath, CTilesetMap* a_p
 
 	CloseFile();
 
-	return m_TilesetMap;
+	return true;
 }
 
 std::string triebWerk::CTMXParser::GetProportie(std::string& a_Line, const char * a_pProportieName)
