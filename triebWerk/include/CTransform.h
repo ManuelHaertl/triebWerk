@@ -10,6 +10,7 @@ namespace triebWerk
         CTransform* m_pParent;
         std::vector<CTransform*> m_Children;
 		bool m_Modified;
+        bool m_PhysicModified;
 
         DirectX::XMVECTOR m_Position;
         DirectX::XMVECTOR m_Scale;
@@ -73,10 +74,11 @@ namespace triebWerk
         void SetPivot(const float a_X, const float a_Y, const float a_Z);
         void SetPivot(const DirectX::XMVECTOR a_Pivot);
 
-        bool IsModified() const;
-        void SetModifiedStateFalse();
+        bool IsPhysicModified() const;
+        void SetPhysicModifiedState(const bool a_State);
 
     private:
+        void Modified();
         void CalculateForwardUpAndSideVector();
         void UpdateChildPosition();
     };

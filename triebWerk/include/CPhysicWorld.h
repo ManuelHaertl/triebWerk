@@ -41,5 +41,6 @@ namespace triebWerk
     private:
         void UpdateCollider();
         void CheckCollisionEvents();
+        void SetModifiedStateFalse();
     };
 }

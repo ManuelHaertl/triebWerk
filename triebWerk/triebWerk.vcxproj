@@ -257,6 +257,7 @@
     <ClInclude Include="include\IMapLayer.h" />
     <ClInclude Include="include\CInstancedMeshBatch.h" />
     <ClInclude Include="include\IShader.h" />
+    <ClInclude Include="include\SEngineConfiguration.h" />
     <ClInclude Include="src\CResourceManager.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

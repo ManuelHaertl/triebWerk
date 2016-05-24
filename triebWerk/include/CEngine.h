@@ -9,6 +9,7 @@
 #include <CRandom.h>
 #include <CRenderer.h>
 #include <CDebug.h>
+#include <SEngineConfiguration.h>
 
 namespace triebWerk
 {
@@ -24,8 +25,6 @@ namespace triebWerk
 		CRenderer* m_pRenderer;
 		CDebug* m_pDebug;
 
-		bool IsSizing;
-
 	private:
 		bool m_IsRunning;
 
@@ -38,6 +37,7 @@ namespace triebWerk
 
     public:
         bool Initialize();
+        bool Initialize(SEngineConfiguration a_Config);
         bool Run();
         void Shutdown();
 

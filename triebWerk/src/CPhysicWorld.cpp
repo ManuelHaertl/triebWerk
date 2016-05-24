@@ -181,6 +181,7 @@ void triebWerk::CPhysicWorld::Update(const float a_DeltaTime)
     }
 
     CheckCollisionEvents();
+    SetModifiedStateFalse();
 }
 
 void triebWerk::CPhysicWorld::UpdateCollider()
@@ -192,7 +193,7 @@ void triebWerk::CPhysicWorld::UpdateCollider()
     {
         auto& collider = *m_StaticCollider[i];
 
-        if (collider.m_pEntity->m_Transform.IsModified())
+        if (collider.m_pEntity->m_Transform.IsPhysicModified())
             collider.UpdateWorldCollider();
     }
 
@@ -200,7 +201,7 @@ void triebWerk::CPhysicWorld::UpdateCollider()
     {
         auto& collider = *m_DynamicCollider[i];
 
-        if (collider.m_pEntity->m_Transform.IsModified())
+        if (collider.m_pEntity->m_Transform.IsPhysicModified())
             collider.UpdateWorldCollider();
     }
 }
@@ -255,4 +256,17 @@ void triebWerk::CPhysicWorld::CheckCollisionEvents()
             }
         }
     }
+}
+
+void triebWerk::CPhysicWorld::SetModifiedStateFalse()
+{
+    size_t sizeStatic = m_StaticCollider.size();
+    size_t sizeDynamic = m_DynamicCollider.size();
+
+    for (size_t i = 0; i < sizeStatic; ++i)
+        m_StaticCollider[i]->m_pEntity->m_Transform.SetPhysicModifiedState(false);
+
+    for (size_t i = 0; i < sizeDynamic; ++i)
+        m_DynamicCollider[i]->m_pEntity->m_Transform.SetPhysicModifiedState(false);
+
 }

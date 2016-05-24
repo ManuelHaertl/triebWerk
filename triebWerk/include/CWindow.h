@@ -38,7 +38,7 @@ namespace triebWerk
 
 	public:
 		//Initialize the window and displays it in focus
-		bool Initialize(const SWindowConfiguration& a_rWindowConfig);
+		bool Initialize(const bool a_Fullscreen, const unsigned short a_ScreenWidth, const unsigned short a_ScreenHeight, const char* a_Name);
 
 		//Get the first window event in queue
 		const MSG GetWindowEvent();

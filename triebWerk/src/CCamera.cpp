@@ -34,11 +34,7 @@ triebWerk::CCamera::~CCamera()
 void triebWerk::CCamera::Update()
 {
     // calculate View Matrix
-    if (m_Transform.IsModified())
-    {
-        CalculateView();
-        m_Transform.SetModifiedStateFalse();
-    }
+    CalculateView();
 
     // calculate Projection Matrix
     if (m_Modified)

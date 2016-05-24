@@ -569,5 +569,8 @@
     <ClInclude Include="include\CInstancedMeshBatch.h">
       <Filter>Headerdateien\Rendering\Batches</Filter>
     </ClInclude>
+    <ClInclude Include="include\SEngineConfiguration.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

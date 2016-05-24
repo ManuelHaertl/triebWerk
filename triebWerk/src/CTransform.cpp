@@ -5,7 +5,8 @@
 
 triebWerk::CTransform::CTransform() :
     m_pParent(nullptr),
-	m_Modified(true)
+	m_Modified(true),
+    m_PhysicModified(true)
 {
     m_Position = DirectX::XMVectorZero();
     m_LocalPosition = DirectX::XMVectorZero();
@@ -136,6 +137,7 @@ DirectX::XMMATRIX& triebWerk::CTransform::GetTransformation()
     if (m_Modified)
     {
         m_Transformation = DirectX::XMMatrixTransformation(m_Pivot, DirectX::XMQuaternionIdentity(), m_Scale, m_Pivot, m_Rotation, m_Position);
+        m_Modified = false;
     }
     
     return m_Transformation;
@@ -152,8 +154,7 @@ void triebWerk::CTransform::SetPosition(const float a_X, const float a_Y, const 
         m_LocalPosition = m_Position;
 
 	UpdateChildPosition();
-
-	m_Modified = true;
+    Modified();
 }
 
 void triebWerk::CTransform::SetPosition(const DirectX::XMVECTOR a_Position)
@@ -167,8 +168,7 @@ void triebWerk::CTransform::SetPosition(const DirectX::XMVECTOR a_Position)
         m_LocalPosition = m_Position;
 
     UpdateChildPosition();
-
-	m_Modified = true;
+    Modified();
 }
 
 void triebWerk::CTransform::SetLocalPosition(const float a_X, const float a_Y, const float a_Z)
@@ -182,8 +182,7 @@ void triebWerk::CTransform::SetLocalPosition(const float a_X, const float a_Y, c
         m_Position = m_LocalPosition;
 
     UpdateChildPosition();
-
-	m_Modified = true;
+    Modified();
 }
 
 void triebWerk::CTransform::SetLocalPosition(const DirectX::XMVECTOR a_Position)
@@ -197,34 +196,33 @@ void triebWerk::CTransform::SetLocalPosition(const DirectX::XMVECTOR a_Position)
         m_Position = m_LocalPosition;
 
     UpdateChildPosition();
-
-	m_Modified = true;
+    Modified();
 }
 
 void triebWerk::CTransform::SetScale(const float a_X, const float a_Y, const float a_Z)
 {
     m_Scale = DirectX::XMVectorSet(a_X, a_Y, a_Z, 0.0f);
-	m_Modified = true;
+    Modified();
 }
 
 void triebWerk::CTransform::SetScale(const DirectX::XMVECTOR a_Scale)
 {
     m_Scale = a_Scale;
-	m_Modified = true;
+    Modified();
 }
 
 void triebWerk::CTransform::SetRotation(const float a_X, const float a_Y, const float a_Z)
 {
     m_Rotation = DirectX::XMVectorSet(a_X, a_Y, a_Z, 0.0f);
     CalculateForwardUpAndSideVector();
-	m_Modified = true;
+    Modified();
 }
 
 void triebWerk::CTransform::SetRotation(const DirectX::XMVECTOR a_Rotation)
 {
     m_Rotation = a_Rotation;
     CalculateForwardUpAndSideVector();
-	m_Modified = true;
+    Modified();
 }
 
 void triebWerk::CTransform::SetRotationDegrees(const float a_X, const float a_Y, const float a_Z)
@@ -235,7 +233,7 @@ void triebWerk::CTransform::SetRotationDegrees(const float a_X, const float a_Y,
         DirectX::XMConvertToRadians(a_Z));
 
     CalculateForwardUpAndSideVector();
-    m_Modified = true;
+    Modified();
 }
 
 void triebWerk::CTransform::SetRotationDegrees(DirectX::XMVECTOR a_Rotation)
@@ -247,7 +245,7 @@ void triebWerk::CTransform::SetRotationDegrees(DirectX::XMVECTOR a_Rotation)
     m_Rotation = DirectX::XMQuaternionRotationRollPitchYawFromVector(a_Rotation);
 
     CalculateForwardUpAndSideVector();
-    m_Modified = true;
+    Modified();
 }
 
 void triebWerk::CTransform::RotateDegrees(const float a_X, const float a_Y, const float a_Z)
@@ -260,7 +258,7 @@ void triebWerk::CTransform::RotateDegrees(const float a_X, const float a_Y, cons
     m_Rotation = DirectX::XMQuaternionMultiply(m_Rotation, rotation);
 
     CalculateForwardUpAndSideVector();
-    m_Modified = true;
+    Modified();
 }
 
 void triebWerk::CTransform::RotateDegrees(DirectX::XMVECTOR a_Rotation)
@@ -272,29 +270,35 @@ void triebWerk::CTransform::RotateDegrees(DirectX::XMVECTOR a_Rotation)
     m_Rotation = DirectX::XMQuaternionMultiply(m_Rotation, a_Rotation);
 
     CalculateForwardUpAndSideVector();
-    m_Modified = true;
+    Modified();
 }
 
 void triebWerk::CTransform::SetPivot(const float a_X, const float a_Y, const float a_Z)
 {
     m_Pivot = DirectX::XMVectorSet(a_X, a_Y, a_Z, 0.0f);
-    m_Modified = true;
+    Modified();
 }
 
 void triebWerk::CTransform::SetPivot(const DirectX::XMVECTOR a_Pivot)
 {
     m_Pivot = a_Pivot;
+    Modified();
+}
+
+bool triebWerk::CTransform::IsPhysicModified() const
+{
+    return m_PhysicModified;
+}
+
+void triebWerk::CTransform::SetPhysicModifiedState(const bool a_State)
+{
+    m_PhysicModified = a_State;
+}
+
+void triebWerk::CTransform::Modified()
+{
     m_Modified = true;
-}
-
-bool triebWerk::CTransform::IsModified() const
-{
-    return m_Modified;
-}
-
-void triebWerk::CTransform::SetModifiedStateFalse()
-{
-    m_Modified = false;
+    m_PhysicModified = true;
 }
 
 void triebWerk::CTransform::CalculateForwardUpAndSideVector()
