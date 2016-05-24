@@ -43,7 +43,7 @@ void triebWerk::CInstancedMeshBatch::Draw(CCamera* a_pCamera)
 	instanceData.SysMemPitch = 0;
 	instanceData.SysMemSlicePitch = 0;
 
-	m_pGraphicsHandle->GetDevice()->CreateBuffer(&instanceBufferDesc, &instanceData, &m_pInstanceBuffer);
+	HRESULT r = m_pGraphicsHandle->GetDevice()->CreateBuffer(&instanceBufferDesc, &instanceData, &m_pInstanceBuffer);
 
 	unsigned int strides[2];
 	unsigned int offsets[2];

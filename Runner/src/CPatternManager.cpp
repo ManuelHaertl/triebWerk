@@ -163,7 +163,7 @@ void CPatternManager::SpawnPatternTile(const SPatternTile& a_rPatternTile)
         triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
         mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube");
         mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
-        mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(3, &colorBlock);
+        mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &colorBlock);
         entity->SetDrawable(mesh);
 
         auto physicEntity = twActivePhysic->CreatePhysicEntity();
@@ -186,7 +186,7 @@ void CPatternManager::SpawnPatternTile(const SPatternTile& a_rPatternTile)
         triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
         mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube");
         mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
-        mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(3, &colorBlock);
+        mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &colorBlock);
         entity->SetDrawable(mesh);
         twActiveWorld->AddEntity(entity);
         m_Entities.push_back(entity);

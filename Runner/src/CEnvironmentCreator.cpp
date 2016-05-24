@@ -173,7 +173,7 @@ void CEnvironmentCreator::CreateGround()
     auto mesh = twRenderer->CreateMeshDrawable();
     mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube");
     mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
-    mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(3, &color);
+    mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &color);
     m_pGround->SetDrawable(mesh);
 
     twActiveWorld->AddEntity(m_pGround);

@@ -89,7 +89,7 @@ void CGameScene::CreatePlayer()
     triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
     mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube");
     mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
-    mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(3, &colorPlayer);
+    mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &colorPlayer);
     player->SetDrawable(mesh);
 
     // Physic
