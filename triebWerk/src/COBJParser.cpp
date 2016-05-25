@@ -35,7 +35,7 @@ bool triebWerk::COBJParser::LoadOBJ(const char * a_pPath)
 	do
 	{
 		//Get Line to read
-		GetLineFast(line);
+		line = GetLine();
 
 		if (BeginLineWith(line, "v "))
 		{
@@ -54,6 +54,7 @@ bool triebWerk::COBJParser::LoadOBJ(const char * a_pPath)
 			size_t firstSpace = 0;
 			size_t secondSpace = 0;
 			bool endOfLine = false;
+			int counter = 0;
 
 			//Read all Vertex Indices
 			while (!endOfLine)
@@ -68,9 +69,10 @@ bool triebWerk::COBJParser::LoadOBJ(const char * a_pPath)
 					secondSpace = line.size();
 					endOfLine = true;
 				}
-
-				//Add final Vertex 
-				AddVertex(line.substr(firstSpace, secondSpace - firstSpace));
+				std::string t = line.substr(firstSpace, secondSpace - firstSpace);
+				counter++;
+				if(counter < 4)
+					AddVertex(t);
 			}
 		}
 
@@ -87,8 +89,6 @@ bool triebWerk::COBJParser::LoadOBJ(const char * a_pPath)
 	}
 
 	m_IndexCount = m_Indices.size();
-
-	CloseFile();
 
 	return true;
 }
@@ -157,6 +157,9 @@ unsigned int triebWerk::COBJParser::CreateVertex(CMesh::SVertex & a_rVertex)
 void triebWerk::COBJParser::AddVertex(std::string & a_Text)
 {
 	CMesh::SVertex vertex;
+
+	if (a_Text == "\r")
+		return;
 
 	if (!m_ContainsNormals && !m_ContainsUVs)
 	{

@@ -59,8 +59,6 @@ bool triebWerk::CTMXParser::ParseData(const char * a_pFilePath, CTilesetMap* a_p
 	} while (!BeginLineWith(line, "</map>"));
 
 
-	CloseFile();
-
 	return true;
 }
 

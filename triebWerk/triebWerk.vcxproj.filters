@@ -196,9 +196,6 @@
     <Filter Include="Headerdateien\Resource\Resources\TWF">
       <UniqueIdentifier>{65014bff-8141-4e1a-995c-09379eaad0b6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Quelldateien\Resource\Resources\ResourceManager">
-      <UniqueIdentifier>{e1f2f63d-4c1f-4073-b9eb-40580430343e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Headerdateien\Rendering\Batches">
       <UniqueIdentifier>{fc406d33-5d51-4cf0-a1ab-2bf1e08d633b}</UniqueIdentifier>
     </Filter>
@@ -210,6 +207,9 @@
     </Filter>
     <Filter Include="Quelldateien\Scenes">
       <UniqueIdentifier>{fdd5977b-2356-40e5-89d8-bb491e573866}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Resource\ResourceManager">
+      <UniqueIdentifier>{e1f2f63d-4c1f-4073-b9eb-40580430343e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -370,7 +370,7 @@
       <Filter>Quelldateien\Resource\Resources\TWF</Filter>
     </ClCompile>
     <ClCompile Include="src\CResourceManager.cpp">
-      <Filter>Quelldateien\Resource\Resources\ResourceManager</Filter>
+      <Filter>Quelldateien\Resource\ResourceManager</Filter>
     </ClCompile>
     <ClCompile Include="src\CDebugLogfile.cpp">
       <Filter>Quelldateien\Debug</Filter>
@@ -576,7 +576,7 @@
       <Filter>Headerdateien\Resource\Resources\TWF</Filter>
     </ClInclude>
     <ClInclude Include="src\CResourceManager.hpp">
-      <Filter>Quelldateien\Resource\Resources\ResourceManager</Filter>
+      <Filter>Quelldateien\Resource\ResourceManager</Filter>
     </ClInclude>
     <ClInclude Include="include\CDebugLogfile.h">
       <Filter>Headerdateien\Debug</Filter>

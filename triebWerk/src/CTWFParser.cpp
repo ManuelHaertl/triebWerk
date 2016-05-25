@@ -10,7 +10,9 @@ triebWerk::CTWFParser::~CTWFParser()
 
 void triebWerk::CTWFParser::ParseData(const char * a_pFilePath, CTWFData* a_pDataOut)
 {
-	ReadData(a_pFilePath);
+	bool success = ReadData(a_pFilePath);
+	if (!success)
+		return;
 
 	std::string line;
 

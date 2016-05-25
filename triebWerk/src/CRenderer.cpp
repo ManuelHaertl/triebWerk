@@ -32,7 +32,7 @@ void triebWerk::CRenderer::Initialize(CGraphics * a_pGraphicsHandle, unsigned in
 	float aspect = (float)m_ScreenWidth / (float)m_ScreenHeight;
 
 	//Create Default Camera
-	SetActiveCamera(CreateCamera(aspect, DirectX::XM_PIDIV4, 0.01f, 100.0f));
+	SetActiveCamera(CreateCamera(aspect, DirectX::XM_PIDIV4, 0.01f, 1000.0f));
 	m_pCurrentCamera->m_Transform.SetPosition(0, 0, -5);
 }
 
