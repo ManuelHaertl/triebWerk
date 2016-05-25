@@ -17,7 +17,7 @@ float CPlayer::CameraRotationX = 4.7f;
 float CPlayer::CameraPosY = 5.0f;
 float CPlayer::CameraMinusPosZ = 10.0f;
 
-int CEnvironmentCreator::FeatherSpawnProbability = 40.0f;
+int CEnvironmentCreator::FeatherSpawnProbability = 40;
 
 CValueUpdater::CValueUpdater() :
     m_pValues(nullptr)

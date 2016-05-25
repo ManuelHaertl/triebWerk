@@ -207,6 +207,7 @@
     <ClInclude Include="include\CCollision.h" />
     <ClInclude Include="include\CCollisionEvent.h" />
     <ClInclude Include="include\CDebugLogfile.h" />
+    <ClInclude Include="include\CFrameAllocator.h" />
     <ClInclude Include="include\CSceneHolder.h" />
     <ClInclude Include="include\CSceneManager.h" />
     <ClInclude Include="include\CTWFData.h" />

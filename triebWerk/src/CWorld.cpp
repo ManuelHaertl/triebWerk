@@ -25,7 +25,7 @@ void triebWerk::CWorld::Initialize(CRenderer* a_pRenderer, const float a_PhysicT
     // reserve some spots so the vector doesn't need
     // to get resized too often during runtime
     m_Entities.reserve(Start_Reserve_Size);
-    m_UpdateEntities.resize(Start_Reserve_Size);
+    m_UpdateEntitiesOLD.resize(Start_Reserve_Size);
     m_DrawEntities.resize(Start_Reserve_Size);
     m_RemoveEntities.resize(Start_Reserve_Size);
 
@@ -92,7 +92,7 @@ void triebWerk::CWorld::AddEntity(CEntity* a_pEntity)
     {
         m_CurrentSize *= 2;
         m_Entities.reserve(m_CurrentSize);
-        m_UpdateEntities.resize(m_CurrentSize);
+        m_UpdateEntitiesOLD.resize(m_CurrentSize);
         m_DrawEntities.resize(m_CurrentSize);
         m_RemoveEntities.resize(m_CurrentSize);
     }
@@ -150,7 +150,7 @@ void triebWerk::CWorld::GetEntityBehaviour()
 
         if (pEntity->GetBehaviour() != nullptr)
         {
-            m_UpdateEntities[m_EntitiesToUpdate] = pEntity->GetBehaviour();
+            m_UpdateEntitiesOLD[m_EntitiesToUpdate] = pEntity->GetBehaviour();
             m_EntitiesToUpdate++;
         }
     }
@@ -164,7 +164,7 @@ void triebWerk::CWorld::GetEntityBehaviourAndDrawable()
 
         if (pEntity->GetBehaviour() != nullptr)
         {
-            m_UpdateEntities[m_EntitiesToUpdate] = pEntity->GetBehaviour();
+            m_UpdateEntitiesOLD[m_EntitiesToUpdate] = pEntity->GetBehaviour();
             m_EntitiesToUpdate++;
         }
 
@@ -180,7 +180,7 @@ void triebWerk::CWorld::UpdateEntityBehaviour()
 {
     for (size_t i = 0; i < m_EntitiesToUpdate; ++i)
     {
-        m_UpdateEntities[i]->Update();
+        m_UpdateEntitiesOLD[i]->Update();
     }
 }
 
@@ -193,7 +193,7 @@ void triebWerk::CWorld::LateUpdateEntityBehaviour()
 {
     for (size_t i = 0; i < m_EntitiesToUpdate; ++i)
     {
-        m_UpdateEntities[i]->LateUpdate();
+        m_UpdateEntitiesOLD[i]->LateUpdate();
     }
 }
 

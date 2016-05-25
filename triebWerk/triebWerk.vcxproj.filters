@@ -596,5 +596,8 @@
     <ClInclude Include="include\CSceneManager.h">
       <Filter>Headerdateien\Scenes</Filter>
     </ClInclude>
+    <ClInclude Include="include\CFrameAllocator.h">
+      <Filter>Headerdateien\Core</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
