@@ -203,15 +203,19 @@ bool triebWerk::CWindow::IsWindowFullscreen()
 
 void triebWerk::CWindow::UpdateWindow()
 {
-	MSG msg = { 0 };
+    bool newMessage = false;
+    do
+    {
+        MSG msg = { 0 };
+        newMessage = (bool)PeekMessage(&msg, NULL, 0, 0, PM_REMOVE);
+        if (newMessage)
+        {
+            TranslateMessage(&msg);
+            m_MessageQueue.push(msg);
 
-	if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-	{
-		TranslateMessage(&msg);
-		m_MessageQueue.push(msg);
-
-		DispatchMessage(&msg);
-	}
+            DispatchMessage(&msg);
+        }
+    }while (newMessage == true);
 }
 
 int triebWerk::CWindow::GetMaximalDisplayWidth()

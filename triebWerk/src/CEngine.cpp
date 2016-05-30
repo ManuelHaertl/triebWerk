@@ -65,17 +65,6 @@ bool triebWerk::CEngine::Initialize(SEngineConfiguration a_Config)
 
     m_PhysicTimeStamp = a_Config.m_PhysicTimeStamp;
 
-    // calculate the sleep time
-    double sleepTime = m_TimePerFrame;
-    if (m_PhysicTimeStamp < sleepTime)
-        sleepTime = m_PhysicTimeStamp;
-
-    sleepTime *= 1000;
-    sleepTime *= 1000;
-    sleepTime /= SleepTimeDivisor;
-    long long bla = static_cast<long long>(sleepTime);
-    m_SleepTime = std::chrono::microseconds(1);
-
     return true;
 }
 
@@ -141,6 +130,7 @@ void triebWerk::CEngine::Shutdown()
 void triebWerk::CEngine::ProcessWindowMessages()
 {
     size_t messageCount = m_pWindow->GetWindowEventCount();
+
     for (size_t i = 0; i < messageCount; ++i)
     {
         MSG msg = m_pWindow->GetWindowEvent();

@@ -52,6 +52,8 @@ void triebWerk::CDebugCamera::KeyboardMovement()
 
     if (twKeyboard.IsState(triebWerk::EKey::Shift, triebWerk::EButtonState::Pressed))
         speed *= FastMovementSpeedFactor;
+    else if (twKeyboard.IsState(triebWerk::EKey::Control, triebWerk::EButtonState::Pressed))
+        speed *= SlowMovementSpeedFactor;
 
     // forward
     if (twKeyboard.IsState(triebWerk::EKey::W, triebWerk::EButtonState::Pressed))

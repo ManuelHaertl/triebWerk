@@ -4,9 +4,6 @@
 triebWerk::CWorld::CWorld() :
     m_pPhysicWorld(nullptr),
     m_CurrentSize(Start_Reserve_Size),
-    m_EntitiesToUpdate(0),
-    m_EntitiesToDraw(0),
-    m_EntitiesToRemove(0),
     m_pRenderingHandle(nullptr),
     m_PhysicTimeStamp(0.0f)
 {
@@ -24,10 +21,10 @@ void triebWerk::CWorld::Initialize(CRenderer* a_pRenderer, const float a_PhysicT
 
     // reserve some spots so the vector doesn't need
     // to get resized too often during runtime
-    m_Entities.reserve(Start_Reserve_Size);
-    m_UpdateEntities.resize(Start_Reserve_Size);
-    m_DrawEntities.resize(Start_Reserve_Size);
-    m_RemoveEntities.resize(Start_Reserve_Size);
+    m_Entities.Resize(Start_Reserve_Size);
+    m_UpdateEntities.Resize(Start_Reserve_Size);
+    m_DrawEntities.Resize(Start_Reserve_Size);
+    m_RemoveEntities.Resize(Start_Reserve_Size);
 
     m_pRenderingHandle = a_pRenderer;
     m_PhysicTimeStamp = a_PhysicTimeStamp;
@@ -44,8 +41,8 @@ void triebWerk::CWorld::Update(const bool a_Render, const bool a_UpdatePhysic)
         RenderEntities();
         DeleteRemoveEntities();
 
-        m_EntitiesToUpdate = 0;
-        m_EntitiesToDraw = 0;
+        m_UpdateEntities.Reset();
+        m_DrawEntities.Reset();
     }
     else if (a_Render)
     {
@@ -55,8 +52,8 @@ void triebWerk::CWorld::Update(const bool a_Render, const bool a_UpdatePhysic)
         RenderEntities();
         DeleteRemoveEntities();
 
-        m_EntitiesToUpdate = 0;
-        m_EntitiesToDraw = 0;
+        m_UpdateEntities.Reset();
+        m_DrawEntities.Reset();
     }
     else if (a_UpdatePhysic)
     {
@@ -66,11 +63,12 @@ void triebWerk::CWorld::Update(const bool a_Render, const bool a_UpdatePhysic)
 
 void triebWerk::CWorld::Shutdown()
 {
-    for (size_t i = 0; i < m_Entities.size(); ++i)
+    size_t size = m_Entities.GetSize();
+    for (size_t i = 0; i < size; ++i)
     {
         DeleteEntity(m_Entities[i]);
     }
-    m_Entities.clear();
+    m_Entities.Clear();
 
     if (m_pPhysicWorld != nullptr)
     {
@@ -88,17 +86,17 @@ triebWerk::CEntity* triebWerk::CWorld::CreateEntity() const
 void triebWerk::CWorld::AddEntity(CEntity* a_pEntity)
 {
     // resize if the vector doesn't have any more reserved spots
-    if (m_Entities.size() >= m_CurrentSize)
+    if (m_Entities.GetSize() >= m_CurrentSize)
     {
         m_CurrentSize *= 2;
-        m_Entities.reserve(m_CurrentSize);
-        m_UpdateEntities.resize(m_CurrentSize);
-        m_DrawEntities.resize(m_CurrentSize);
-        m_RemoveEntities.resize(m_CurrentSize);
+        m_Entities.Resize(m_CurrentSize);
+        m_UpdateEntities.Resize(m_CurrentSize);
+        m_DrawEntities.Resize(m_CurrentSize);
+        m_RemoveEntities.Resize(m_CurrentSize);
     }
 
     // and add it to the vector
-    m_Entities.push_back(a_pEntity);
+    m_Entities.Add(a_pEntity);
 
     // check for Physic Entity
     if (a_pEntity->GetPhysicEntity() != nullptr)
@@ -119,66 +117,66 @@ void triebWerk::CWorld::AddEntity(CEntity* a_pEntity)
 
 void triebWerk::CWorld::RemoveEntity(CEntity* a_pEntity)
 {
-    m_RemoveEntities[m_EntitiesToRemove] = a_pEntity;
-    m_EntitiesToRemove++;
+    m_RemoveEntities.Add(a_pEntity);
 }
 
 void triebWerk::CWorld::ClearEntities()
 {
-    for (size_t i = 0; i < m_Entities.size(); ++i)
+    size_t size = m_Entities.GetSize();
+    for (size_t i = 0; i < size; ++i)
     {
-        m_RemoveEntities[m_EntitiesToRemove] = m_Entities[i];
-        m_EntitiesToRemove++;
+        m_RemoveEntities.Add(m_Entities[i]);
     }
 }
 
 triebWerk::CEntity* triebWerk::CWorld::GetEntity(size_t a_ID) const
 {
-    return m_Entities[a_ID];
+    CEntity* entity = m_Entities[a_ID];
+    return entity;
 }
 
 size_t triebWerk::CWorld::GetEntityCount() const
 {
-    return m_Entities.size();
+    return m_Entities.GetSize();
 }
 
 void triebWerk::CWorld::GetEntityBehaviour()
 {
-    for (size_t i = 0; i < m_Entities.size(); ++i)
+    size_t size = m_Entities.GetSize();
+    for (size_t i = 0; i < size; ++i)
     {
         CEntity* pEntity = m_Entities[i];
 
         if (pEntity->GetBehaviour() != nullptr)
         {
-            m_UpdateEntities[m_EntitiesToUpdate] = pEntity->GetBehaviour();
-            m_EntitiesToUpdate++;
+            m_UpdateEntities.Add(pEntity->GetBehaviour());
         }
     }
 }
 
 void triebWerk::CWorld::GetEntityBehaviourAndDrawable()
 {
-    for (size_t i = 0; i < m_Entities.size(); ++i)
+    size_t size = m_Entities.GetSize();
+    for (size_t i = 0; i < size; ++i)
     {
         CEntity* pEntity = m_Entities[i];
 
         if (pEntity->GetBehaviour() != nullptr)
         {
-            m_UpdateEntities[m_EntitiesToUpdate] = pEntity->GetBehaviour();
-            m_EntitiesToUpdate++;
+            m_UpdateEntities.Add(pEntity->GetBehaviour());
         }
 
         if (pEntity->GetDrawable() != nullptr)
         {
-            m_DrawEntities[m_EntitiesToDraw] = pEntity;
-            m_EntitiesToDraw++;
+            m_DrawEntities.Add(pEntity);
         }
     }
 }
 
 void triebWerk::CWorld::UpdateEntityBehaviour()
 {
-    for (size_t i = 0; i < m_EntitiesToUpdate; ++i)
+    size_t size = m_UpdateEntities.GetSize();
+    for (size_t i = 0; i < size; ++i)
     {
         m_UpdateEntities[i]->Update();
     }
@@ -191,7 +189,8 @@ void triebWerk::CWorld::UpdatePhysic()
 
 void triebWerk::CWorld::LateUpdateEntityBehaviour()
 {
-    for (size_t i = 0; i < m_EntitiesToUpdate; ++i)
+    size_t size = m_UpdateEntities.GetSize();
+    for (size_t i = 0; i < size; ++i)
     {
         m_UpdateEntities[i]->LateUpdate();
     }
@@ -199,7 +198,8 @@ void triebWerk::CWorld::LateUpdateEntityBehaviour()
 
 void triebWerk::CWorld::RenderEntities()
 {
-    for (size_t i = 0; i < m_EntitiesToDraw; ++i)
+    size_t size = m_DrawEntities.GetSize();
+    for (size_t i = 0; i < size; ++i)
     {
         m_DrawEntities[i]->GetDrawable()->SetTransform(m_DrawEntities[i]->m_Transform.GetTransformation());
         m_pRenderingHandle->AddRenderCommand(m_DrawEntities[i]->GetDrawable());
@@ -211,19 +211,16 @@ void triebWerk::CWorld::RenderEntities()
 void triebWerk::CWorld::DeleteRemoveEntities()
 {
     // TO DO: maybe improve this a bit in case ClearEntities() gets called..
-    for (size_t i = 0; i < m_EntitiesToRemove; ++i)
+    size_t removeSize = m_RemoveEntities.GetSize();
+    for (size_t i = 0; i < removeSize; ++i)
     {
-        for (size_t j = 0; j < m_Entities.size(); ++j)
-        {
-            if (m_RemoveEntities[i] == m_Entities[j])
-            {
-                m_Entities.erase(m_Entities.begin() + j);
-                DeleteEntity(m_RemoveEntities[i]);
-            }
-        }
+        CEntity* removeEntity = m_RemoveEntities[i];
+
+        m_Entities.Remove(removeEntity);
+        DeleteEntity(removeEntity);
     }
 
-    m_EntitiesToRemove = 0;
+    m_RemoveEntities.Reset();
 }
 
 void triebWerk::CWorld::DeleteEntity(CEntity* a_pEntity)

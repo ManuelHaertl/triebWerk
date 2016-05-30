@@ -33,7 +33,6 @@ namespace triebWerk
         float m_CurrentTime;
         float m_PhysicTimeStamp;
         float m_CurrentPhysicTime;
-        std::chrono::duration<long long, std::micro> m_SleepTime;
 
     private:
         CEngine();

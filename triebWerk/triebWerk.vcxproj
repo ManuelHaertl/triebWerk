@@ -144,6 +144,7 @@
     <ClCompile Include="extern\include\loadPNG\lodepng.cpp" />
     <ClCompile Include="src\CAABBCollider.cpp" />
     <ClCompile Include="src\CBody.cpp" />
+    <ClCompile Include="src\CBucketAllocator.cpp" />
     <ClCompile Include="src\CCamera.cpp" />
     <ClCompile Include="src\CCollision.cpp" />
     <ClCompile Include="src\CCollisionEvent.cpp" />
@@ -203,12 +204,15 @@
   <ItemGroup>
     <ClInclude Include="extern\include\loadPNG\lodepng.h" />
     <ClInclude Include="include\CAABBCollider.h" />
+    <ClInclude Include="include\CBucketAllocator.h" />
     <ClInclude Include="include\CCamera.h" />
     <ClInclude Include="include\CBody.h" />
     <ClInclude Include="include\CCollision.h" />
     <ClInclude Include="include\CCollisionEvent.h" />
     <ClInclude Include="include\CDebugLogfile.h" />
     <ClInclude Include="include\CRenderTarget.h" />
+    <ClInclude Include="include\CElementContainer.h" />
+    <ClInclude Include="include\CFrameContainer.h" />
     <ClInclude Include="include\CSceneHolder.h" />
     <ClInclude Include="include\CSceneManager.h" />
     <ClInclude Include="include\CTWFData.h" />
