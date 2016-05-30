@@ -63,6 +63,7 @@ namespace triebWerk
 
 		ID3D11Device* GetDevice();
 		ID3D11DeviceContext* GetDeviceContext();
+		ID3D11DepthStencilView* GetDepthStencilView();
 
 		//Get the amount of videomemory from the system
 		unsigned int GetVideoCardMemory();

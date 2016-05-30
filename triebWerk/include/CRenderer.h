@@ -6,6 +6,7 @@
 #include <CMeshDrawable.h>
 #include <CInstancedMeshBatch.h>
 #include <unordered_map>
+#include <CRenderTarget.h>
 
 namespace triebWerk
 {
@@ -22,6 +23,8 @@ namespace triebWerk
 		CMeshDrawable** m_pOpaqueMeshBuffer;
 		CMeshDrawable** m_pTransparentMeshBuffer;
 		CInstancedMeshBatch* m_pInstancedMeshBuffer;
+		CRenderTarget* m_pRenderTargetList;
+		size_t m_RenderTargetCounter;
 		size_t m_CommandCounter;
 		size_t m_OpaqueMeshCounter;
 		size_t m_TransparentMeshCounter;
@@ -51,8 +54,6 @@ namespace triebWerk
 
 		CMeshDrawable* CreateMeshDrawable();
 
-		//void ZSortTransparency();
-
 		//Command Functions
 		void AddRenderCommand(IDrawable* a_pRenderCommand);
 
@@ -64,6 +65,8 @@ namespace triebWerk
 		void InsertTransparent(CMeshDrawable* a_pDrawable);
 
 		void SortTransparentObjects();
+
+		CRenderTarget* AddRenderTarget(int a_Order);
 
 		void InstanceBatching(CMeshDrawable* a_pDrawable);
 

@@ -211,6 +211,12 @@
     <Filter Include="Quelldateien\Resource\ResourceManager">
       <UniqueIdentifier>{e1f2f63d-4c1f-4073-b9eb-40580430343e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headerdateien\Rendering\RenderTargets">
+      <UniqueIdentifier>{74925fa1-dc87-4eb6-9c13-69e44ff531e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Rendering\Render Targets">
+      <UniqueIdentifier>{45e3a750-5a58-43ff-98b7-85cefaf5b6e4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CEngine.cpp">
@@ -386,6 +392,9 @@
     </ClCompile>
     <ClCompile Include="src\CSceneManager.cpp">
       <Filter>Quelldateien\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CRenderTarget.cpp">
+      <Filter>Quelldateien\Rendering\Render Targets</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -595,6 +604,9 @@
     </ClInclude>
     <ClInclude Include="include\CSceneManager.h">
       <Filter>Headerdateien\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CRenderTarget.h">
+      <Filter>Headerdateien\Rendering\RenderTargets</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

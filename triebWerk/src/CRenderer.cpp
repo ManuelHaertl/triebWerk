@@ -3,7 +3,17 @@
 #include <algorithm>
 
 
-triebWerk::CRenderer::CRenderer()
+triebWerk::CRenderer::CRenderer() :
+	m_pCommandBuffer(nullptr),
+	m_pOpaqueMeshBuffer(nullptr),
+	m_pTransparentMeshBuffer(nullptr),
+	m_pInstancedMeshBuffer(nullptr),
+	m_pRenderTargetList(nullptr),
+	m_RenderTargetCounter(0),
+	m_CommandCounter(0),
+	m_OpaqueMeshCounter(0),
+	m_TransparentMeshCounter(0),
+	m_InstancedMeshBatchCount(0)
 {
 }
 
@@ -18,6 +28,7 @@ void triebWerk::CRenderer::Initialize(CGraphics * a_pGraphicsHandle, unsigned in
 	m_pTransparentMeshBuffer = new CMeshDrawable*[m_MaxDrawables];
 	m_pOpaqueMeshBuffer = new CMeshDrawable*[m_MaxDrawables];
 	m_pInstancedMeshBuffer = new CInstancedMeshBatch[m_MaxInstancedMeshBatch];
+	m_pRenderTargetList = new CRenderTarget[20];
 
 	//Initialize the InstancedBatches for later use
 	for (size_t i = 0; i < m_MaxInstancedMeshBatch; i++)
@@ -42,6 +53,7 @@ void triebWerk::CRenderer::Shutdown()
 	delete[] m_pOpaqueMeshBuffer;
 	delete[] m_pTransparentMeshBuffer;
 	delete[] m_pInstancedMeshBuffer;
+	delete[] m_pRenderTargetList;
 
 	for (auto pCamera : m_CameraBuffer)
 	{
@@ -149,7 +161,6 @@ void triebWerk::CRenderer::DrawScene()
 	//Renders all Meshes in buffer
 	RenderMeshDrawables();
 
-
 	m_pGraphicsHandle->Present();
 
 	//Reset all buffers
@@ -254,6 +265,14 @@ void triebWerk::CRenderer::SortTransparentObjects()
 {
 	//Sort transparent meshs form far to near
 	std::sort(m_pTransparentMeshBuffer, m_pTransparentMeshBuffer + m_TransparentMeshCounter, HowToSort);
+}
+
+triebWerk::CRenderTarget* triebWerk::CRenderer::AddRenderTarget(int a_Order)
+{
+	m_pRenderTargetList[a_Order].Initialize(m_pGraphicsHandle, m_ScreenWidth, m_ScreenHeight);
+	m_RenderTargetCounter++;
+
+	return &m_pRenderTargetList[a_Order];
 }
 
 void triebWerk::CRenderer::InstanceBatching(CMeshDrawable * a_pDrawable)

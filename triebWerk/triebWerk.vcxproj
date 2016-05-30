@@ -149,6 +149,7 @@
     <ClCompile Include="src\CCollisionEvent.cpp" />
     <ClCompile Include="src\CDebugLogfile.cpp" />
     <ClCompile Include="src\CInstancedMeshBatch.cpp" />
+    <ClCompile Include="src\CRenderTarget.cpp" />
     <ClCompile Include="src\CSceneHolder.cpp" />
     <ClCompile Include="src\CSceneManager.cpp" />
     <ClCompile Include="src\CTWFData.cpp" />
@@ -207,6 +208,7 @@
     <ClInclude Include="include\CCollision.h" />
     <ClInclude Include="include\CCollisionEvent.h" />
     <ClInclude Include="include\CDebugLogfile.h" />
+    <ClInclude Include="include\CRenderTarget.h" />
     <ClInclude Include="include\CSceneHolder.h" />
     <ClInclude Include="include\CSceneManager.h" />
     <ClInclude Include="include\CTWFData.h" />

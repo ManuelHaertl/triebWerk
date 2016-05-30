@@ -254,6 +254,11 @@ ID3D11DeviceContext * triebWerk::CGraphics::GetDeviceContext()
 	return m_pDeviceContext;
 }
 
+ID3D11DepthStencilView * triebWerk::CGraphics::GetDepthStencilView()
+{
+	return m_pDepthStencilView;
+}
+
 unsigned int triebWerk::CGraphics::GetVideoCardMemory()
 {
 	return m_VideoCardMemory;
