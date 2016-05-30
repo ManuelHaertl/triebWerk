@@ -1,7 +1,8 @@
 #pragma once
 #include <vector>
 
-#include <CFrameAllocator.h>
+#include <CElementContainer.h>
+#include <CFrameContainer.h>
 #include <CEntity.h>
 #include <CPhysicWorld.h>
 #include <CRenderer.h>
@@ -14,16 +15,13 @@ namespace triebWerk
         CPhysicWorld* m_pPhysicWorld;
 
     private:
-		static const size_t Start_Reserve_Size = 512;
+		static const size_t Start_Reserve_Size = 2;
         size_t m_CurrentSize;
 
-        std::vector<CEntity*> m_Entities;
-        std::vector<IBehaviour*> m_UpdateEntitiesOLD;
-        size_t m_EntitiesToUpdate;
-        std::vector<CEntity*> m_DrawEntities;
-        size_t m_EntitiesToDraw;
-        std::vector<CEntity*> m_RemoveEntities;
-        size_t m_EntitiesToRemove;
+        CElementContainer<CEntity*> m_Entities;
+        CFrameContainer<IBehaviour*> m_UpdateEntities;
+        CFrameContainer<CEntity*> m_DrawEntities;
+        CFrameContainer<CEntity*> m_RemoveEntities;
 
 		CRenderer* m_pRenderingHandle;
         float m_PhysicTimeStamp;

@@ -13,7 +13,7 @@ int main()
     config.m_Height = 800;
     config.m_Fullscreen = false;
     config.m_VSync = false;
-    config.m_TargetFPS = 60;
+    config.m_TargetFPS = 6000;
     config.m_PhysicTimeStamp = 0.01f;
 
     if (twEngine.Initialize(config) == false)

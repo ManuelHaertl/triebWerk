@@ -79,7 +79,6 @@ void CGameScene::CreatePlayer()
     // Transform
     player->m_Transform.SetPosition(0.0f, 1.0f, 0.0f);
     player->m_Transform.SetRotationDegrees(0.0f, 0.0f, 0.0f);
-    player->m_Transform.SetScale(1.5f, 0.7f, 2.0f);
 
     // Behaviour
     m_pPlayer = new CPlayer();
@@ -87,9 +86,9 @@ void CGameScene::CreatePlayer()
 
     // Drawable
     triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
-    mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube");
-    mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
-    mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &colorPlayer);
+    mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_player");
+    mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardTexture"));
+    mesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("t_player_diff"));
     player->SetDrawable(mesh);
 
     // Physic

@@ -387,6 +387,9 @@
     <ClCompile Include="src\CSceneManager.cpp">
       <Filter>Quelldateien\Scenes</Filter>
     </ClCompile>
+    <ClCompile Include="src\CBucketAllocator.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\CEngine.h">
@@ -596,7 +599,13 @@
     <ClInclude Include="include\CSceneManager.h">
       <Filter>Headerdateien\Scenes</Filter>
     </ClInclude>
-    <ClInclude Include="include\CFrameAllocator.h">
+    <ClInclude Include="include\CFrameContainer.h">
+      <Filter>Headerdateien\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CBucketAllocator.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CElementContainer.h">
       <Filter>Headerdateien\Core</Filter>
     </ClInclude>
   </ItemGroup>

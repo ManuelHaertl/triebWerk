@@ -4,7 +4,7 @@
 namespace triebWerk
 {
     template <class T>
-    class CFrameAllocator
+    class CFrameContainer
     {
     private:
         T* m_pElements;
@@ -13,8 +13,9 @@ namespace triebWerk
         size_t m_ElementSize;
 
     public:
-        CFrameAllocator();
-        ~CFrameAllocator();
+        CFrameContainer();
+        CFrameContainer(size_t a_ElementCount);
+        ~CFrameContainer();
 
         void Add(const T& a_rValue);
         void Reset();
@@ -26,7 +27,7 @@ namespace triebWerk
     };
 
     template <class T>
-    CFrameAllocator<T>::CFrameAllocator() :
+    inline CFrameContainer<T>::CFrameContainer() :
         m_pElements(nullptr),
         m_MaxSize(32),
         m_Size(0)
@@ -35,27 +36,37 @@ namespace triebWerk
         m_ElementSize = sizeof(T);
     }
 
+    template<class T>
+    inline CFrameContainer<T>::CFrameContainer(size_t a_ElementCount) : 
+        m_pElements(nullptr),
+        m_MaxSize(a_ElementCount),
+        m_Size(0)
+    {
+        m_pElements = new T[m_MaxSize];
+        m_ElementSize = sizeof(T);
+    }
+
     template <class T>
-    CFrameAllocator<T>::~CFrameAllocator()
+    inline CFrameContainer<T>::~CFrameContainer()
     {
         delete[] m_pElements;
     }
 
     template<class T>
-    inline void CFrameAllocator<T>::Add(const T & a_rValue)
+    inline void CFrameContainer<T>::Add(const T& a_rValue)
     {
         m_pElements[m_Size] = a_rValue;
         m_Size++;
     }
 
     template<class T>
-    inline void CFrameAllocator<T>::Reset()
+    inline void CFrameContainer<T>::Reset()
     {
         m_Size = 0;
     }
 
     template<class T>
-    inline void CFrameAllocator<T>::Resize(size_t a_Elements)
+    inline void CFrameContainer<T>::Resize(size_t a_Elements)
     {
         // get byte count that shall be copied
         if (m_Size > a_Elements)
@@ -74,19 +85,19 @@ namespace triebWerk
     }
 
     template<class T>
-    inline size_t CFrameAllocator<T>::GetSize() const
+    inline size_t CFrameContainer<T>::GetSize() const
     {
         return m_Size;
     }
 
     template<class T>
-    inline size_t CFrameAllocator<T>::GetMaxSize() const
+    inline size_t CFrameContainer<T>::GetMaxSize() const
     {
         return m_MaxSize;
     }
 
     template<class T>
-    inline T& CFrameAllocator<T>::operator[](size_t a_Index)
+    inline T& CFrameContainer<T>::operator[](size_t a_Index)
     {
         return m_pElements[a_Index];
     }
