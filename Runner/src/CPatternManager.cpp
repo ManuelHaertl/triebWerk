@@ -147,7 +147,7 @@ void CPatternManager::SetNextPattern()
 
     m_pCurrentPattern = m_pCurrentPattern->m_ConnectedPattern[difficulty][priority][randomPatternNumber];
 
-    auto color = triebWerk::CDebugLogfile::EColor::Black;
+    auto color = triebWerk::CDebugLogfile::ELogType::Text;
     int prio = CPattern::MaxPriorities + 1 - m_pCurrentPattern->m_Priority;
     std::string log =
         "Name: " + m_pCurrentPattern->m_Name +
