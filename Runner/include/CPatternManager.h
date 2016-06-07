@@ -1,13 +1,15 @@
 #pragma once
 #include <list>
-#include <CGameInfo.h>
 #include <CPatternLoader.h>
 
 class CPatternManager
 {
+public:
+    static float SpawnDistance;
+    static float DeleteDistance;
+    static float StartFreeDistance;
+
 private:
-    const float SpawnDistance = 300.0f;
-    const float DeleteDistance = 10.0f;
 
     std::list<triebWerk::CEntity*> m_Entities;
 
@@ -28,6 +30,8 @@ public:
     void Start();
     void Update(const float a_MetersFlewn);
     void End();
+
+    void Reset();
 
 private:
     void SpawnNextTile();

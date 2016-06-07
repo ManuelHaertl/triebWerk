@@ -10,6 +10,9 @@ CDebugScene::~CDebugScene()
 
 void CDebugScene::Start()
 {
+    m_Position = DirectX::XMVectorSet(0.0, 0.0, -10.0f, 0.0f);
+
+    ResetCamera();
     CreateTestCubes();
 }
 
@@ -28,41 +31,47 @@ void CDebugScene::End()
 {
 }
 
+void CDebugScene::Resume()
+{
+    ResetCamera();
+}
+
+void CDebugScene::Pause()
+{
+    m_Position = twRenderer->GetCurrentActiveCamera()->m_Transform.GetPosition();
+}
+
 void CDebugScene::CreateTestCubes()
 {
-    auto entity = m_pWorld->CreateEntity();
-    entity->m_Transform.SetPosition(0, 0, 0);
-    triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
-    mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_snakeloop_01");
-    mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardTexture"));
-    mesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_snakeloop_diff"));
-    //mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(3, &colorBlock);
-    entity->SetDrawable(mesh);
-    m_pWorld->AddEntity(entity);
+    const int range = 10;
+    const int incrementer = 5;
+    const int freeArea = 1;
 
+    for (int x = -range; x < range; x += incrementer)
+    {
+        for (int y = -range; y < range; y += incrementer)
+        {
+            for (int z = -range; z < range; z += incrementer)
+            {
+                auto entity = m_pWorld->CreateEntity();
+                entity->m_Transform.SetPosition(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z));
 
-    //const int range = 30;
-    //const int incrementer = 5;
-    //const int freeArea = 1;
-    //DirectX::XMFLOAT3 colorBlock = { 0.5f, 0.5f, 0.5f };
+                triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
+                mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube");
+                mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
 
-    //for (int x = -range; x < range; x += incrementer)
-    //{
-    //    for (int y = -range; y < range; y += incrementer)
-    //    {
-    //        for (int z = -range; z < range; z += incrementer)
-    //        {
-    //            auto entity = twWorld->CreateEntity();
-    //            entity->m_Transform.SetPosition(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z));
+                DirectX::XMFLOAT3 colorBlock = { twRandom::GetNumber(0.0f, 1.0f), twRandom::GetNumber(0.0f, 1.0f), twRandom::GetNumber(0.0f, 1.0f) };
+                mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &colorBlock);
 
-    //            triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
-    //            mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube");
-    //            mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardTexture"));
-    //mesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("images"));
-    //            //mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(3, &colorBlock);
-    //            entity->SetDrawable(mesh);
-    //            twWorld->AddEntity(entity);
-    //        }
-    //    }
-    //}
+                entity->SetDrawable(mesh);
+                m_pWorld->AddEntity(entity);
+            }
+        }
+    }
+}
+
+void CDebugScene::ResetCamera()
+{
+    twDebug->Enable();
+    twRenderer->GetCurrentActiveCamera()->m_Transform.SetPosition(m_Position);
 }

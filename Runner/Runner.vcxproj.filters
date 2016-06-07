@@ -37,6 +37,12 @@
     <Filter Include="Quelldateien\Debug">
       <UniqueIdentifier>{098fd8ba-73b4-4a7e-b0a9-3dbd73d7e85d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headerdateien\Game\Tiles">
+      <UniqueIdentifier>{48c94248-b244-45e5-a053-f4f00761ce09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Game\Tiles">
+      <UniqueIdentifier>{30c28bf0-e3e4-40c3-a81f-09c276170203}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -68,6 +74,12 @@
     </ClCompile>
     <ClCompile Include="src\CDebugScene.cpp">
       <Filter>Quelldateien\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CPoints.cpp">
+      <Filter>Quelldateien\Game\Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CCheckpoint.cpp">
+      <Filter>Quelldateien\Game\Tiles</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -106,6 +118,15 @@
     </ClInclude>
     <ClInclude Include="include\CDebugScene.h">
       <Filter>Headerdateien\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CPoints.h">
+      <Filter>Headerdateien\Game\Tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CCheckpoint.h">
+      <Filter>Headerdateien\Game\Tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SPlayerInput.h">
+      <Filter>Headerdateien\Game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

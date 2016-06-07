@@ -1,7 +1,7 @@
 #include <IDrawable.h>
 
 triebWerk::IDrawable::IDrawable() :
-	m_ActiveState(false),
+	m_ActiveState(true),
 	m_Type(EDrawableType::Empty),
 	m_RenderTargetSlot(0)
 {

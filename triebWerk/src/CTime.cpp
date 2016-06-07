@@ -80,6 +80,14 @@ void triebWerk::CTime::SetTimeScale(const float a_TimeStamp)
     m_TimeScale = a_TimeStamp;
 }
 
+void triebWerk::CTime::ResetDeltaTime()
+{
+    m_LastTime = std::chrono::high_resolution_clock::now();
+    m_LastLoopTime = m_LastTime;
+    m_DeltaTime = 0;
+    m_UnscaledDeltaTime = 0;
+}
+
 void triebWerk::CTime::StartPerformanceCounter()
 {
     m_PerformanceStart = std::chrono::high_resolution_clock::now();
