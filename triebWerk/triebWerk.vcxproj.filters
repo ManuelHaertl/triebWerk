@@ -399,6 +399,9 @@
     <ClCompile Include="src\CBucketAllocator.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="src\CFontDrawable.cpp">
+      <Filter>Quelldateien\Rendering\Drawables</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\CEngine.h">
@@ -619,6 +622,9 @@
     </ClInclude>
     <ClInclude Include="include\CElementContainer.h">
       <Filter>Headerdateien\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CFontDrawable.h">
+      <Filter>Headerdateien\Rendering\Drawables</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

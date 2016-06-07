@@ -52,6 +52,15 @@ namespace triebWerk
 		typedef std::unordered_map<size_t, CMaterial*> CMaterialMap;
 		typedef std::pair<size_t, CMaterial*> CMaterialPair;
 
+		//Forward declared CFont class
+		//TODO:
+		//Replace this with the proper inclusion
+		class CFont;
+
+		//True Type
+		typedef std::unordered_map<size_t, CFont*> CFontMap;
+		typedef std::pair<size_t, CFont*> CFontPair;
+
 	private:
 		CFileWatcher m_FileWatcher;
 		CTilesetHashMap m_TilesetBuffer;
@@ -59,6 +68,7 @@ namespace triebWerk
 		CTextureMap m_TextureBuffer;
 		CMeshMap m_MeshBuffer;
 		CMaterialMap m_MaterialBuffer;
+		CFontMap m_FontBuffer;
 
 		CGraphics* m_pGraphicsHandle;
 
@@ -112,6 +122,7 @@ namespace triebWerk
 		void LoadTMX(SFile a_File);
 		void LoadHLSL(SFile a_File);
 		void LoadTWF(SFile a_File);
+		void LoadTTF(SFile a_File);
 
 		bool SetModulPath();
 		std::vector<SFile> SearchFolderForAllFiles(const char* a_FolderToLoad);

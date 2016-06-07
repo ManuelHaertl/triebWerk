@@ -13,6 +13,7 @@ namespace triebWerk
 		TMX,
 		HLSL,
 		TWF,
+		TTF,
 		NONE
 	};
 }

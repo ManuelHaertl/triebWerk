@@ -271,6 +271,9 @@ void triebWerk::CResourceManager::LoadFile(SFile a_File)
 	case EFileType::TMX:
 		LoadTMX(a_File);
 		break;
+	case EFileType::TTF:
+		LoadTTF(a_File);
+		break;
 	}
 }
 
@@ -371,6 +374,17 @@ void triebWerk::CResourceManager::LoadTWF(SFile a_File)
 	twfParser.ParseData(a_File.FilePath.c_str(), twfData);
 	
 	m_TWFBuffer.insert(CTWFDataPair(StringHasher(RemoveFileType(a_File.FileName)), twfData));
+}
+
+void triebWerk::CResourceManager::LoadTTF(SFile a_File)
+{
+	//use the a_File struct to get the filename, filepath, filetype
+
+	//Create Font and load it, if error could occur pls log a error!
+
+
+	//Insert Data in font map
+	//m_FontBuffer.insert(CFontPair(StringHasher(RemoveFileType(a_File.FileName)), twfData));
 }
 
 bool triebWerk::CResourceManager::SetModulPath()
@@ -512,6 +526,10 @@ triebWerk::EFileType triebWerk::CResourceManager::GetFileType(const std::string&
 	else if (fileType == ".tmx")
 	{
 		return EFileType::TMX;
+	}
+	else if (fileType == ".ttf")
+	{
+		return EFileType::TTF;
 	}
 
 	return EFileType::NONE;
