@@ -297,8 +297,8 @@ void triebWerk::CHLSLParser::LogErrors(const char * a_pErrorMessage)
 {
 	if (m_CompileErrors == false)
 	{
-		DebugLogfile.LogfText(CDebugLogfile::EColor::Red, false, "Critical error: Could not compile Shader: ");
-		DebugLogfile.LogfText(CDebugLogfile::EColor::Red, false, a_pErrorMessage);
+		DebugLogfile.LogfText(CDebugLogfile::ELogType::Error, false, "Critical error: Could not compile Shader: ");
+		DebugLogfile.LogfText(CDebugLogfile::ELogType::Error, false, a_pErrorMessage);
 		m_CompileErrors = true;
 	}
 }

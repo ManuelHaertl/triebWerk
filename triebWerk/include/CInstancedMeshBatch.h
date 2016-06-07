@@ -5,7 +5,7 @@
 #include <CGraphics.h>
 
 #define MAX_INSTANCE_COUNT 8000
-#define MAX_DATA_PER_INSTANCE 64
+#define MAX_DATA_PER_INSTANCE 120
 
 namespace triebWerk
 {

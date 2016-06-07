@@ -75,25 +75,20 @@ void triebWerk::CDebugLogfile::LogText(const char * a_Text)
 	fflush(this->m_pFile);
 }
 
-void triebWerk::CDebugLogfile::LogText(EColor a_Color, bool a_List, const char * a_Text)
+void triebWerk::CDebugLogfile::LogText(ELogType a_LogType, bool a_List, const char * a_Text)
 {
 	if (a_List)
 		LogText("<li>");
 
-	switch (a_Color)
+	switch (a_LogType)
 	{
-	case EColor::Black:
+	case ELogType::Text:
 		LogText("<font color=black>"); break;
-	case EColor::Red:
+	case ELogType::Error:
 		LogText("<font color=red>"); 
 		m_ErrorOccurred = true;
 		break;
-	case EColor::Green:
-		LogText("<font color=green>"); break;
-	case EColor::Blue:
-		LogText("<font color=blue>"); 
-		break;
-	case EColor::Yellow:
+	case ELogType::Warning:
 		LogText("<font color=#bfa904>");
 		m_ErrorOccurred = true;
 		break;
@@ -108,9 +103,9 @@ void triebWerk::CDebugLogfile::LogText(EColor a_Color, bool a_List, const char *
 		LogText("</li>");
 }
 
-void triebWerk::CDebugLogfile::LogText(EColor a_Color, const char * a_Text)
+void triebWerk::CDebugLogfile::LogText(ELogType a_LogType, const char * a_Text)
 {
-	LogText(a_Color, false, a_Text);
+	LogText(a_LogType, false, a_Text);
 }
 
 void triebWerk::CDebugLogfile::LogfText(const char * a_Text, ...)
@@ -124,7 +119,7 @@ void triebWerk::CDebugLogfile::LogfText(const char * a_Text, ...)
 	LogText(buffer);
 }
 
-void triebWerk::CDebugLogfile::LogfText(EColor a_Color, const char * a_Text, ...)
+void triebWerk::CDebugLogfile::LogfText(ELogType a_LogType, const char * a_Text, ...)
 {
 	TCHAR buffer[MAX_BUFFER];
 	va_list pArgList;
@@ -132,10 +127,10 @@ void triebWerk::CDebugLogfile::LogfText(EColor a_Color, const char * a_Text, ...
 	vsprintf_s(buffer, a_Text, pArgList);
 	va_end(pArgList);
 
-	LogText(a_Color, buffer);
+	LogText(a_LogType, buffer);
 }
 
-void triebWerk::CDebugLogfile::LogfText(EColor a_Color, bool a_List, const char * a_Text, ...)
+void triebWerk::CDebugLogfile::LogfText(ELogType a_LogType, bool a_List, const char * a_Text, ...)
 {
 	TCHAR buffer[MAX_BUFFER];
 	va_list pArgList;
@@ -143,7 +138,7 @@ void triebWerk::CDebugLogfile::LogfText(EColor a_Color, bool a_List, const char 
 	vsprintf_s(buffer, a_Text, pArgList);
 	va_end(pArgList);
 
-	LogText(a_Color, a_List, buffer);
+	LogText(a_LogType, a_List, buffer);
 }
 
 void triebWerk::CDebugLogfile::FunctionResult(const char * a_pFunctionName, bool a_Result)

@@ -12,7 +12,7 @@ void triebWerk::CMaterial::SetMaterial(const CMaterial * a_pMaterial)
 {
 	if (a_pMaterial == nullptr)
 	{
-		DebugLogfile.LogfText(CDebugLogfile::EColor::Yellow, false, "Warning: You tried to set an empty Material!");
+		DebugLogfile.LogfText(CDebugLogfile::ELogType::Warning, false, "Warning: You tried to set an empty Material!");
 		return;
 	}
 	m_ConstantBuffer.m_BuffferDescription = a_pMaterial->m_ConstantBuffer.m_BuffferDescription;

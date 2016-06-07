@@ -15,6 +15,7 @@ namespace triebWerk
 		const D3D_FEATURE_LEVEL ENGINE_FEATURE_LEVEL = D3D_FEATURE_LEVEL_11_0;
 
 	private:
+		//Window Settigns
 		bool m_IsVSynced;
 		bool m_IsFullscreen;
 
@@ -34,10 +35,6 @@ namespace triebWerk
 		D3D11_TEXTURE2D_DESC m_bbDesc;
 		ID3D11BlendState* m_pBlendState;
 	
-		//Debug
-		ID3D11VertexShader* m_pVertexShader;
-		ID3D11PixelShader* m_pPixelShader;
-
 		float m_ClearColor[4];
 
 		unsigned int m_VideoCardMemory;
@@ -53,8 +50,10 @@ namespace triebWerk
 	public:
 		//Initialize the graphics d3d11 device and set all graphics related options
 		bool Initialize(HWND &a_rWindowHandle, const unsigned int a_ScreenHeight, const unsigned int a_ScreenWidth, const bool a_Fullscreen, const bool a_VSync);
+		//Shutdown the graphics system
 		void Shutdown();
 		
+		void SetBackBufferRenderTarget();
 		void ClearRenderTarget();
 		void Present();
 
