@@ -65,6 +65,7 @@ void triebWerk::CRenderer::Shutdown()
 
 void triebWerk::CRenderer::AddRenderCommand(IDrawable* a_pRenderCommand)
 {
+
 	if (m_CommandCounter < m_MaxDrawables - 1)
 	{
 		//Sort the commands related to its type

@@ -43,12 +43,12 @@ void triebWerk::IShader::SetTexture(const size_t a_Index, CTexture2D * a_pTextur
 {
 	if (a_pTexture == nullptr)
 	{
-		DebugLogfile.LogfText(CDebugLogfile::EColor::Yellow, false, "Warning: Tried to add nullptr as Texture!");
+		DebugLogfile.LogfText(CDebugLogfile::ELogType::Warning, false, "Warning: Tried to add nullptr as Texture!");
 		return;
 	}
 	if (a_Index > m_TextureDescriptions.size())
 	{
-		DebugLogfile.LogfText(CDebugLogfile::EColor::Yellow, false, "Warning: Tried to add a Texture in a none a existing slot!");
+		DebugLogfile.LogfText(CDebugLogfile::ELogType::Warning, false, "Warning: Tried to add a Texture in a none a existing slot!");
 		return;
 	}
 

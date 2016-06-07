@@ -17,6 +17,7 @@ triebWerk::CGraphics::CGraphics() :
 	m_pSwapChain(nullptr),
 	m_pBlendState(nullptr)
 {
+	//default clear color
 	SetClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 }
 
@@ -72,8 +73,13 @@ bool triebWerk::CGraphics::Initialize(HWND & a_rWindowHandle, const unsigned int
 		&m_pDevice,
 		NULL,
 		&m_pDeviceContext);
+	
 	if (FAILED(result))
+	{
+		DebugLogfile.LogfText(CDebugLogfile::ELogType::Error, false, "Error: Swapchain coud not be created!");
 		return false;
+	}
+
 
 	result = m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&m_pBackBufferTexture);
 	if (FAILED(result))
@@ -216,13 +222,12 @@ void triebWerk::CGraphics::Shutdown()
 
 	if (m_pInputLayout != nullptr)
 		m_pInputLayout->Release();
-
-	if (m_pPixelShader != nullptr)
-		m_pPixelShader->Release();
-
-	if (m_pVertexShader != nullptr)
-		m_pVertexShader->Release();
 }	
+
+void triebWerk::CGraphics::SetBackBufferRenderTarget()
+{
+	m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
+}
 
 void triebWerk::CGraphics::ClearRenderTarget()
 {
@@ -274,7 +279,7 @@ void triebWerk::CGraphics::UpdateSwapchainConfiguration()
 
 	if (FAILED(hr))
 	{
-		DebugLogfile.LogfText(CDebugLogfile::EColor::Red, false, "Critical Error: Graphics failed to resize swapchain buffers!");
+		DebugLogfile.LogfText(CDebugLogfile::ELogType::Error, false, "Critical Error: Graphics failed to resize swapchain buffers!");
 	}
 
 	ConfigureBackBuffer();
@@ -423,9 +428,6 @@ void triebWerk::CGraphics::ReleaseBackBuffer()
 
 	m_pDepthStencilView->Release();
 	m_pDepthStencilBuffer->Release();
-
-	//m_pVertexShader->Release();
-	//m_pPixelShader->Release();
 
 	m_pDeviceContext->Flush();
 }

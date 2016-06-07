@@ -47,7 +47,7 @@ bool triebWerk::CConstantBuffer::CompareConstantBuffer(const char * a_pBufferA, 
 //
 //	if (a_NumberOfArguments > m_Variables.size() - 3)
 //	{
-//		DebugLogfile.LogfText(CDebugLogfile::EColor::Yellow, false, "Warning: Tried to write in a none existing constant buffer index!");
+//		DebugLogfile.LogfText(CDebugLogfile::ELogType::Warning, false, "Warning: Tried to write in a none existing constant buffer index!");
 //		return;
 //	}
 //
@@ -65,7 +65,7 @@ void triebWerk::CConstantBuffer::SetValueInBuffer(int a_IndexOfValue, void * a_p
 {
 	if (a_IndexOfValue >= m_Variables.size())
 	{
-		DebugLogfile.LogfText(CDebugLogfile::EColor::Yellow, false, "Warning: Tried to write in a none existing constant buffer index!");
+		DebugLogfile.LogfText(CDebugLogfile::ELogType::Warning, false, "Warning: Tried to write in a none existing constant buffer index!");
 		return;
 	}
 
@@ -144,7 +144,7 @@ void triebWerk::CConstantBuffer::InitializeConstantBufffer(ID3D11Device * a_pDev
 	if (FAILED(hr))
 	{
 		m_pConstantBuffer;
-		DebugLogfile.LogfText(CDebugLogfile::EColor::Yellow, false, "Warning: constantbuffer creation failed!");
+		DebugLogfile.LogfText(CDebugLogfile::ELogType::Warning, false, "Warning: constantbuffer creation failed!");
 	}
 }
 

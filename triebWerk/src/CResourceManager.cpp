@@ -114,7 +114,7 @@ triebWerk::CTilesetMap * triebWerk::CResourceManager::GetTileset(const char * Ti
 
 	if (foundIterator == m_TilesetBuffer.end())
 	{
-		DebugLogfile.LogfText(CDebugLogfile::EColor::Yellow, false, "Warning: No Tileset was loaded with the Name: %s", TilesetName);
+		DebugLogfile.LogfText(CDebugLogfile::ELogType::Warning, false, "Warning: No Tileset was loaded with the Name: %s", TilesetName);
 		return nullptr;
 	}
 	else
@@ -129,7 +129,7 @@ triebWerk::CTWFData* triebWerk::CResourceManager::GetTWFData(const char * a_pCon
 
 	if (foundIterator == m_TWFBuffer.end())
 	{
-		DebugLogfile.LogfText(CDebugLogfile::EColor::Yellow, false, "Warning: No TWF was loaded with the Name: %s", a_pConfiguration);
+		DebugLogfile.LogfText(CDebugLogfile::ELogType::Warning, false, "Warning: No TWF was loaded with the Name: %s", a_pConfiguration);
 		return nullptr;
 	}
 	else
@@ -144,7 +144,7 @@ triebWerk::CTexture2D * triebWerk::CResourceManager::GetTexture2D(const char * a
 
 	if (foundIterator == m_TextureBuffer.end())
 	{
-		DebugLogfile.LogfText(CDebugLogfile::EColor::Yellow, false, "Warning: No Texture2D was loaded with the Name: %s", a_pTexture2DName);
+		DebugLogfile.LogfText(CDebugLogfile::ELogType::Warning, false, "Warning: No Texture2D was loaded with the Name: %s", a_pTexture2DName);
 		return nullptr;
 	}
 	else
@@ -159,7 +159,7 @@ triebWerk::CMesh * triebWerk::CResourceManager::GetMesh(const char * a_pMeshName
 
 	if (foundIterator == m_MeshBuffer.end())
 	{
-		DebugLogfile.LogfText(CDebugLogfile::EColor::Yellow, false, "Warning: No Mesh was loaded with the Name: %s", a_pMeshName);
+		DebugLogfile.LogfText(CDebugLogfile::ELogType::Warning, false, "Warning: No Mesh was loaded with the Name: %s", a_pMeshName);
 		return nullptr;
 	}
 	else
@@ -174,7 +174,7 @@ triebWerk::CMaterial* triebWerk::CResourceManager::GetMaterial(const char * a_pE
 
 	if (foundIterator == m_MaterialBuffer.end())
 	{
-		DebugLogfile.LogfText(CDebugLogfile::EColor::Yellow, false, "Warning: No Material was loaded with the Name: %s", a_pEffectName);
+		DebugLogfile.LogfText(CDebugLogfile::ELogType::Warning, false, "Warning: No Material was loaded with the Name: %s", a_pEffectName);
 		return nullptr;
 	}
 	else
@@ -286,7 +286,7 @@ void triebWerk::CResourceManager::LoadPNG(SFile a_File)
 
 	if (error != 0)
 	{
-		DebugLogfile.LogfText(CDebugLogfile::EColor::Yellow, false, "Warning: PNG could not be loaded! File: %s", a_File.FilePath.c_str());
+		DebugLogfile.LogfText(CDebugLogfile::ELogType::Warning, false, "Warning: PNG could not be loaded! File: %s", a_File.FilePath.c_str());
 		return;
 	}
 	else
@@ -312,7 +312,7 @@ void triebWerk::CResourceManager::LoadOBJ(SFile a_File)
 
 	if (!success)
 	{
-		DebugLogfile.LogfText(CDebugLogfile::EColor::Yellow, false, "Warning: OBJ could not be loaded! File: %s", a_File.FilePath.c_str());
+		DebugLogfile.LogfText(CDebugLogfile::ELogType::Warning, false, "Warning: OBJ could not be loaded! File: %s", a_File.FilePath.c_str());
 		return;
 	}
 
@@ -341,7 +341,7 @@ void triebWerk::CResourceManager::LoadTMX(SFile a_File)
 
 	if (!success)
 	{
-		DebugLogfile.LogfText(CDebugLogfile::EColor::Yellow, false, "Warning: TMX could not be loaded! File: %s", a_File.FilePath.c_str());
+		DebugLogfile.LogfText(CDebugLogfile::ELogType::Warning, false, "Warning: TMX could not be loaded! File: %s", a_File.FilePath.c_str());
 		delete tileset;
 		return;
 	}
@@ -408,7 +408,7 @@ std::vector<triebWerk::CResourceManager::SFile> triebWerk::CResourceManager::Sea
 
 	if (INVALID_HANDLE_VALUE == hFindHandle)
 	{
-		//DebugLogfile.LogfText(Debug.m_Logfile.Red, false, "Folder not found! Name: %s", a_FolderToLoad);
+		//DebugLogfile.LogfText(Debug.m_Logfile.Error, false, "Folder not found! Name: %s", a_FolderToLoad);
 		return filesToLoad;
 	}
 

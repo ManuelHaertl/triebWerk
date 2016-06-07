@@ -28,7 +28,7 @@ void triebWerk::CVertexShader::SetInstanceData(int a_Index, void * a_pAdressOfDa
 {
 	if (m_SizeOfInstanceDataBytes == 0)
 	{
-		DebugLogfile.LogfText(CDebugLogfile::EColor::Yellow, false, "Warning: There is no CostumInstanceData to set");
+		DebugLogfile.LogfText(CDebugLogfile::ELogType::Warning, false, "Warning: There is no CostumInstanceData to set");
 		return;
 	}
 
