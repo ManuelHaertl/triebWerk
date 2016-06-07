@@ -157,6 +157,7 @@
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\CCheckpoint.cpp" />
     <ClCompile Include="src\CDebugScene.cpp" />
     <ClCompile Include="src\CEnvironmentCreator.cpp" />
     <ClCompile Include="src\CGameInfo.cpp" />
@@ -165,10 +166,12 @@
     <ClCompile Include="src\CPatternLoader.cpp" />
     <ClCompile Include="src\CPatternManager.cpp" />
     <ClCompile Include="src\CPlayer.cpp" />
+    <ClCompile Include="src\CPoints.cpp" />
     <ClCompile Include="src\CValueUpdater.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\CCheckpoint.h" />
     <ClInclude Include="include\CDebugScene.h" />
     <ClInclude Include="include\CEnvironmentCreator.h" />
     <ClInclude Include="include\CGameInfo.h" />
@@ -177,10 +180,12 @@
     <ClInclude Include="include\CPatternLoader.h" />
     <ClInclude Include="include\CPatternManager.h" />
     <ClInclude Include="include\CPlayer.h" />
+    <ClInclude Include="include\CPoints.h" />
     <ClInclude Include="include\CValueUpdater.h" />
     <ClInclude Include="include\EPatternCategories.h" />
     <ClInclude Include="include\ETileType.h" />
     <ClInclude Include="include\SPatternTile.h" />
+    <ClInclude Include="include\SPlayerInput.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

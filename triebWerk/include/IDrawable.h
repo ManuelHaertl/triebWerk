@@ -34,6 +34,6 @@ namespace triebWerk
 		virtual void SetTransform(const DirectX::XMMATRIX& a_rTransform) = 0;
 
 		void SetActive(bool a_State);
-		bool IsActive();
+		bool IsActive() const;
 	};
 }

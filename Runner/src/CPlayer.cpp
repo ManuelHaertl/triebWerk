@@ -1,8 +1,18 @@
 #include <CPlayer.h>
 
+#include <iostream>
+#include <CCheckpoint.h>
+#include <CGameInfo.h>
+#include <CMeshDrawable.h>
+#include <CPoints.h>
+
 CPlayer::CPlayer() :
-    m_CurrentMaxSpeedValue(0.0f),
+    m_IsDodging(false),
+    m_DodgeSpeed(0.0f),
+    m_CurrentDodgeCooldownTime(0.0f),
+    m_CurrentDodgeTime(0.0f),
     m_pMainCamera(nullptr),
+    m_IsDead(false),
     m_MetersFlewn(0.0f),
     m_LastZ(0.0f)
 {
@@ -20,12 +30,23 @@ void CPlayer::Start()
 
 void CPlayer::Update()
 {
+    CheckInput();
     SetSpeed();
+    CalculateDistanceFlewn();
+    AddPointsForFlewnDistance();
 
-    float currentZ = m_pEntity->m_Transform.GetPosition().m128_f32[2];
-
-    m_MetersFlewn = currentZ - m_LastZ;
-    m_LastZ = currentZ;
+    CGameInfo& gameInfo = CGameInfo::Instance();
+    // for testing (till we have an UI system)
+    m_CurrentPointTellerTime -= twTime->GetDeltaTime();
+    if (m_CurrentPointTellerTime <= 0.0f)
+    {
+        m_CurrentPointTellerTime = PointTellerTimer;
+        
+        std::cout <<
+            "Total: " << (int)gameInfo.m_TotalPoints <<
+            " Current: " << (int)gameInfo.m_CurrentPoints <<
+            " Multiplier: " << gameInfo.m_Multiplier << std::endl;
+    }
 }
 
 void CPlayer::LateUpdate()
@@ -40,6 +61,34 @@ void CPlayer::LateUpdate()
 void CPlayer::CollisionEnter(triebWerk::CCollisionEvent a_Collision)
 {
     CheckSideWall(a_Collision);
+
+    triebWerk::CEntity* entity = a_Collision.m_pPartner;
+    if (entity->m_ID.GetHash() == triebWerk::StringHasher("Points"))
+    {
+        entity->GetDrawable()->SetActive(false);
+        entity->RemovePhysicEntity();
+
+        // add a fixed amount to the total points
+        CGameInfo& gameInfo = CGameInfo::Instance();
+        gameInfo.m_TotalPoints += ((CPoints*)entity->GetBehaviour())->m_Points;
+    }
+    else if (entity->m_ID.GetHash() == triebWerk::StringHasher("Checkpoint"))
+    {
+        entity->GetDrawable()->SetActive(false);
+        entity->RemovePhysicEntity();
+
+        ((CCheckpoint*)entity->GetBehaviour())->m_HasCollected = true;
+
+        // Add the points you collected by flying
+        CGameInfo& gameInfo = CGameInfo::Instance();
+        gameInfo.m_TotalPoints += gameInfo.m_CurrentPoints * gameInfo.m_Multiplier;
+        gameInfo.m_CurrentPoints = 0;
+        gameInfo.m_Multiplier = 1.0f;
+    }
+    else if (entity->m_ID.GetHash() == triebWerk::StringHasher("Wall"))
+    {
+        m_IsDead = true;
+    }
 }
 
 void CPlayer::CollisionStay(triebWerk::CCollisionEvent a_Collision)
@@ -47,80 +96,165 @@ void CPlayer::CollisionStay(triebWerk::CCollisionEvent a_Collision)
     CheckSideWall(a_Collision);
 }
 
+void CPlayer::Reset()
+{
+    m_IsDodging = false;
+    m_DodgeSpeed = 0.0f;
+    m_CurrentDodgeCooldownTime = 0.0f;
+    m_CurrentDodgeTime = 0.0f;
+    m_IsDead = false;
+    m_MetersFlewn = 0.0f;
+    m_LastZ = 0.0f;
+
+    m_pEntity->m_Transform.SetPosition(0.0f, 1.0f, 0.0f);
+}
+
 float CPlayer::GetMetersFlewn() const
 {
     return m_MetersFlewn;
+}
+
+bool CPlayer::HasDied() const
+{
+    return m_IsDead;
+}
+
+void CPlayer::CheckInput()
+{
+    // Gamepad Input
+    if (twGamepad.IsConnected(0))
+    {
+        m_PlayerInput.m_Left = twGamepad.IsState(triebWerk::EGamepadButton::LAnalogLeft, triebWerk::EButtonState::Pressed, 0);
+        m_PlayerInput.m_Right = twGamepad.IsState(triebWerk::EGamepadButton::LAnalogRight, triebWerk::EButtonState::Pressed, 0);
+
+        m_PlayerInput.m_DodgeLeft =
+            twGamepad.IsState(triebWerk::EGamepadButton::LT, triebWerk::EButtonState::Down, 0) ||
+            twGamepad.IsState(triebWerk::EGamepadButton::LB, triebWerk::EButtonState::Down, 0);
+
+        m_PlayerInput.m_DodgeRight =
+            twGamepad.IsState(triebWerk::EGamepadButton::RT, triebWerk::EButtonState::Down, 0) ||
+            twGamepad.IsState(triebWerk::EGamepadButton::RB, triebWerk::EButtonState::Down, 0);
+
+        float xValue = static_cast<float>(twGamepad.GetLeftAnalogX(0));
+
+        float deadZone = static_cast<float>(triebWerk::CXboxController::DEADZONE_LEFT_ANALOG);
+        if (xValue > 0)
+        {
+            xValue -= deadZone;
+            xValue /= (32767.0f - deadZone);
+        }
+        else if (xValue < 0)
+        {
+            xValue += deadZone;
+            xValue /= (32768.0f - deadZone);
+        }
+        else
+        {
+            xValue = 0.0f;
+        }
+
+        m_PlayerInput.m_MoveKeyDistance = xValue;
+    }
+
+    //Keyboard Input
+    else
+    {
+        m_PlayerInput.m_Left = twKeyboard.IsState(triebWerk::EKey::Left, triebWerk::EButtonState::Pressed);
+        m_PlayerInput.m_Right = twKeyboard.IsState(triebWerk::EKey::Right, triebWerk::EButtonState::Pressed);
+
+        m_PlayerInput.m_DodgeLeft = twKeyboard.IsState(triebWerk::EKey::Q, triebWerk::EButtonState::Down);
+        m_PlayerInput.m_DodgeRight = twKeyboard.IsState(triebWerk::EKey::E, triebWerk::EButtonState::Down);
+          
+        if (m_PlayerInput.m_Left)
+            m_PlayerInput.m_MoveKeyDistance = -1.0f;
+        else if (m_PlayerInput.m_Right)
+            m_PlayerInput.m_MoveKeyDistance = 1.0f;
+        else
+            m_PlayerInput.m_MoveKeyDistance = 0.0f;
+    }
 }
 
 void CPlayer::SetSpeed()
 {
     DirectX::XMVECTOR velocity = m_pEntity->GetPhysicEntity()->GetBody()->m_Velocity;
 
-    bool keyboardLeft = twKeyboard.IsState(triebWerk::EKey::Left, triebWerk::EButtonState::Pressed);
-    bool keyboardRight = twKeyboard.IsState(triebWerk::EKey::Right, triebWerk::EButtonState::Pressed);
-
-    bool left = twGamepad.IsState(triebWerk::EGamepadButton::LAnalogLeft, triebWerk::EButtonState::Pressed, 0) | keyboardLeft;
-    bool right = twGamepad.IsState(triebWerk::EGamepadButton::LAnalogRight, triebWerk::EButtonState::Pressed, 0) |keyboardRight;
-
-    if (keyboardLeft)
-        m_CurrentMaxSpeedValue = -32768.0f;
-    else if (keyboardRight)
-        m_CurrentMaxSpeedValue = 32767.0f;
-    else
-        m_CurrentMaxSpeedValue = static_cast<float>(twGamepad.GetLeftAnalogX(0));
-    
-    float currentMaxSpeed = 0.0f;
-
-    if (m_CurrentMaxSpeedValue != 0.0f)
+    m_CurrentDodgeCooldownTime -= twTime->GetDeltaTime();
+    if (m_IsDodging)
     {
-        float deadZone = static_cast<float>(triebWerk::CXboxController::DEADZONE_LEFT_ANALOG);
-
-        if (m_CurrentMaxSpeedValue >= 0)
+        m_CurrentDodgeTime -= twTime->GetDeltaTime();
+        if (m_CurrentDodgeTime <= 0.0f)
         {
-            m_CurrentMaxSpeedValue -= deadZone;
-            m_CurrentMaxSpeedValue /= (32767.0f - deadZone);
+            velocity.m128_f32[0] = 0.0f;
+            m_IsDodging = false;
         }
-        else
-        {
-            m_CurrentMaxSpeedValue += deadZone;
-            m_CurrentMaxSpeedValue /= (32768.0f - deadZone);
-        }
-
-        currentMaxSpeed = MaxSpeed * m_CurrentMaxSpeedValue;
     }
 
-    if (left)
+    if ((m_PlayerInput.m_DodgeLeft || m_PlayerInput.m_DodgeRight) && m_CurrentDodgeCooldownTime <= 0.0f)
     {
-        if (velocity.m128_f32[0] >= currentMaxSpeed)
+        m_CurrentDodgeCooldownTime = DodgeCooldown;
+        m_CurrentDodgeTime = DodgeTime;
+        m_IsDodging = true;
+
+        m_DodgeSpeed = DodgeDistance / DodgeTime;
+        if (m_PlayerInput.m_DodgeLeft)
+            m_DodgeSpeed *= -1;
+    }
+    if (m_IsDodging)
+    {
+        if (DodgeTime == 0.0f)
+            DodgeTime = 0.001f;
+        
+        velocity.m128_f32[0] = m_DodgeSpeed;
+    }
+
+    else
+    {
+        float currentMaxSpeed = MaxSpeed * m_PlayerInput.m_MoveKeyDistance;
+
+        // move to left or right and don't go over the max speed
+        if (m_PlayerInput.m_Left && velocity.m128_f32[0] >= currentMaxSpeed)
         {
             velocity.m128_f32[0] -= Acceleration * twTime->GetDeltaTime();
         }
-    }
-    else if (right)
-    {
-        if (velocity.m128_f32[0] <= currentMaxSpeed)
+        else if (m_PlayerInput.m_Right && velocity.m128_f32[0] <= currentMaxSpeed)
         {
             velocity.m128_f32[0] += Acceleration * twTime->GetDeltaTime();
         }
-    }
-    else
-    {
-        if (velocity.m128_f32[0] < 0.0f)
+        // if there is no input, the spaceship shall deaccelerate faster (with a drag)
+        else
         {
-            velocity.m128_f32[0] += Drag * twTime->GetDeltaTime();
-            if (velocity.m128_f32[0] > 0.0f)
-                velocity.m128_f32[0] = 0.0f;
-        }
-        else if (velocity.m128_f32[0] > 0.0f)
-        {
-            velocity.m128_f32[0] -= Drag * twTime->GetDeltaTime();
             if (velocity.m128_f32[0] < 0.0f)
-                velocity.m128_f32[0] = 0.0f;
+            {
+                velocity.m128_f32[0] += Drag * twTime->GetDeltaTime();
+                if (velocity.m128_f32[0] > 0.0f)
+                    velocity.m128_f32[0] = 0.0f;
+            }
+            else if (velocity.m128_f32[0] > 0.0f)
+            {
+                velocity.m128_f32[0] -= Drag * twTime->GetDeltaTime();
+                if (velocity.m128_f32[0] < 0.0f)
+                    velocity.m128_f32[0] = 0.0f;
+            }
         }
     }
 
+    // set the new speed
     velocity.m128_f32[2] = FlySpeed;
     m_pEntity->GetPhysicEntity()->GetBody()->m_Velocity = velocity;
+}
+
+void CPlayer::CalculateDistanceFlewn()
+{
+    float currentZ = m_pEntity->m_Transform.GetPosition().m128_f32[2];
+
+    m_MetersFlewn = currentZ - m_LastZ;
+    m_LastZ = currentZ;
+}
+
+void CPlayer::AddPointsForFlewnDistance()
+{
+    CGameInfo& gameInfo = CGameInfo::Instance();
+    gameInfo.m_CurrentPoints += m_MetersFlewn * gameInfo.m_PointsPerMeter;
 }
 
 void CPlayer::SetCamera()
@@ -153,7 +287,7 @@ void CPlayer::SetRotation()
     if (speed == 0.0f)
         rotationPlayer.m128_f32[2] = 0.0f;
     else
-        rotationPlayer.m128_f32[2] = MaxRotation * m_CurrentMaxSpeedValue * -1;
+        rotationPlayer.m128_f32[2] = MaxRotation * m_PlayerInput.m_MoveKeyDistance * -1;
 
     // camera rotation
     if (speed != 0.0f)

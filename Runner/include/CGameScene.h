@@ -20,7 +20,6 @@ public:
     void Start();
     void Update();
     void End();
-    void Pause();
     void Resume();
 
 private:

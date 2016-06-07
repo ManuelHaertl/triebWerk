@@ -55,6 +55,8 @@ public:
     void Update(const float a_MetersFlewn);
     void End();
 
+    void Reset();
+
 private:
     void SpawnFeathers();
     void DeleteFeathers();

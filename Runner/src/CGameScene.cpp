@@ -1,5 +1,7 @@
 #include <CGameScene.h>
 
+#include <CGameInfo.h>
+
 CGameScene::CGameScene() :
     m_pPlayer(nullptr),
     m_LastPlayerPos(0.0f)
@@ -12,6 +14,8 @@ CGameScene::~CGameScene()
 
 void CGameScene::Start()
 {
+    twDebug->Disable();
+
     m_ValueUpdater.Start();
     m_EnvironmentCreator.Start();
     m_PatternManager.Start();
@@ -21,6 +25,14 @@ void CGameScene::Start()
 void CGameScene::Update()
 {
     m_ValueUpdater.Update();
+
+    if (m_pPlayer->HasDied())
+    {
+        CGameInfo::Instance().Reset();
+        m_pPlayer->Reset();
+        m_PatternManager.Reset();
+        m_EnvironmentCreator.Reset();
+    }
 
     if (twKeyboard.IsState(triebWerk::EKey::F3, triebWerk::EButtonState::Down))
     {
@@ -58,14 +70,9 @@ void CGameScene::End()
     m_ValueUpdater.End();
 }
 
-void CGameScene::Pause()
-{
-    std::cout << "GameScene has been paused" << std::endl;
-}
-
 void CGameScene::Resume()
 {
-    std::cout << "GameScene has been resumed" << std::endl;
+    twDebug->Disable();
 }
 
 void CGameScene::CreatePlayer()
@@ -79,6 +86,7 @@ void CGameScene::CreatePlayer()
     // Transform
     player->m_Transform.SetPosition(0.0f, 1.0f, 0.0f);
     player->m_Transform.SetRotationDegrees(0.0f, 0.0f, 0.0f);
+    player->m_Transform.SetScale(1.0f, 1.0f, 1.0f);
 
     // Behaviour
     m_pPlayer = new CPlayer();

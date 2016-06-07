@@ -51,7 +51,7 @@ void CEnvironmentCreator::End()
     m_RoadAllLength = 0.0f;
     m_RoadMoveZone = -RoadMoveDistance;
     m_RoadCount = 0;
-    m_FeathersSpawnTo = 0.0f;
+    m_FeathersSpawnTo = SpawnDistance;
     m_FeathersDeleteZone = -FeathersDeleteDistance;
     m_pEndWall = nullptr;
 
@@ -61,6 +61,32 @@ void CEnvironmentCreator::End()
     m_pSnake1 = nullptr;
     m_pSnake2 = nullptr;
     m_pSnake3 = nullptr;
+}
+
+void CEnvironmentCreator::Reset()
+{
+    m_RoadMoveZone = -RoadMoveDistance;
+    m_FeathersIsSpawnedTo = 0.0f;
+    m_FeathersSpawnTo = SpawnDistance;
+    m_FeathersDeleteZone = -FeathersDeleteDistance;
+
+    m_pEndWall->m_Transform.SetPosition(0.0f, -500.0f, 500.0f);
+
+    size_t roadEntitiesSize = m_RoadEntities.size();
+    for (size_t i = 0; i < roadEntitiesSize; ++i)
+    {
+        twActiveWorld->RemoveEntity(m_RoadEntities.front());
+        m_RoadEntities.erase(m_RoadEntities.begin());
+    }
+
+    size_t feathersEntitiesSize = m_FeathersEntities.size();
+    for (size_t i = 0; i < feathersEntitiesSize; ++i)
+    {
+        twActiveWorld->RemoveEntity(m_FeathersEntities.front());
+        m_FeathersEntities.erase(m_FeathersEntities.begin());
+    }
+
+    CreateFloor();
 }
 
 void CEnvironmentCreator::SpawnFeathers()
@@ -131,15 +157,20 @@ void CEnvironmentCreator::CreateFloor()
 
 void CEnvironmentCreator::CreateCollisionSideWalls()
 {
+    const float roadWidth = 48.0f;
+    const float scaleX = 1000.0f;
+    const float scaleY = 1000.0f;
+    const float scaleZ = 100000000.0f;
+
     // left side wall
     auto wallLeft = twActiveWorld->CreateEntity();
-    wallLeft->m_Transform.SetPosition(-30.0f, 2.5f, 50.0f);
-    wallLeft->m_Transform.SetScale(10.0f, 10.0f, 1000000.0f);
+    wallLeft->m_Transform.SetPosition((scaleX / 2.0f + roadWidth / 2.0f) * -1, 0.0f, 0.0f);
+    wallLeft->m_Transform.SetScale(scaleX, scaleY, scaleZ);
     wallLeft->m_ID.SetName("SideLeft");
 
     auto physicEntityLeft = twActivePhysic->CreatePhysicEntity();
     auto collLeft = twActivePhysic->CreateAABBCollider();
-    collLeft->SetSize(1.2f, 1.0f, 1.0f);
+    collLeft->SetSize(1.0f, 1.0f, 1.0f);
     collLeft->m_CheckCollision = false;
     physicEntityLeft->AddCollider(collLeft);
     wallLeft->SetPhysicEntity(physicEntityLeft);
@@ -148,13 +179,13 @@ void CEnvironmentCreator::CreateCollisionSideWalls()
 
     // right side wall
     auto wallRight = twActiveWorld->CreateEntity();
-    wallRight->m_Transform.SetPosition(30.0f, 2.5f, 50.0f);
-    wallRight->m_Transform.SetScale(10.0f, 10.0f, 1000000.0f);
+    wallRight->m_Transform.SetPosition(scaleX / 2.0f + roadWidth / 2.0f, 0.0f, 0.0f);
+    wallRight->m_Transform.SetScale(scaleX, scaleY, scaleZ);
     wallRight->m_ID.SetName("SideRight");
 
     auto physicEntityRight = twActivePhysic->CreatePhysicEntity();
     auto collRight = twActivePhysic->CreateAABBCollider();
-    collRight->SetSize(1.2f, 1.0f, 1.0f);
+    collRight->SetSize(1.0f, 1.0f, 1.0f);
     collRight->m_CheckCollision = false;
     physicEntityRight->AddCollider(collRight);
     wallRight->SetPhysicEntity(physicEntityRight);

@@ -38,6 +38,8 @@ namespace triebWerk
         float GetTimeScale() const;
         void SetTimeScale(const float a_TimeScale);
 
+        void ResetDeltaTime();
+
         void StartPerformanceCounter();
         float EndPerformanceCounter();
 

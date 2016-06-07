@@ -3,6 +3,9 @@
 
 class CDebugScene : public triebWerk::IScene
 {
+private:
+    DirectX::XMVECTOR m_Position;
+
 public:
     CDebugScene();
     ~CDebugScene();
@@ -10,7 +13,10 @@ public:
     void Start();
     void Update();
     void End();
+    void Resume();
+    void Pause();
 
 private:
     void CreateTestCubes();
+    void ResetCamera();
 };

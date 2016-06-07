@@ -18,6 +18,7 @@ namespace triebWerk
         ~CFrameContainer();
 
         void Add(const T& a_rValue);
+        bool Contains(const T& a_rValue);
         void Reset();
         void Resize(size_t a_Elements);
         size_t GetSize() const;
@@ -57,6 +58,18 @@ namespace triebWerk
     {
         m_pElements[m_Size] = a_rValue;
         m_Size++;
+    }
+
+    template<class T>
+    inline bool CFrameContainer<T>::Contains(const T& a_rValue)
+    {
+        for (size_t i = 0; i < m_Size; ++i)
+        {
+            if (m_pElements[i] == a_rValue)
+                return true;
+        }
+
+        return false;
     }
 
     template<class T>

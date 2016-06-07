@@ -117,7 +117,8 @@ void triebWerk::CWorld::AddEntity(CEntity* a_pEntity)
 
 void triebWerk::CWorld::RemoveEntity(CEntity* a_pEntity)
 {
-    m_RemoveEntities.Add(a_pEntity);
+    if (m_RemoveEntities.Contains(a_pEntity) == false)
+        m_RemoveEntities.Add(a_pEntity);
 }
 
 void triebWerk::CWorld::ClearEntities()

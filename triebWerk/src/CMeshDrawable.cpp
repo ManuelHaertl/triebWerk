@@ -17,7 +17,7 @@ triebWerk::CMeshDrawable::~CMeshDrawable()
 
 bool triebWerk::CMeshDrawable::IsValidDrawable(const CMeshDrawable * a_pDrawableToTest)
 {
-	if (a_pDrawableToTest->m_pMesh == nullptr || a_pDrawableToTest->m_Material.m_ID.GetHash() == 0)
+	if (a_pDrawableToTest->m_pMesh == nullptr || a_pDrawableToTest->m_Material.m_ID.GetHash() == 0 || a_pDrawableToTest->IsActive() == false )
 	{
 		return false;
 	}
