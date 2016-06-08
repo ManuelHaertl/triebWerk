@@ -287,7 +287,8 @@ void triebWerk::CGraphics::UpdateSwapchainConfiguration()
 	RECT a;
 	GetClientRect(CEngine::Instance().m_pWindow->GetWindowHandle(), &a);
 
-	CEngine::Instance().m_pRenderer->GetCurrentActiveCamera()->SetAspect((float)(a.right - a.left) / (float)(a.bottom - a.top));
+	//Resize the Rendering
+	CEngine::Instance().m_pRenderer->ResizeRenderer((a.right - a.left), (a.bottom - a.top));
 }
 
 ID3D11Texture2D * triebWerk::CGraphics::CreateD3D11Texture2D(const void * a_pData, const unsigned int a_Width, const unsigned int a_Height) const
@@ -384,6 +385,61 @@ ID3D11Buffer * triebWerk::CGraphics::CreateIndexBuffer(void * a_pIndexData, size
 		return nullptr;
 
 	return pIndexBuffer;
+}
+
+ID3D11Buffer * triebWerk::CGraphics::CreateDefaultQuad(UINT* a_pStrideOut, UINT* a_pOutVertexCount)
+{
+	ID3D11Buffer* pVertexBuffer;
+
+	struct SVertices
+	{
+		float x, y, z;
+		float u, v;
+	};
+
+	//Vertice structure for a simple quad 
+	SVertices vertices[] =
+	{
+		{ 0.5f, 0.5f, 0.0f, 1.0f, 0.0f },
+		{ -0.5f, 0.5f, 0.0f, 0.0f, 0.0f },
+		{ 0.5f, -0.5f, 0.0f, 1.0f, 1.0f },
+		{ 0.5f, -0.5f, 0.0f, 1.0f, 1.0f },
+		{ -0.5f, 0.5f, 0.0f, 0.0f, 0.0f },
+		{ -0.5f, -0.5, 0.0f, 0.0f, 1.0f },
+	};
+
+	//Buffer description for a vertex buffer
+	D3D11_BUFFER_DESC vertexBufferDescription;
+	ZeroMemory(&vertexBufferDescription, sizeof(D3D11_BUFFER_DESC));
+	vertexBufferDescription.Usage = D3D11_USAGE_DYNAMIC;
+	vertexBufferDescription.ByteWidth = sizeof(SVertices) * 6;
+	vertexBufferDescription.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vertexBufferDescription.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+
+	//Create Buffer
+	HRESULT hrError = m_pDevice->CreateBuffer(&vertexBufferDescription, NULL, &pVertexBuffer);
+
+	if (FAILED(hrError))
+	{
+		DebugLogfile.LogfText(CDebugLogfile::ELogType::Warning, false, "Warnig: Could not create vertex buffer for default quad!");
+		pVertexBuffer = nullptr;
+		*a_pStrideOut = 0;
+		return nullptr;
+	}
+
+	//Map the actual vertex data into the vertex buffer;
+	D3D11_MAPPED_SUBRESOURCE subResourceVertexBuffer;
+	m_pDeviceContext->Map(pVertexBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &subResourceVertexBuffer);
+	memcpy(subResourceVertexBuffer.pData, vertices, sizeof(vertices));
+	m_pDeviceContext->Unmap(pVertexBuffer, NULL);
+
+	//Stride size of the vertix struct 4* xyz and 4*uv
+	*a_pStrideOut = sizeof(SVertices);
+
+	//Vertex count of a quad 
+	*a_pOutVertexCount = 6;
+
+	return pVertexBuffer;
 }
 
 void triebWerk::CGraphics::SetDisplayProperties()

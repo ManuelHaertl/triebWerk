@@ -116,8 +116,13 @@ void triebWerk::CRenderer::AddRenderCommand(IDrawable* a_pRenderCommand)
 		case IDrawable::EDrawableType::Font:
 		{
 			CFontDrawable* pFontDrawable = reinterpret_cast<CFontDrawable*>(a_pRenderCommand);
-			m_pFontBuffer[m_FontCommandCount] = pFontDrawable;
-
+			
+			//Add font if valid to render buffer
+			if (CFontDrawable::IsValidDrawable(pFontDrawable))
+			{
+				m_pFontBuffer[m_FontCommandCount] = pFontDrawable;
+				m_FontCommandCount++;
+			}
 		}break;
 		}
 
@@ -154,6 +159,13 @@ triebWerk::CCamera* triebWerk::CRenderer::GetCurrentActiveCamera()
 	return m_pCurrentCamera;
 }
 
+triebWerk::CFontDrawable * triebWerk::CRenderer::CreateFontDrawable()
+{
+	CFontDrawable* drawable = new CFontDrawable(m_pGraphicsHandle);
+
+	return drawable;
+}
+
 triebWerk::CMeshDrawable* triebWerk::CRenderer::CreateMeshDrawable()
 {
 	CMeshDrawable* drawable = new CMeshDrawable();
@@ -171,6 +183,9 @@ void triebWerk::CRenderer::DrawScene()
 	//Renders all Meshes in buffer
 	RenderMeshDrawables();
 
+	//Render all fonts
+	RenderFontDrawables();
+
 	m_pGraphicsHandle->Present();
 
 	//Reset all buffers
@@ -178,6 +193,15 @@ void triebWerk::CRenderer::DrawScene()
 	m_TransparentMeshCounter = 0;
 	m_CommandCounter = 0;
 	m_InstancedMeshBatchCount = 0;
+	m_FontCommandCount = 0;
+}
+
+void triebWerk::CRenderer::ResizeRenderer(unsigned int a_ScreenWidth, unsigned int a_ScreenHeight)
+{
+	for (size_t i = 0; i < m_CameraBuffer.size(); i++)
+	{
+		m_CameraBuffer[i]->Resize(a_ScreenWidth, a_ScreenHeight);
+	}
 }
 
 void triebWerk::CRenderer::RenderMeshDrawables()
@@ -202,6 +226,52 @@ void triebWerk::CRenderer::RenderMeshDrawables()
 	{
 		RenderMesh(m_pTransparentMeshBuffer[i]);
 	}
+}
+
+void triebWerk::CRenderer::RenderFontDrawables()
+{
+	for (size_t i = 0; i < m_FontCommandCount; i++)
+	{
+		RenderFont(m_pFontBuffer[i]);
+	}
+}
+
+void triebWerk::CRenderer::RenderFont(CFontDrawable * a_pDrawable)
+{
+	ID3D11DeviceContext* pDeviceContext = m_pGraphicsHandle->GetDeviceContext();
+
+	//Set Vertex and InputLayout
+	pDeviceContext->VSSetShader(a_pDrawable->m_Material.m_pVertexShader.m_pD3DVertexShader, 0, 0);
+	pDeviceContext->IASetInputLayout(a_pDrawable->m_Material.m_pVertexShader.GetInputLayout());
+
+	//Set pixelshader to use
+	pDeviceContext->PSSetShader(a_pDrawable->m_Material.m_pPixelShader.m_pD3DPixelShader, 0, 0);
+
+	//Set constantbuffer
+	a_pDrawable->m_Material.m_ConstantBuffer.SetConstantBuffer(pDeviceContext, a_pDrawable->m_Transformation, DirectX::XMMatrixIdentity(), m_pCurrentCamera->GetUIProjection(), false);
+
+	//for (size_t i = 0; i < a_pDrawable->m_Material.m_pVertexShader.m_Textures.size(); i++)
+	//{
+	//	ID3D11ShaderResourceView* pResourceView = a_pDrawable->m_Material.m_pVertexShader.m_Textures[i]->GetShaderResourceView();
+	//	m_pGraphicsHandle->GetDeviceContext()->PSSetShaderResources(static_cast<UINT>(i), 1, &pResourceView);
+	//}
+
+	//Draw all set textures
+	for (size_t i = 0; i < a_pDrawable->m_Material.m_pPixelShader.m_TextureCount; i++)
+	{
+		if (a_pDrawable->m_Material.m_pPixelShader.m_pTextures[i] != nullptr)
+		{
+			ID3D11ShaderResourceView* pResourceView = a_pDrawable->m_Material.m_pPixelShader.m_pTextures[i]->GetShaderResourceView();
+			pDeviceContext->PSSetShaderResources(static_cast<UINT>(i), 1, &pResourceView);
+		}
+	}
+
+	//set the vertex buffer and index buffer
+	UINT offset = 0;
+	pDeviceContext->IASetVertexBuffers(0, 1, &a_pDrawable->m_pVertexBuffer, &a_pDrawable->m_Stride, &offset);
+
+	pDeviceContext->IASetPrimitiveTopology(a_pDrawable->m_Topology);
+	pDeviceContext->Draw(a_pDrawable->m_VertexCount, 0);
 }
 
 void triebWerk::CRenderer::RenderMesh(CMeshDrawable * a_pDrawable)

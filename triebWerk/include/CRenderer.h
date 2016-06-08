@@ -60,12 +60,17 @@ namespace triebWerk
 		void SetActiveCamera(CCamera* a_pCamera);
 		CCamera* GetCurrentActiveCamera();
 
+		//Create Drawables
+		CFontDrawable* CreateFontDrawable();
 		CMeshDrawable* CreateMeshDrawable();
 
 		//Command Functions
 		void AddRenderCommand(IDrawable* a_pRenderCommand);
 
 		void RenderMeshDrawables();
+		void RenderFontDrawables();
+
+		void RenderFont(CFontDrawable* a_pFont);
 
 		void RenderMesh(CMeshDrawable* a_pDrawable);
 		void RenderInstancedMeshBatch(size_t a_Index);
@@ -79,5 +84,8 @@ namespace triebWerk
 		void InstanceBatching(CMeshDrawable* a_pDrawable);
 
 		void DrawScene();
+
+		//Resize the Cameras and the viewports
+		void ResizeRenderer(unsigned int a_ScreenWidth, unsigned int a_ScreenHeight);
 	};
 }

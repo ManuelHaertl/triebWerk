@@ -31,6 +31,7 @@ bool triebWerk::CHLSLParser::ParseShader(const char* a_pShaderPath, CGraphics* a
 
 	a_pMaterialOut->m_ID.SetName(name);
 
+
 	SetConstantBuffers(m_pVSByteCode, &a_pMaterialOut->m_ConstantBuffer);
 
 	a_pMaterialOut->m_ConstantBuffer.InitializeConstantBufffer(a_pGraphicHandle->GetDevice());
@@ -128,7 +129,7 @@ void triebWerk::CHLSLParser::CompileShader(const char * a_pShaderPath)
 
 
 	//Geometry Shader------------------------
-	hResult = D3DCompileFromFile(shaderPath, 0, 0, m_HSEntryPoint.c_str(), "gs_5_0", m_CompileFlags, 0, &m_pHSByteCode, &pErrorMessage);
+	hResult = D3DCompileFromFile(shaderPath, 0, 0, m_GSEntryPoint.c_str(), "gs_5_0", m_CompileFlags, 0, &m_pGSByteCode, &pErrorMessage);
 	if (FAILED(hResult))
 	{
 		std::string errorString = (char*)pErrorMessage->GetBufferPointer();
@@ -263,6 +264,12 @@ void triebWerk::CHLSLParser::SetConstantBuffers(ID3DBlob* a_pShaderByteCode, tri
 			a_pConstantBuffer->m_Types.push_back(typeDesc);
 		}
 	}
+
+	//Debug Code
+	//if (shaderDescription.ConstantBuffers == 0)
+	//{
+	//	SetConstantBuffers(m_pGSByteCode, a_pConstantBuffer);
+	//}
 }
 
 void triebWerk::CHLSLParser::SetBoundResources(ID3DBlob * a_pShaderByteCode, IShader * a_PShader)

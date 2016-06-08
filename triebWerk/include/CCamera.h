@@ -14,6 +14,9 @@ namespace triebWerk
 		DirectX::XMMATRIX m_ViewMatrix;
 		DirectX::XMMATRIX m_ProjectionMatrix;
 
+		DirectX::XMMATRIX m_UIViewMatrix;
+		DirectX::XMMATRIX m_UIProjectionMatrix;
+
 		unsigned int m_ScreenHeight;
 		unsigned int m_ScreenWidth;
 		float m_Aspect;
@@ -27,14 +30,18 @@ namespace triebWerk
 
 	public:
 		CCamera();
-		CCamera(float a_Aspect, float a_FOV, float a_Near, float a_Far, unsigned int m_ScreenHeight, unsigned int m_ScreenWidth);
+		CCamera(float a_Aspect, float a_FOV, float a_Near, float a_Far, unsigned int a_ScreenHeight, unsigned int a_ScreenWidth);
 		~CCamera();
 
 	public:
 		void Update();
 
+		//Resize the aspect and the ui projection
+		void Resize(unsigned int a_NewScreenWidth, unsigned int a_NewScreenHeight);
+
 		DirectX::XMMATRIX& GetViewMatrix();
 		DirectX::XMMATRIX& GetProjection();
+		DirectX::XMMATRIX& GetUIProjection();
 
 		void SetAspect(const float a_Aspect);
 		void SetFOV(const float a_FOV);
@@ -49,5 +56,6 @@ namespace triebWerk
 	private:
         void CalculateView();
 		void CalculateProjection();
+		void CalculateUIProjection();
 	};
 }

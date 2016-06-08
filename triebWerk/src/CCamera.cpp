@@ -25,6 +25,7 @@ triebWerk::CCamera::CCamera(float a_Aspect, float a_FOV, float a_Near, float a_F
 
     CalculateView();
 	CalculateProjection();
+	CalculateUIProjection();
 }
 
 triebWerk::CCamera::~CCamera()
@@ -44,6 +45,16 @@ void triebWerk::CCamera::Update()
     }
 }
 
+void triebWerk::CCamera::Resize(unsigned int a_NewScreenWidth, unsigned int a_ScreenHeight)
+{
+	m_Aspect = static_cast<float>(a_NewScreenWidth) / static_cast<float>(a_ScreenHeight);
+	m_ScreenHeight = a_ScreenHeight;
+	m_ScreenWidth = a_NewScreenWidth;
+
+	CalculateProjection();
+	CalculateUIProjection();
+}
+
 DirectX::XMMATRIX & triebWerk::CCamera::GetViewMatrix()
 {
 	return m_ViewMatrix;
@@ -52,6 +63,11 @@ DirectX::XMMATRIX & triebWerk::CCamera::GetViewMatrix()
 DirectX::XMMATRIX & triebWerk::CCamera::GetProjection()
 {
 	return m_ProjectionMatrix;
+}
+
+DirectX::XMMATRIX & triebWerk::CCamera::GetUIProjection()
+{
+	return m_UIProjectionMatrix;
 }
 
 void triebWerk::CCamera::SetAspect(const float a_Aspect)
@@ -107,4 +123,9 @@ void triebWerk::CCamera::CalculateView()
 void triebWerk::CCamera::CalculateProjection()
 {
     m_ProjectionMatrix = DirectX::XMMatrixPerspectiveFovLH(m_FOV, m_Aspect, m_NearPlane, m_FarPlane);
+}
+
+void triebWerk::CCamera::CalculateUIProjection()
+{
+	m_UIProjectionMatrix = DirectX::XMMatrixOrthographicLH(m_ScreenWidth, m_ScreenHeight, m_NearPlane, m_FarPlane);
 }

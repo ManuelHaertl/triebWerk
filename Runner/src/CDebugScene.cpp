@@ -43,6 +43,15 @@ void CDebugScene::Pause()
 
 void CDebugScene::CreateTestCubes()
 {
+	auto entity = m_pWorld->CreateEntity();
+	entity->m_Transform.SetPosition(2.0f, 300.0f, 1.0f);
+	entity->m_Transform.SetScale(1.0f, 1.0f, 1.0f);
+	triebWerk::CFontDrawable* pFont = twRenderer->CreateFontDrawable();
+	pFont->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardFont"));
+	pFont->SetFont(twResourceManager->GetTexture2D("Font"));
+	entity->SetDrawable(pFont);
+	m_pWorld->AddEntity(entity);
+
     const int range = 10;
     const int incrementer = 5;
     const int freeArea = 1;
