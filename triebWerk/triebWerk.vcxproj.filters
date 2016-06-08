@@ -217,6 +217,12 @@
     <Filter Include="Quelldateien\Rendering\Render Targets">
       <UniqueIdentifier>{45e3a750-5a58-43ff-98b7-85cefaf5b6e4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headerdateien\Font">
+      <UniqueIdentifier>{120ff453-5d5c-47b3-a410-9902d6aa7573}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Font">
+      <UniqueIdentifier>{4e416251-a3a4-4da6-978f-ceb77c8f08ba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CEngine.cpp">
@@ -396,8 +402,14 @@
     <ClCompile Include="src\CRenderTarget.cpp">
       <Filter>Quelldateien\Rendering\Render Targets</Filter>
     </ClCompile>
-    <ClCompile Include="src\CBucketAllocator.cpp">
-      <Filter>Quelldateien</Filter>
+    <ClCompile Include="src\CFontManager.cpp">
+      <Filter>Quelldateien\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CFont.cpp">
+      <Filter>Quelldateien\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CText.cpp">
+      <Filter>Quelldateien\Font</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -614,11 +626,17 @@
     <ClInclude Include="include\CFrameContainer.h">
       <Filter>Headerdateien\Core</Filter>
     </ClInclude>
-    <ClInclude Include="include\CBucketAllocator.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="include\CElementContainer.h">
       <Filter>Headerdateien\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CFontManager.h">
+      <Filter>Headerdateien\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CFont.h">
+      <Filter>Headerdateien\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CText.h">
+      <Filter>Headerdateien\Font</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
