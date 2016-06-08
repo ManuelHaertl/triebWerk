@@ -6,6 +6,7 @@
 #include <CGraphics.h>
 #include <CVertexShader.h>
 #include <CPixelShader.h>
+#include <CGeometryShader.h>
 #include <CMaterial.h>
 #include <string>
 #include <CDebugLogfile.h>
@@ -50,10 +51,12 @@ namespace triebWerk
 		void SetBoundResources(ID3DBlob* a_pShaderbyteCode, IShader* a_PShader);
 		void CreateVertexShader(CGraphics* a_pGraphicHandle, CVertexShader* a_pShaderOut);
 		void CreatePixelShader(CGraphics* a_pGraphicHandle, CPixelShader* a_pShaderOut);
+		void CreateGeometryShader(CGraphics* a_pGraphicHandle, CGeometryShader* a_pShaderOut);
+
 
 		//TODO: Create all other shader
 		void CreateHullShader();
-		void CreateGeometryShader();
+
 		void CreateDomainShader();
 		void CreateComputeShader();
 

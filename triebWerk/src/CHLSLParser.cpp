@@ -31,6 +31,7 @@ bool triebWerk::CHLSLParser::ParseShader(const char* a_pShaderPath, CGraphics* a
 
 	a_pMaterialOut->m_ID.SetName(name);
 
+
 	SetConstantBuffers(m_pVSByteCode, &a_pMaterialOut->m_ConstantBuffer);
 
 	a_pMaterialOut->m_ConstantBuffer.InitializeConstantBufffer(a_pGraphicHandle->GetDevice());
@@ -40,6 +41,9 @@ bool triebWerk::CHLSLParser::ParseShader(const char* a_pShaderPath, CGraphics* a
 
 	if (m_pPSByteCode != nullptr)
 		CreatePixelShader(a_pGraphicHandle, &a_pMaterialOut->m_pPixelShader);
+
+	if (m_pGSByteCode != nullptr)
+		CreateGeometryShader(a_pGraphicHandle, &a_pMaterialOut->m_GeometryShader);
 
 	return true;
 }
@@ -56,6 +60,11 @@ void triebWerk::CHLSLParser::CreateVertexShader(CGraphics* a_pGraphicHandle, CVe
 
 	hResult = a_pGraphicHandle->GetDevice()->CreateVertexShader(m_pVSByteCode->GetBufferPointer(), m_pVSByteCode->GetBufferSize(), NULL, &a_pShaderOut->m_pD3DVertexShader);
 
+	if (FAILED(hResult))
+	{
+		DebugLogfile.LogfText(CDebugLogfile::ELogType::Warning, false, "Warning: Vertex Shader could not be created!");
+	}
+
 	a_pShaderOut->CreateInstanceData();
 }
 
@@ -70,8 +79,30 @@ void triebWerk::CHLSLParser::CreatePixelShader(CGraphics* a_pGraphicHandle, CPix
 	a_pShaderOut->InitializeTextureBuffer();
 
 	hResult = a_pGraphicHandle->GetDevice()->CreatePixelShader(m_pPSByteCode->GetBufferPointer(), m_pPSByteCode->GetBufferSize(), NULL, &a_pShaderOut->m_pD3DPixelShader);
+
+	if (FAILED(hResult))
+	{
+		DebugLogfile.LogfText(CDebugLogfile::ELogType::Warning, false, "Warning: Pixel Shader could not be created!");
+	}
 }
 
+void triebWerk::CHLSLParser::CreateGeometryShader(CGraphics * a_pGraphicHandle, CGeometryShader * a_pShaderOut)
+{
+	HRESULT hResult;
+
+	SetInputLayout(m_pGSByteCode, a_pGraphicHandle, a_pShaderOut);
+
+	SetBoundResources(m_pPSByteCode, a_pShaderOut);
+
+	a_pShaderOut->InitializeTextureBuffer();
+
+	hResult = a_pGraphicHandle->GetDevice()->CreateGeometryShader(m_pGSByteCode->GetBufferPointer(), m_pGSByteCode->GetBufferSize(), NULL, &a_pShaderOut->m_pD3DGeometryShader);
+
+	if (FAILED(hResult))
+	{
+		DebugLogfile.LogfText(CDebugLogfile::ELogType::Warning, false, "Warning: Geometry Shader could not be created!");
+	}
+}
 
 void triebWerk::CHLSLParser::WriteCompileError(ID3DBlob * a_pMessage)
 {
@@ -128,7 +159,7 @@ void triebWerk::CHLSLParser::CompileShader(const char * a_pShaderPath)
 
 
 	//Geometry Shader------------------------
-	hResult = D3DCompileFromFile(shaderPath, 0, 0, m_HSEntryPoint.c_str(), "gs_5_0", m_CompileFlags, 0, &m_pHSByteCode, &pErrorMessage);
+	hResult = D3DCompileFromFile(shaderPath, 0, 0, m_GSEntryPoint.c_str(), "gs_5_0", m_CompileFlags, 0, &m_pGSByteCode, &pErrorMessage);
 	if (FAILED(hResult))
 	{
 		std::string errorString = (char*)pErrorMessage->GetBufferPointer();
@@ -262,6 +293,11 @@ void triebWerk::CHLSLParser::SetConstantBuffers(ID3DBlob* a_pShaderByteCode, tri
 
 			a_pConstantBuffer->m_Types.push_back(typeDesc);
 		}
+	}
+
+	if (shaderDescription.ConstantBuffers == 0 && m_pGSByteCode != nullptr)
+	{
+		SetConstantBuffers(m_pGSByteCode, a_pConstantBuffer);
 	}
 }
 
