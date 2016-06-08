@@ -14,6 +14,7 @@ namespace triebWerk
 		{
 			Mesh,
 			UI,
+			Font,
 			Empty
 		};
 

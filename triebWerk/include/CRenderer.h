@@ -7,6 +7,7 @@
 #include <CInstancedMeshBatch.h>
 #include <unordered_map>
 #include <CRenderTarget.h>
+#include <CFontDrawable.h>
 
 namespace triebWerk
 {
@@ -15,21 +16,28 @@ namespace triebWerk
 	private:
 
 	private:
+		const size_t m_MaxFonts = 1000;
 		const size_t m_MaxDrawables = 10000;
 		const size_t m_MaxInstancedMeshBatch = 100;
 
 	private:
+		//General
+		CRenderTarget* m_pRenderTargetList;
+
+		//UI
+		CFontDrawable** m_pFontBuffer;
+		size_t m_FontCommandCount;
+
+		//Mesh Drawing
 		IDrawable** m_pCommandBuffer;
 		CMeshDrawable** m_pOpaqueMeshBuffer;
 		CMeshDrawable** m_pTransparentMeshBuffer;
 		CInstancedMeshBatch* m_pInstancedMeshBuffer;
-		CRenderTarget* m_pRenderTargetList;
 		size_t m_RenderTargetCounter;
 		size_t m_CommandCounter;
 		size_t m_OpaqueMeshCounter;
 		size_t m_TransparentMeshCounter;
 		size_t m_InstancedMeshBatchCount;
-
 
 		std::vector<CCamera*> m_CameraBuffer;
 		CGraphics* m_pGraphicsHandle;

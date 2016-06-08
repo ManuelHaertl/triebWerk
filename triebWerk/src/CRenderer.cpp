@@ -13,7 +13,8 @@ triebWerk::CRenderer::CRenderer() :
 	m_CommandCounter(0),
 	m_OpaqueMeshCounter(0),
 	m_TransparentMeshCounter(0),
-	m_InstancedMeshBatchCount(0)
+	m_InstancedMeshBatchCount(0),
+	m_FontCommandCount(0)
 {
 }
 
@@ -29,6 +30,8 @@ void triebWerk::CRenderer::Initialize(CGraphics * a_pGraphicsHandle, unsigned in
 	m_pOpaqueMeshBuffer = new CMeshDrawable*[m_MaxDrawables];
 	m_pInstancedMeshBuffer = new CInstancedMeshBatch[m_MaxInstancedMeshBatch];
 	m_pRenderTargetList = new CRenderTarget[20];
+	m_pFontBuffer = new CFontDrawable*[m_MaxFonts];
+
 
 	//Initialize the InstancedBatches for later use
 	for (size_t i = 0; i < m_MaxInstancedMeshBatch; i++)
@@ -54,6 +57,7 @@ void triebWerk::CRenderer::Shutdown()
 	delete[] m_pTransparentMeshBuffer;
 	delete[] m_pInstancedMeshBuffer;
 	delete[] m_pRenderTargetList;
+	delete[] m_pFontBuffer;
 
 	for (auto pCamera : m_CameraBuffer)
 	{
@@ -107,7 +111,12 @@ void triebWerk::CRenderer::AddRenderCommand(IDrawable* a_pRenderCommand)
 				m_TransparentMeshCounter++;
 				m_CommandCounter++;
 			}
-			}
+			}break;
+		}break;
+		case IDrawable::EDrawableType::Font:
+		{
+			CFontDrawable* pFontDrawable = reinterpret_cast<CFontDrawable*>(a_pRenderCommand);
+			m_pFontBuffer[m_FontCommandCount] = pFontDrawable;
 
 		}break;
 		}

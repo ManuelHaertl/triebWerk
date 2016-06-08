@@ -411,6 +411,9 @@
     <ClCompile Include="src\CText.cpp">
       <Filter>Quelldateien\Font</Filter>
     </ClCompile>
+    <ClCompile Include="src\CFontDrawable.cpp">
+      <Filter>Quelldateien\Rendering\Drawables</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\CEngine.h">
@@ -637,6 +640,9 @@
     </ClInclude>
     <ClInclude Include="include\CText.h">
       <Filter>Headerdateien\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CFontDrawable.h">
+      <Filter>Headerdateien\Rendering\Drawables</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

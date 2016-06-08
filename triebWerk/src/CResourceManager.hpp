@@ -3,7 +3,14 @@
 
 template<typename T>void triebWerk::CResourceManager::GetAll(const char* a_pPath, std::vector<T*>* a_pOutData)
 {
-	T* typeVar;
+
+//This variable exists only so it can be decltyped to compare with T
+#pragma warning( push )
+#pragma warning( disable : 4101)
+T* typeVar;
+#pragma warning( pop ) 
+
+
 	std::vector<SFile>files = SearchFolderForAllFiles(a_pPath);
 
 	for (size_t i = 0; i < files.size(); i++)
