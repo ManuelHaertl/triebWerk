@@ -23,7 +23,7 @@ void CGameScene::Start()
 
     auto text = twFontManager->CreateText();
     text->SetText("Hallo");
-    text->SetPixelSize(12);
+    text->SetPixelSize(11);
     text->SetFont(twResourceManager->GetFont("Rubik-Regular"));
     text->CreateTexture();
 }
