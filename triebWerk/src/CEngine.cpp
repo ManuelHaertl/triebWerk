@@ -8,6 +8,7 @@ triebWerk::CEngine::CEngine() :
 	m_pTime(nullptr),
 	m_pWindow(nullptr),
     m_pSceneManager(nullptr),
+    m_pFontManager(nullptr),
 	m_pDebug(nullptr),
     m_IsRunning(true),
     m_TimePerFrame(0.0f),
@@ -50,6 +51,7 @@ bool triebWerk::CEngine::Initialize(SEngineConfiguration a_Config)
     m_pGraphics = new CGraphics();
     m_pRenderer = new CRenderer();
     m_pSceneManager = new CSceneManager();
+    m_pFontManager = new CFontManager();
     m_pDebug = new CDebug();
 
     m_pWindow->Initialize(a_Config.m_Fullscreen, a_Config.m_Width, a_Config.m_Height, a_Config.m_Name);
@@ -57,6 +59,7 @@ bool triebWerk::CEngine::Initialize(SEngineConfiguration a_Config)
     m_pResourceManager->Initialize(m_pGraphics);
     m_pRenderer->Initialize(m_pGraphics, a_Config.m_Width, a_Config.m_Height);
     m_pSceneManager->Initialize(m_pRenderer, a_Config.m_PhysicTimeStamp);;
+    m_pFontManager->Initialize();
 
     if (a_Config.m_TargetFPS == 0)
         m_TimePerFrame = 0;
@@ -112,11 +115,13 @@ bool triebWerk::CEngine::Run()
 
 void triebWerk::CEngine::Shutdown()
 {
+    m_pFontManager->Shutdown();
     m_pSceneManager->Shutdown();
 	m_pResourceManager->CleanUp();
 	m_pGraphics->Shutdown();
 	m_pRenderer->Shutdown();
 
+    delete m_pFontManager;
     delete m_pSceneManager;
 	delete m_pDebug;
     delete m_pInput;

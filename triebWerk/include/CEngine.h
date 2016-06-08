@@ -3,6 +3,7 @@
 #include <CInput.h>
 #include <CTime.h>
 #include <CWindow.h>
+#include <CFontManager.h>
 #include <CResourceManager.h>
 #include <CGraphics.h>
 #include <CRandom.h>
@@ -23,6 +24,7 @@ namespace triebWerk
 		CResourceManager* m_pResourceManager;
 		CRenderer* m_pRenderer;
         CSceneManager* m_pSceneManager;
+        CFontManager* m_pFontManager;
 		CDebug* m_pDebug;
 
 	private:
