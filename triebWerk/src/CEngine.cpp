@@ -116,9 +116,9 @@ bool triebWerk::CEngine::Run()
 
 void triebWerk::CEngine::Shutdown()
 {
-    m_pFontManager->Shutdown();
     m_pSceneManager->Shutdown();
 	m_pResourceManager->CleanUp();
+    m_pFontManager->Shutdown();
 	m_pGraphics->Shutdown();
 	m_pRenderer->Shutdown();
 
