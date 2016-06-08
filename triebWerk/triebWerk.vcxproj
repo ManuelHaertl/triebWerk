@@ -151,6 +151,7 @@
     <ClCompile Include="src\CFont.cpp" />
     <ClCompile Include="src\CFontManager.cpp" />
     <ClCompile Include="src\CFontDrawable.cpp" />
+    <ClCompile Include="src\CGeometryShader.cpp" />
     <ClCompile Include="src\CInstancedMeshBatch.cpp" />
     <ClCompile Include="src\CRenderTarget.cpp" />
     <ClCompile Include="src\CSceneHolder.cpp" />
@@ -215,6 +216,7 @@
     <ClInclude Include="include\CFont.h" />
     <ClInclude Include="include\CFontManager.h" />
     <ClInclude Include="include\CFontDrawable.h" />
+    <ClInclude Include="include\CGeometryShader.h" />
     <ClInclude Include="include\CRenderTarget.h" />
     <ClInclude Include="include\CElementContainer.h" />
     <ClInclude Include="include\CFrameContainer.h" />

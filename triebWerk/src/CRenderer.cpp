@@ -284,7 +284,10 @@ void triebWerk::CRenderer::RenderMesh(CMeshDrawable * a_pDrawable)
 
 	//Set pixelshader to use
 	pDeviceContext->PSSetShader(a_pDrawable->m_Material.m_pPixelShader.m_pD3DPixelShader, 0, 0);
-
+	
+	if(a_pDrawable->m_Material.m_GeometryShader.m_pD3DGeometryShader != nullptr)
+		pDeviceContext->GSSetShader(a_pDrawable->m_Material.m_GeometryShader.m_pD3DGeometryShader, 0, 0);
+	
 	//Set constantbuffer
 	a_pDrawable->m_Material.m_ConstantBuffer.SetConstantBuffer(pDeviceContext, a_pDrawable->m_Transformation, m_pCurrentCamera->GetViewMatrix(), m_pCurrentCamera->GetProjection(), false);
 

@@ -107,6 +107,7 @@ void triebWerk::CConstantBuffer::SetConstantBuffer(ID3D11DeviceContext * a_pDevi
 
 	a_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
 	a_pDeviceContext->PSSetConstantBuffers(0, 1, &m_pConstantBuffer);
+	a_pDeviceContext->GSSetConstantBuffers(0, 1, &m_pConstantBuffer);
 }
 
 void triebWerk::CConstantBuffer::InitializeConstantBufffer(ID3D11Device * a_pDevice)
