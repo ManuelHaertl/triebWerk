@@ -20,6 +20,12 @@ void CGameScene::Start()
     m_EnvironmentCreator.Start();
     m_PatternManager.Start();
     CreatePlayer();
+
+    auto text = twFontManager->CreateText();
+    text->SetText("Hallo");
+    text->SetPixelSize(12);
+    text->SetFont(twResourceManager->GetFont("Rubik-Regular"));
+    text->CreateTexture();
 }
 
 void CGameScene::Update()

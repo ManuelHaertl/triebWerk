@@ -14,6 +14,7 @@
 #include <CTWFParser.h>
 #include <CTexture2D.h>
 #include <COBJParser.h>
+#include <CFont.h>
 #include <CHLSLParser.h>
 #include <CFileWatcher.h>
 #include <CMaterial.h>
@@ -52,11 +53,6 @@ namespace triebWerk
 		typedef std::unordered_map<size_t, CMaterial*> CMaterialMap;
 		typedef std::pair<size_t, CMaterial*> CMaterialPair;
 
-		//Forward declared CFont class
-		//TODO:
-		//Replace this with the proper inclusion
-		class CFont;
-
 		//True Type
 		typedef std::unordered_map<size_t, CFont*> CFontMap;
 		typedef std::pair<size_t, CFont*> CFontPair;
@@ -71,6 +67,7 @@ namespace triebWerk
 		CFontMap m_FontBuffer;
 
 		CGraphics* m_pGraphicsHandle;
+        FT_Library* m_pFontLibraryHandle;
 
 		std::string m_ModulPath;
 
@@ -79,7 +76,7 @@ namespace triebWerk
 		~CResourceManager();
 
 	public:
-		bool Initialize(CGraphics* a_pGraphics);
+		bool Initialize(CGraphics* a_pGraphics, FT_Library* a_pFontLibrary);
 		void CleanUp();
 		void Update();
 
@@ -102,6 +99,7 @@ namespace triebWerk
 		CTexture2D* GetTexture2D(const char* a_pTexture2DName);
 		CMesh* GetMesh(const char* a_pMeshName);
 		CMaterial* GetMaterial(const char* a_pMaterialName);
+        CFont* GetFont(const char* a_pFontName);
 
 		//Get all data in this directory and subdirectory which were previous loaded 
 		template<typename T>

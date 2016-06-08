@@ -32,8 +32,13 @@ void triebWerk::CFontManager::Shutdown()
     }
 }
 
-triebWerk::CFont* triebWerk::CFontManager::CreateEmptyFont()
+FT_Library* triebWerk::CFontManager::GetLibrary()
 {
-    CFont* pFont = new CFont(&m_Library);
-    return pFont;
+    return &m_Library;
+}
+
+triebWerk::CText * triebWerk::CFontManager::CreateText()
+{
+    CText* pText = new CText();
+    return pText;
 }

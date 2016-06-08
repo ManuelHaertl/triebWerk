@@ -7,10 +7,12 @@ namespace triebWerk
     class CFont
     {
     private:
-        FT_Library* m_pLibrary;
+        FT_Face m_Face;
 
     public:
-        CFont(FT_Library* a_pLibrary);
+        CFont(FT_Library* a_pLibrary, const char* a_pFile);
         ~CFont();
+
+        FT_Face& GetFace();
     };
 }

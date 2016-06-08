@@ -54,12 +54,13 @@ bool triebWerk::CEngine::Initialize(SEngineConfiguration a_Config)
     m_pFontManager = new CFontManager();
     m_pDebug = new CDebug();
 
+
     m_pWindow->Initialize(a_Config.m_Fullscreen, a_Config.m_Width, a_Config.m_Height, a_Config.m_Name);
     m_pGraphics->Initialize(m_pWindow->GetWindowHandle(), a_Config.m_Width, a_Config.m_Height, a_Config.m_Fullscreen, a_Config.m_VSync);
-    m_pResourceManager->Initialize(m_pGraphics);
+    m_pFontManager->Initialize();
+    m_pResourceManager->Initialize(m_pGraphics, m_pFontManager->GetLibrary());
     m_pRenderer->Initialize(m_pGraphics, a_Config.m_Width, a_Config.m_Height);
     m_pSceneManager->Initialize(m_pRenderer, a_Config.m_PhysicTimeStamp);;
-    m_pFontManager->Initialize();
 
     if (a_Config.m_TargetFPS == 0)
         m_TimePerFrame = 0;

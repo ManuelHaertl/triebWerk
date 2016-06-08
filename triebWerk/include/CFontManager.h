@@ -2,6 +2,7 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include <CFont.h>
+#include <CText.h>
 
 namespace triebWerk
 {
@@ -17,6 +18,7 @@ namespace triebWerk
         bool Initialize();
         void Shutdown();
 
-        CFont* CreateEmptyFont();
+        FT_Library* GetLibrary();
+        CText* CreateText();
     };
 }

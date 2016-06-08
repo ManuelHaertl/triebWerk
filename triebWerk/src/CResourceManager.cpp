@@ -9,10 +9,11 @@ triebWerk::CResourceManager::~CResourceManager()
 {
 }
 
-bool triebWerk::CResourceManager::Initialize(CGraphics* a_pGraphics)
+bool triebWerk::CResourceManager::Initialize(CGraphics* a_pGraphics, FT_Library* a_pFontLibrary)
 {
 	//bool error = SetModulPath();
 	m_pGraphicsHandle = a_pGraphics;
+    m_pFontLibraryHandle = a_pFontLibrary;
 #ifdef _DEBUG
 	m_FileWatcher.Watch("data", true);
 #endif //DEBUG
@@ -54,11 +55,17 @@ void triebWerk::CResourceManager::CleanUp()
 		delete material.second;
 	}
 
+    for (auto font : m_FontBuffer)
+    {
+        delete font.second;
+    }
+
 	m_TWFBuffer.clear();
 	m_TextureBuffer.clear();
 	m_TilesetBuffer.clear();
 	m_MeshBuffer.clear();
 	m_MaterialBuffer.clear();
+    m_FontBuffer.clear();
 
 	m_FileWatcher.StopWatching();
 }
@@ -181,6 +188,21 @@ triebWerk::CMaterial* triebWerk::CResourceManager::GetMaterial(const char * a_pE
 	{
 		return foundIterator->second;
 	}
+}
+
+triebWerk::CFont* triebWerk::CResourceManager::GetFont(const char* a_pFontName)
+{
+    auto foundIterator = m_FontBuffer.find(StringHasher(RemoveFileType(a_pFontName)));
+
+    if (foundIterator == m_FontBuffer.end())
+    {
+        DebugLogfile.LogfText(CDebugLogfile::ELogType::Warning, false, "Warning: No Font was loaded with the Name: %s", a_pFontName);
+        return nullptr;
+    }
+    else
+    {
+        return foundIterator->second;
+    }
 }
 
 void triebWerk::CResourceManager::UnloadTileset(const char * a_pTilesetName)
@@ -378,13 +400,10 @@ void triebWerk::CResourceManager::LoadTWF(SFile a_File)
 
 void triebWerk::CResourceManager::LoadTTF(SFile a_File)
 {
-	//use the a_File struct to get the filename, filepath, filetype
-
-	//Create Font and load it, if error could occur pls log a error!
-
+    CFont* pFont = new CFont(m_pFontLibraryHandle, a_File.FilePath.c_str());
 
 	//Insert Data in font map
-	//m_FontBuffer.insert(CFontPair(StringHasher(RemoveFileType(a_File.FileName)), twfData));
+    m_FontBuffer.insert(CFontPair(StringHasher(RemoveFileType(a_File.FileName)), pFont));
 }
 
 bool triebWerk::CResourceManager::SetModulPath()

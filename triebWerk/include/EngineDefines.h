@@ -8,6 +8,7 @@
 
 #define twDebug triebWerk::CEngine::Instance().m_pDebug
 #define twRenderer triebWerk::CEngine::Instance().m_pRenderer
+#define twFontManager triebWerk::CEngine::Instance().m_pFontManager
 #define twResourceManager triebWerk::CEngine::Instance().m_pResourceManager
 #define twSceneManager triebWerk::CEngine::Instance().m_pSceneManager
 #define twTime triebWerk::CEngine::Instance().m_pTime
