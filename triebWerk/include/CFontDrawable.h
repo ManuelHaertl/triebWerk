@@ -2,10 +2,10 @@
 #include <IDrawable.h>
 #include <CGraphics.h>
 #include <CMaterial.h>
+#include <CText.h>
 
 namespace triebWerk
 {
-	class CText;
 
 	class CFontDrawable : public IDrawable
 	{
@@ -27,7 +27,7 @@ namespace triebWerk
 		CFontDrawable(CGraphics* a_pGraphicsHandle);
 		~CFontDrawable();
 
-		void SetFont(CTexture2D* a_pFontTexture);
+		void SetText(CText* a_pText);
 
 		IDrawable::EDrawableType GetType() final;
 		void SetTransform(const DirectX::XMMATRIX& a_rTransform) final;

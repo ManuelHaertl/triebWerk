@@ -322,6 +322,37 @@ ID3D11Texture2D * triebWerk::CGraphics::CreateD3D11Texture2D(const void * a_pDat
 		return temp;
 }
 
+ID3D11Texture2D * triebWerk::CGraphics::CreateD3D11FontTexture(const void * a_pData, const unsigned int a_Width, const unsigned int a_Height) const
+{
+	HRESULT hr;
+
+	ID3D11Texture2D* temp;
+
+	D3D11_SUBRESOURCE_DATA textureData;
+	textureData.pSysMem = a_pData;
+	textureData.SysMemPitch = a_Width;
+	textureData.SysMemSlicePitch = 0;
+
+	D3D11_TEXTURE2D_DESC textureDescription = { 0 };
+	textureDescription.ArraySize = 1;
+	textureDescription.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	textureDescription.CPUAccessFlags = 0;
+	textureDescription.Format = DXGI_FORMAT_R8_UNORM;
+	textureDescription.MipLevels = 1;
+	textureDescription.MiscFlags = 0;
+	textureDescription.SampleDesc.Count = 1;
+	textureDescription.SampleDesc.Quality = 0;
+	textureDescription.Usage = D3D11_USAGE_DEFAULT;
+	textureDescription.Height = a_Height;
+	textureDescription.Width = a_Width;
+
+	hr = this->m_pDevice->CreateTexture2D(&textureDescription, &textureData, &temp);
+	if (FAILED(hr))
+		return nullptr;
+	else
+		return temp;
+}
+
 ID3D11ShaderResourceView * triebWerk::CGraphics::CreateID3D11ShaderResourceView(ID3D11Texture2D * a_Texture) const
 {
 	HRESULT hr;
@@ -331,6 +362,26 @@ ID3D11ShaderResourceView * triebWerk::CGraphics::CreateID3D11ShaderResourceView(
 	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDescription;
 	memset(&shaderResourceViewDescription, 0, sizeof(D3D11_SHADER_RESOURCE_VIEW_DESC));
 	shaderResourceViewDescription.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	shaderResourceViewDescription.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	shaderResourceViewDescription.Texture2D.MostDetailedMip = 0;
+	shaderResourceViewDescription.Texture2D.MipLevels = 1;
+
+	hr = this->m_pDevice->CreateShaderResourceView(a_Texture, &shaderResourceViewDescription, &temp);
+	if (FAILED(hr))
+		return nullptr;
+	else
+		return temp;
+}
+
+ID3D11ShaderResourceView * triebWerk::CGraphics::CreateID3D11ShaderResourceViewFont(ID3D11Texture2D * a_Texture) const
+{
+	HRESULT hr;
+
+	ID3D11ShaderResourceView* temp;
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDescription;
+	memset(&shaderResourceViewDescription, 0, sizeof(D3D11_SHADER_RESOURCE_VIEW_DESC));
+	shaderResourceViewDescription.Format = DXGI_FORMAT_R8_UNORM;
 	shaderResourceViewDescription.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 	shaderResourceViewDescription.Texture2D.MostDetailedMip = 0;
 	shaderResourceViewDescription.Texture2D.MipLevels = 1;

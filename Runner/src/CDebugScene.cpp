@@ -43,12 +43,18 @@ void CDebugScene::Pause()
 
 void CDebugScene::CreateTestCubes()
 {
+	auto text = twFontManager->CreateText();
+	text->SetText("HalloTest");
+	text->SetPixelSize(12);
+	text->SetFont(twResourceManager->GetFont("Rubik-Regular"));
+	text->CreateTexture();
+
 	auto entity = m_pWorld->CreateEntity();
-	entity->m_Transform.SetPosition(2.0f, 300.0f, 1.0f);
+	entity->m_Transform.SetPosition(1.0f, 50.0f, 1.0f);
 	entity->m_Transform.SetScale(1.0f, 1.0f, 1.0f);
 	triebWerk::CFontDrawable* pFont = twRenderer->CreateFontDrawable();
 	pFont->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardFont"));
-	pFont->SetFont(twResourceManager->GetTexture2D("Font"));
+	pFont->SetText(text);
 	entity->SetDrawable(pFont);
 	m_pWorld->AddEntity(entity);
 

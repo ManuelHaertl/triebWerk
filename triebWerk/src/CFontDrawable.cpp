@@ -12,15 +12,17 @@ triebWerk::CFontDrawable::CFontDrawable(CGraphics * a_pGraphicsHandle) :
 
 triebWerk::CFontDrawable::~CFontDrawable()
 {
-
+	if (m_pText != nullptr)
+		delete m_pText;
 }
 
-void triebWerk::CFontDrawable::SetFont(CTexture2D * a_pFontTexture)
+void triebWerk::CFontDrawable::SetText(CText * a_pText)
 {
-	m_ScaleOfTextureX = a_pFontTexture->GetWidth();
-	m_ScaleOfTextureY = a_pFontTexture->GetHeight();
+	m_ScaleOfTextureX = a_pText->GetWidth();
+	m_ScaleOfTextureY = a_pText->GetHeight();
+	m_pText = a_pText;
 
-	m_Material.m_pPixelShader.SetTexture(0, a_pFontTexture);
+	m_Material.m_pPixelShader.SetTexture(0, a_pText->GetTexture());
 }
 
 triebWerk::IDrawable::EDrawableType triebWerk::CFontDrawable::GetType()
@@ -30,6 +32,7 @@ triebWerk::IDrawable::EDrawableType triebWerk::CFontDrawable::GetType()
 
 void triebWerk::CFontDrawable::SetTransform(const DirectX::XMMATRIX & a_rTransform)
 {
+
 
 	DirectX::XMMATRIX t = a_rTransform;
 
