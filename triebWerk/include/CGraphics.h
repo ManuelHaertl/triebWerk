@@ -72,7 +72,9 @@ namespace triebWerk
 		
 		//Factory functions
 		ID3D11Texture2D* CreateD3D11Texture2D(const void* a_pData, const unsigned int a_Width, const unsigned int a_Height) const;
+		ID3D11Texture2D* CreateD3D11FontTexture(const void* a_pData, const unsigned int a_Width, const unsigned int a_Height) const;
 		ID3D11ShaderResourceView* CreateID3D11ShaderResourceView(ID3D11Texture2D* a_Texture) const;
+		ID3D11ShaderResourceView* CreateID3D11ShaderResourceViewFont(ID3D11Texture2D* a_Texture) const;
 		ID3D11Buffer* CreateVertexBuffer(void* a_pVertexData, size_t a_VertexCount);
 		ID3D11Buffer* CreateIndexBuffer(void* a_pIndexData, size_t a_ByteWidth);
 		ID3D11Buffer* CreateDefaultQuad(UINT* a_pOutStride, UINT* a_pOutVertexCount);
