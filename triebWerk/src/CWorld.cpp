@@ -118,7 +118,13 @@ void triebWerk::CWorld::AddEntity(CEntity* a_pEntity)
 void triebWerk::CWorld::RemoveEntity(CEntity* a_pEntity)
 {
     if (m_RemoveEntities.Contains(a_pEntity) == false)
+    {
+        IBehaviour* behaviour = a_pEntity->GetBehaviour();
+        if (behaviour != nullptr)
+            behaviour->End();
+
         m_RemoveEntities.Add(a_pEntity);
+    }
 }
 
 void triebWerk::CWorld::ClearEntities()
@@ -126,6 +132,10 @@ void triebWerk::CWorld::ClearEntities()
     size_t size = m_Entities.GetSize();
     for (size_t i = 0; i < size; ++i)
     {
+        IBehaviour* behaviour = m_Entities[i]->GetBehaviour();
+        if (behaviour != nullptr)
+            behaviour->End();
+
         m_RemoveEntities.Add(m_Entities[i]);
     }
 }

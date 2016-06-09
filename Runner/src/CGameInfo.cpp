@@ -24,7 +24,7 @@ CGameInfo& CGameInfo::Instance()
 
 void CGameInfo::Reset()
 {
-    m_Difficulty = 1;
+    //m_Difficulty = 1;
     m_TotalPoints = 0;
     m_CurrentPoints = 0;
     m_Multiplier = 1.0f;

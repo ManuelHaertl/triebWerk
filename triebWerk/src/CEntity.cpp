@@ -82,9 +82,6 @@ void triebWerk::CEntity::RemoveBehaviour()
     // check if there exists a behaviour
     if (m_pBehaviour != nullptr)
     {
-        if (m_IsInWorld) // only call the behaviour end function if the entity is actually in the world
-            m_pBehaviour->End();
-
         delete m_pBehaviour;
         m_pBehaviour = nullptr;
     }

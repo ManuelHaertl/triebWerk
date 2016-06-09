@@ -30,10 +30,10 @@ void CGameScene::Update()
 
     if (m_pPlayer->HasDied())
     {
-        CGameInfo::Instance().Reset();
         m_pPlayer->Reset();
         m_PatternManager.Reset();
         m_EnvironmentCreator.Reset();
+        CGameInfo::Instance().Reset();
     }
 
     std::string points =
@@ -41,8 +41,11 @@ void CGameScene::Update()
         std::to_string(CGameInfo::Instance().m_TotalPoints) +
         "\nCurrent: " +
         std::to_string(CGameInfo::Instance().m_CurrentPoints) +
-        "\nx" +
-        std::to_string(CGameInfo::Instance().m_Multiplier);
+        "\nMultiplier: " +
+        std::to_string(CGameInfo::Instance().m_Multiplier) +
+        "\nDifficulty: " + 
+        std::to_string(CGameInfo::Instance().m_Difficulty);
+
     m_pPoints->Update(points, nullptr, 0);
 
     if (twKeyboard.IsState(triebWerk::EKey::F3, triebWerk::EButtonState::Down))
@@ -57,15 +60,11 @@ void CGameScene::Update()
     {
         if (CGameInfo::Instance().m_Difficulty < 5)
             CGameInfo::Instance().m_Difficulty++;
-
-        std::cout << "Difficulty: " << CGameInfo::Instance().m_Difficulty << std::endl;
     }
     if (twKeyboard.IsState(triebWerk::EKey::Down, triebWerk::EButtonState::Down))
     {
         if (CGameInfo::Instance().m_Difficulty > 1)
             CGameInfo::Instance().m_Difficulty--;
-
-        std::cout << "Difficulty: " << CGameInfo::Instance().m_Difficulty << std::endl;
     }
 
     const float metersFlewn = m_pPlayer->GetMetersFlewn();
