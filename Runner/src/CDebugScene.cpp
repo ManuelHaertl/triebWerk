@@ -80,8 +80,8 @@ void CDebugScene::CreateTestCubes()
 	entity->m_Transform.SetPosition(0, 0, 0);
 
 	mesh = twRenderer->CreateMeshDrawable();
-	mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("checkpoint2");
-	mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("PointExpolsion"));
+	mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("points2");
+	mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("PointExplosion"));
 	mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
 	mesh->m_Material.m_pGeometryShader.SetTexture(0, twResourceManager->GetTexture2D("noise"));
 	DirectX::XMFLOAT3 colorBlock = { twRandom::GetNumber(0.0f, 1.0f), twRandom::GetNumber(0.0f, 1.0f), twRandom::GetNumber(0.0f, 1.0f) };

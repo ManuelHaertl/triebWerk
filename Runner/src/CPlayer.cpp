@@ -65,12 +65,11 @@ void CPlayer::CollisionEnter(triebWerk::CCollisionEvent a_Collision)
     triebWerk::CEntity* entity = a_Collision.m_pPartner;
     if (entity->m_ID.GetHash() == triebWerk::StringHasher("Points"))
     {
-        entity->GetDrawable()->SetActive(false);
-        entity->RemovePhysicEntity();
+        CPoints* points = (CPoints*)entity->GetBehaviour();
+        points->Collected();
 
         // add a fixed amount to the total points
-        CGameInfo& gameInfo = CGameInfo::Instance();
-        gameInfo.m_TotalPoints += ((CPoints*)entity->GetBehaviour())->m_Points;
+        CGameInfo::Instance().m_TotalPoints += points->m_Points;
     }
     else if (entity->m_ID.GetHash() == triebWerk::StringHasher("Checkpoint"))
     {

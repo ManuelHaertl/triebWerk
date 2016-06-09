@@ -66,6 +66,7 @@ void triebWerk::CInstancedMeshBatch::Draw(CCamera* a_pCamera)
 	pDeviceContext->VSSetShader(m_pMaterial->m_pVertexShader.m_pD3DVertexShader, 0, 0);
 	pDeviceContext->IASetInputLayout(m_pMaterial->m_pVertexShader.GetInputLayout());
 	pDeviceContext->PSSetShader(m_pMaterial->m_pPixelShader.m_pD3DPixelShader, 0, 0);
+    pDeviceContext->GSSetShader(nullptr, nullptr, 0);
 
 	//Set constant buffer for all instances.
 	m_pMaterial->m_ConstantBuffer.SetConstantBuffer(m_pGraphicsHandle->GetDeviceContext(), DirectX::XMMatrixIdentity(), a_pCamera->GetViewMatrix(), a_pCamera->GetProjection(), true);

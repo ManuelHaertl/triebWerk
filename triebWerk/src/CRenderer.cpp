@@ -245,7 +245,8 @@ void triebWerk::CRenderer::RenderFont(CFontDrawable * a_pDrawable)
 	pDeviceContext->IASetInputLayout(a_pDrawable->m_Material.m_pVertexShader.GetInputLayout());
 
 	//Set pixelshader to use
-	pDeviceContext->PSSetShader(a_pDrawable->m_Material.m_pPixelShader.m_pD3DPixelShader, 0, 0);
+    pDeviceContext->PSSetShader(a_pDrawable->m_Material.m_pPixelShader.m_pD3DPixelShader, 0, 0);
+    pDeviceContext->GSSetShader(nullptr, nullptr, 0);
 
 	//Set constantbuffer
 	a_pDrawable->m_Material.m_ConstantBuffer.SetConstantBuffer(pDeviceContext, a_pDrawable->m_Transformation, DirectX::XMMatrixIdentity(), m_pCurrentCamera->GetUIProjection(), false);

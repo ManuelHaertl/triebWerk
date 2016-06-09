@@ -16,4 +16,6 @@ public:
     void Start();
     void Update();
     void End();
+
+    void Collected();
 };
