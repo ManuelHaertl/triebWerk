@@ -25,6 +25,9 @@ void triebWerk::CMaterial::SetMaterial(const CMaterial * a_pMaterial)
 	m_pPixelShader.InitializeTextureBuffer();
 	m_pVertexShader = a_pMaterial->m_pVertexShader;
 	m_pVertexShader.InitializeTextureBuffer();
+	m_pGeometryShader = a_pMaterial->m_pGeometryShader;
+	m_pGeometryShader.InitializeTextureBuffer();
+
 	m_pVertexShader.CreateInstanceData();
 
 	m_ID = a_pMaterial->m_ID;

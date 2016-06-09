@@ -52,6 +52,9 @@ void triebWerk::CResourceManager::CleanUp()
 	{
 		material.second->m_pVertexShader.m_pD3DVertexShader->Release();
 		material.second->m_pPixelShader.m_pD3DPixelShader->Release();
+		if (material.second->m_pGeometryShader.m_pD3DGeometryShader != nullptr)
+			material.second->m_pGeometryShader.m_pD3DGeometryShader->Release();
+
 		delete material.second;
 	}
 
@@ -294,7 +297,8 @@ void triebWerk::CResourceManager::LoadFile(SFile a_File)
 		LoadTMX(a_File);
 		break;
 	case EFileType::TTF:
-		LoadTTF(a_File);
+	case EFileType::OTF:
+		LoadFont(a_File);
 		break;
 	}
 }
@@ -398,7 +402,7 @@ void triebWerk::CResourceManager::LoadTWF(SFile a_File)
 	m_TWFBuffer.insert(CTWFDataPair(StringHasher(RemoveFileType(a_File.FileName)), twfData));
 }
 
-void triebWerk::CResourceManager::LoadTTF(SFile a_File)
+void triebWerk::CResourceManager::LoadFont(SFile a_File)
 {
     CFont* pFont = new CFont(m_pFontLibraryHandle, a_File.FilePath.c_str());
 

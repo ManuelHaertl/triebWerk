@@ -1,5 +1,9 @@
 #include <CDebugScene.h>
 
+triebWerk::CMeshDrawable* mesh;
+float speed = 1;
+
+
 CDebugScene::CDebugScene()
 {
 }
@@ -25,6 +29,19 @@ void CDebugScene::Update()
         else
             twDebug->Disable();
     }
+
+	if (twKeyboard.IsState(triebWerk::EKey::F, triebWerk::EButtonState::Pressed))
+	{
+		speed += (1.0f * twTime->GetDeltaTime()) * speed;
+		mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &speed);
+	}
+
+	if (twKeyboard.IsState(triebWerk::EKey::G, triebWerk::EButtonState::Pressed))
+	{
+		speed -= 1.0f * twTime->GetDeltaTime();
+		mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &speed);
+	}
+
 }
 
 void CDebugScene::End()
@@ -43,7 +60,7 @@ void CDebugScene::Pause()
 
 void CDebugScene::CreateTestCubes()
 {
-	auto text = twFontManager->CreateText();
+	/*auto text = twFontManager->CreateText();
 	text->SetText("HalloTest");
 	text->SetPixelSize(12);
 	text->SetFont(twResourceManager->GetFont("Rubik-Regular"));
@@ -57,8 +74,25 @@ void CDebugScene::CreateTestCubes()
 	pFont->SetText(text);
 	entity->SetDrawable(pFont);
 	m_pWorld->AddEntity(entity);
+*/
 
-    const int range = 10;
+	auto entity = m_pWorld->CreateEntity();
+	entity->m_Transform.SetPosition(0, 0, 0);
+
+	mesh = twRenderer->CreateMeshDrawable();
+	mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("checkpoint2");
+	mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("PointExpolsion"));
+	mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
+	mesh->m_Material.m_pGeometryShader.SetTexture(0, twResourceManager->GetTexture2D("noise"));
+	DirectX::XMFLOAT3 colorBlock = { twRandom::GetNumber(0.0f, 1.0f), twRandom::GetNumber(0.0f, 1.0f), twRandom::GetNumber(0.0f, 1.0f) };
+	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &colorBlock);
+	speed = 0;
+	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &speed);
+	speed = 0.4f;
+	entity->SetDrawable(mesh);
+	m_pWorld->AddEntity(entity);
+
+  /*  const int range = 10;
     const int incrementer = 5;
     const int freeArea = 1;
 
@@ -82,7 +116,7 @@ void CDebugScene::CreateTestCubes()
                 m_pWorld->AddEntity(entity);
             }
         }
-    }
+    }*/
 }
 
 void CDebugScene::ResetCamera()

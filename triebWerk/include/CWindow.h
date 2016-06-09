@@ -1,6 +1,7 @@
 #pragma once
 #include <Windows.h>
 #include <queue>
+#include <CDebugLogfile.h>
 
 namespace triebWerk
 {
@@ -49,6 +50,8 @@ namespace triebWerk
 		
 		bool IsWindowFullscreen();
 		void UpdateWindow();
+
+		void GetDPIFromDisplay(unsigned int* a_OutDPIX, unsigned int* a_OutDPIY);
 
 		static int GetMaximalDisplayWidth();
 		static int GetMaximalDisplayHeight();

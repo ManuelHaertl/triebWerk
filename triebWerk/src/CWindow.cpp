@@ -2,6 +2,9 @@
 #include <Windows.h>
 #include <iostream>
 
+#include <ShellScalingAPI.h>
+#include <Winuser.h>
+
 triebWerk::CWindow::CWindow() : 
 	m_Height(0),
 	m_Width(0),
@@ -79,6 +82,11 @@ bool triebWerk::CWindow::Initialize(const bool a_Fullscreen, const unsigned shor
 	//If fullscreen change normal "default" window above to fullscreen
 	if (a_Fullscreen)
 		ChangeWindowSettings(true, m_Width, m_Height);
+
+	unsigned int a;
+	unsigned int b;
+
+	GetDPIFromDisplay(&a, &b);
 
 	return true;
 }
@@ -216,6 +224,22 @@ void triebWerk::CWindow::UpdateWindow()
             DispatchMessage(&msg);
         }
     }while (newMessage == true);
+}
+
+void triebWerk::CWindow::GetDPIFromDisplay(unsigned int* a_OutDPIX, unsigned int* a_OutDPIY)
+{
+	HRESULT hResult;
+
+	auto monitor = MonitorFromWindow(m_WindowHandle, MONITOR_DEFAULTTONEAREST);
+
+	hResult = GetDpiForMonitor(monitor, MDT_EFFECTIVE_DPI, a_OutDPIX, a_OutDPIY);
+	if (FAILED(hResult))
+	{
+		DebugLogfile.LogfText(CDebugLogfile::ELogType::Warning, false, "Warning: Could not read dpi from monitor!");
+		*a_OutDPIX = 0;
+		*a_OutDPIY = 0;
+		return;
+	}
 }
 
 int triebWerk::CWindow::GetMaximalDisplayWidth()

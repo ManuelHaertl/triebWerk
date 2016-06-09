@@ -120,7 +120,7 @@ namespace triebWerk
 		void LoadTMX(SFile a_File);
 		void LoadHLSL(SFile a_File);
 		void LoadTWF(SFile a_File);
-		void LoadTTF(SFile a_File);
+		void LoadFont(SFile a_File);
 
 		bool SetModulPath();
 		std::vector<SFile> SearchFolderForAllFiles(const char* a_FolderToLoad);

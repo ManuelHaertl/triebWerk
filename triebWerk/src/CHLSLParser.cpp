@@ -43,7 +43,7 @@ bool triebWerk::CHLSLParser::ParseShader(const char* a_pShaderPath, CGraphics* a
 		CreatePixelShader(a_pGraphicHandle, &a_pMaterialOut->m_pPixelShader);
 
 	if (m_pGSByteCode != nullptr)
-		CreateGeometryShader(a_pGraphicHandle, &a_pMaterialOut->m_GeometryShader);
+		CreateGeometryShader(a_pGraphicHandle, &a_pMaterialOut->m_pGeometryShader);
 
 	return true;
 }
@@ -92,7 +92,7 @@ void triebWerk::CHLSLParser::CreateGeometryShader(CGraphics * a_pGraphicHandle, 
 
 	SetInputLayout(m_pGSByteCode, a_pGraphicHandle, a_pShaderOut);
 
-	SetBoundResources(m_pPSByteCode, a_pShaderOut);
+	SetBoundResources(m_pGSByteCode, a_pShaderOut);
 
 	a_pShaderOut->InitializeTextureBuffer();
 

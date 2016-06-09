@@ -285,17 +285,22 @@ void triebWerk::CRenderer::RenderMesh(CMeshDrawable * a_pDrawable)
 	//Set pixelshader to use
 	pDeviceContext->PSSetShader(a_pDrawable->m_Material.m_pPixelShader.m_pD3DPixelShader, 0, 0);
 	
-	if(a_pDrawable->m_Material.m_GeometryShader.m_pD3DGeometryShader != nullptr)
-		pDeviceContext->GSSetShader(a_pDrawable->m_Material.m_GeometryShader.m_pD3DGeometryShader, 0, 0);
+	if(a_pDrawable->m_Material.m_pGeometryShader.m_pD3DGeometryShader != nullptr)
+		pDeviceContext->GSSetShader(a_pDrawable->m_Material.m_pGeometryShader.m_pD3DGeometryShader, 0, 0);
 	
 	//Set constantbuffer
 	a_pDrawable->m_Material.m_ConstantBuffer.SetConstantBuffer(pDeviceContext, a_pDrawable->m_Transformation, m_pCurrentCamera->GetViewMatrix(), m_pCurrentCamera->GetProjection(), false);
 
-	//for (size_t i = 0; i < a_pDrawable->m_Material.m_pVertexShader.m_Textures.size(); i++)
-	//{
-	//	ID3D11ShaderResourceView* pResourceView = a_pDrawable->m_Material.m_pVertexShader.m_Textures[i]->GetShaderResourceView();
-	//	m_pGraphicsHandle->GetDeviceContext()->PSSetShaderResources(static_cast<UINT>(i), 1, &pResourceView);
-	//}
+
+	//Draw all set textures Geometry Shader
+	for (size_t i = 0; i < a_pDrawable->m_Material.m_pGeometryShader.m_TextureCount; i++)
+	{
+		if (a_pDrawable->m_Material.m_pGeometryShader.m_pTextures[i] != nullptr)
+		{
+			ID3D11ShaderResourceView* pResourceView = a_pDrawable->m_Material.m_pGeometryShader.m_pTextures[i]->GetShaderResourceView();
+			pDeviceContext->GSSetShaderResources(static_cast<UINT>(i), 1, &pResourceView);
+		}
+	}
 
 	//Draw all set textures
 	for (size_t i = 0; i < a_pDrawable->m_Material.m_pPixelShader.m_TextureCount; i++)

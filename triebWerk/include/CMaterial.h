@@ -14,7 +14,7 @@ namespace triebWerk
 	public:
 		CVertexShader m_pVertexShader;
 		CPixelShader m_pPixelShader;
-		CGeometryShader m_GeometryShader;
+		CGeometryShader m_pGeometryShader;
 		CConstantBuffer m_ConstantBuffer;
 		CID m_ID;
 

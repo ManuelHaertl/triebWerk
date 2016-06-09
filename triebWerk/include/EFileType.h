@@ -14,6 +14,7 @@ namespace triebWerk
 		HLSL,
 		TWF,
 		TTF,
+		OTF,
 		NONE
 	};
 }
