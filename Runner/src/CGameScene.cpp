@@ -4,7 +4,8 @@
 
 CGameScene::CGameScene() :
     m_pPlayer(nullptr),
-    m_LastPlayerPos(0.0f)
+    m_LastPlayerPos(0.0f),
+    m_pPoints(nullptr)
 {
 }
 
@@ -19,6 +20,7 @@ void CGameScene::Start()
     m_ValueUpdater.Start();
     m_EnvironmentCreator.Start();
     m_PatternManager.Start();
+    CreateText();
     CreatePlayer();
 }
 
@@ -33,6 +35,15 @@ void CGameScene::Update()
         m_PatternManager.Reset();
         m_EnvironmentCreator.Reset();
     }
+
+    std::string points =
+        "Total: " +
+        std::to_string(CGameInfo::Instance().m_TotalPoints) +
+        "\nCurrent: " +
+        std::to_string(CGameInfo::Instance().m_CurrentPoints) +
+        "\nx" +
+        std::to_string(CGameInfo::Instance().m_Multiplier);
+    m_pPoints->Update(points, nullptr, 0);
 
     if (twKeyboard.IsState(triebWerk::EKey::F3, triebWerk::EButtonState::Down))
     {
@@ -73,6 +84,21 @@ void CGameScene::End()
 void CGameScene::Resume()
 {
     twDebug->Disable();
+}
+
+void CGameScene::CreateText()
+{
+    auto entity = m_pWorld->CreateEntity();
+    entity->m_Transform.SetPosition(1.0f, 50.0f, 1.0f);
+    entity->m_Transform.SetScale(1.0f, 1.0f, 1.0f);
+
+    auto pFont = twRenderer->CreateFontDrawable();
+    pFont->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardFont"));
+    m_pPoints = twFontManager->CreateText("Hallo", twResourceManager->GetFont("Rubik-Regular"), 18);
+    pFont->SetText(m_pPoints);
+    entity->SetDrawable(pFont);
+
+    m_pWorld->AddEntity(entity);
 }
 
 void CGameScene::CreatePlayer()

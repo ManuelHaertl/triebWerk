@@ -1,17 +1,25 @@
 #include <CText.h>
 
 #include <CFont.h>
+#include <CGraphics.h>
 #include <string.h>
 
-#include <CEngine.h>
 
-triebWerk::CText::CText() :
+triebWerk::CText::CText(CGraphics* a_pGraphics, unsigned int a_DPIX, unsigned int a_DPIY) :
     m_Text(),
     m_pFont(nullptr),
-    m_PixelSize(12),
-    m_IsModified(false)
+    m_PointSize(12),
+    m_LineSpacing(1.0f),
+    m_IsModified(false),
+    m_Width(800),
+    m_Height(600),
+    m_DPIX(a_DPIX),
+    m_DPIY(a_DPIY),
+    m_pBuffer(nullptr),
+    m_Texture(),
+    m_pGraphics(a_pGraphics)
 {
-    memset(&m_Buffer, 0, WIDTH * HEIGHT);
+    
 }
 
 triebWerk::CText::~CText()
@@ -19,38 +27,40 @@ triebWerk::CText::~CText()
     
 }
 
-void triebWerk::CText::SetText(const std::string a_Text)
+void triebWerk::CText::Update(const char* a_pText, CFont* a_pFont, const unsigned int a_PointSize)
 {
-    m_Text = a_Text;
-    m_IsModified = true;
+    m_Text = a_pText;
+
+    if (a_pFont != nullptr)
+        m_pFont = a_pFont;
+
+    if (a_PointSize != 0)
+        m_PointSize = a_PointSize;
+
+    CreateTexture();
 }
 
-void triebWerk::CText::SetText(const char* const a_Text)
+void triebWerk::CText::Update(const std::string a_Text, CFont* a_pFont, const unsigned int a_PointSize)
 {
-    m_Text = a_Text;
-    m_IsModified = true;
-}
+    m_Text = a_Text.c_str();
 
-void triebWerk::CText::SetFont(CFont* const a_pFont)
-{
-    m_pFont = a_pFont;
-    m_IsModified = true;
-}
+    if (a_pFont != nullptr)
+        m_pFont = a_pFont;
 
-void triebWerk::CText::SetPixelSize(const unsigned int a_PixelSize)
-{
-    m_PixelSize = a_PixelSize;
-    m_IsModified = true;
-}
+    if (a_PointSize != 0)
+        m_PointSize = a_PointSize;
 
-unsigned int triebWerk::CText::GetHeight() const
-{
-	return HEIGHT;
+    CreateTexture();
 }
 
 unsigned int triebWerk::CText::GetWidth() const
 {
-	return WIDTH;
+    return m_Width;
+}
+
+unsigned int triebWerk::CText::GetHeight() const
+{
+	return m_Height;
 }
 
 triebWerk::CTexture2D * triebWerk::CText::GetTexture()
@@ -62,43 +72,52 @@ void triebWerk::CText::CreateTexture()
 {
     FT_Error error;
 	int penX = 0;
-	int penY = 0;
+	int penY = 100;
 
     FT_Face face = m_pFont->GetFace();
+    FT_GlyphSlot glyph = face->glyph;
 
-    FT_Set_Char_Size(face, 16 * 64, 0, 300, 0);
-    //FT_Set_Pixel_Sizes(face, 0, m_PixelSize);
-    FT_Select_Charmap(face, FT_ENCODING_UNICODE);
+    FT_Set_Char_Size(face, 0, m_PointSize * 64, m_DPIX, m_DPIY);
+
+    // allocate memory for drawing buffer
+    m_pBuffer = new unsigned char[m_Height * m_Width];
+    memset(m_pBuffer, 0, m_Height * m_Width);
 
     for (size_t i = 0; i < m_Text.size(); ++i)
     {
+        if (m_Text[i] == '\n')
+        {
+            penX = 0;
+            penY += (unsigned int)(face->max_advance_height * m_LineSpacing) >> 6;
+            continue;
+        }
+
         error = FT_Load_Char(face, m_Text[i], FT_LOAD_RENDER);
         if (error)
             continue;
 
-        DrawLetter(&face->glyph->bitmap, penX + face->glyph->bitmap_left, penY + face->glyph->bitmap_top);
+        DrawLetter(
+            &glyph->bitmap,
+            penX + glyph->bitmap_left,
+            penY - glyph->bitmap_top);
 
-		penX += face->glyph->advance.x >> 6;
-		penY += face->glyph->advance.y >> 6;
+		penX += glyph->advance.x >> 6;
     }
-	
-	//bool bla = true;
-	//for (size_t i = 0; i < WIDTH; i++)
-	//{
-	//	for (size_t j = 0; j < HEIGHT; j++)
-	//	{
-	//		if (bla)
-	//			m_Buffer[i][j] = 255;
-	//		else
-	//			m_Buffer[i][j] = 0;
 
-	//		bla = !bla;
-	//	}
-	//}
+    // check if there is a an old texture to release
+    auto texture = m_Texture.GetD3D11Texture();
+    if (texture != nullptr)
+        texture->Release();
+    auto shaderResource = m_Texture.GetShaderResourceView();
+    if (shaderResource != nullptr)
+        shaderResource->Release();
 
-	auto texture = CEngine::Instance().m_pGraphics->CreateD3D11FontTexture(&m_Buffer, WIDTH, HEIGHT);
+    // create the new texture
+    auto newTexture = m_pGraphics->CreateD3D11FontTexture(m_pBuffer, m_Width, m_Height);
+	m_Texture.SetTexture(m_Width, m_Height, newTexture, m_pGraphics->CreateID3D11ShaderResourceViewFont(newTexture));
 
-	m_Texture.SetTexture(WIDTH, HEIGHT, texture, CEngine::Instance().m_pGraphics->CreateID3D11ShaderResourceViewFont(texture));
+    // delete buffer
+    delete[] m_pBuffer;
 }
 
 void triebWerk::CText::DrawLetter(FT_Bitmap* a_pBitmap, FT_Int a_X, FT_Int a_Y)
@@ -112,10 +131,11 @@ void triebWerk::CText::DrawLetter(FT_Bitmap* a_pBitmap, FT_Int a_X, FT_Int a_Y)
         for (j = a_Y, q = 0; j < y_max; j++, q++)
         {
             if (i < 0 || j < 0 ||
-                i >= WIDTH || j >= HEIGHT)
+                i >= m_Width || j >= m_Height)
                 continue;
 
-            m_Buffer[j][i] |= a_pBitmap->buffer[q * a_pBitmap->width + p];
+            size_t cur = j * m_Width + i;
+            m_pBuffer[cur] |= a_pBitmap->buffer[q * a_pBitmap->width + p];
         }
     }
 }
