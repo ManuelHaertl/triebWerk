@@ -45,6 +45,9 @@ namespace triebWerk
 
 		unsigned int m_ScreenHeight;
 		unsigned int m_ScreenWidth;
+
+		ID3D11BlendState* m_pDefaultBlendState;
+		ID3D11RasterizerState* m_pDefaultRasterizerState;
 		
 	public:
 		CRenderer();
@@ -55,37 +58,69 @@ namespace triebWerk
 		void Shutdown();
 
 		//Camera Functions
+		//--------------------------------------
+		//Creates a camera which will be updated.
+		//Renderer handles ownership
 		CCamera* CreateCamera(const float a_Aspect, const float a_FOV, const float a_Near, const float a_Far);
+		//Remove a camera from the list
 		void RemoveCamera(CCamera* a_pCamera);
+		//Set Camera to draw with
 		void SetActiveCamera(CCamera* a_pCamera);
+		//Get the camera which is the draw camera at the moment
 		CCamera* GetCurrentActiveCamera();
+		//--------------------------------------
 
 		//Create Drawables
+		//--------------------------------------
+		//Creates a new font drawable.
+		//Renderer handles ownership
 		CFontDrawable* CreateFontDrawable();
+		//Creates a new mesh drawable.
+		//Renderer handles ownership
 		CMeshDrawable* CreateMeshDrawable();
+		//--------------------------------------
 
-		//Command Functions
+		//World Functions
+		//Add a render command to the scene which will be drawn after calling draw scene
 		void AddRenderCommand(IDrawable* a_pRenderCommand);
+		//Draws all commands in buffer and resets the scene
+		void DrawScene();
 
+
+		//Render Targets does nothing at the moment
+		CRenderTarget* AddRenderTarget(int a_Order);
+	
+		//Resize the Cameras and the viewports
+		void ResizeRenderer(unsigned int a_ScreenWidth, unsigned int a_ScreenHeight);
+
+	private:
+		//Render the differnet drawable types
 		void RenderMeshDrawables();
 		void RenderFontDrawables();
 
-		void RenderFont(CFontDrawable* a_pFont);
+		//Render pipeline functions
+		void SetResources(const CMaterial* a_pMaterial);
+		void SetShader(const CMaterial* a_pMaterial);
+		void SetSpefificStates(const CMeshDrawable::SD3D11States* a_pMeshDrawable);
 
+		void ResetRenderStates();
+
+		//MeshDrawable
+		//--------------------------------------
+		void DrawMesh(const CMeshDrawable* a_pDrawable);
 		void RenderMesh(CMeshDrawable* a_pDrawable);
-		void RenderInstancedMeshBatch(size_t a_Index);
 
 		void InsertTransparent(CMeshDrawable* a_pDrawable);
-
 		void SortTransparentObjects();
 
-		CRenderTarget* AddRenderTarget(int a_Order);
-
 		void InstanceBatching(CMeshDrawable* a_pDrawable);
-
-		void DrawScene();
-
-		//Resize the Cameras and the viewports
-		void ResizeRenderer(unsigned int a_ScreenWidth, unsigned int a_ScreenHeight);
+		void RenderInstancedMeshBatch(size_t a_Index);
+		//--------------------------------------
+		
+		//MeshDrawable
+		//--------------------------------------
+		//Render the font buffer
+		void RenderFont(CFontDrawable* a_pFont);
+		//--------------------------------------
 	};
 }

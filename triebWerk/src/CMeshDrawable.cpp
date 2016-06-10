@@ -9,10 +9,17 @@ triebWerk::CMeshDrawable::CMeshDrawable() :
 	m_Stride(sizeof(CMesh::SVertex))
 {
 	m_Type = IDrawable::EDrawableType::Mesh;
+
+	m_D3DStates.m_pBlendState = nullptr;
+	m_D3DStates.m_pRasterizerState = nullptr;
 }
 
 triebWerk::CMeshDrawable::~CMeshDrawable()
 {
+	if (m_D3DStates.m_pRasterizerState != nullptr)
+		m_D3DStates.m_pRasterizerState->Release();
+	if (m_D3DStates.m_pBlendState != nullptr)
+		m_D3DStates.m_pBlendState->Release();
 }
 
 bool triebWerk::CMeshDrawable::IsValidDrawable(const CMeshDrawable * a_pDrawableToTest)

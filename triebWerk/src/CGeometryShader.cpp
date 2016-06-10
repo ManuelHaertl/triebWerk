@@ -1,6 +1,7 @@
 #include <CGeometryShader.h>
 
-triebWerk::CGeometryShader::CGeometryShader()
+triebWerk::CGeometryShader::CGeometryShader() :
+	m_pD3DGeometryShader(nullptr)
 {
 
 }

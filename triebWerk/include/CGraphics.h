@@ -44,10 +44,6 @@ namespace triebWerk
 		~CGraphics();
 
 	public:
-		//Get the actual byte size of a DXGI_FORMAT
-		static int SizeOfFormatElement(DXGI_FORMAT a_Format);
-
-	public:
 		//Initialize the graphics d3d11 device and set all graphics related options
 		bool Initialize(HWND &a_rWindowHandle, const unsigned int a_ScreenHeight, const unsigned int a_ScreenWidth, const bool a_Fullscreen, const bool a_VSync);
 		//Shutdown the graphics system
@@ -56,6 +52,9 @@ namespace triebWerk
 		void SetBackBufferRenderTarget();
 		void ClearRenderTarget();
 		void Present();
+
+		ID3D11RasterizerState* GetDefaultRasterizerState() const;
+		ID3D11BlendState* GetDefaultBlendState() const;
 
 		//Set the clearcolor of the rendertarget
 		void SetClearColor(const float a_R, const float a_G, const float a_B, const float a_A);
@@ -78,6 +77,12 @@ namespace triebWerk
 		ID3D11Buffer* CreateVertexBuffer(void* a_pVertexData, size_t a_VertexCount);
 		ID3D11Buffer* CreateIndexBuffer(void* a_pIndexData, size_t a_ByteWidth);
 		ID3D11Buffer* CreateDefaultQuad(UINT* a_pOutStride, UINT* a_pOutVertexCount);
+		ID3D11RasterizerState* CreateRasterizerState(D3D11_CULL_MODE a_CullMode, D3D11_FILL_MODE a_FillMode);
+
+		//Helper functions
+		//Get the actual byte size of a DXGI_FORMAT
+		static int SizeOfFormatElement(DXGI_FORMAT a_Format);
+		void RemapTextureBuffer(const void* a_pData, size_t a_DataSize, ID3D11Texture2D* a_pTextureToRemap);
 
 	private:
 		void SetDisplayProperties();

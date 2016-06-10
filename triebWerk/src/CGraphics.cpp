@@ -241,6 +241,16 @@ void triebWerk::CGraphics::Present()
 	m_pSwapChain->Present(m_IsVSynced, 0);
 }
 
+ID3D11RasterizerState* triebWerk::CGraphics::GetDefaultRasterizerState() const
+{
+	return m_pRasterState;
+}
+
+ID3D11BlendState * triebWerk::CGraphics::GetDefaultBlendState() const
+{
+	return m_pBlendState;
+}
+
 void triebWerk::CGraphics::SetClearColor(const float a_R, const float a_G, const float a_B, const float a_A)
 {
 	m_ClearColor[0] = a_R;
@@ -493,6 +503,33 @@ ID3D11Buffer * triebWerk::CGraphics::CreateDefaultQuad(UINT* a_pStrideOut, UINT*
 	return pVertexBuffer;
 }
 
+ID3D11RasterizerState * triebWerk::CGraphics::CreateRasterizerState(D3D11_CULL_MODE a_CullMode, D3D11_FILL_MODE a_FillMode)
+{
+	ID3D11RasterizerState* rasterState = nullptr;
+	D3D11_RASTERIZER_DESC rasterDesc;
+	ZeroMemory(&rasterDesc, sizeof(D3D11_RASTERIZER_DESC));
+	// Setup the raster state
+	rasterDesc.AntialiasedLineEnable = true;
+	rasterDesc.CullMode = a_CullMode;
+	rasterDesc.DepthBias = 0;
+	rasterDesc.DepthBiasClamp = 0.0f;
+	rasterDesc.DepthClipEnable = true;
+	rasterDesc.FillMode = a_FillMode;
+	rasterDesc.FrontCounterClockwise = true;
+	rasterDesc.MultisampleEnable = true;
+	rasterDesc.ScissorEnable = false;
+	rasterDesc.SlopeScaledDepthBias = 0.0f;
+
+	HRESULT hResult = m_pDevice->CreateRasterizerState(&rasterDesc, &rasterState);
+	if (FAILED(hResult))
+	{
+		DebugLogfile.LogfText(CDebugLogfile::ELogType::Warning, false, "Warning: Could not create ID3D11RasterizerState!");
+		return nullptr;
+	}
+
+	return rasterState;
+}
+
 void triebWerk::CGraphics::SetDisplayProperties()
 {
 	IDXGIFactory* factory;
@@ -689,4 +726,13 @@ int triebWerk::CGraphics::SizeOfFormatElement(DXGI_FORMAT a_Format)
 	default:
 		return 0;
 	}
+}
+
+void triebWerk::CGraphics::RemapTextureBuffer(const void * a_pData, size_t a_DataSize, ID3D11Texture2D * a_pTextureToRemap)
+{
+	D3D11_MAPPED_SUBRESOURCE subResourceTextureBuffer;
+
+	m_pDeviceContext->Map(a_pTextureToRemap, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &subResourceTextureBuffer);
+	memcpy(subResourceTextureBuffer.pData, a_pData, a_DataSize);
+	m_pDeviceContext->Unmap(a_pTextureToRemap, NULL);
 }

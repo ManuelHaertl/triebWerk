@@ -27,7 +27,7 @@ int main()
     twSceneManager->AddScene(new CGameScene(), "Game");
     twSceneManager->AddScene(new CDebugScene(), "Debug");
 
-    twSceneManager->SetActiveScene("Game");
+    twSceneManager->SetActiveScene("Debug");
 
     // main loop, update game & engine
     bool run = true;

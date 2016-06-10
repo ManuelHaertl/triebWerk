@@ -23,6 +23,14 @@ namespace triebWerk
 			Transparent
 		};
 
+		struct SD3D11States
+		{
+			SD3D11States() : m_pRasterizerState(nullptr), m_pBlendState(nullptr) {};
+
+			ID3D11RasterizerState* m_pRasterizerState;
+			ID3D11BlendState* m_pBlendState;
+		};
+
 	public:
 		//BEBUG
 		float DEBUG_Distance;
@@ -36,6 +44,8 @@ namespace triebWerk
 		D3D11_PRIMITIVE_TOPOLOGY m_Topology;
 		DirectX::XMMATRIX m_Transformation;
 		UINT m_Stride;
+
+		SD3D11States m_D3DStates;
 
 	public:
 		CMeshDrawable();

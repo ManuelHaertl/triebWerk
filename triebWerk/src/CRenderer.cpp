@@ -14,7 +14,9 @@ triebWerk::CRenderer::CRenderer() :
 	m_OpaqueMeshCounter(0),
 	m_TransparentMeshCounter(0),
 	m_InstancedMeshBatchCount(0),
-	m_FontCommandCount(0)
+	m_FontCommandCount(0),
+	m_pDefaultBlendState(nullptr),
+	m_pDefaultRasterizerState(nullptr)
 {
 }
 
@@ -48,6 +50,11 @@ void triebWerk::CRenderer::Initialize(CGraphics * a_pGraphicsHandle, unsigned in
 	//Create Default Camera
 	SetActiveCamera(CreateCamera(aspect, DirectX::XM_PIDIV4, 0.01f, 1000.0f));
 	m_pCurrentCamera->m_Transform.SetPosition(0, 0, -5);
+
+	//Get default states
+	m_pDefaultRasterizerState = a_pGraphicsHandle->GetDefaultRasterizerState();
+	m_pDefaultBlendState = a_pGraphicsHandle->GetDefaultBlendState();
+
 }
 
 void triebWerk::CRenderer::Shutdown()
@@ -69,6 +76,7 @@ void triebWerk::CRenderer::Shutdown()
 
 void triebWerk::CRenderer::AddRenderCommand(IDrawable* a_pRenderCommand)
 {
+	m_CommandCounter++;
 
 	if (m_CommandCounter < m_MaxDrawables - 1)
 	{
@@ -102,14 +110,13 @@ void triebWerk::CRenderer::AddRenderCommand(IDrawable* a_pRenderCommand)
 				//Add as normal command
 				m_pOpaqueMeshBuffer[m_OpaqueMeshCounter] = pMeshDrawable;
 				m_OpaqueMeshCounter++;
-				m_CommandCounter++;
+
 			}break;
 			case CMeshDrawable::ERenderMode::Transparent:
 			{
 				//add as transparent drawable
 				InsertTransparent(pMeshDrawable);
 				m_TransparentMeshCounter++;
-				m_CommandCounter++;
 			}
 			}break;
 		}break;
@@ -182,9 +189,10 @@ void triebWerk::CRenderer::DrawScene()
 
 	//Renders all Meshes in buffer
 	RenderMeshDrawables();
-
+	ResetRenderStates();
 	//Render all fonts
 	RenderFontDrawables();
+	ResetRenderStates();
 
 	m_pGraphicsHandle->Present();
 
@@ -236,38 +244,145 @@ void triebWerk::CRenderer::RenderFontDrawables()
 	}
 }
 
-void triebWerk::CRenderer::RenderFont(CFontDrawable * a_pDrawable)
+void triebWerk::CRenderer::SetResources(const CMaterial * a_pMaterial)
 {
 	ID3D11DeviceContext* pDeviceContext = m_pGraphicsHandle->GetDeviceContext();
-
-	//Set Vertex and InputLayout
-	pDeviceContext->VSSetShader(a_pDrawable->m_Material.m_pVertexShader.m_pD3DVertexShader, 0, 0);
-	pDeviceContext->IASetInputLayout(a_pDrawable->m_Material.m_pVertexShader.GetInputLayout());
-
-	//Set pixelshader to use
-    pDeviceContext->PSSetShader(a_pDrawable->m_Material.m_pPixelShader.m_pD3DPixelShader, 0, 0);
-    pDeviceContext->GSSetShader(nullptr, nullptr, 0);
-
-	//Set constantbuffer
-	a_pDrawable->m_Material.m_ConstantBuffer.SetConstantBuffer(pDeviceContext, a_pDrawable->m_Transformation, DirectX::XMMatrixIdentity(), m_pCurrentCamera->GetUIProjection(), false);
-
-	//for (size_t i = 0; i < a_pDrawable->m_Material.m_pVertexShader.m_Textures.size(); i++)
-	//{
-	//	ID3D11ShaderResourceView* pResourceView = a_pDrawable->m_Material.m_pVertexShader.m_Textures[i]->GetShaderResourceView();
-	//	m_pGraphicsHandle->GetDeviceContext()->PSSetShaderResources(static_cast<UINT>(i), 1, &pResourceView);
-	//}
-
-	//Draw all set textures
-	for (size_t i = 0; i < a_pDrawable->m_Material.m_pPixelShader.m_TextureCount; i++)
+	
+	//Vertex Shader
+	for (size_t i = 0; i < a_pMaterial->m_pVertexShader.m_TextureCount; i++)
 	{
-		if (a_pDrawable->m_Material.m_pPixelShader.m_pTextures[i] != nullptr)
+		if (a_pMaterial->m_pVertexShader.m_pTextures[i] != nullptr)
 		{
-			ID3D11ShaderResourceView* pResourceView = a_pDrawable->m_Material.m_pPixelShader.m_pTextures[i]->GetShaderResourceView();
+			ID3D11ShaderResourceView* pResourceView = a_pMaterial->m_pVertexShader.m_pTextures[i]->GetShaderResourceView();
+			pDeviceContext->GSSetShaderResources(static_cast<UINT>(i), 1, &pResourceView);
+		}
+	}
+
+	//Geometry Shader
+	for (size_t i = 0; i < a_pMaterial->m_pGeometryShader.m_TextureCount; i++)
+	{
+		if (a_pMaterial->m_pGeometryShader.m_pTextures[i] != nullptr)
+		{
+			ID3D11ShaderResourceView* pResourceView = a_pMaterial->m_pGeometryShader.m_pTextures[i]->GetShaderResourceView();
+			pDeviceContext->GSSetShaderResources(static_cast<UINT>(i), 1, &pResourceView);
+		}
+	}
+
+	//PixelShader
+	for (size_t i = 0; i < a_pMaterial->m_pPixelShader.m_TextureCount; i++)
+	{
+		if (a_pMaterial->m_pPixelShader.m_pTextures[i] != nullptr)
+		{
+			ID3D11ShaderResourceView* pResourceView = a_pMaterial->m_pPixelShader.m_pTextures[i]->GetShaderResourceView();
 			pDeviceContext->PSSetShaderResources(static_cast<UINT>(i), 1, &pResourceView);
 		}
 	}
 
-	//set the vertex buffer and index buffer
+}
+
+void triebWerk::CRenderer::SetShader(const CMaterial * a_pMaterial)
+{
+	ID3D11DeviceContext* pDeviceContext = m_pGraphicsHandle->GetDeviceContext();
+
+	//Vertex Shader
+	pDeviceContext->VSSetShader(a_pMaterial->m_pVertexShader.m_pD3DVertexShader, 0, 0);
+	
+	//InputLayout
+	pDeviceContext->IASetInputLayout(a_pMaterial->m_pVertexShader.GetInputLayout());
+
+	//Geometry Shader
+	pDeviceContext->GSSetShader(a_pMaterial->m_pGeometryShader.m_pD3DGeometryShader, 0, 0);
+
+	//Pixel Shader
+	pDeviceContext->PSSetShader(a_pMaterial->m_pPixelShader.m_pD3DPixelShader, 0, 0);
+
+}
+
+void triebWerk::CRenderer::SetSpefificStates(const CMeshDrawable::SD3D11States * a_pDrawabelStates)
+{
+	ID3D11DeviceContext* pDeviceContext = m_pGraphicsHandle->GetDeviceContext();
+
+	if (a_pDrawabelStates->m_pRasterizerState != nullptr)
+	{
+		pDeviceContext->RSSetState(a_pDrawabelStates->m_pRasterizerState);
+	}
+	else
+	{
+		pDeviceContext->RSSetState(m_pDefaultRasterizerState);
+	}
+
+	if(a_pDrawabelStates->m_pBlendState != nullptr)
+	{
+		pDeviceContext->OMSetBlendState(a_pDrawabelStates->m_pBlendState, 0, 0xffffffff);
+	}
+	else
+	{
+		pDeviceContext->OMSetBlendState(m_pDefaultBlendState, 0, 0xffffffff);
+	}
+}
+
+void triebWerk::CRenderer::ResetRenderStates()
+{
+	ID3D11DeviceContext* pDeviceContext = m_pGraphicsHandle->GetDeviceContext();
+	pDeviceContext->RSSetState(m_pDefaultRasterizerState);
+	pDeviceContext->OMSetBlendState(m_pDefaultBlendState, 0, 0xffffffff);
+}
+
+void triebWerk::CRenderer::DrawMesh(const CMeshDrawable * a_pDrawable)
+{
+	ID3D11DeviceContext* pDeviceContext = m_pGraphicsHandle->GetDeviceContext();
+
+	switch (a_pDrawable->m_DrawType)
+	{
+	case CMeshDrawable::EDrawType::Draw:
+	{
+		//set the vertex buffer and index buffer
+		UINT offset = 0;
+		pDeviceContext->IASetVertexBuffers(0, 1, &a_pDrawable->m_pMesh->m_pVertexBuffer, &a_pDrawable->m_Stride, &offset);
+
+		pDeviceContext->IASetPrimitiveTopology(a_pDrawable->m_Topology);
+		pDeviceContext->Draw(a_pDrawable->m_pMesh->m_VertexCount, 0);
+	}break;
+
+	case CMeshDrawable::EDrawType::DrawIndexed:
+	{
+		UINT offset = 0;
+		pDeviceContext->IASetVertexBuffers(0, 1, &a_pDrawable->m_pMesh->m_pVertexBuffer, &a_pDrawable->m_Stride, &offset);
+		pDeviceContext->IASetIndexBuffer(a_pDrawable->m_pMesh->m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+
+		pDeviceContext->IASetPrimitiveTopology(a_pDrawable->m_Topology);
+		pDeviceContext->DrawIndexed(static_cast<UINT>(a_pDrawable->m_pMesh->m_IndexCount), 0, 0);
+ 
+	}break;
+	
+	case CMeshDrawable::EDrawType::DrawIndexedInstanced:
+	{
+
+	}break;
+	
+	case CMeshDrawable::EDrawType::DrawInstanced:
+	{
+
+	}break;
+	}
+
+
+}
+
+void triebWerk::CRenderer::RenderFont(CFontDrawable * a_pDrawable)
+{
+	ID3D11DeviceContext* pDeviceContext = m_pGraphicsHandle->GetDeviceContext();
+
+	//Set the shader pipleline
+	SetShader(&a_pDrawable->m_Material);
+
+	//Set constant buffer
+	a_pDrawable->m_Material.m_ConstantBuffer.SetConstantBuffer(pDeviceContext, a_pDrawable->m_Transformation, DirectX::XMMatrixIdentity(), m_pCurrentCamera->GetUIProjection(), false);
+
+	//set the resource needed by the shader pipeline 
+	SetResources(&a_pDrawable->m_Material);
+
+	//Draw the font vertex buffer
 	UINT offset = 0;
 	pDeviceContext->IASetVertexBuffers(0, 1, &a_pDrawable->m_pVertexBuffer, &a_pDrawable->m_Stride, &offset);
 
@@ -278,48 +393,21 @@ void triebWerk::CRenderer::RenderFont(CFontDrawable * a_pDrawable)
 void triebWerk::CRenderer::RenderMesh(CMeshDrawable * a_pDrawable)
 {
 	ID3D11DeviceContext* pDeviceContext = m_pGraphicsHandle->GetDeviceContext();
-
-	//Set Vertex and InputLayout
-	pDeviceContext->VSSetShader(a_pDrawable->m_Material.m_pVertexShader.m_pD3DVertexShader, 0, 0);
-	pDeviceContext->IASetInputLayout(a_pDrawable->m_Material.m_pVertexShader.GetInputLayout());
-
-	//Set pixelshader to use
-	pDeviceContext->PSSetShader(a_pDrawable->m_Material.m_pPixelShader.m_pD3DPixelShader, 0, 0);
 	
-	if(a_pDrawable->m_Material.m_pGeometryShader.m_pD3DGeometryShader != nullptr)
-		pDeviceContext->GSSetShader(a_pDrawable->m_Material.m_pGeometryShader.m_pD3DGeometryShader, 0, 0);
-	
-	//Set constantbuffer
+	//Check if specific states must be set
+	SetSpefificStates(&a_pDrawable->m_D3DStates);
+
+	//Set the shader pipleline
+	SetShader(&a_pDrawable->m_Material);
+
+	//Set constant buffer
 	a_pDrawable->m_Material.m_ConstantBuffer.SetConstantBuffer(pDeviceContext, a_pDrawable->m_Transformation, m_pCurrentCamera->GetViewMatrix(), m_pCurrentCamera->GetProjection(), false);
 
+	//set the resource needed by the shader pipeline 
+	SetResources(&a_pDrawable->m_Material);
 
-	//Draw all set textures Geometry Shader
-	for (size_t i = 0; i < a_pDrawable->m_Material.m_pGeometryShader.m_TextureCount; i++)
-	{
-		if (a_pDrawable->m_Material.m_pGeometryShader.m_pTextures[i] != nullptr)
-		{
-			ID3D11ShaderResourceView* pResourceView = a_pDrawable->m_Material.m_pGeometryShader.m_pTextures[i]->GetShaderResourceView();
-			pDeviceContext->GSSetShaderResources(static_cast<UINT>(i), 1, &pResourceView);
-		}
-	}
-
-	//Draw all set textures
-	for (size_t i = 0; i < a_pDrawable->m_Material.m_pPixelShader.m_TextureCount; i++)
-	{
-		if (a_pDrawable->m_Material.m_pPixelShader.m_pTextures[i] != nullptr)
-		{
-			ID3D11ShaderResourceView* pResourceView = a_pDrawable->m_Material.m_pPixelShader.m_pTextures[i]->GetShaderResourceView();
-			pDeviceContext->PSSetShaderResources(static_cast<UINT>(i), 1, &pResourceView);
-		}
-	}
-
-	//set the vertex buffer and index buffer
-	UINT offset = 0;
-	pDeviceContext->IASetVertexBuffers(0, 1, &a_pDrawable->m_pMesh->m_pVertexBuffer, &a_pDrawable->m_Stride, &offset);
-	pDeviceContext->IASetIndexBuffer(a_pDrawable->m_pMesh->m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-
-	pDeviceContext->IASetPrimitiveTopology(a_pDrawable->m_Topology);
-	pDeviceContext->DrawIndexed(static_cast<UINT>(a_pDrawable->m_pMesh->m_IndexCount), 0, 0);
+	//Draw the actual mesh
+	DrawMesh(a_pDrawable);
 }
 
 void triebWerk::CRenderer::RenderInstancedMeshBatch(size_t a_Index)

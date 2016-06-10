@@ -32,7 +32,7 @@ void CDebugScene::Update()
 
 	if (twKeyboard.IsState(triebWerk::EKey::F, triebWerk::EButtonState::Pressed))
 	{
-		speed += (1.0f * twTime->GetDeltaTime()) * speed;
+		speed += (1.0f * twTime->GetDeltaTime());
 		mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &speed);
 	}
 
@@ -41,6 +41,18 @@ void CDebugScene::Update()
 		speed -= 1.0f * twTime->GetDeltaTime();
 		mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &speed);
 	}
+
+	if (twKeyboard.IsState(triebWerk::EKey::H, triebWerk::EButtonState::Down))
+	{
+		mesh->m_D3DStates.m_pRasterizerState->Release();
+		mesh->m_D3DStates.m_pRasterizerState = twEngine.m_pGraphics->CreateRasterizerState(D3D11_CULL_NONE, D3D11_FILL_SOLID);
+	}
+	if (twKeyboard.IsState(triebWerk::EKey::J, triebWerk::EButtonState::Down))
+	{
+		mesh->m_D3DStates.m_pRasterizerState->Release();
+		mesh->m_D3DStates.m_pRasterizerState = twEngine.m_pGraphics->CreateRasterizerState(D3D11_CULL_NONE, D3D11_FILL_WIREFRAME);
+	}
+	
 
 }
 
@@ -88,9 +100,23 @@ void CDebugScene::CreateTestCubes()
 	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &colorBlock);
 	speed = 0;
 	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &speed);
-	speed = 0.4f;
+	mesh->m_D3DStates.m_pRasterizerState = twEngine.m_pGraphics->CreateRasterizerState(D3D11_CULL_NONE, D3D11_FILL_SOLID);
+	speed = 0.01f;
 	entity->SetDrawable(mesh);
 	m_pWorld->AddEntity(entity);
+
+	/*auto entity = m_pWorld->CreateEntity();
+	entity->m_Transform.SetPosition(0,0,0);
+
+	triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
+	mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube");
+	mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardTexture"));
+	mesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("noise"));
+	DirectX::XMFLOAT3 colorBlock = { twRandom::GetNumber(0.0f, 1.0f), twRandom::GetNumber(0.0f, 1.0f), twRandom::GetNumber(0.0f, 1.0f) };
+	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &colorBlock);
+
+	entity->SetDrawable(mesh);
+	m_pWorld->AddEntity(entity);*/
 
   /*  const int range = 10;
     const int incrementer = 5;

@@ -38,7 +38,7 @@ namespace triebWerk
 	public:
 		void SetInputLayout(ID3D11InputLayout* a_pInputLayout);
 		void InitializeTextureBuffer();
-		ID3D11InputLayout* GetInputLayout();
+		ID3D11InputLayout* GetInputLayout() const;
 
 	public:
 		virtual void* GetD3D11Shader() = 0;

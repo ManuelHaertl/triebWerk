@@ -34,7 +34,7 @@ void triebWerk::IShader::InitializeTextureBuffer()
 
 }
 
-ID3D11InputLayout * triebWerk::IShader::GetInputLayout()
+ID3D11InputLayout * triebWerk::IShader::GetInputLayout() const
 {
 	return m_pInputLayout;
 }
