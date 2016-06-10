@@ -5,7 +5,7 @@
 #include <string.h>
 
 
-triebWerk::CText::CText(CGraphics* a_pGraphics, unsigned int a_DPIX, unsigned int a_DPIY) :
+triebWerk::CText::CText(CGraphics* a_pGraphics, unsigned int a_DPIX, unsigned int a_DPIY, unsigned char* a_pBuffer) :
     m_Text(),
     m_pFont(nullptr),
     m_PointSize(12),
@@ -15,7 +15,7 @@ triebWerk::CText::CText(CGraphics* a_pGraphics, unsigned int a_DPIX, unsigned in
     m_Height(600),
     m_DPIX(a_DPIX),
     m_DPIY(a_DPIY),
-    m_pBuffer(nullptr),
+    m_pBuffer(a_pBuffer),
     m_Texture(),
     m_pGraphics(a_pGraphics)
 {
@@ -79,8 +79,6 @@ void triebWerk::CText::CreateTexture()
 
     FT_Set_Char_Size(face, 0, m_PointSize * 64, m_DPIX, m_DPIY);
 
-    // allocate memory for drawing buffer
-    m_pBuffer = new unsigned char[m_Height * m_Width];
     memset(m_pBuffer, 0, m_Height * m_Width);
 
     for (size_t i = 0; i < m_Text.size(); ++i)
@@ -115,9 +113,6 @@ void triebWerk::CText::CreateTexture()
     // create the new texture
     auto newTexture = m_pGraphics->CreateD3D11FontTexture(m_pBuffer, m_Width, m_Height);
 	m_Texture.SetTexture(m_Width, m_Height, newTexture, m_pGraphics->CreateID3D11ShaderResourceViewFont(newTexture));
-
-    // delete buffer
-    delete[] m_pBuffer;
 }
 
 void triebWerk::CText::DrawLetter(FT_Bitmap* a_pBitmap, FT_Int a_X, FT_Int a_Y)
@@ -130,8 +125,7 @@ void triebWerk::CText::DrawLetter(FT_Bitmap* a_pBitmap, FT_Int a_X, FT_Int a_Y)
     {
         for (j = a_Y, q = 0; j < y_max; j++, q++)
         {
-            if (i < 0 || j < 0 ||
-                i >= m_Width || j >= m_Height)
+            if (i < 0 || j < 0 || i >= m_Width || j >= m_Height)
                 continue;
 
             size_t cur = j * m_Width + i;

@@ -16,6 +16,7 @@ triebWerk::CFontManager::~CFontManager()
 
 bool triebWerk::CFontManager::Initialize(CGraphics* a_pGraphics, const unsigned int a_DPIX, const unsigned int a_DPIY)
 {
+    m_pBuffer = new unsigned char[BUFFER_SIZE];
     m_pGraphics = a_pGraphics;
     
     if (a_DPIX != 0 && a_DPIY != 0)
@@ -36,6 +37,8 @@ bool triebWerk::CFontManager::Initialize(CGraphics* a_pGraphics, const unsigned 
 
 void triebWerk::CFontManager::Shutdown()
 {
+    delete[] m_pBuffer;
+
     FT_Error error = FT_Done_FreeType(m_Library);
     if (error != FT_Err_Ok)
     {
@@ -50,14 +53,14 @@ FT_Library* triebWerk::CFontManager::GetLibrary()
 
 triebWerk::CText* triebWerk::CFontManager::CreateText(const char* a_pText, CFont* a_pFont, const unsigned int a_PointSize)
 {
-    CText* pText = new CText(m_pGraphics, m_DPIX, m_DPIY);
+    CText* pText = new CText(m_pGraphics, m_DPIX, m_DPIY, m_pBuffer);
     pText->Update(a_pText, a_pFont, a_PointSize);
     return pText;
 }
 
 triebWerk::CText * triebWerk::CFontManager::CreateText(const std::string a_Text, CFont * a_pFont, const unsigned int a_PointSize)
 {
-    CText* pText = new CText(m_pGraphics, m_DPIX, m_DPIY);
+    CText* pText = new CText(m_pGraphics, m_DPIX, m_DPIY, m_pBuffer);
     pText->Update(a_Text, a_pFont, a_PointSize);
     return pText;
 }
