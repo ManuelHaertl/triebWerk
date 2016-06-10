@@ -36,9 +36,9 @@ private:
     triebWerk::CEntity* m_pEndWall;
 
     // Snake Loop
-    const float SnakeRotateSpeed1 = 3.0f;
-    const float SnakeRotateSpeed2 = 2.0f;
-    const float SnakeRotateSpeed3 = 1.0f;
+    const float SnakeRotateSpeed1 = -3.0f;
+    const float SnakeRotateSpeed2 = -2.0f;
+    const float SnakeRotateSpeed3 = -1.0f;
     DirectX::XMVECTOR m_SnakeRotation1;
     DirectX::XMVECTOR m_SnakeRotation2;
     DirectX::XMVECTOR m_SnakeRotation3;

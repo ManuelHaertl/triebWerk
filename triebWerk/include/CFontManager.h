@@ -11,8 +11,10 @@ namespace triebWerk
     class CFontManager
     {
     private:
+        static const int BUFFER_SIZE = 4000000;
         FT_Library m_Library;
-            
+        unsigned char* m_pBuffer;
+
         CGraphics* m_pGraphics;
         unsigned int m_DPIX;
         unsigned int m_DPIY;

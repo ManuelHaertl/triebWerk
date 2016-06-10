@@ -45,7 +45,7 @@ void CGameScene::Update()
         std::to_string(CGameInfo::Instance().m_Multiplier) +
         "\nDifficulty: " + 
         std::to_string(CGameInfo::Instance().m_Difficulty);
-
+    
     m_pPoints->Update(points, nullptr, 0);
 
     if (twKeyboard.IsState(triebWerk::EKey::F3, triebWerk::EButtonState::Down))

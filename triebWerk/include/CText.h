@@ -22,13 +22,13 @@ namespace triebWerk
         unsigned int m_Height;
         unsigned int m_DPIX;
         unsigned int m_DPIY;
-        unsigned char* m_pBuffer;
 
 		CTexture2D m_Texture;
         CGraphics* m_pGraphics;
+        unsigned char* m_pBuffer;
 
     public:
-        CText(CGraphics* a_pGraphics, unsigned int a_DPIX, unsigned int a_DPIY);
+        CText(CGraphics* a_pGraphics, unsigned int a_DPIX, unsigned int a_DPIY, unsigned char* a_pBuffer);
         ~CText();
 
         void Update(const char* a_pText, CFont* a_pFont, const unsigned int a_PointSize);
