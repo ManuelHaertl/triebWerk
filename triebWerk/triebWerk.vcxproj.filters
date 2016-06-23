@@ -387,9 +387,6 @@
     <ClCompile Include="src\CDebugLogfile.cpp">
       <Filter>Quelldateien\Debug</Filter>
     </ClCompile>
-    <ClCompile Include="src\CInstancedMeshBatch.cpp">
-      <Filter>Quelldateien\Rendering\Batches</Filter>
-    </ClCompile>
     <ClCompile Include="src\IScene.cpp">
       <Filter>Quelldateien\Scenes</Filter>
     </ClCompile>
@@ -416,6 +413,15 @@
     </ClCompile>
     <ClCompile Include="src\CGeometryShader.cpp">
       <Filter>Quelldateien\Resource\Resources\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CRenderBatch.cpp">
+      <Filter>Quelldateien\Rendering\Batches</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CInstancedMeshBatch.cpp">
+      <Filter>Quelldateien\Rendering\Batches</Filter>
+    </ClCompile>
+    <ClCompile Include="include\CPostEffectDrawable.cpp">
+      <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -649,6 +655,12 @@
     </ClInclude>
     <ClInclude Include="include\CGeometryShader.h">
       <Filter>Headerdateien\Resource\Resources\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CRenderBatch.h">
+      <Filter>Headerdateien\Rendering\Batches</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CPostEffectDrawable.h">
+      <Filter>Headerdateien\Rendering\Drawables</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -142,6 +142,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="extern\include\loadPNG\lodepng.cpp" />
+    <ClCompile Include="include\CPostEffectDrawable.cpp" />
     <ClCompile Include="src\CAABBCollider.cpp" />
     <ClCompile Include="src\CBody.cpp" />
     <ClCompile Include="src\CCamera.cpp" />
@@ -153,6 +154,7 @@
     <ClCompile Include="src\CFontDrawable.cpp" />
     <ClCompile Include="src\CGeometryShader.cpp" />
     <ClCompile Include="src\CInstancedMeshBatch.cpp" />
+    <ClCompile Include="src\CRenderBatch.cpp" />
     <ClCompile Include="src\CRenderTarget.cpp" />
     <ClCompile Include="src\CSceneHolder.cpp" />
     <ClCompile Include="src\CSceneManager.cpp" />
@@ -217,6 +219,8 @@
     <ClInclude Include="include\CFontManager.h" />
     <ClInclude Include="include\CFontDrawable.h" />
     <ClInclude Include="include\CGeometryShader.h" />
+    <ClInclude Include="include\CPostEffectDrawable.h" />
+    <ClInclude Include="include\CRenderBatch.h" />
     <ClInclude Include="include\CRenderTarget.h" />
     <ClInclude Include="include\CElementContainer.h" />
     <ClInclude Include="include\CFrameContainer.h" />

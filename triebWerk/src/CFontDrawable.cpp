@@ -32,8 +32,6 @@ triebWerk::IDrawable::EDrawableType triebWerk::CFontDrawable::GetType()
 
 void triebWerk::CFontDrawable::SetTransform(const DirectX::XMMATRIX & a_rTransform)
 {
-
-
 	DirectX::XMMATRIX t = a_rTransform;
 
 	t.r[0].m128_f32[0] = a_rTransform.r[0].m128_f32[0] * m_ScaleOfTextureX;

@@ -18,6 +18,9 @@ bool triebWerk::CResourceManager::Initialize(CGraphics* a_pGraphics, FT_Library*
 	m_FileWatcher.Watch("data", true);
 #endif //DEBUG
 	//return error;
+
+	LoadAllFilesInFolder("data/Default/");
+
     return true;
 }
 
@@ -305,6 +308,11 @@ void triebWerk::CResourceManager::LoadFile(SFile a_File)
 
 void triebWerk::CResourceManager::LoadPNG(SFile a_File)
 {
+	size_t hash = StringHasher(RemoveFileType(a_File.FileName));
+	if (ExistsResourceInBuffer(EFileType::PNG, hash))
+		return;
+
+
 	//PixelBuffer
 	std::vector<unsigned char> imageBuffer;
 
@@ -329,13 +337,17 @@ void triebWerk::CResourceManager::LoadPNG(SFile a_File)
 
 		texture->SetTexture(width, height, d3dtexture, resourceView);
 
-		m_TextureBuffer.insert(CTexturePair(StringHasher(RemoveFileType(a_File.FileName)), texture));
+		m_TextureBuffer.insert(CTexturePair(hash, texture));
 	}
 
 }
 
 void triebWerk::CResourceManager::LoadOBJ(SFile a_File)
 {
+	size_t hash = StringHasher(RemoveFileType(a_File.FileName));
+	if (ExistsResourceInBuffer(EFileType::OBJ, hash))
+		return;
+
 	COBJParser objParser;
 	bool success = objParser.LoadOBJ(a_File.FilePath.c_str());
 
@@ -355,7 +367,7 @@ void triebWerk::CResourceManager::LoadOBJ(SFile a_File)
 	mesh->m_pVertexBuffer = m_pGraphicsHandle->CreateVertexBuffer(mesh->m_pVertices, mesh->m_VertexCount);
 	mesh->m_pIndexBuffer = m_pGraphicsHandle->CreateIndexBuffer(objParser.m_pIndices, sizeof(unsigned int) * objParser.m_IndexCount);
 
-	m_MeshBuffer.insert(CMeshPair(StringHasher(RemoveFileType(a_File.FileName)), mesh));
+	m_MeshBuffer.insert(CMeshPair(hash, mesh));
 }
 
 void triebWerk::CResourceManager::LoadMP3(SFile a_File)
@@ -364,6 +376,10 @@ void triebWerk::CResourceManager::LoadMP3(SFile a_File)
 
 void triebWerk::CResourceManager::LoadTMX(SFile a_File)
 {
+	size_t hash = StringHasher(RemoveFileType(a_File.FileName));
+	if (ExistsResourceInBuffer(EFileType::TMX, hash))
+		return;
+
 	CTMXParser parserTMX = CTMXParser();
 	CTilesetMap* tileset = new CTilesetMap();
 	bool success = parserTMX.ParseData(a_File.FilePath.c_str(), tileset);
@@ -375,11 +391,15 @@ void triebWerk::CResourceManager::LoadTMX(SFile a_File)
 		return;
 	}
 
-	m_TilesetBuffer.insert(CTilesetPair(StringHasher(RemoveFileType(a_File.FileName)), tileset));
+	m_TilesetBuffer.insert(CTilesetPair(hash, tileset));
 }
 
 void triebWerk::CResourceManager::LoadHLSL(SFile a_File)
 {
+	size_t hash = StringHasher(RemoveFileType(a_File.FileName));
+	if (ExistsResourceInBuffer(EFileType::HLSL, hash))
+		return;
+
 	CMaterial* temp = new CMaterial();
 	CHLSLParser hlslParser;
 	bool success = hlslParser.ParseShader(a_File.FilePath.c_str(), m_pGraphicsHandle, temp);
@@ -390,24 +410,32 @@ void triebWerk::CResourceManager::LoadHLSL(SFile a_File)
 		return;
 	}
 
-	m_MaterialBuffer.insert(CMaterialPair(StringHasher(RemoveFileType(a_File.FileName)), temp));
+	m_MaterialBuffer.insert(CMaterialPair(hash, temp));
 }
 
 void triebWerk::CResourceManager::LoadTWF(SFile a_File)
 {
+	size_t hash = StringHasher(RemoveFileType(a_File.FileName));
+	if (ExistsResourceInBuffer(EFileType::TWF, hash))
+		return;
+
 	CTWFParser twfParser;
 	CTWFData* twfData = new CTWFData();
 	twfParser.ParseData(a_File.FilePath.c_str(), twfData);
 	
-	m_TWFBuffer.insert(CTWFDataPair(StringHasher(RemoveFileType(a_File.FileName)), twfData));
+	m_TWFBuffer.insert(CTWFDataPair(hash, twfData));
 }
 
 void triebWerk::CResourceManager::LoadFont(SFile a_File)
 {
+	size_t hash = StringHasher(RemoveFileType(a_File.FileName));
+	if (ExistsResourceInBuffer(EFileType::TTF, hash))
+		return;
+
     CFont* pFont = new CFont(m_pFontLibraryHandle, a_File.FilePath.c_str());
 
 	//Insert Data in font map
-    m_FontBuffer.insert(CFontPair(StringHasher(RemoveFileType(a_File.FileName)), pFont));
+    m_FontBuffer.insert(CFontPair(hash, pFont));
 }
 
 bool triebWerk::CResourceManager::SetModulPath()
@@ -485,6 +513,81 @@ std::vector<triebWerk::CResourceManager::SFile> triebWerk::CResourceManager::Sea
 	}
 
 	return filesToLoad;
+}
+
+bool triebWerk::CResourceManager::ExistsResourceInBuffer(EFileType a_FileType, size_t a_Hash)
+{
+	switch (a_FileType)
+	{
+	case triebWerk::EFileType::PNG:
+	{
+		auto iter = m_TextureBuffer.find(a_Hash);
+
+		if (iter != m_TextureBuffer.end())
+			return true;
+		else
+			return false;
+	}break;
+		
+
+	case triebWerk::EFileType::OBJ:
+	{
+		auto iter = m_MeshBuffer.find(a_Hash);
+
+		if (iter != m_MeshBuffer.end())
+			return true;
+		else
+			return false;
+	}break;
+	//case triebWerk::EFileType::MP3:
+	//{
+	//	auto iter = m_TextureBuffer.find(a_Hash);
+
+	//	if (iter != m_TextureBuffer.end())
+	//		return true;
+	//	else
+	//		return false;
+	//}break;
+	case triebWerk::EFileType::TMX:
+	{
+		auto iter = m_TilesetBuffer.find(a_Hash);
+
+		if (iter != m_TilesetBuffer.end())
+			return true;
+		else
+			return false;
+	}break;
+	case triebWerk::EFileType::HLSL:
+	{
+		auto iter = m_MaterialBuffer.find(a_Hash);
+
+		if (iter != m_MaterialBuffer.end())
+			return true;
+		else
+			return false;
+	}break;
+	case triebWerk::EFileType::TWF:
+	{
+		auto iter = m_TWFBuffer.find(a_Hash);
+
+		if (iter != m_TWFBuffer.end())
+			return true;
+		else
+			return false;
+	}break;
+	case triebWerk::EFileType::TTF:
+	case triebWerk::EFileType::OTF:
+	{
+		auto iter = m_FontBuffer.find(a_Hash);
+
+		if (iter != m_FontBuffer.end())
+			return true;
+		else
+			return false;
+	}break;
+	}
+
+	return false;
 }
 
 bool triebWerk::CResourceManager::CompareFileTypes(const std::string& a_Name, const char * a_ExpectedType)

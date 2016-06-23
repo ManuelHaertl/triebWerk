@@ -8,36 +8,30 @@
 #include <unordered_map>
 #include <CRenderTarget.h>
 #include <CFontDrawable.h>
+#include <CRenderBatch.h>
+#include <CPostEffectDrawable.h>
 
 namespace triebWerk
 {
 	class CRenderer
 	{
 	private:
-
-	private:
-		const size_t m_MaxFonts = 1000;
-		const size_t m_MaxDrawables = 10000;
-		const size_t m_MaxInstancedMeshBatch = 100;
+		const size_t m_MaxRenderTargetCount = 4;
+		const size_t m_MaxPostEffects = 30;
 
 	private:
 		//General
 		CRenderTarget* m_pRenderTargetList;
-
-		//UI
-		CFontDrawable** m_pFontBuffer;
-		size_t m_FontCommandCount;
-
-		//Mesh Drawing
-		IDrawable** m_pCommandBuffer;
-		CMeshDrawable** m_pOpaqueMeshBuffer;
-		CMeshDrawable** m_pTransparentMeshBuffer;
-		CInstancedMeshBatch* m_pInstancedMeshBuffer;
 		size_t m_RenderTargetCounter;
 		size_t m_CommandCounter;
-		size_t m_OpaqueMeshCounter;
-		size_t m_TransparentMeshCounter;
-		size_t m_InstancedMeshBatchCount;
+
+		//PostEffects
+		CPostEffectDrawable** m_pPostEffectBuffer;
+		CPostEffectDrawable* m_pDefaultPostEffect;
+		size_t m_PostEffectCounter;
+
+		//Render Target to draw with
+		int m_ActiveRenderTargetSlot;
 
 		std::vector<CCamera*> m_CameraBuffer;
 		CGraphics* m_pGraphicsHandle;
@@ -48,7 +42,6 @@ namespace triebWerk
 
 		ID3D11BlendState* m_pDefaultBlendState;
 		ID3D11RasterizerState* m_pDefaultRasterizerState;
-		
 	public:
 		CRenderer();
 		~CRenderer();
@@ -78,6 +71,9 @@ namespace triebWerk
 		//Creates a new mesh drawable.
 		//Renderer handles ownership
 		CMeshDrawable* CreateMeshDrawable();
+		//Creates a new mesh drawable.
+		//Renderer handles ownership
+		CPostEffectDrawable* CreatePostEffecthDrawable();
 		//--------------------------------------
 
 		//World Functions
@@ -87,8 +83,8 @@ namespace triebWerk
 		void DrawScene();
 
 
-		//Render Targets does nothing at the moment
-		CRenderTarget* AddRenderTarget(int a_Order);
+		//Render Target
+		CRenderTarget* GetRenderTarget(unsigned int a_Slot);
 	
 		//Resize the Cameras and the viewports
 		void ResizeRenderer(unsigned int a_ScreenWidth, unsigned int a_ScreenHeight);
@@ -105,6 +101,10 @@ namespace triebWerk
 
 		void ResetRenderStates();
 
+		//RenderTarget
+		//--------------------------------------
+		void DrawRenderTarget(CRenderTarget* a_pRenderTarget);
+		//--------------------------------------
 		//MeshDrawable
 		//--------------------------------------
 		void DrawMesh(const CMeshDrawable* a_pDrawable);
@@ -113,7 +113,7 @@ namespace triebWerk
 		void InsertTransparent(CMeshDrawable* a_pDrawable);
 		void SortTransparentObjects();
 
-		void InstanceBatching(CMeshDrawable* a_pDrawable);
+		void InstanceBatching(CMeshDrawable* a_pDrawable, const unsigned int a_RenderTargetSlot);
 		void RenderInstancedMeshBatch(size_t a_Index);
 		//--------------------------------------
 		
