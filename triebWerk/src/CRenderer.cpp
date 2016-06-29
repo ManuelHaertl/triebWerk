@@ -2,6 +2,7 @@
 #include <iostream>
 #include <algorithm>
 #include <CEngine.h>
+#include <CInstancedFontBatch.h>
 
 triebWerk::CRenderer::CRenderer() 
 	: m_pDefaultBlendState(nullptr)
@@ -472,23 +473,27 @@ void triebWerk::CRenderer::DrawMesh(const CMeshDrawable * a_pDrawable)
 
 void triebWerk::CRenderer::RenderFont(CFontDrawable * a_pDrawable)
 {
-	ID3D11DeviceContext* pDeviceContext = m_pGraphicsHandle->GetDeviceContext();
+	//ID3D11DeviceContext* pDeviceContext = m_pGraphicsHandle->GetDeviceContext();
 
-	//Set the shader pipleline
-	SetShader(&a_pDrawable->m_Material);
+	a_pDrawable->m_Material.m_pPixelShader.SetTexture(0, &a_pDrawable->m_pText->m_pFont->m_LetterMap);
 
-	//Set constant buffer
-	a_pDrawable->m_Material.m_ConstantBuffer.SetConstantBuffer(pDeviceContext, a_pDrawable->m_Transformation, DirectX::XMMatrixIdentity(), m_pCurrentCamera->GetUIProjection(), false);
+	////Set the shader pipleline
+	//SetShader(&a_pDrawable->m_Material);
 
-	//set the resource needed by the shader pipeline 
-	SetResources(&a_pDrawable->m_Material);
+	////Set constant buffer
+	//a_pDrawable->m_Material.m_ConstantBuffer.SetConstantBuffer(pDeviceContext, a_pDrawable->m_Transformation, DirectX::XMMatrixIdentity(), m_pCurrentCamera->GetUIProjection(), true);
 
-	//Draw the font vertex buffer
-	UINT offset = 0;
-	pDeviceContext->IASetVertexBuffers(0, 1, &a_pDrawable->m_pVertexBuffer, &a_pDrawable->m_Stride, &offset);
+	////set the resource needed by the shader pipeline 
+	//SetResources(&a_pDrawable->m_Material);
 
-	pDeviceContext->IASetPrimitiveTopology(a_pDrawable->m_Topology);
-	pDeviceContext->Draw(a_pDrawable->m_VertexCount, 0);
+	////Draw the font vertex buffer
+	//UINT offset = 0;
+	//pDeviceContext->IASetVertexBuffers(0, 1, &a_pDrawable->m_pVertexBuffer, &a_pDrawable->m_Stride, &offset);
+
+	//pDeviceContext->IASetPrimitiveTopology(a_pDrawable->m_Topology);
+	//pDeviceContext->Draw(a_pDrawable->m_VertexCount, 0);
+
+	CInstancedFontBatch::Draw(a_pDrawable, m_pGraphicsHandle->GetDevice(), m_pGraphicsHandle->GetDeviceContext(), m_pCurrentCamera);
 }
 
 void triebWerk::CRenderer::RenderMesh(CMeshDrawable * a_pDrawable)

@@ -12,7 +12,7 @@ namespace triebWerk
     struct SLetterCoordinate
     {
         float uBegin, uEnd, vBegin, vEnd;
-        int width, height;
+        float width, height;
 
         SLetterCoordinate()
             : uBegin(0.0f)

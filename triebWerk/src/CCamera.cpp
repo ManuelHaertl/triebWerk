@@ -127,5 +127,5 @@ void triebWerk::CCamera::CalculateProjection()
 
 void triebWerk::CCamera::CalculateUIProjection()
 {
-	m_UIProjectionMatrix = DirectX::XMMatrixOrthographicLH(m_ScreenWidth, m_ScreenHeight, m_NearPlane, m_FarPlane);
+	m_UIProjectionMatrix = DirectX::XMMatrixOrthographicLH(m_ScreenWidth, m_ScreenHeight, -0.1f, 100.0f);
 }

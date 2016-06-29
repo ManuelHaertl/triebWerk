@@ -22,6 +22,7 @@ void CDebugScene::Start()
 
     ResetCamera();
     CreateTestCubes();
+	CreateDebugFont();
 }
 
 void CDebugScene::Update()
@@ -64,7 +65,7 @@ void CDebugScene::Update()
 
 	float time = twTime->GetTimeSinceStartup();
 
-	//sunEffect->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &time);
+	sunEffect->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &time);
 
 	//effect->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &time);
 }
@@ -85,6 +86,8 @@ void CDebugScene::Pause()
 
 void CDebugScene::CreateTestCubes()
 {
+
+
 	/*auto text = twFontManager->CreateText();
 	text->SetText("HalloTest");
 	text->SetPixelSize(12);
@@ -119,32 +122,35 @@ void CDebugScene::CreateTestCubes()
 //	entity->SetDrawable(mesh);
 //	m_pWorld->AddEntity(entity);
 //
-	eps = m_pWorld->CreateEntity();
-	effect = twRenderer->CreatePostEffecthDrawable();
+	//eps = m_pWorld->CreateEntity();
+	//effect = twRenderer->CreatePostEffecthDrawable();
+	////effect->AddMaterial(twResourceManager->GetMaterial("ScanLines"));
+
 	//effect->AddMaterial(twResourceManager->GetMaterial("ScanLines"));
+	//effect->m_RenderTargetSlotToStartOff = 0;
+	//eps->SetDrawable(effect);
+	//m_pWorld->AddEntity(eps);
 
-	effect->AddMaterial(twResourceManager->GetMaterial("ScanLines"));
-	effect->m_RenderTargetSlotToStartOff = 0;
-	eps->SetDrawable(effect);
-	m_pWorld->AddEntity(eps);
+	////auto o = twRenderer->GetRenderTarget(1);
+	////o->m_PlaneTransform.SetPosition(0, 0, -0.1f);
 
-	//auto o = twRenderer->GetRenderTarget(1);
-	//o->m_PlaneTransform.SetPosition(0, 0, -0.1f);
+	//auto entity = m_pWorld->CreateEntity();
+	//entity->m_Transform.SetPosition(0,0,0);
 
-	auto entity = m_pWorld->CreateEntity();
-	entity->m_Transform.SetPosition(0,0,0);
+	//triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
+	//mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_obs_5x5x12_base");
+	//mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
+	////mesh->m_Material.m_pVertexShader.SetTexture(0, twResourceManager->GetTexture2D("noise"));
+	//mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
+	//mesh->m_D3DStates.m_pRasterizerState = twEngine.m_pGraphics->CreateRasterizerState(D3D11_CULL_NONE, D3D11_FILL_SOLID);
+	//DirectX::XMFLOAT3 colorBlock = { 0.2f, 0.0f, 0.6f };	
+	//mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &colorBlock);
 
-	triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
-	mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_obs_5x5x12_base");
-	mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
-	//mesh->m_Material.m_pVertexShader.SetTexture(0, twResourceManager->GetTexture2D("noise"));
-	mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
-	mesh->m_D3DStates.m_pRasterizerState = twEngine.m_pGraphics->CreateRasterizerState(D3D11_CULL_NONE, D3D11_FILL_SOLID);
-	DirectX::XMFLOAT3 colorBlock = { 0.2f, 0.0f, 0.6f };	
-	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &colorBlock);
+	//entity->SetDrawable(mesh);
+	//m_pWorld->AddEntity(entity);
 
-	entity->SetDrawable(mesh);
-	m_pWorld->AddEntity(entity);
+	//auto entity = m_pWorld->CreateEntity();
+	//entity->m_Transform.SetPosition(0,0,0);
 
 	//sunEffect = twRenderer->CreateMeshDrawable();
 	//sunEffect->m_pMesh = twEngine.m_pResourceManager->GetMesh("sphere");
@@ -152,7 +158,6 @@ void CDebugScene::CreateTestCubes()
 	//sunEffect->m_Material.m_pVertexShader.SetTexture(0, twEngine.m_pResourceManager->GetTexture2D("WhiteNoise"));
 	//sunEffect->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
 	//sunEffect->m_D3DStates.m_pRasterizerState = twGraphic->CreateRasterizerState(D3D11_CULL_NONE, D3D11_FILL_SOLID);
-
 
 	//entity->SetDrawable(sunEffect);
 	//m_pWorld->AddEntity(entity);
@@ -183,6 +188,25 @@ void CDebugScene::CreateTestCubes()
             }
         }
     }*/
+}
+
+void CDebugScene::CreateDebugFont()
+{
+	auto font = twFontManager->LoadFont(twResourceManager->GetFontFace("Rubik-Regular"), 40);
+	auto text = twFontManager->CreateText();
+	text->Set(font, "Fonn", 1.0f);
+
+	auto entity = m_pWorld->CreateEntity();
+	entity->m_Transform.SetPosition(400.0f, 300.0f, 0.0f);
+
+	auto fontDraw = twRenderer->CreateFontDrawable();
+	fontDraw->m_pText = text;
+	fontDraw->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardFont"));
+	DirectX::XMFLOAT3 t = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
+	fontDraw->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &t);
+
+	entity->SetDrawable(fontDraw);
+	m_pWorld->AddEntity(entity);
 }
 
 void CDebugScene::ResetCamera()

@@ -10,18 +10,17 @@ namespace triebWerk
 	class CFontDrawable : public IDrawable
 	{
 	public:
-		CMaterial m_Material;
+
 		DirectX::XMMATRIX m_Transformation;
+
+
 		ID3D11Buffer* m_pVertexBuffer;
 		UINT m_Stride;
 		D3D11_PRIMITIVE_TOPOLOGY m_Topology;
 		UINT m_VertexCount;
 
 		CText* m_pText;
-
-	private:
-		unsigned int m_ScaleOfTextureX;
-		unsigned int m_ScaleOfTextureY;
+		CMaterial m_Material;
 
 	public:
 		CFontDrawable(CGraphics* a_pGraphicsHandle);

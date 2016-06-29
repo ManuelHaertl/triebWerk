@@ -18,5 +18,6 @@ public:
 
 private:
     void CreateTestCubes();
+	void CreateDebugFont();
     void ResetCamera();
 };

@@ -10,7 +10,7 @@ namespace triebWerk
     struct SLetterInfo
     {
         SLetterCoordinate letterCoordinate;
-        int offsetX, offsetY;
+        float offsetX, offsetY;
 
         SLetterInfo()
             : letterCoordinate()
@@ -21,13 +21,14 @@ namespace triebWerk
 
     class CText
     {
+	public:
+		CFont* m_pFont;
+		SLetterInfo* m_pLetterInfo;
+		size_t m_LetterCount;
+
     private:
         std::string m_Text;
-        CFont* m_pFont;
         float m_LineSpacing;
-
-        SLetterInfo* m_pLetterInfo;
-        size_t m_LetterCount;
         int m_Width, m_Height;
 
     public:

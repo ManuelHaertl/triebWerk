@@ -426,6 +426,9 @@
     <ClCompile Include="src\CFontFace.cpp">
       <Filter>Quelldateien\Font</Filter>
     </ClCompile>
+    <ClCompile Include="src\CInstancedFontBatch.cpp">
+      <Filter>Quelldateien\Rendering\Batches</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\CEngine.h">
@@ -667,6 +670,9 @@
     </ClInclude>
     <ClInclude Include="include\CFontFace.h">
       <Filter>Headerdateien\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CInstancedFontBatch.h">
+      <Filter>Headerdateien\Rendering\Batches</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
