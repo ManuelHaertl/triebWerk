@@ -62,7 +62,7 @@ void CPatternLoader::SetMapLayer(triebWerk::CMapLayer* const a_pLayer, CPattern*
             short tile = a_pLayer->m_Indices[current];
             ETileType::Type type = GetTileType(tile);
 
-            if (type != ETileType::Invalid)
+            if (type != ETileType::Nothing)
             {
                 // convert the .TMX Map Layer coordinates to our
                 float xPos = static_cast<float>(x) - a_pPattern->m_Width / 2.0f + 0.5f;
@@ -87,11 +87,20 @@ void CPatternLoader::SetObjectLayer(triebWerk::CObjectLayer* const a_pLayer, CPa
         auto& objectProperty = a_pLayer->m_Objects[i];
         ETileType::Type type = GetTileType(objectProperty.m_GID);
 
-        if (type != ETileType::Invalid)
+        if (type != ETileType::Nothing)
         {
             // convert the .TMX Object Layer coordinates to our
-            float xPos = static_cast<float>(objectProperty.m_X) / static_cast<float>(objectProperty.m_Width) - a_pPattern->m_Width / 2.0f + 0.5f;
-            float yPos = a_pPattern->m_Height - static_cast<float>(objectProperty.m_Y) / static_cast<float>(objectProperty.m_Height) + 0.5f;
+            float width = (float)objectProperty.m_Width / 2 / 64.0f;
+            float middleX = (float)objectProperty.m_X / 64.0f + width;
+            float patternHalfWidth = a_pPattern->m_Width / 2.0f;
+            float xPos = middleX - patternHalfWidth;
+
+            float height = (float)objectProperty.m_Height / 2.0f / 64.0f;
+            float middleY = (float)objectProperty.m_Y / 64.0f + height;
+            float yPos = a_pPattern->m_Height - middleY;
+            
+            if (type == ETileType::ModelSize)
+                type = GetModelTileType(objectProperty.m_Width / 64, objectProperty.m_Height / 64);
 
             SetTile(type, xPos, yPos, a_pPattern);
         }
@@ -126,6 +135,8 @@ ETileType::Type CPatternLoader::GetTileType(const short a_Tile) const
 {
     switch (a_Tile)
     {
+    case ETileType::ModelSize:
+        return ETileType::ModelSize;
     case ETileType::Checkpoint:
         return ETileType::Checkpoint;
     case ETileType::Points:
@@ -138,7 +149,41 @@ ETileType::Type CPatternLoader::GetTileType(const short a_Tile) const
         return ETileType::Block2x2;
     }
 
-    return ETileType::Invalid;
+    return ETileType::Nothing;
+}
+
+ETileType::Type CPatternLoader::GetModelTileType(const int a_ModelWidth, const int a_ModelHeight) const
+{
+    if (a_ModelWidth == 5)
+    {
+        switch (a_ModelHeight)
+        {
+        case 5:
+            return ETileType::Model05x05;
+        case 10:
+            return ETileType::Model05x10;
+        case 20:
+            return ETileType::Model05x20;
+        case 30:
+            return ETileType::Model05x30;
+        }
+    }
+    else if (a_ModelHeight == 5)
+    {
+        switch (a_ModelWidth)
+        {
+        case 5:
+            return ETileType::Model05x05Flipped;
+        case 10:
+            return ETileType::Model05x10Flipped;
+        case 20:
+            return ETileType::Model05x20Flipped;
+        case 30:
+            return ETileType::Model05x30Flipped;
+        }
+    }
+
+    return ETileType::Block1x1;
 }
 
 void CPatternLoader::SetPatternProperties(triebWerk::CObjectLayer* const a_pLayer, CPattern* a_pPattern)

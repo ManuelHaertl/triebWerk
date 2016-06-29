@@ -84,6 +84,9 @@
     <ClCompile Include="src\CCollectedPoint.cpp">
       <Filter>Quelldateien\Game\Tiles</Filter>
     </ClCompile>
+    <ClCompile Include="src\CPatternTileCreator.cpp">
+      <Filter>Quelldateien\Game\Pattern</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\CGameScene.h">
@@ -133,6 +136,9 @@
     </ClInclude>
     <ClInclude Include="include\CCollectedPoint.h">
       <Filter>Headerdateien\Game\Tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CPatternTileCreator.h">
+      <Filter>Headerdateien\Game\Pattern</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

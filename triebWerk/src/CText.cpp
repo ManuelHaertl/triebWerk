@@ -1,135 +1,129 @@
 #include <CText.h>
 
-#include <CFont.h>
-#include <CGraphics.h>
-#include <string.h>
 
-
-triebWerk::CText::CText(CGraphics* a_pGraphics, unsigned int a_DPIX, unsigned int a_DPIY, unsigned char* a_pBuffer) :
-    m_Text(),
-    m_pFont(nullptr),
-    m_PointSize(12),
-    m_LineSpacing(1.0f),
-    m_IsModified(false),
-    m_Width(800),
-    m_Height(600),
-    m_DPIX(a_DPIX),
-    m_DPIY(a_DPIY),
-    m_pBuffer(a_pBuffer),
-    m_Texture(),
-    m_pGraphics(a_pGraphics)
+triebWerk::CText::CText()
+    : m_Text()
+    , m_pFont(nullptr)
+    , m_LineSpacing(1.0f)
+    , m_pLetterInfo(nullptr)
+    , m_LetterCount(0)
+    , m_Width(0)
+    , m_Height(0)
 {
-    
+
 }
 
 triebWerk::CText::~CText()
 {
-    
+    if (m_pLetterInfo != nullptr)
+        delete[] m_pLetterInfo;
 }
 
-void triebWerk::CText::Update(const char* a_pText, CFont* a_pFont, const unsigned int a_PointSize)
+void triebWerk::CText::Set(CFont* a_pFont, const char* a_pText, const float a_LineSpacing)
 {
     m_Text = a_pText;
-
-    if (a_pFont != nullptr)
-        m_pFont = a_pFont;
-
-    if (a_PointSize != 0)
-        m_PointSize = a_PointSize;
-
-    CreateTexture();
+    m_pFont = a_pFont;
+    m_LineSpacing = a_LineSpacing;
+    MakeTextToValidIndices();
+    CreateLetterInfo();
 }
 
-void triebWerk::CText::Update(const std::string a_Text, CFont* a_pFont, const unsigned int a_PointSize)
+void triebWerk::CText::Set(CFont* a_pFont, std::string a_Text, const float a_LineSpacing)
 {
-    m_Text = a_Text.c_str();
-
-    if (a_pFont != nullptr)
-        m_pFont = a_pFont;
-
-    if (a_PointSize != 0)
-        m_PointSize = a_PointSize;
-
-    CreateTexture();
+    m_Text = a_Text;
+    m_pFont = a_pFont;
+    m_LineSpacing = a_LineSpacing;
+    MakeTextToValidIndices();
+    CreateLetterInfo();
 }
 
-unsigned int triebWerk::CText::GetWidth() const
+void triebWerk::CText::SetFont(CFont* a_pFont)
 {
-    return m_Width;
+    m_pFont = a_pFont;
+    CreateLetterInfo();
 }
 
-unsigned int triebWerk::CText::GetHeight() const
+void triebWerk::CText::SetText(const char* a_pText)
 {
-	return m_Height;
+    m_Text = a_pText;
+    MakeTextToValidIndices();
+    CreateLetterInfo();
 }
 
-triebWerk::CTexture2D * triebWerk::CText::GetTexture()
+void triebWerk::CText::SetText(const std::string a_Text)
 {
-	return &m_Texture;
+    m_Text = a_Text;
+    MakeTextToValidIndices();
+    CreateLetterInfo();
 }
 
-void triebWerk::CText::CreateTexture()
+void triebWerk::CText::SetLineSpacing(const float a_LineSpacing)
 {
-    FT_Error error;
-	int penX = 0;
-	int penY = 100;
+    m_LineSpacing = a_LineSpacing;
+    CreateLetterInfo();
+}
 
-    FT_Face face = m_pFont->GetFace();
-    FT_GlyphSlot glyph = face->glyph;
+void triebWerk::CText::CreateLetterInfo()
+{
+    m_LetterCount = m_Text.size();
 
-    FT_Set_Char_Size(face, 0, m_PointSize * 64, m_DPIX, m_DPIY);
-
-    memset(m_pBuffer, 0, m_Height * m_Width);
-
-    for (size_t i = 0; i < m_Text.size(); ++i)
+    // delete the old letter buffer
+    if (m_pLetterInfo != nullptr)
     {
-        if (m_Text[i] == '\n')
-        {
-            penX = 0;
-            penY += (unsigned int)(face->max_advance_height * m_LineSpacing) >> 6;
-            continue;
-        }
-
-        error = FT_Load_Char(face, m_Text[i], FT_LOAD_RENDER);
-        if (error)
-            continue;
-
-        DrawLetter(
-            &glyph->bitmap,
-            penX + glyph->bitmap_left,
-            penY - glyph->bitmap_top);
-
-		penX += glyph->advance.x >> 6;
+        delete[] m_pLetterInfo;
+        m_pLetterInfo = nullptr;
     }
 
-    // check if there is a an old texture to release
-    auto texture = m_Texture.GetD3D11Texture();
-    if (texture != nullptr)
-        texture->Release();
-    auto shaderResource = m_Texture.GetShaderResourceView();
-    if (shaderResource != nullptr)
-        shaderResource->Release();
+    // check that there is at least 1 char
+    if (m_LetterCount == 0)
+        return;
 
-    // create the new texture
-    auto newTexture = m_pGraphics->CreateD3D11FontTexture(m_pBuffer, m_Width, m_Height);
-	m_Texture.SetTexture(m_Width, m_Height, newTexture, m_pGraphics->CreateID3D11ShaderResourceViewFont(newTexture));
+    // create a new buffer
+    m_pLetterInfo = new SLetterInfo[m_LetterCount];
+
+    CalculateWidthAndHeight();
+
+    int currentWidth = m_Width / -2;
+    int currentHeight = m_Height / -2;
+
+    for (size_t i = 0; i < m_LetterCount; ++i)
+    {
+        SLetterCoordinate letter = m_pFont->m_LetterCoordinates[m_Text[i]];
+        currentWidth += letter.width / 2;
+
+        m_pLetterInfo[i].letterCoordinate = letter;
+        m_pLetterInfo[i].offsetX = currentWidth;
+        m_pLetterInfo[i].offsetY = currentHeight;
+
+        if (i + 1< m_LetterCount)
+            currentWidth += m_pFont->m_LetterCoordinates[m_Text[i + 1]].width / 2;
+    }
+
+    int bla = 5;
 }
 
-void triebWerk::CText::DrawLetter(FT_Bitmap* a_pBitmap, FT_Int a_X, FT_Int a_Y)
+void triebWerk::CText::CalculateWidthAndHeight()
 {
-    FT_Int  i, j, p, q;
-    FT_Int  x_max = a_X + a_pBitmap->width;
-    FT_Int  y_max = a_Y + a_pBitmap->rows;
+    m_Width = 0;
+    m_Height = m_pFont->m_LetterCoordinates[m_Text[0]].height;
 
-    for (i = a_X, p = 0; i < x_max; i++, p++)
+    for (size_t i = 0; i < m_LetterCount; ++i)
     {
-        for (j = a_Y, q = 0; j < y_max; j++, q++)
-        {
-            if (i < 0 || j < 0 || i >= m_Width || j >= m_Height)
-                continue;
+        m_Width += m_pFont->m_LetterCoordinates[m_Text[i]].width;
+        if (m_pFont->m_LetterCoordinates[m_Text[i]].height > m_Height)
+            m_Height = m_pFont->m_LetterCoordinates[m_Text[i]].height;
+    }
+}
 
-            size_t cur = j * m_Width + i;
-            m_pBuffer[cur] |= a_pBitmap->buffer[q * a_pBitmap->width + p];
-        }
+void triebWerk::CText::MakeTextToValidIndices()
+{
+    size_t count = m_Text.size();
+    for (size_t i = 0; i < count; ++i)
+    {
+        char& current = m_Text[i];
+        current -= 32;
+
+        if (current < 0 || current >= 94)
+            current = 0;
     }
 }

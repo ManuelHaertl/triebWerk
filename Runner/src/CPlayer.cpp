@@ -34,19 +34,6 @@ void CPlayer::Update()
     SetSpeed();
     CalculateDistanceFlewn();
     AddPointsForFlewnDistance();
-
-    CGameInfo& gameInfo = CGameInfo::Instance();
-    // for testing (till we have an UI system)
-    m_CurrentPointTellerTime -= twTime->GetDeltaTime();
-    if (m_CurrentPointTellerTime <= 0.0f)
-    {
-        m_CurrentPointTellerTime = PointTellerTimer;
-        
-        std::cout <<
-            "Total: " << (int)gameInfo.m_TotalPoints <<
-            " Current: " << (int)gameInfo.m_CurrentPoints <<
-            " Multiplier: " << gameInfo.m_Multiplier << std::endl;
-    }
 }
 
 void CPlayer::LateUpdate()
@@ -86,6 +73,8 @@ void CPlayer::CollisionEnter(triebWerk::CCollisionEvent a_Collision)
     }
     else if (entity->m_ID.GetHash() == triebWerk::StringHasher("Wall"))
     {
+        if (m_IsDead == false)
+            triebWerk::CDebugLogfile::Instance().LogfText(triebWerk::CDebugLogfile::ELogType::Warning, false, entity->m_ID.GetDescribtion().c_str());
         m_IsDead = true;
     }
 }

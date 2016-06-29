@@ -196,7 +196,7 @@ triebWerk::CMaterial* triebWerk::CResourceManager::GetMaterial(const char * a_pE
 	}
 }
 
-triebWerk::CFont* triebWerk::CResourceManager::GetFont(const char* a_pFontName)
+triebWerk::CFontFace* triebWerk::CResourceManager::GetFontFace(const char* a_pFontName)
 {
     auto foundIterator = m_FontBuffer.find(StringHasher(RemoveFileType(a_pFontName)));
 
@@ -432,10 +432,10 @@ void triebWerk::CResourceManager::LoadFont(SFile a_File)
 	if (ExistsResourceInBuffer(EFileType::TTF, hash))
 		return;
 
-    CFont* pFont = new CFont(m_pFontLibraryHandle, a_File.FilePath.c_str());
+    CFontFace* pFontFace = new CFontFace(m_pFontLibraryHandle, a_File.FilePath.c_str(), a_File.FileName.c_str());
 
 	//Insert Data in font map
-    m_FontBuffer.insert(CFontPair(hash, pFont));
+    m_FontBuffer.insert(CFontPair(hash, pFontFace));
 }
 
 bool triebWerk::CResourceManager::SetModulPath()
