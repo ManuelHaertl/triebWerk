@@ -432,10 +432,10 @@ void triebWerk::CResourceManager::LoadFont(SFile a_File)
 	if (ExistsResourceInBuffer(EFileType::TTF, hash))
 		return;
 
-    CFont* pFont = new CFont(m_pFontLibraryHandle, a_File.FilePath.c_str());
+    CFontFace* pFontFace = new CFontFace(m_pFontLibraryHandle, a_File.FilePath.c_str(), a_File.FileName.c_str());
 
 	//Insert Data in font map
-    m_FontBuffer.insert(CFontPair(hash, pFont));
+    m_FontBuffer.insert(CFontPair(hash, pFontFace));
 }
 
 bool triebWerk::CResourceManager::SetModulPath()
