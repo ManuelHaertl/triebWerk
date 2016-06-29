@@ -177,6 +177,24 @@ bool triebWerk::CGraphics::Initialize(HWND & a_rWindowHandle, const unsigned int
 
 	m_pDeviceContext->RSSetState(m_pRasterState);
 
+	
+	D3D11_SAMPLER_DESC samplerStateDesc;
+	ZeroMemory(&samplerStateDesc, sizeof(D3D11_SAMPLER_DESC));
+	samplerStateDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerStateDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerStateDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerStateDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerStateDesc.MinLOD = FLT_MAX;
+	samplerStateDesc.MaxLOD = FLT_MAX;
+	samplerStateDesc.MipLODBias = 0.0f;
+	samplerStateDesc.MaxAnisotropy = 16;
+	samplerStateDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+
+	result = m_pDevice->CreateSamplerState(&samplerStateDesc, &m_pSamplerState);
+
+	m_pDeviceContext->VSSetSamplers(0, 1, &m_pSamplerState);
+	m_pDeviceContext->PSSetSamplers(0, 1, &m_pSamplerState);
+
 	//TODO: Move this to the camera
 	// Setup the viewport for rendering.
 	viewport.Width = (float)a_ScreenWidth;

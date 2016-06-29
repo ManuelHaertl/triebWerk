@@ -34,7 +34,9 @@ namespace triebWerk
 		ID3D11Texture2D* m_pBackBufferTexture;
 		D3D11_TEXTURE2D_DESC m_bbDesc;
 		ID3D11BlendState* m_pBlendState;
-	
+		
+		ID3D11SamplerState* m_pSamplerState;
+
 		float m_ClearColor[4];
 
 		unsigned int m_VideoCardMemory;
