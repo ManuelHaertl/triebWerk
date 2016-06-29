@@ -55,6 +55,11 @@ namespace triebWerk
     template<class T>
     inline void CElementContainer<T>::Add(const T& a_rElement)
     {
+		if (m_Size == m_MaxSize)
+		{
+			Resize(m_MaxSize * 2);
+		}
+
         m_pElements[m_Size] = a_rElement;
         m_Size++;
     }

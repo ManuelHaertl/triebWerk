@@ -125,6 +125,8 @@ namespace triebWerk
 		bool SetModulPath();
 		std::vector<SFile> SearchFolderForAllFiles(const char* a_FolderToLoad);
 
+		bool ExistsResourceInBuffer(EFileType a_FileType, size_t a_Hash);
+
 		//String helper functions
 		bool CompareFileTypes(const std::string& a_Name, const char* a_ExpectedType);
 		std::string RemoveFileType(const std::string& a_Name);

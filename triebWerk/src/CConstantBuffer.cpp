@@ -40,27 +40,6 @@ bool triebWerk::CConstantBuffer::CompareConstantBuffer(const char * a_pBufferA, 
 	}
 }
 
-//void triebWerk::CConstantBuffer::FillConstantBufferWithSpecialValues(int a_NumberOfArguments ...)
-//{
-//	va_list arguments;
-//	va_start(arguments, a_NumberOfArguments);
-//
-//	if (a_NumberOfArguments > m_Variables.size() - 3)
-//	{
-//		DebugLogfile.LogfText(CDebugLogfile::ELogType::Warning, false, "Warning: Tried to write in a none existing constant buffer index!");
-//		return;
-//	}
-//
-//	for (int x = 0; x < a_NumberOfArguments; x++)
-//	{
-//		void* p = va_arg(arguments, void*);
-//
-//		memcpy(m_pBuffer + m_Variables[3 + x].StartOffset, p, m_Variables[3 + x].Size);
-//	}
-//
-//	va_end(arguments);
-//}
-
 void triebWerk::CConstantBuffer::SetValueInBuffer(int a_IndexOfValue, void * a_pValueAdress)
 {
 	if (a_IndexOfValue >= m_Variables.size())

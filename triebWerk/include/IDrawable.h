@@ -15,6 +15,7 @@ namespace triebWerk
 			Mesh,
 			UI,
 			Font,
+			PostEffect,
 			Empty
 		};
 
