@@ -65,7 +65,7 @@ void CDebugScene::Update()
 
 	float time = twTime->GetTimeSinceStartup();
 
-	sunEffect->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &time);
+	//sunEffect->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &time);
 
 	//effect->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &time);
 }
