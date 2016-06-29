@@ -33,6 +33,9 @@ namespace triebWerk
 		//Render Target to draw with
 		int m_ActiveRenderTargetSlot;
 
+		//Default Quad Projection Matrix
+		DirectX::XMMATRIX m_ScreenAligendQuadProjection;
+
 		std::vector<CCamera*> m_CameraBuffer;
 		CGraphics* m_pGraphicsHandle;
 		CCamera* m_pCurrentCamera;

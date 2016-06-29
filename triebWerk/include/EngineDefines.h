@@ -14,5 +14,6 @@
 #define twTime triebWerk::CEngine::Instance().m_pTime
 #define twActivePhysic triebWerk::CEngine::Instance().m_pSceneManager->m_pActiveScene->m_pScene->m_pWorld->m_pPhysicWorld
 #define twActiveWorld triebWerk::CEngine::Instance().m_pSceneManager->m_pActiveScene->m_pScene->m_pWorld
+#define twGraphic triebWerk::CEngine::Instance().m_pGraphics
 
 #define twRandom triebWerk::CRandom

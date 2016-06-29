@@ -25,7 +25,7 @@ void triebWerk::CRenderer::Initialize(CGraphics * a_pGraphicsHandle, unsigned in
 
 	for (size_t i = 0; i < m_MaxRenderTargetCount; i++)
 	{
-		m_pRenderTargetList[i].Initialize(a_pGraphicsHandle, a_ScreenWidth, a_ScreenHeight, i);
+		m_pRenderTargetList[i].Initialize(a_pGraphicsHandle, a_ScreenWidth, a_ScreenHeight, i, true);
 	}
 
 	m_ScreenHeight = a_ScreenHeight;
@@ -46,9 +46,12 @@ void triebWerk::CRenderer::Initialize(CGraphics * a_pGraphicsHandle, unsigned in
 
 	//Create Default RenderTarget Setup
 	m_pDefaultPostEffect = CreatePostEffecthDrawable();
-	m_pDefaultPostEffect->m_Effect.SetMaterial(CEngine::Instance().m_pResourceManager->GetMaterial("DefaultRenderTarget"));
+	m_pDefaultPostEffect->AddMaterial(CEngine::Instance().m_pResourceManager->GetMaterial("DefaultRenderTarget"));
 
 	m_pRenderTargetList[0].m_pPostEffect = m_pDefaultPostEffect;
+
+
+	m_ScreenAligendQuadProjection = DirectX::XMMatrixOrthographicLH(static_cast<float>(m_ScreenWidth), static_cast<float>(m_ScreenHeight), -0.1f, 100);
 }
 
 void triebWerk::CRenderer::Shutdown()
@@ -204,8 +207,8 @@ void triebWerk::CRenderer::DrawScene()
 	{
 		if (m_pRenderTargetList[i].m_pPostEffect != nullptr)
 		{
-			m_pRenderTargetList[i].SetRenderTarget();
-			m_pRenderTargetList[i].ClearRenderTarget();
+			m_pRenderTargetList[i].SetRenderTarget(0);
+			m_pRenderTargetList[i].ClearRenderTarget(0);
 
 			m_ActiveRenderTargetSlot = i;
 			//Renders all Meshes in buffer
@@ -260,6 +263,8 @@ void triebWerk::CRenderer::ResizeRenderer(unsigned int a_ScreenWidth, unsigned i
 		m_pRenderTargetList[i].Resize(a_ScreenWidth, a_ScreenHeight);
 	}
 
+	m_ScreenAligendQuadProjection = DirectX::XMMatrixOrthographicLH(static_cast<float>(a_ScreenWidth), static_cast<float>(a_ScreenHeight), -0.1f, 100);
+
 	m_ScreenHeight = a_ScreenHeight;
 	m_ScreenWidth = a_ScreenWidth;
 }
@@ -306,7 +311,7 @@ void triebWerk::CRenderer::SetResources(const CMaterial * a_pMaterial)
 		if (a_pMaterial->m_pVertexShader.m_pTextures[i] != nullptr)
 		{
 			ID3D11ShaderResourceView* pResourceView = a_pMaterial->m_pVertexShader.m_pTextures[i]->GetShaderResourceView();
-			pDeviceContext->GSSetShaderResources(static_cast<UINT>(i), 1, &pResourceView);
+			pDeviceContext->VSSetShaderResources(static_cast<UINT>(i), 1, &pResourceView);
 		}
 	}
 
@@ -382,22 +387,46 @@ void triebWerk::CRenderer::ResetRenderStates()
 
 void triebWerk::CRenderer::DrawRenderTarget(CRenderTarget* a_pRenderTarget)
 {
-	a_pRenderTarget->m_pPostEffect->m_Effect.m_pPixelShader.SetTexture(0, &a_pRenderTarget->m_Texture);
+	//used to swap the rendertarget doublebuffer
+	bool swapRenderTarget = true;
 
-	SetShader(&a_pRenderTarget->m_pPostEffect->m_Effect);
+	//Draw every effect in the drawable
+	for (unsigned int i = 0; i < a_pRenderTarget->m_pPostEffect->m_Materials.size(); i++)
+	{
+		if (i == a_pRenderTarget->m_pPostEffect->m_Materials.size()-1)
+		{	
+			//if this is the last effect draw it to screen
+			m_pGraphicsHandle->SetBackBufferRenderTarget();
+			swapRenderTarget = !swapRenderTarget;
+		}
+		else
+		{
+			//use the rendertarget which is not in use
+			int swapBufferSlot = static_cast<int>(swapRenderTarget);
+			a_pRenderTarget->SetRenderTarget(swapBufferSlot);
+			a_pRenderTarget->ClearRenderTarget(swapBufferSlot);
 
-	DirectX::XMMATRIX t = DirectX::XMMatrixOrthographicLH(static_cast<float>(m_ScreenWidth), static_cast<float>(m_ScreenHeight), -0.1f, 100);
+			//swap the buffers so the current rendertarget is in use and the old one will be cleared
+			swapRenderTarget = !swapRenderTarget;
+		}
 
-	a_pRenderTarget->m_PlaneTransform.SetScale(static_cast<float>(m_pRenderTargetList[0].m_Texture.GetWidth()), static_cast<float>(m_pRenderTargetList[0].m_Texture.GetHeight()), 0);
+		//set the rendertarget where the prevoius effect was drawn into
+		a_pRenderTarget->m_pPostEffect->m_Materials[i].m_pPixelShader.SetTexture(0, &a_pRenderTarget->m_Texture[swapRenderTarget]);
 
-	a_pRenderTarget->m_pPostEffect->m_Effect.m_ConstantBuffer.SetConstantBuffer(m_pGraphicsHandle->GetDeviceContext(), a_pRenderTarget->m_PlaneTransform.GetTransformation(), DirectX::XMMatrixIdentity(), t, false);
+		//set resources and shader
+		SetShader(&a_pRenderTarget->m_pPostEffect->m_Materials[i]);
 
-	SetResources(&a_pRenderTarget->m_pPostEffect->m_Effect);
+		//offset the next rendertarget so it wont be culled - not happy with this solution at the moment but it works 
+		a_pRenderTarget->m_PlaneTransform.SetPosition(0, 0, static_cast<float>(i * -0.01f));
+		a_pRenderTarget->m_pPostEffect->m_Materials[i].m_ConstantBuffer.SetConstantBuffer(m_pGraphicsHandle->GetDeviceContext(), a_pRenderTarget->m_PlaneTransform.GetTransformation(), DirectX::XMMatrixIdentity(), m_ScreenAligendQuadProjection, false);
 
-	UINT offset = 0;
-	m_pGraphicsHandle->GetDeviceContext()->IASetVertexBuffers(0, 1, &a_pRenderTarget->m_pPlaneBuffer, &a_pRenderTarget->m_Stride, &offset);
+		SetResources(&a_pRenderTarget->m_pPostEffect->m_Materials[i]);
 
-	m_pGraphicsHandle->GetDeviceContext()->Draw(a_pRenderTarget->m_VertexCount, 0);
+		UINT offset = 0;
+		m_pGraphicsHandle->GetDeviceContext()->IASetVertexBuffers(0, 1, &a_pRenderTarget->m_pPlaneBuffer, &a_pRenderTarget->m_Stride, &offset);
+
+		m_pGraphicsHandle->GetDeviceContext()->Draw(a_pRenderTarget->m_VertexCount, 0);
+	}
 }
 
 void triebWerk::CRenderer::DrawMesh(const CMeshDrawable * a_pDrawable)

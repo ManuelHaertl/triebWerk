@@ -11,8 +11,9 @@ namespace triebWerk
 	class CRenderTarget
 	{
 	public:
-		CTexture2D m_Texture;
-		ID3D11RenderTargetView* m_pRenderTargetView;
+		//For doublebuffering
+		CTexture2D m_Texture[2];
+		ID3D11RenderTargetView* m_pRenderTargetView[2];
 		CRenderBatch m_RenderBatch;
 		CPostEffectDrawable* m_pPostEffect;
 
@@ -32,9 +33,9 @@ namespace triebWerk
 		~CRenderTarget();
 
 	public:
-		void Initialize(CGraphics* a_pGraphic, const unsigned int a_Width, const unsigned int a_Height, const unsigned int a_Slot);
-		void SetRenderTarget() const;
-		void ClearRenderTarget() const;
+		void Initialize(CGraphics* a_pGraphic, const unsigned int a_Width, const unsigned int a_Height, const unsigned int a_Slot, bool a_Batching);
+		void SetRenderTarget(const unsigned short a_Slot) const;
+		void ClearRenderTarget(const unsigned short a_Slot) const;
 		void SetClearColor(const float a_R, const float a_G, const float a_B, const float a_A);
 		void Resize(unsigned int a_ScreenWidth, unsigned int a_ScreenHeight);
 		void Clear();

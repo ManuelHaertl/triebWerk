@@ -34,7 +34,7 @@ void triebWerk::CVertexShader::SetInstanceData(int a_Index, void * a_pAdressOfDa
 
 	int offset = 0;
 
-	for (size_t i = 0; i < a_Index; i++)
+	for (int i = 0; i < a_Index; i++)
 	{
 		if (m_InputInstanceDescriptions[i].InputSlotClass == D3D11_INPUT_PER_INSTANCE_DATA)
 		{

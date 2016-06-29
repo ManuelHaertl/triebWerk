@@ -1,8 +1,9 @@
 #include <CDebugScene.h>
 
 triebWerk::CMeshDrawable* mesh;
-//triebWerk::CPostEffectDrawable* effect;
-//triebWerk::CEntity* eps;
+triebWerk::CPostEffectDrawable* effect;
+triebWerk::CMeshDrawable* sunEffect;
+triebWerk::CEntity* eps;
 float speed = 1;
 
 
@@ -63,9 +64,9 @@ void CDebugScene::Update()
 
 	float time = twTime->GetTimeSinceStartup();
 
-	//effect->m_Effect.m_ConstantBuffer.SetValueInBuffer(4, &time);
+	//sunEffect->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &time);
 
-
+	//effect->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &time);
 }
 
 void CDebugScene::End()
@@ -100,37 +101,61 @@ void CDebugScene::CreateTestCubes()
 	m_pWorld->AddEntity(entity);
 */
 
-	auto entity = m_pWorld->CreateEntity();
-	entity->m_Transform.SetPosition(0, 0, 0);
+//	auto entity = m_pWorld->CreateEntity();
+//	entity->m_Transform.SetPosition(0, 0, 0);
 
-	mesh = twRenderer->CreateMeshDrawable();
-	mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("points2");
-	mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("PointExplosion"));
-	mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
-	mesh->m_Material.m_pGeometryShader.SetTexture(0, twResourceManager->GetTexture2D("noise"));
-	DirectX::XMFLOAT3 colorBlock = { twRandom::GetNumber(0.0f, 1.0f), twRandom::GetNumber(0.0f, 1.0f), twRandom::GetNumber(0.0f, 1.0f) };
-	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &colorBlock);
-	mesh->SetRenderTarget(0);
-	speed = 0;
-	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &speed);
-	mesh->m_D3DStates.m_pRasterizerState = twEngine.m_pGraphics->CreateRasterizerState(D3D11_CULL_NONE, D3D11_FILL_SOLID);
-	speed = 0.01f;
-	entity->SetDrawable(mesh);
-	m_pWorld->AddEntity(entity);
+//	mesh = twRenderer->CreateMeshDrawable();
+//	mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("points2");
+//	mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("PointExplosion"));
+//	mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
+//	mesh->m_Material.m_pGeometryShader.SetTexture(0, twResourceManager->GetTexture2D("noise"));
+//	DirectX::XMFLOAT3 colorBlock = { twRandom::GetNumber(0.0f, 1.0f), twRandom::GetNumber(0.0f, 1.0f), twRandom::GetNumber(0.0f, 1.0f) };
+//	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &colorBlock);
+//	mesh->SetRenderTarget(0);
+//	speed = 0;
+//	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &speed);
+//	mesh->m_D3DStates.m_pRasterizerState = twEngine.m_pGraphics->CreateRasterizerState(D3D11_CULL_NONE, D3D11_FILL_SOLID);
+//	speed = 0.01f;
+//	entity->SetDrawable(mesh);
+//	m_pWorld->AddEntity(entity);
+//
+	eps = m_pWorld->CreateEntity();
+	effect = twRenderer->CreatePostEffecthDrawable();
+	//effect->AddMaterial(twResourceManager->GetMaterial("ScanLines"));
 
-
-	//eps = m_pWorld->CreateEntity();
-	//effect = twRenderer->CreatePostEffecthDrawable();
-	//effect->m_Effect.SetMaterial(twResourceManager->GetMaterial("ScanLines"));
-	//effect->m_RenderTargetSlotToStartOff = 0;
-	//effect->m_Effect.m_pPixelShader.SetTexture(1, twResourceManager->GetTexture2D("noise"));
-	//eps->SetDrawable(effect);
-	//m_pWorld->AddEntity(eps);
+	effect->AddMaterial(twResourceManager->GetMaterial("ScanLines"));
+	effect->m_RenderTargetSlotToStartOff = 0;
+	eps->SetDrawable(effect);
+	m_pWorld->AddEntity(eps);
 
 	//auto o = twRenderer->GetRenderTarget(1);
 	//o->m_PlaneTransform.SetPosition(0, 0, -0.1f);
 
+	auto entity = m_pWorld->CreateEntity();
+	entity->m_Transform.SetPosition(0,0,0);
 
+	triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
+	mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_obs_5x5x12_base");
+	mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
+	//mesh->m_Material.m_pVertexShader.SetTexture(0, twResourceManager->GetTexture2D("noise"));
+	mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
+	mesh->m_D3DStates.m_pRasterizerState = twEngine.m_pGraphics->CreateRasterizerState(D3D11_CULL_NONE, D3D11_FILL_SOLID);
+	DirectX::XMFLOAT3 colorBlock = { 0.2f, 0.0f, 0.6f };	
+	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &colorBlock);
+
+	entity->SetDrawable(mesh);
+	m_pWorld->AddEntity(entity);
+
+	//sunEffect = twRenderer->CreateMeshDrawable();
+	//sunEffect->m_pMesh = twEngine.m_pResourceManager->GetMesh("sphere");
+	//sunEffect->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("Sun"));
+	//sunEffect->m_Material.m_pVertexShader.SetTexture(0, twEngine.m_pResourceManager->GetTexture2D("WhiteNoise"));
+	//sunEffect->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
+	//sunEffect->m_D3DStates.m_pRasterizerState = twGraphic->CreateRasterizerState(D3D11_CULL_NONE, D3D11_FILL_SOLID);
+
+
+	//entity->SetDrawable(sunEffect);
+	//m_pWorld->AddEntity(entity);
 
    /* const int range = 10;
     const int incrementer = 5;
