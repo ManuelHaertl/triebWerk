@@ -417,6 +417,9 @@
     <ClCompile Include="src\CGeometryShader.cpp">
       <Filter>Quelldateien\Resource\Resources\Shader</Filter>
     </ClCompile>
+    <ClCompile Include="src\CFontFace.cpp">
+      <Filter>Quelldateien\Font</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\CEngine.h">
@@ -649,6 +652,9 @@
     </ClInclude>
     <ClInclude Include="include\CGeometryShader.h">
       <Filter>Headerdateien\Resource\Resources\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CFontFace.h">
+      <Filter>Headerdateien\Font</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

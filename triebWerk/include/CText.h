@@ -1,44 +1,49 @@
 #pragma once
 #include <string>
 #include <ft2build.h>
-#include <CTexture2D.h>
 #include FT_FREETYPE_H
+#include FT_GLYPH_H
+#include <CFont.h>
 
 namespace triebWerk
 {
-    class CFont;
-    class CGraphics;
+    struct SLetterInfo
+    {
+        SLetterCoordinate letterCoordinate;
+        int offsetX, offsetY;
+
+        SLetterInfo()
+            : letterCoordinate()
+            , offsetX(0)
+            , offsetY(0)
+        { }
+    };
 
     class CText
     {
     private:
         std::string m_Text;
         CFont* m_pFont;
-        unsigned int m_PointSize;
         float m_LineSpacing;
 
-        bool m_IsModified;
-        unsigned int m_Width;
-        unsigned int m_Height;
-        unsigned int m_DPIX;
-        unsigned int m_DPIY;
-
-		CTexture2D m_Texture;
-        CGraphics* m_pGraphics;
-        unsigned char* m_pBuffer;
+        SLetterInfo* m_pLetterInfo;
+        size_t m_LetterCount;
+        int m_Width, m_Height;
 
     public:
-        CText(CGraphics* a_pGraphics, unsigned int a_DPIX, unsigned int a_DPIY, unsigned char* a_pBuffer);
+        CText();
         ~CText();
 
-        void Update(const char* a_pText, CFont* a_pFont, const unsigned int a_PointSize);
-        void Update(const std::string a_Text, CFont* a_pFont, const unsigned int a_PointSize);
-		unsigned int GetWidth() const;
-		unsigned int GetHeight() const;
-		CTexture2D* GetTexture();
+        void Set(CFont* a_pFont, const char* a_pText, const float a_LineSpacing);
+        void Set(CFont* a_pFont, std::string a_Text, const float a_LineSpacing);
+        void SetFont(CFont* a_pFont);
+        void SetText(const char* a_pText);
+        void SetText(const std::string a_Text);
+        void SetLineSpacing(const float a_LineSpacing);
 
     private:
-        void CreateTexture();
-        void DrawLetter(FT_Bitmap* a_pBitmap, FT_Int a_X, FT_Int a_Y);
+        void CreateLetterInfo();
+        void CalculateWidthAndHeight();
+        void MakeTextToValidIndices();
     };
 }

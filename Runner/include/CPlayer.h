@@ -37,10 +37,6 @@ private:
     float m_MetersFlewn;
     float m_LastZ;
 
-    // for testing (till we have an UI system)
-    const float PointTellerTimer = 1.0f;
-    float m_CurrentPointTellerTime = 0.0f;
-
 public:
     CPlayer();
     ~CPlayer();

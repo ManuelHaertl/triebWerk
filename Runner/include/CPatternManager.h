@@ -1,6 +1,7 @@
 #pragma once
 #include <list>
 #include <CPatternLoader.h>
+#include <CPatternTileCreator.h>
 
 class CPatternManager
 {
@@ -10,10 +11,9 @@ public:
     static float StartFreeDistance;
 
 private:
-
     std::list<triebWerk::CEntity*> m_Entities;
-
     std::vector<CPattern*> m_Pattern[CPattern::MaxDifficulty];
+    CPatternTileCreator m_PatternTileCreator;
 
     float m_IsSpawned;
     float m_SpawnTo;
@@ -37,6 +37,6 @@ private:
     void SpawnNextTile();
     void SetNextPattern();
     void DeleteEntities();
-    void SpawnPatternTile(const SPatternTile& a_rPatternTile);
+    //void SpawnPatternTile(const SPatternTile& a_rPatternTile);
     void SetRandomPattern(size_t a_Difficulty);
 };

@@ -1,19 +1,20 @@
 #pragma once
+#include <vector>
 #include <ft2build.h>
 #include FT_FREETYPE_H
-#include <CFont.h>
-#include <CText.h>
 
 namespace triebWerk
 {
     class CGraphics;
+    class CFont;
+    class CFontFace;
+    class CText;
 
     class CFontManager
     {
     private:
-        static const int BUFFER_SIZE = 4000000;
         FT_Library m_Library;
-        unsigned char* m_pBuffer;
+        std::vector<CFont*> m_Fonts;
 
         CGraphics* m_pGraphics;
         unsigned int m_DPIX;
@@ -27,7 +28,9 @@ namespace triebWerk
         void Shutdown();
 
         FT_Library* GetLibrary();
-        CText* CreateText(const char* a_pText, CFont* a_pFont, const unsigned int a_PointSize);
-        CText* CreateText(const std::string a_Text, CFont* a_pFont, const unsigned int a_PointSize);
+        CFont* LoadFont(CFontFace* a_pFontFace, const unsigned int a_PointSize);
+        void UnloadFont(const CFontFace* a_pFontFace, const unsigned int a_PointSize);
+        CFont* GetFont(CFontFace* a_pFontFace, const unsigned int a_PointSize);
+        CText* CreateText();
     };
 }

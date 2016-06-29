@@ -66,7 +66,11 @@ std::string triebWerk::CTMXParser::GetProportie(std::string& a_Line, const char 
 {
 	std::string toSearch = a_pProportieName;
 	toSearch += "=\"";
+    if (a_Line.find(toSearch) == std::string::npos)
+        return std::string();
+
 	size_t startPos = a_Line.find(toSearch) + toSearch.size();
+
 	size_t endPos = a_Line.find("\"", startPos);
 	return a_Line.substr(startPos, endPos - startPos);;
 }
@@ -269,7 +273,18 @@ void triebWerk::CTMXParser::ReadObject(std::string& a_Line)
 			CLayerObject object;
 
 			object.m_ID = stoi(GetProportie(a_Line, "id"));
-			object.m_GID = stoi(GetProportie(a_Line, "gid"));
+			
+            std::string t = GetProportie(a_Line, "gid");
+            
+            if (t.size() == 0)
+            {
+                object.m_GID = -1;
+            }
+            else
+            {
+                object.m_GID = stoi(t);
+            }
+
 			object.m_X = stoi(GetProportie(a_Line, "x"));
 			object.m_Y = stoi(GetProportie(a_Line, "y"));
 			object.m_Width = stoi(GetProportie(a_Line, "width"));

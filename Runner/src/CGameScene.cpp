@@ -1,11 +1,10 @@
-#include <CGameScene.h>
+﻿#include <CGameScene.h>
 
 #include <CGameInfo.h>
 
 CGameScene::CGameScene() :
     m_pPlayer(nullptr),
-    m_LastPlayerPos(0.0f),
-    m_pPoints(nullptr)
+    m_LastPlayerPos(0.0f)
 {
 }
 
@@ -20,8 +19,8 @@ void CGameScene::Start()
     m_ValueUpdater.Start();
     m_EnvironmentCreator.Start();
     m_PatternManager.Start();
-    CreateText();
     CreatePlayer();
+    CreateText();
 }
 
 void CGameScene::Update()
@@ -36,17 +35,17 @@ void CGameScene::Update()
         CGameInfo::Instance().Reset();
     }
 
-    std::string points =
-        "Total: " +
-        std::to_string(CGameInfo::Instance().m_TotalPoints) +
-        "\nCurrent: " +
-        std::to_string(CGameInfo::Instance().m_CurrentPoints) +
-        "\nMultiplier: " +
-        std::to_string(CGameInfo::Instance().m_Multiplier) +
-        "\nDifficulty: " + 
-        std::to_string(CGameInfo::Instance().m_Difficulty);
-    
-    m_pPoints->Update(points, nullptr, 0);
+    //std::string points =
+    //    "Total: " +
+    //    std::to_string(CGameInfo::Instance().m_TotalPoints) +
+    //    "\nCurrent: " +
+    //    std::to_string(CGameInfo::Instance().m_CurrentPoints) +
+    //    "\nMultiplier: " +
+    //    std::to_string(CGameInfo::Instance().m_Multiplier) +
+    //    "\nDifficulty: " + 
+    //    std::to_string(CGameInfo::Instance().m_Difficulty);
+    //
+    //m_pPoints->Update(points, nullptr, 0);
 
     if (twKeyboard.IsState(triebWerk::EKey::F3, triebWerk::EButtonState::Down))
     {
@@ -60,11 +59,15 @@ void CGameScene::Update()
     {
         if (CGameInfo::Instance().m_Difficulty < 5)
             CGameInfo::Instance().m_Difficulty++;
+
+        std::cout << "Difficulty: " << CGameInfo::Instance().m_Difficulty << std::endl;
     }
     if (twKeyboard.IsState(triebWerk::EKey::Down, triebWerk::EButtonState::Down))
     {
         if (CGameInfo::Instance().m_Difficulty > 1)
             CGameInfo::Instance().m_Difficulty--;
+
+        std::cout << "Difficulty: " << CGameInfo::Instance().m_Difficulty << std::endl;
     }
 
     const float metersFlewn = m_pPlayer->GetMetersFlewn();
@@ -83,21 +86,6 @@ void CGameScene::End()
 void CGameScene::Resume()
 {
     twDebug->Disable();
-}
-
-void CGameScene::CreateText()
-{
-    auto entity = m_pWorld->CreateEntity();
-    entity->m_Transform.SetPosition(1.0f, 50.0f, 1.0f);
-    entity->m_Transform.SetScale(1.0f, 1.0f, 1.0f);
-
-    auto pFont = twRenderer->CreateFontDrawable();
-    pFont->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardFont"));
-    m_pPoints = twFontManager->CreateText("Hallo", twResourceManager->GetFont("Rubik-Regular"), 18);
-    pFont->SetText(m_pPoints);
-    entity->SetDrawable(pFont);
-
-    m_pWorld->AddEntity(entity);
 }
 
 void CGameScene::CreatePlayer()
@@ -139,4 +127,12 @@ void CGameScene::CreatePlayer()
     player->SetPhysicEntity(physicEntity);
 
     m_pWorld->AddEntity(player);
+}
+
+void CGameScene::CreateText()
+{
+    auto font = twFontManager->LoadFont(twResourceManager->GetFontFace("Rubik-Regular"), 12);
+
+    auto text = twFontManager->CreateText();
+    text->Set(font, "Hallo", 1.0f);
 }

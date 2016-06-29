@@ -13,8 +13,6 @@ private:
     CPlayer* m_pPlayer;
     float m_LastPlayerPos;
 
-    triebWerk::CText* m_pPoints;
-
 public:
     CGameScene();
     ~CGameScene();
@@ -25,6 +23,6 @@ public:
     void Resume();
 
 private:
-    void CreateText();
     void CreatePlayer();
+    void CreateText();
 };

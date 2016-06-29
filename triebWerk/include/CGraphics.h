@@ -89,4 +89,4 @@ namespace triebWerk
 		void ReleaseBackBuffer();
 		void ConfigureBackBuffer();
 	};
-}
+} 

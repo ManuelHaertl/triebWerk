@@ -730,9 +730,11 @@ int triebWerk::CGraphics::SizeOfFormatElement(DXGI_FORMAT a_Format)
 
 void triebWerk::CGraphics::RemapTextureBuffer(const void * a_pData, size_t a_DataSize, ID3D11Texture2D * a_pTextureToRemap)
 {
-	D3D11_MAPPED_SUBRESOURCE subResourceTextureBuffer;
+    m_pDeviceContext->UpdateSubresource(a_pTextureToRemap, 0, nullptr, a_pData, a_DataSize, 0);
 
-	m_pDeviceContext->Map(a_pTextureToRemap, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &subResourceTextureBuffer);
-	memcpy(subResourceTextureBuffer.pData, a_pData, a_DataSize);
-	m_pDeviceContext->Unmap(a_pTextureToRemap, NULL);
+	//D3D11_MAPPED_SUBRESOURCE subResourceTextureBuffer;
+
+	//m_pDeviceContext->Map(a_pTextureToRemap, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &subResourceTextureBuffer);
+	//memcpy(subResourceTextureBuffer.pData, a_pData, a_DataSize * subResourceTextureBuffer.RowPitch);
+	//m_pDeviceContext->Unmap(a_pTextureToRemap, NULL);
 }
