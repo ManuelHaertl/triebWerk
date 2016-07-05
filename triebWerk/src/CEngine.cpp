@@ -53,7 +53,7 @@ bool triebWerk::CEngine::Initialize(SEngineConfiguration a_Config)
     m_pSceneManager = new CSceneManager();
     m_pFontManager = new CFontManager();
     m_pDebug = new CDebug();
-
+	m_pSoundEngine = new CSoundEngine();
 
     m_pWindow->Initialize(a_Config.m_Fullscreen, a_Config.m_Width, a_Config.m_Height, a_Config.m_Name);
     m_pGraphics->Initialize(m_pWindow->GetWindowHandle(), a_Config.m_Width, a_Config.m_Height, a_Config.m_Fullscreen, a_Config.m_VSync);
@@ -62,7 +62,8 @@ bool triebWerk::CEngine::Initialize(SEngineConfiguration a_Config)
     m_pWindow->GetDPIFromDisplay(&dpiX, &dpiY);
     m_pFontManager->Initialize(m_pGraphics, dpiX, dpiY);
 
-    m_pResourceManager->Initialize(m_pGraphics, m_pFontManager->GetLibrary());
+    m_pResourceManager->Initialize(m_pGraphics, m_pFontManager->GetLibrary(), m_pSoundEngine);
+	m_pSoundEngine->Initialize();
     m_pRenderer->Initialize(m_pGraphics, a_Config.m_Width, a_Config.m_Height);
     m_pSceneManager->Initialize(m_pRenderer, a_Config.m_PhysicTimeStamp);;
 
@@ -125,6 +126,7 @@ void triebWerk::CEngine::Shutdown()
     m_pFontManager->Shutdown();
 	m_pGraphics->Shutdown();
 	m_pRenderer->Shutdown();
+	m_pSoundEngine->CleanUp();
 
     delete m_pFontManager;
     delete m_pSceneManager;
@@ -135,6 +137,7 @@ void triebWerk::CEngine::Shutdown()
 	delete m_pResourceManager;
 	delete m_pGraphics;
 	delete m_pRenderer;
+	delete m_pSoundEngine;
 }
 
 void triebWerk::CEngine::ProcessWindowMessages()

@@ -20,6 +20,8 @@
 #include <CMaterial.h>
 #include <loadPNG\lodepng.h>
 #include <CDebugLogfile.h>
+#include <CSoundEngine.h>
+#include <CDDSParser.h>
 
 namespace triebWerk
 {
@@ -57,6 +59,10 @@ namespace triebWerk
 		typedef std::unordered_map<size_t, CFontFace*> CFontMap;
 		typedef std::pair<size_t, CFontFace*> CFontPair;
 
+		//MP3
+		typedef std::unordered_map<size_t, CSound*> CSoundMap;
+		typedef std::pair<size_t, CSound*> CSoundPair;
+
 	private:
 		CFileWatcher m_FileWatcher;
 		CTilesetHashMap m_TilesetBuffer;
@@ -65,9 +71,12 @@ namespace triebWerk
 		CMeshMap m_MeshBuffer;
 		CMaterialMap m_MaterialBuffer;
 		CFontMap m_FontBuffer;
+		CSoundMap m_SoundBuffer;
 
+		//Handles
 		CGraphics* m_pGraphicsHandle;
         FT_Library* m_pFontLibraryHandle;
+		CSoundEngine* m_pSoundEngineHandle;
 
 		std::string m_ModulPath;
 
@@ -76,7 +85,7 @@ namespace triebWerk
 		~CResourceManager();
 
 	public:
-		bool Initialize(CGraphics* a_pGraphics, FT_Library* a_pFontLibrary);
+		bool Initialize(CGraphics* a_pGraphics, FT_Library* a_pFontLibrary, CSoundEngine* a_pSoundEngine);
 		void CleanUp();
 		void Update();
 
@@ -100,6 +109,7 @@ namespace triebWerk
 		CMesh* GetMesh(const char* a_pMeshName);
 		CMaterial* GetMaterial(const char* a_pMaterialName);
         CFontFace* GetFontFace(const char* a_pFontName);
+		CSound* GetSound(const char* a_pSoundName);
 
 		//Get all data in this directory and subdirectory which were previous loaded 
 		template<typename T>
@@ -116,11 +126,12 @@ namespace triebWerk
 		void LoadFile(SFile a_File);
 		void LoadPNG(SFile a_File);
 		void LoadOBJ(SFile a_File);
-		void LoadMP3(SFile a_File);
+		void LoadAudio(SFile a_File);
 		void LoadTMX(SFile a_File);
 		void LoadHLSL(SFile a_File);
 		void LoadTWF(SFile a_File);
 		void LoadFont(SFile a_File);
+		void LoadDDS(SFile a_File);
 
 		bool SetModulPath();
 		std::vector<SFile> SearchFolderForAllFiles(const char* a_FolderToLoad);

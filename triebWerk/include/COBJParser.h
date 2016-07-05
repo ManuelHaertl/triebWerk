@@ -40,10 +40,12 @@ namespace triebWerk
 	private:
 		unsigned int CreateVertex(CMesh::SVertex& a_rVertex);
 		void AddVertex(std::string& a_Text);
-		void AddVertexPoint(std::string& a_Text);
-		void AddUV(std::string& a_Text);
-		void AddNormal(std::string& a_Text);
+		void AddVertexPoint(const char* a_pLine);
+		void AddUV(const char* a_pLine);
+		void AddNormal(const char* a_pLine);
+		void ReadFaces(std::string& a_Line);
 
 		bool BeginLineWith(std::string& a_rLine, const char* a_pStart);
+		void GetCoordinatesFromLine(const char* a_pLine, DirectX::XMFLOAT3* a_pOutBuffer);
 	};
 }

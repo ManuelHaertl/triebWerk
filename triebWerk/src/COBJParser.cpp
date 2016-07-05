@@ -16,8 +16,6 @@ triebWerk::COBJParser::~COBJParser()
 	delete[] m_Vertices;
 }
 
-//Alexander new code:
-
 bool triebWerk::COBJParser::LoadOBJ(const char * a_pPath)
 {
 	m_Vertices = new CMesh::SVertex[m_MAX_VERTICES];
@@ -39,41 +37,19 @@ bool triebWerk::COBJParser::LoadOBJ(const char * a_pPath)
 
 		if (BeginLineWith(line, "v "))
 		{
-			AddVertexPoint(line);
+			AddVertexPoint(line.c_str());
 		}
 		else if(BeginLineWith(line, "vt "))
 		{
-			AddUV(line);
+			AddUV(line.c_str());
 		}
 		else if(BeginLineWith(line, "vn "))
 		{
-			AddNormal(line);
+			AddNormal(line.c_str());
 		}
 		else if(BeginLineWith(line, "f "))
 		{
-			size_t firstSpace = 0;
-			size_t secondSpace = 0;
-			bool endOfLine = false;
-			int counter = 0;
-
-			//Read all Vertex Indices
-			while (!endOfLine)
-			{
-				firstSpace = line.find(' ', secondSpace);
-
-				secondSpace = line.find(' ', firstSpace + 1);
-
-				//End of Line reached
-				if (secondSpace == std::string::npos || secondSpace +1 == line.size())
-				{
-					secondSpace = line.size();
-					endOfLine = true;
-				}
-				std::string t = line.substr(firstSpace, secondSpace - firstSpace);
-				counter++;
-				if(counter < 4)
-					AddVertex(t);
-			}
+			ReadFaces(line);
 		}
 
 	} while (ReachedEndOfFile() != true);
@@ -93,49 +69,175 @@ bool triebWerk::COBJParser::LoadOBJ(const char * a_pPath)
 	return true;
 }
 
-void triebWerk::COBJParser::AddVertexPoint(std::string & a_Text)
+void triebWerk::COBJParser::AddVertexPoint(const char* a_pLine)
 {
 	DirectX::XMFLOAT3 vertex;
 	
-	size_t pos1 = a_Text.find_first_of(' ', 0) +1;
-	size_t pos2 = a_Text.find(' ', pos1+1);
-	size_t pos3 = a_Text.find(' ', pos2+1);
+	GetCoordinatesFromLine(a_pLine, &vertex);
 
-	vertex.x = std::stof(a_Text.substr(pos1, pos2-pos1));
-	vertex.y = std::stof(a_Text.substr(pos2, pos3-pos2));
-	vertex.z = std::stof(a_Text.substr(pos3, a_Text.size()-pos3)) * -1.0f; //transfer to lh
+	vertex.z *= -1.0f; // LH
+
+	//size_t pos1 = a_Text.find_first_of(' ', 0) +1;
+	//size_t pos2 = a_Text.find(' ', pos1+1);
+	//size_t pos3 = a_Text.find(' ', pos2+1);
+
+	//vertex.x = std::stof(a_Text.substr(pos1, pos2-pos1));
+	//vertex.y = std::stof(a_Text.substr(pos2, pos3-pos2));
+	//vertex.z = std::stof(a_Text.substr(pos3, a_Text.size()-pos3)) * -1.0f; //transfer to lh
 	
 	m_VertexPoint.push_back(vertex);
 }
 
-void triebWerk::COBJParser::AddUV(std::string & a_Text)
+void triebWerk::COBJParser::AddUV(const char* a_pLine)
 {
 	DirectX::XMFLOAT2 uv;
+	DirectX::XMFLOAT3 uvw;
 
-	size_t pos1 = a_Text.find_first_of(' ', 0);
-	size_t pos2 = a_Text.find(' ', pos1 + 1);
+	GetCoordinatesFromLine(a_pLine, &uvw);
 
-	uv.x = std::stof(a_Text.substr(pos1, pos2 - pos1));
-	uv.y = 1.0f - std::stof(a_Text.substr(pos2, a_Text.size() - pos2)); //transfer to lh
+	uv.x = uvw.x;
+	uv.y = 1.0f - uvw.y; // LH
+
+/*
+	int counter = 0;
+	double multi = 1.0f;
+
+	const char* ptr = a_Text.c_str();
+	float val = 0;
+	bool before = true;
+
+	while (*ptr)
+	{
+		if (*ptr == ' ' || *ptr == '\r')
+		{
+			if (counter == 1)
+			{
+				uv.x = val;
+			}
+			else if(counter == 2)
+			{
+				uv.y = 1.0f - val;
+				break;
+			}
+
+			val = 0.0f;
+			before = true;
+			multi = 1.0f;
+			counter++;
+		}
+		else
+		{
+			if (*ptr == '.')
+			{
+				multi = 1.0f;
+				before = false;
+			}
+
+			if (*ptr >= '0' && *ptr <= '9')
+			{
+				if (before)
+				{
+					val *= 10;
+					val += *ptr - '0';
+				}
+				else
+				{
+					float t = *ptr - '0';
+					multi *= 10.0f;
+					val += t / multi;
+				}
+			}
+		}
+
+		ptr++;
+	}*/
+
+	
+	//size_t pos1 = a_Text.find_first_of(' ', 0);
+	//size_t pos2 = a_Text.find(' ', pos1 + 1);
+
+	//uv.x = std::stof(a_Text.substr(pos1, pos2 - pos1));
+	//uv.y = 1.0f - std::stof(a_Text.substr(pos2, a_Text.size() - pos2)); //transfer to lh
 
 	m_UV.push_back(uv);
 	m_ContainsUVs = true;
 }
 
-void triebWerk::COBJParser::AddNormal(std::string & a_Text)
+void triebWerk::COBJParser::AddNormal(const char* a_pLine)
 {
 	DirectX::XMFLOAT3 normal;
 
-	size_t pos1 = a_Text.find_first_of(' ', 0);
-	size_t pos2 = a_Text.find(' ', pos1 + 1);
-	size_t pos3 = a_Text.find(' ', pos2 + 1);
+	GetCoordinatesFromLine(a_pLine, &normal);
 
-	normal.x = std::stof(a_Text.substr(pos1, pos2 - pos1));
-	normal.y = std::stof(a_Text.substr(pos2, pos3 - pos2));
-	normal.z = std::stof(a_Text.substr(pos3, a_Text.size() - pos3)) * -1.0f; //transfer to lh
+	normal.z *= -1.0f; //LH
+
+	//size_t pos1 = a_Text.find_first_of(' ', 0);
+	//size_t pos2 = a_Text.find(' ', pos1 + 1);
+	//size_t pos3 = a_Text.find(' ', pos2 + 1);
+
+	//normal.x = std::stof(a_Text.substr(pos1, pos2 - pos1));
+	//normal.y = std::stof(a_Text.substr(pos2, pos3 - pos2));
+	//normal.z = std::stof(a_Text.substr(pos3, a_Text.size() - pos3)) * -1.0f; //transfer to lh
 
 	m_Normal.push_back(normal);
 	m_ContainsNormals = true;
+}
+
+void triebWerk::COBJParser::ReadFaces(std::string & a_Line)
+{
+	char buffer[400] = { 0 };
+	int counter = 0;
+	const char* ptr = a_Line.c_str();
+	
+	while (*ptr)
+	{
+		if (*ptr >= '0' && *ptr <= '9')
+			break;
+
+		ptr++;
+	}
+
+	while (*ptr)
+	{
+		if (*ptr == ' ' || *ptr == '\r' && counter > 0)
+		{
+			std::string t = buffer;
+			AddVertex(t);
+			memset(&buffer, 0, 400);
+			counter = 0;
+		}
+		else
+		{
+			buffer[counter] = *ptr;
+			counter++;
+		}
+
+		ptr++;
+	}
+
+	//size_t firstSpace = 0;
+	//size_t secondSpace = 0;
+	//bool endOfLine = false;
+	//int counter = 0;
+
+	////Read all Vertex Indices
+	//while (!endOfLine)
+	//{
+	//	firstSpace = a_Line.find(' ', secondSpace);
+
+	//	secondSpace = a_Line.find(' ', firstSpace + 1);
+
+	//	//End of Line reached
+	//	if (secondSpace == std::string::npos || secondSpace + 1 == a_Line.size())
+	//	{
+	//		secondSpace = a_Line.size();
+	//		endOfLine = true;
+	//	}
+	//	std::string t = a_Line.substr(firstSpace, secondSpace - firstSpace);
+	//	counter++;
+	//	if (counter < 4)
+	//		AddVertex(t);
+	//}
 }
 
 unsigned int triebWerk::COBJParser::CreateVertex(CMesh::SVertex & a_rVertex)
@@ -158,8 +260,7 @@ void triebWerk::COBJParser::AddVertex(std::string & a_Text)
 {
 	CMesh::SVertex vertex;
 
-	if (a_Text == "\r")
-		return;
+	const char* ptr = a_Text.c_str();
 
 	if (!m_ContainsNormals && !m_ContainsUVs)
 	{
@@ -169,7 +270,6 @@ void triebWerk::COBJParser::AddVertex(std::string & a_Text)
 		vertex.normal = DirectX::XMFLOAT3(0, 0, 0);
 		vertex.uv = DirectX::XMFLOAT2(0, 0);
 	}
-
 
 	if (m_ContainsNormals && !m_ContainsUVs)
 	{
@@ -197,16 +297,44 @@ void triebWerk::COBJParser::AddVertex(std::string & a_Text)
 	
 	if (m_ContainsUVs && m_ContainsNormals)
 	{
-		size_t backslashPosFirst = a_Text.find_first_of("/", 0);
-		size_t backslashPosSecond = a_Text.find("/", backslashPosFirst+1);
+		int val = 0;
+		int elementCount = 0;
 
-		int v = std::stoi(a_Text.substr(0, backslashPosFirst));
-		int vt = std::stoi(a_Text.substr(backslashPosFirst + 1, backslashPosSecond - backslashPosFirst));
-		int vn = std::stoi(a_Text.substr(backslashPosSecond + 1, a_Text.size() - backslashPosSecond));
+		int elements[3] = { 0 };
 
-		vertex.position = m_VertexPoint[v - 1];
-		vertex.normal = m_Normal[vn -1];
-		vertex.uv = m_UV[vt - 1];
+		do
+		{
+			if (*ptr == '/')
+			{
+				elements[elementCount] = val;
+				elementCount++;
+				val = 0;
+			}
+			else
+			{
+				if (*ptr >= '0' && *ptr <= '9')
+				{
+					val *= 10;
+					val += *ptr - '0';
+				}
+			}
+
+			ptr++;
+		} while (*ptr);
+
+		//last element
+		elements[elementCount] = val;
+
+		//size_t backslashPosFirst = a_Text.find_first_of("/", 0);
+		//size_t backslashPosSecond = a_Text.find("/", backslashPosFirst+1);
+
+		//int v = std::stoi(a_Text.substr(0, backslashPosFirst));
+		//int vt = std::stoi(a_Text.substr(backslashPosFirst + 1, backslashPosSecond - backslashPosFirst));
+		//int vn = std::stoi(a_Text.substr(backslashPosSecond + 1, a_Text.size() - backslashPosSecond));
+
+		vertex.position = m_VertexPoint[elements[0] - 1];
+		vertex.uv = m_UV[elements[1] - 1];
+		vertex.normal = m_Normal[elements[2] - 1];
 	}
 
 	m_Indices.push_back(CreateVertex(vertex));
@@ -223,6 +351,85 @@ bool triebWerk::COBJParser::BeginLineWith(std::string& a_rLine, const char * a_p
 	else
 	{
 		return false;
+	}
+}
+
+void triebWerk::COBJParser::GetCoordinatesFromLine(const char * a_pLine, DirectX::XMFLOAT3 * a_pOutBuffer)
+{
+	//count of coordinates written to
+	int elementCount = 0;
+	//multiplier to shift the decimal places 
+	float decimalPlaceMultiplier = 1.0f;
+
+	//is the coordinate negative or positive
+	int sign = 1;
+
+	//iterator 
+	const char* ptr = a_pLine;
+
+	float val = 0;
+
+	bool isAtDecimalPlace = false;
+
+	//skip everthing which is at the beginning
+	do
+	{
+		if ((*ptr >= '0' && *ptr <= '9') || *ptr == '-')
+		{
+			break;
+		}
+
+		ptr++;
+	} while (*ptr);
+
+
+	while (*ptr)
+	{
+		//if a space or the of the line occurs
+		if (*ptr == ' ' || *ptr == '\r')
+		{
+			//set the value for the specific coordinate
+			if (elementCount == 0)
+				a_pOutBuffer->x = val * sign;
+			else if (elementCount == 1)
+				a_pOutBuffer->y = val * sign;
+			else if (elementCount == 2)
+				a_pOutBuffer->z = val*sign;
+
+			//reset the values for the next iteration
+			val = 0.0f;
+			isAtDecimalPlace = false;
+			decimalPlaceMultiplier = 1.0f;
+			sign = 1;
+			elementCount++;
+		}
+		else
+		{
+			if (*ptr == '.')
+				isAtDecimalPlace = true;
+
+			if (*ptr == '-')
+				sign = -1;
+
+			//numbers to set into value
+			if (*ptr >= '0' && *ptr <= '9')
+			{
+				if (!isAtDecimalPlace)
+				{
+					val *= 10;
+					val += *ptr - '0';
+				}
+				else
+				{
+					float number = *ptr - '0';
+					//shift the number to the correct decimal place
+					decimalPlaceMultiplier *= 10.0f;
+					val += number / decimalPlaceMultiplier;
+				}
+			}
+		}
+
+		ptr++;
 	}
 }
 

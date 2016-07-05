@@ -223,6 +223,18 @@
     <Filter Include="Quelldateien\Font">
       <UniqueIdentifier>{4e416251-a3a4-4da6-978f-ceb77c8f08ba}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headerdateien\Audio">
+      <UniqueIdentifier>{295d3b4c-227b-4e8f-87e8-188ff2edf816}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Resource\Resources\Audio">
+      <UniqueIdentifier>{47ed2e65-ef14-4c2f-a147-06677e4de88c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Audio">
+      <UniqueIdentifier>{3657dfa2-dba4-4957-8ff5-b5cad1dcd1e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Resource\Resources\Audio">
+      <UniqueIdentifier>{c517ebf9-9d5c-46b2-955f-613253a08ca1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CEngine.cpp">
@@ -428,6 +440,15 @@
     </ClCompile>
     <ClCompile Include="src\CInstancedFontBatch.cpp">
       <Filter>Quelldateien\Rendering\Batches</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CSoundEngine.cpp">
+      <Filter>Quelldateien\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CSound.cpp">
+      <Filter>Quelldateien\Resource\Resources\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CDDSParser.cpp">
+      <Filter>Quelldateien\Resource\Parser</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -673,6 +694,15 @@
     </ClInclude>
     <ClInclude Include="include\CInstancedFontBatch.h">
       <Filter>Headerdateien\Rendering\Batches</Filter>
+    </ClInclude>
+    <ClInclude Include="CSoundEngine.h">
+      <Filter>Headerdateien\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CSound.h">
+      <Filter>Headerdateien\Resource\Resources\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CDDSParser.h">
+      <Filter>Headerdateien\Resource\Parser</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

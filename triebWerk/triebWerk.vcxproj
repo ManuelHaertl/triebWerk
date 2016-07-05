@@ -148,6 +148,7 @@
     <ClCompile Include="src\CCamera.cpp" />
     <ClCompile Include="src\CCollision.cpp" />
     <ClCompile Include="src\CCollisionEvent.cpp" />
+    <ClCompile Include="src\CDDSParser.cpp" />
     <ClCompile Include="src\CDebugLogfile.cpp" />
     <ClCompile Include="src\CFont.cpp" />
     <ClCompile Include="src\CFontFace.cpp" />
@@ -160,6 +161,8 @@
     <ClCompile Include="src\CRenderTarget.cpp" />
     <ClCompile Include="src\CSceneHolder.cpp" />
     <ClCompile Include="src\CSceneManager.cpp" />
+    <ClCompile Include="src\CSound.cpp" />
+    <ClCompile Include="src\CSoundEngine.cpp" />
     <ClCompile Include="src\CText.cpp" />
     <ClCompile Include="src\CTWFData.cpp" />
     <ClCompile Include="src\CConstantBuffer.cpp" />
@@ -210,12 +213,14 @@
     <ClCompile Include="src\IShader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CSoundEngine.h" />
     <ClInclude Include="extern\include\loadPNG\lodepng.h" />
     <ClInclude Include="include\CAABBCollider.h" />
     <ClInclude Include="include\CCamera.h" />
     <ClInclude Include="include\CBody.h" />
     <ClInclude Include="include\CCollision.h" />
     <ClInclude Include="include\CCollisionEvent.h" />
+    <ClInclude Include="include\CDDSParser.h" />
     <ClInclude Include="include\CDebugLogfile.h" />
     <ClInclude Include="include\CFont.h" />
     <ClInclude Include="include\CFontFace.h" />
@@ -281,6 +286,7 @@
     <ClInclude Include="include\EKey.h" />
     <ClInclude Include="include\EMouseButton.h" />
     <ClInclude Include="include\EngineDefines.h" />
+    <ClInclude Include="include\CSound.h" />
     <ClInclude Include="include\IBehaviour.h" />
     <ClInclude Include="include\CStringHasher.h" />
     <ClInclude Include="include\IDrawable.h" />
