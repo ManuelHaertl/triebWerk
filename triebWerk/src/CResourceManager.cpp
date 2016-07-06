@@ -937,8 +937,98 @@ void triebWerk::CResourceManager::UpdateResourceChanges()
 				}
 			}
 		}break;
+
+		case EFileType::DDS:
+		{
+			if (events[i].Event == CFileWatcher::EFileEventTypes::Modified)
+			{
+				//Create a the PNGFile to load
+				SFile fileToLoad;
+				fileToLoad.FileName = AbstractFileNameFromPath(events[0].FileName);
+				fileToLoad.FilePath = m_FileWatcher.m_PathWatching + "\\" + events[0].FileName;
+				fileToLoad.FileType = EFileType::DDS;
+
+				//Load and update the texture
+				CTexture2D* texture = GetTexture2D(fileToLoad.FileName.c_str());
+				if (texture != nullptr)
+				{
+				/*	std::vector<unsigned char> imageBuffer;
+
+					unsigned int width;
+					unsigned int height;
+
+					unsigned int error = lodepng::decode(imageBuffer, width, height, fileToLoad.FilePath);
+
+					if (error != 0)
+						return;*/
+
+					ID3D11Texture2D* pTexture = nullptr;
+					ID3D11ShaderResourceView* pShaderResource = nullptr;
+					ID3D11Resource* pResource = nullptr;
+
+					const size_t cSize = strlen(fileToLoad.FilePath.c_str()) + 1;
+					wchar_t* wc = new wchar_t[cSize];
+					size_t numberOfChars;
+					mbstowcs_s(&numberOfChars, wc, cSize, fileToLoad.FilePath.c_str(), cSize); //wc, a_File.FileP
+
+					HRESULT hr = DirectX::CreateDDSTextureFromFile(m_pGraphicsHandle->GetDevice(), wc, nullptr, &pShaderResource);
+						delete wc;
+
+					if (FAILED(hr))
+					{
+						DebugLogfile.LogfText(CDebugLogfile::ELogType::Warning, false, "Warning: DDS could not be reloaded in filewatcher! File: %s", fileToLoad.FilePath.c_str());
+						break;
+					}
+
+					pShaderResource->GetResource(&pResource);
+					pTexture = static_cast<ID3D11Texture2D*>(pResource);
+
+					D3D11_TEXTURE2D_DESC textureDesc;
+
+					pTexture->GetDesc(&textureDesc);
+
+					texture->SetTexture(textureDesc.Width, textureDesc.Height, pTexture, pShaderResource);
+				}
+			}
+		}break;
 		}
 	}
 
 	events.clear();
 }
+
+//size_t hash = StringHasher(RemoveFileType(a_File.FileName));
+//if (ExistsResourceInBuffer(EFileType::DDS, hash))
+//return;
+//
+//ID3D11Texture2D* pTexture = nullptr;
+//ID3D11ShaderResourceView* pShaderResource = nullptr;
+//ID3D11Resource* pResource = nullptr;
+//
+//const size_t cSize = strlen(a_File.FilePath.c_str()) + 1;
+//wchar_t* wc = new wchar_t[cSize];
+//size_t numberOfChars;
+//mbstowcs_s(&numberOfChars, wc, cSize, a_File.FilePath.c_str(), cSize); //wc, a_File.FilePath.c_str(), cSize);
+//
+//HRESULT hr = DirectX::CreateDDSTextureFromFile(m_pGraphicsHandle->GetDevice(), wc, nullptr, &pShaderResource);
+//delete wc;
+//
+//if (FAILED(hr))
+//{
+//	DebugLogfile.LogfText(CDebugLogfile::ELogType::Warning, false, "Warning: DDS could not be loaded! File: %s", a_File.FilePath.c_str());
+//	return;
+//}
+//
+//CTexture2D* ptwTexture = new CTexture2D();
+//
+//
+//pShaderResource->GetResource(&pResource);
+//pTexture = static_cast<ID3D11Texture2D*>(pResource);
+//
+//D3D11_TEXTURE2D_DESC textureDesc;
+//
+//pTexture->GetDesc(&textureDesc);
+//
+//ptwTexture->SetTexture(textureDesc.Width, textureDesc.Height, pTexture, pShaderResource);
+//
+//m_TextureBuffer.insert(CTexturePair(hash, ptwTexture));

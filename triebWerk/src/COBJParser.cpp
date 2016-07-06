@@ -251,14 +251,13 @@ void triebWerk::COBJParser::ReadFaces(const char* a_pLine)
 
 unsigned int triebWerk::COBJParser::CreateVertex(CMesh::SVertex & a_rVertex)
 {
-
-	for (size_t i = 0; i < m_VertexCount; i++)
-	{
-		if (CMesh::SVertex::IsEqual(m_Vertices[i], a_rVertex) == true)
-		{
-			return static_cast<unsigned int>(i);
-		}
-	}
+	//for (size_t i = 0; i < m_VertexCount; i++)
+	//{
+	//	if (CMesh::SVertex::IsEqual(m_Vertices[i], a_rVertex) == true)
+	//	{
+	//		return static_cast<unsigned int>(i);
+	//	}
+	//}
 
 	m_Vertices[m_VertexCount] = a_rVertex;
 	m_VertexCount++;
@@ -467,6 +466,11 @@ void triebWerk::COBJParser::GetCoordinatesFromLine(const char * a_pLine, DirectX
 		}
 
 		ptr++;
+	}
+
+	if (elementCount == 2)
+	{
+		a_pOutBuffer->z = val*sign;
 	}
 }
 
