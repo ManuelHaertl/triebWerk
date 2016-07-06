@@ -253,10 +253,16 @@ void triebWerk::CTMXParser::ReadProperties(std::unordered_map<std::string, std::
 
 void triebWerk::CTMXParser::ReadObject(std::string& a_Line)
 {
+	size_t isEmpty = a_Line.find("/>");
+
+	if (isEmpty != std::string::npos)
+		return;
+
 	CObjectLayer* objectLayer = new CObjectLayer();
 
 	objectLayer->m_Name = GetProportie(a_Line, "name");
 	
+
 	do
 	{
 		a_Line = GetLine();

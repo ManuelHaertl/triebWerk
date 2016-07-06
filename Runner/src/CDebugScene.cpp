@@ -147,7 +147,6 @@ void CDebugScene::CreateTestCubes()
 	triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
 	mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("points");
 	mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
-	mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
 	DirectX::XMFLOAT3 t = DirectX::XMFLOAT3(0.0f, 1.0f, 1.0f);
 	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &t);
 
