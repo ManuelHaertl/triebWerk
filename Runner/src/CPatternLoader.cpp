@@ -183,6 +183,7 @@ ETileType::Type CPatternLoader::GetModelTileType(const int a_ModelWidth, const i
         }
     }
 
+
     return ETileType::Block1x1;
 }
 

@@ -4,7 +4,7 @@
 
 int main()
 {
-    //_crtBreakAlloc = 427822;
+    //_crtBreakAlloc = 432518;
 
     // Initialize the engine
     triebWerk::SEngineConfiguration config;
@@ -27,7 +27,7 @@ int main()
     twSceneManager->AddScene(new CGameScene(), "Game");
     twSceneManager->AddScene(new CDebugScene(), "Debug");
 
-    twSceneManager->SetActiveScene("Debug");
+    twSceneManager->SetActiveScene("Game");
 
     // main loop, update game & engine
     bool run = true;

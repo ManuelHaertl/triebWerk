@@ -73,8 +73,8 @@ void CPlayer::CollisionEnter(triebWerk::CCollisionEvent a_Collision)
     }
     else if (entity->m_ID.GetHash() == triebWerk::StringHasher("Wall"))
     {
-        //if (m_IsDead == false)
-        //    triebWerk::CDebugLogfile::Instance().LogfText(triebWerk::CDebugLogfile::ELogType::Warning, false, entity->m_ID.GetDescribtion().c_str());
+        if (m_IsDead == false)
+            triebWerk::CDebugLogfile::Instance().LogfText(triebWerk::CDebugLogfile::ELogType::Warning, false, entity->m_ID.GetDescribtion().c_str());
         m_IsDead = true;
     }
 }

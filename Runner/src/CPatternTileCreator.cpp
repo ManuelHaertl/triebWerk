@@ -258,7 +258,7 @@ triebWerk::CEntity* CPatternTileCreator::CreateModel05x10()
     // Physic
     auto physicEntity = twActivePhysic->CreatePhysicEntity();
     auto collider = twActivePhysic->CreateAABBCollider();
-    collider->SetSize(10.0f, 8.0f, 5.0f);
+    collider->SetSize(5.0f, 8.0f, 10.0f);
     collider->m_CheckCollision = false;
     physicEntity->AddCollider(collider);
     entity->SetPhysicEntity(physicEntity);
@@ -317,7 +317,7 @@ triebWerk::CEntity* CPatternTileCreator::CreateModel05x20()
     // Physic
     auto physicEntity = twActivePhysic->CreatePhysicEntity();
     auto collider = twActivePhysic->CreateAABBCollider();
-    collider->SetSize(20.0f, 8.0f, 5.0f);
+    collider->SetSize(5.0f, 8.0f, 20.0f);
     collider->m_CheckCollision = false;
     physicEntity->AddCollider(collider);
     entity->SetPhysicEntity(physicEntity);
@@ -376,7 +376,7 @@ triebWerk::CEntity* CPatternTileCreator::CreateModel05x30()
     // Physic
     auto physicEntity = twActivePhysic->CreatePhysicEntity();
     auto collider = twActivePhysic->CreateAABBCollider();
-    collider->SetSize(30.0f, 8.0f, 5.0f);
+    collider->SetSize(5.0f, 8.0f, 30.0f);
     collider->m_CheckCollision = false;
     physicEntity->AddCollider(collider);
     entity->SetPhysicEntity(physicEntity);

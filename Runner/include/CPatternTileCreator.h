@@ -28,4 +28,5 @@ private:
     triebWerk::CEntity* CreateModel05x20Flipped();
     triebWerk::CEntity* CreateModel05x30();
     triebWerk::CEntity* CreateModel05x30Flipped();
+
 };
