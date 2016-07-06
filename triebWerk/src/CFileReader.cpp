@@ -53,7 +53,7 @@ bool triebWerk::CFileReader::ReachedEndOfFile()
 	return m_ReachedEnd;
 }
 
-std::string triebWerk::CFileReader::GetLine()
+char* triebWerk::CFileReader::GetLine()
 {
 	//new line
 	m_LineCounter++;
@@ -70,10 +70,10 @@ std::string triebWerk::CFileReader::GetLine()
 		if (*(m_pData + m_DataIterator) == '\n')
 		{
 			memcpy(m_pLineBuffer, m_pData + lineStart, m_DataIterator - lineStart);
-			std::string string = m_pLineBuffer;
+			//std::string string = m_pLineBuffer;
 			//Skip the '\n'
 			m_DataIterator++;
-			return string;
+			return m_pLineBuffer;
 		}
 
 		m_DataIterator++;
@@ -82,8 +82,7 @@ std::string triebWerk::CFileReader::GetLine()
 	m_ReachedEnd = true;
 
 	memcpy(m_pLineBuffer, m_pData + lineStart, m_DataIterator - lineStart);
-	std::string string = m_pLineBuffer;
-	return string;
+	return m_pLineBuffer;
 }
 
 //void triebWerk::CFileReader::GetLineFast(std::string & a_rString)

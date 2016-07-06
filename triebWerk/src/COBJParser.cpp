@@ -27,25 +27,27 @@ bool triebWerk::COBJParser::LoadOBJ(const char * a_pPath)
 		return false;
 
 	//Reserve memory for the string
-	std::string line;
-	line.reserve(200);
+	char* line;
 
 	do
 	{
 		//Get Line to read
 		line = GetLine();
 
+		if (line[0] == '#' || line[0] == '\r')
+			continue;
+
 		if (BeginLineWith(line, "v "))
 		{
-			AddVertexPoint(line.c_str());
+			AddVertexPoint(line);
 		}
 		else if(BeginLineWith(line, "vt "))
 		{
-			AddUV(line.c_str());
+			AddUV(line);
 		}
 		else if(BeginLineWith(line, "vn "))
 		{
-			AddNormal(line.c_str());
+			AddNormal(line);
 		}
 		else if(BeginLineWith(line, "f "))
 		{
@@ -183,11 +185,12 @@ void triebWerk::COBJParser::AddNormal(const char* a_pLine)
 	m_ContainsNormals = true;
 }
 
-void triebWerk::COBJParser::ReadFaces(std::string & a_Line)
+void triebWerk::COBJParser::ReadFaces(const char* a_pLine)
 {
-	char buffer[400] = { 0 };
+	char buffer[512] = { 0 };
 	int counter = 0;
-	const char* ptr = a_Line.c_str();
+	const char* ptr = a_pLine;
+	//int charLength = a_Line.size();
 	
 	while (*ptr)
 	{
@@ -201,18 +204,24 @@ void triebWerk::COBJParser::ReadFaces(std::string & a_Line)
 	{
 		if (*ptr == ' ' || *ptr == '\r' && counter > 0)
 		{
-			std::string t = buffer;
-			AddVertex(t);
+			AddVertex(buffer);
 			memset(&buffer, 0, 400);
 			counter = 0;
 		}
-		else
+		else if((*ptr >= '0' && *ptr <= '9') || *ptr == '/')
 		{
 			buffer[counter] = *ptr;
 			counter++;
 		}
 
 		ptr++;
+	}
+
+	if (counter > 0)
+	{
+		AddVertex(buffer);
+		memset(&buffer, 0, 400);
+		counter = 0;
 	}
 
 	//size_t firstSpace = 0;
@@ -256,14 +265,15 @@ unsigned int triebWerk::COBJParser::CreateVertex(CMesh::SVertex & a_rVertex)
 	return static_cast<unsigned int>(m_VertexCount -1);
 }
 
-void triebWerk::COBJParser::AddVertex(std::string & a_Text)
+void triebWerk::COBJParser::AddVertex(const char* a_pText)
 {
 	CMesh::SVertex vertex;
 
-	const char* ptr = a_Text.c_str();
+	const char* ptr = a_pText;
 
 	if (!m_ContainsNormals && !m_ContainsUVs)
 	{
+		std::string a_Text = a_pText;
 		int v = std::stoi(a_Text);
 
 		vertex.position = m_VertexPoint[v - 1];
@@ -273,6 +283,7 @@ void triebWerk::COBJParser::AddVertex(std::string & a_Text)
 
 	if (m_ContainsNormals && !m_ContainsUVs)
 	{
+		std::string a_Text = a_pText;
 		size_t backslashPos = a_Text.find_first_of("//", 0);
 
 		int v = std::stoi(a_Text.substr(0, backslashPos));
@@ -285,6 +296,7 @@ void triebWerk::COBJParser::AddVertex(std::string & a_Text)
 
 	if (m_ContainsUVs && !m_ContainsNormals)
 	{
+		std::string a_Text = a_pText;
 		size_t backslashPos = a_Text.find_first_of("/", 0);
 
 		int v = std::stoi(a_Text.substr(0, backslashPos));
@@ -340,8 +352,33 @@ void triebWerk::COBJParser::AddVertex(std::string & a_Text)
 	m_Indices.push_back(CreateVertex(vertex));
 }
 
-bool triebWerk::COBJParser::BeginLineWith(std::string& a_rLine, const char * a_pStart)
+bool triebWerk::COBJParser::BeginLineWith(const char* a_pLine, const char * a_pStart)
 {
+	int wordLength = strlen(a_pStart);
+	int charCounter = 0;
+	char wordBuffer[32] = { 0 };
+	const char* ptr = a_pLine;
+
+	while (*ptr)
+	{
+		if (charCounter == wordLength)
+		{
+			if (strcmp(wordBuffer, a_pStart) == 0)
+				return true;
+			else
+				return false;
+		}
+		else
+		{
+			wordBuffer[charCounter] = *ptr;
+			charCounter++;
+		}
+
+		ptr++;
+	}
+
+	return false;
+	/*std::string a_rLine = a_pLine;
 	size_t startPos = a_rLine.find(a_pStart);
 
 	if (startPos != std::string::npos)
@@ -351,7 +388,7 @@ bool triebWerk::COBJParser::BeginLineWith(std::string& a_rLine, const char * a_p
 	else
 	{
 		return false;
-	}
+	}*/
 }
 
 void triebWerk::COBJParser::GetCoordinatesFromLine(const char * a_pLine, DirectX::XMFLOAT3 * a_pOutBuffer)

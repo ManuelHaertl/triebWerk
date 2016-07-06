@@ -145,13 +145,26 @@ void CDebugScene::CreateTestCubes()
 	entity->m_Transform.SetPosition(0,0,0);
 
 	triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
-	mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube");
-	mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardTexture"));
+	mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("points");
+	mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
 	mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
-	mesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("noise"));
+	DirectX::XMFLOAT3 t = DirectX::XMFLOAT3(0.0f, 1.0f, 1.0f);
+	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &t);
 
 	entity->SetDrawable(mesh);
 	m_pWorld->AddEntity(entity);
+
+	//auto entity2 = m_pWorld->CreateEntity();
+	//entity2->m_Transform.SetPosition(0, 0, 0);
+
+	//triebWerk::CMeshDrawable* mesh2 = twRenderer->CreateMeshDrawable();
+	//mesh2->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_obs_05x30x12_base");
+	//mesh2->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
+	//mesh2->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
+	//mesh2->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &t);
+
+	//entity->SetDrawable(mesh2);
+	//m_pWorld->AddEntity(entity2);
 
     /*const int range = 10;
     const int incrementer = 5;

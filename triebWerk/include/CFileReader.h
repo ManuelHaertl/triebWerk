@@ -7,7 +7,7 @@ namespace triebWerk
 class CFileReader
 {
 private:
-	const size_t m_MaxLineBufferSize = 400;
+	const size_t m_MaxLineBufferSize = 800;
 
 private:
 	FILE* m_pFilePointer;
@@ -28,7 +28,7 @@ protected:
 	//Is file reader at the end of file
 	bool ReachedEndOfFile();
 	//Get the next data till a \n is hit
-	std::string GetLine();
+	char* GetLine();
 	//Get all data in memory
 	std::string GetAllData();
 	//Get the line count of the reader
