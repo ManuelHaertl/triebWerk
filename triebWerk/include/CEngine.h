@@ -26,6 +26,7 @@ namespace triebWerk
         CSceneManager* m_pSceneManager;
         CFontManager* m_pFontManager;
 		CDebug* m_pDebug;
+		CSoundEngine* m_pSoundEngine;
 
 	private:
         const double SleepTimeDivisor = 10.0;
