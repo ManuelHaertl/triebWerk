@@ -4,52 +4,115 @@
 #include <CPoints.h>
 
 CPatternTileCreator::CPatternTileCreator()
+    : m_pFirstEntity(nullptr)
+    , m_pSecondEntity(nullptr)
+    , m_Tile()
+    , m_PatternSpawnBegin(0.0f)
 {
+    m_pCheckPoint = twResourceManager->GetMesh("checkpoint");
+    m_pPoints = twResourceManager->GetMesh("points");
+    m_pBlock1x1 = twResourceManager->GetMesh("cube");
+    m_pBlock2x2 = twResourceManager->GetMesh("cube");
+
+    m_pObstacle05x05x08 = twResourceManager->GetMesh("ms_obs_05x05x08_base");
+    m_pObstacle05x05x08Deko1 = twResourceManager->GetMesh("ms_obs_05x05x08_deko_01");
+    m_pObstacle05x05x08Deko2 = twResourceManager->GetMesh("ms_obs_05x05x08_deko_02");
+    m_pObstacle05x05x08Deko3 = twResourceManager->GetMesh("ms_obs_05x05x08_deko_03");
+    m_pObstacle05x05x12 = twResourceManager->GetMesh("ms_obs_05x05x12_base");
+    m_pObstacle05x05x12Deko1 = twResourceManager->GetMesh("ms_obs_05x05x12_deko_01");
+    m_pObstacle05x05x12Deko2 = twResourceManager->GetMesh("ms_obs_05x05x12_deko_02");
+    m_pObstacle05x05x12Deko3 = twResourceManager->GetMesh("ms_obs_05x05x12_deko_03");
+
+    m_pObstacle05x10x08 = twResourceManager->GetMesh("ms_obs_05x10x08_base");
+    m_pObstacle05x10x08Deko1 = twResourceManager->GetMesh("ms_obs_05x10x08_deko_01");
+    m_pObstacle05x10x08Deko2 = twResourceManager->GetMesh("ms_obs_05x10x08_deko_02");
+    m_pObstacle05x10x08Deko3 = twResourceManager->GetMesh("ms_obs_05x10x08_deko_03");
+    m_pObstacle05x10x12 = twResourceManager->GetMesh("ms_obs_05x10x12_base");
+    m_pObstacle05x10x12Deko1 = twResourceManager->GetMesh("ms_obs_05x10x12_deko_01");
+    m_pObstacle05x10x12Deko2 = twResourceManager->GetMesh("ms_obs_05x10x12_deko_02");
+    m_pObstacle05x10x12Deko3 = twResourceManager->GetMesh("ms_obs_05x10x12_deko_03");
+
+    m_pObstacle05x20x08 = twResourceManager->GetMesh("ms_obs_05x20x08_base");
+    m_pObstacle05x20x08Deko1 = twResourceManager->GetMesh("ms_obs_05x20x08_deko_01");
+    m_pObstacle05x20x08Deko2 = twResourceManager->GetMesh("ms_obs_05x20x08_deko_02");
+    m_pObstacle05x20x08Deko3 = twResourceManager->GetMesh("ms_obs_05x20x08_deko_03");
+    m_pObstacle05x20x12 = twResourceManager->GetMesh("ms_obs_05x20x12_base");
+    m_pObstacle05x20x12Deko1 = twResourceManager->GetMesh("ms_obs_05x20x12_deko_01");
+    m_pObstacle05x20x12Deko2 = twResourceManager->GetMesh("ms_obs_05x20x12_deko_02");
+    m_pObstacle05x20x12Deko3 = twResourceManager->GetMesh("ms_obs_05x20x12_deko_03");
+
+    m_pObstacle05x30x08 = twResourceManager->GetMesh("ms_obs_05x30x08_base");
+    m_pObstacle05x30x08Deko1 = twResourceManager->GetMesh("ms_obs_05x30x08_deko_01");
+    m_pObstacle05x30x08Deko2 = twResourceManager->GetMesh("ms_obs_05x30x08_deko_02");
+    m_pObstacle05x30x08Deko3 = twResourceManager->GetMesh("ms_obs_05x30x08_deko_03");
+    m_pObstacle05x30x12 = twResourceManager->GetMesh("ms_obs_05x30x12_base");
+    m_pObstacle05x30x12Deko1 = twResourceManager->GetMesh("ms_obs_05x30x12_deko_01");
+    m_pObstacle05x30x12Deko2 = twResourceManager->GetMesh("ms_obs_05x30x12_deko_02");
+    m_pObstacle05x30x12Deko3 = twResourceManager->GetMesh("ms_obs_05x30x12_deko_03");
+
+    m_pTextureObstacle = twResourceManager->GetTexture2D("T_obs_01");
+
+    m_pMaterialStandardColor = twResourceManager->GetMaterial("StandardColor");
+    m_pMaterialStandardTexture = twResourceManager->GetMaterial("StandardTexture");
 }
 
 CPatternTileCreator::~CPatternTileCreator()
 {
 }
 
-triebWerk::CEntity* CPatternTileCreator::CreateEntity(const SPatternTile& a_rTile, const float a_PatternSpawnBegin)
+void CPatternTileCreator::CreateEntity(const SPatternTile& a_rTile, const float a_PatternSpawnBegin)
 {
     m_Tile = a_rTile;
     m_PatternSpawnBegin = a_PatternSpawnBegin;
 
+    m_pFirstEntity = nullptr;
+    m_pSecondEntity = nullptr;
+
     switch (a_rTile.m_Type)
     {
     case ETileType::Checkpoint:
-        return CreateCheckpoint();
+        CreateCheckpoint();
+        break;
     case ETileType::Points:
-        return CreatePoints();
+        CreatePoints();
+        break;
     case ETileType::Shield:
-        return CreateShield();
+        CreateShield();
+        break;
     case ETileType::Block1x1:
-        return CreateBlock1x1();
+        CreateBlock1x1();
+        break;
     case ETileType::Block2x2:
-        return CreateBlock2x2();
+        CreateBlock2x2();
+        break;
     case ETileType::Model05x05:
-        return CreateModel05x05();
+        CreateModel05x05();
+        break;
     case ETileType::Model05x05Flipped:
-        return CreateModel05x05Flipped();
+        CreateModel05x05Flipped();
+        break;
     case ETileType::Model05x10:
-        return CreateModel05x10();
+        CreateModel05x10();
+        break;
     case ETileType::Model05x10Flipped:
-        return CreateModel05x10Flipped();
+        CreateModel05x10Flipped();
+        break;
     case ETileType::Model05x20:
-        return CreateModel05x20();
+        CreateModel05x20();
+        break;
     case ETileType::Model05x20Flipped:
-        return CreateModel05x20Flipped();
+        CreateModel05x20Flipped();
+        break;
     case ETileType::Model05x30:
-        return CreateModel05x30();
+        CreateModel05x30();
+        break;
     case ETileType::Model05x30Flipped:
-        return CreateModel05x30Flipped();
+        CreateModel05x30Flipped();
+        break;
     }
-
-    return nullptr;
 }
 
-triebWerk::CEntity* CPatternTileCreator::CreateCheckpoint()
+void CPatternTileCreator::CreateCheckpoint()
 {
     auto entity = twActiveWorld->CreateEntity();
 
@@ -79,10 +142,10 @@ triebWerk::CEntity* CPatternTileCreator::CreateCheckpoint()
     entity->SetBehaviour(new CCheckpoint());
 
     twActiveWorld->AddEntity(entity);
-    return entity;
+    m_pFirstEntity = entity;
 }
 
-triebWerk::CEntity* CPatternTileCreator::CreatePoints()
+void CPatternTileCreator::CreatePoints()
 {
     auto entity = twActiveWorld->CreateEntity();
 
@@ -111,15 +174,15 @@ triebWerk::CEntity* CPatternTileCreator::CreatePoints()
     entity->SetBehaviour(new CPoints());
 
     twActiveWorld->AddEntity(entity);
-    return entity;
+    m_pFirstEntity = entity;
 }
 
-triebWerk::CEntity* CPatternTileCreator::CreateShield()
+void CPatternTileCreator::CreateShield()
 {
-    return nullptr;
+    m_pFirstEntity = nullptr;
 }
 
-triebWerk::CEntity* CPatternTileCreator::CreateBlock1x1()
+void CPatternTileCreator::CreateBlock1x1()
 {
     auto entity = twActiveWorld->CreateEntity();
 
@@ -146,10 +209,10 @@ triebWerk::CEntity* CPatternTileCreator::CreateBlock1x1()
     entity->SetPhysicEntity(physicEntity);
 
     twActiveWorld->AddEntity(entity);
-    return entity;
+    m_pFirstEntity = entity;
 }
 
-triebWerk::CEntity* CPatternTileCreator::CreateBlock2x2()
+void CPatternTileCreator::CreateBlock2x2()
 {
     auto entity = twActiveWorld->CreateEntity();
 
@@ -176,10 +239,10 @@ triebWerk::CEntity* CPatternTileCreator::CreateBlock2x2()
     entity->SetPhysicEntity(physicEntity);
 
     twActiveWorld->AddEntity(entity);
-    return entity;
+    m_pFirstEntity = entity;
 }
 
-triebWerk::CEntity* CPatternTileCreator::CreateModel05x05()
+void CPatternTileCreator::CreateModel05x05()
 {
     auto entity = twActiveWorld->CreateEntity();
 
@@ -191,9 +254,10 @@ triebWerk::CEntity* CPatternTileCreator::CreateModel05x05()
 
     // Rendering
     auto mesh = twRenderer->CreateMeshDrawable();
-    mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_obs_05x05x08_base");
-    mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
-    mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(0.9f, 0.9f, 0.9f));
+
+    (twRandom::GetNumber(0, 1) == 0) ? mesh->m_pMesh = m_pObstacle05x05x08 : mesh->m_pMesh = m_pObstacle05x05x12;
+    mesh->m_Material.SetMaterial(m_pMaterialStandardTexture);
+    mesh->m_Material.m_pPixelShader.SetTexture(0, m_pTextureObstacle);
     entity->SetDrawable(mesh);
 
     // Physic
@@ -205,10 +269,10 @@ triebWerk::CEntity* CPatternTileCreator::CreateModel05x05()
     entity->SetPhysicEntity(physicEntity);
 
     twActiveWorld->AddEntity(entity);
-    return entity;
+    m_pFirstEntity = entity;
 }
 
-triebWerk::CEntity* CPatternTileCreator::CreateModel05x05Flipped()
+void CPatternTileCreator::CreateModel05x05Flipped()
 {
     auto entity = twActiveWorld->CreateEntity();
 
@@ -221,9 +285,9 @@ triebWerk::CEntity* CPatternTileCreator::CreateModel05x05Flipped()
 
     // Rendering
     auto mesh = twRenderer->CreateMeshDrawable();
-    mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_obs_05x05x08_base");
-    mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
-    mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(0.9f, 0.9f, 0.9f));
+    (twRandom::GetNumber(0, 1) == 0) ? mesh->m_pMesh = m_pObstacle05x05x08 : mesh->m_pMesh = m_pObstacle05x05x12;
+    mesh->m_Material.SetMaterial(m_pMaterialStandardTexture);
+    mesh->m_Material.m_pPixelShader.SetTexture(0, m_pTextureObstacle);
     entity->SetDrawable(mesh);
 
     // Physic
@@ -235,10 +299,10 @@ triebWerk::CEntity* CPatternTileCreator::CreateModel05x05Flipped()
     entity->SetPhysicEntity(physicEntity);
 
     twActiveWorld->AddEntity(entity);
-    return entity;
+    m_pFirstEntity = entity;
 }
 
-triebWerk::CEntity* CPatternTileCreator::CreateModel05x10()
+void CPatternTileCreator::CreateModel05x10()
 {
     auto entity = twActiveWorld->CreateEntity();
 
@@ -250,9 +314,9 @@ triebWerk::CEntity* CPatternTileCreator::CreateModel05x10()
 
     // Rendering
     auto mesh = twRenderer->CreateMeshDrawable();
-    mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_obs_05x10x08_base");
-    mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
-    mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(0.9f, 0.9f, 0.9f));
+    (twRandom::GetNumber(0, 1) == 0) ? mesh->m_pMesh = m_pObstacle05x10x08 : mesh->m_pMesh = m_pObstacle05x10x12;
+    mesh->m_Material.SetMaterial(m_pMaterialStandardTexture);
+    mesh->m_Material.m_pPixelShader.SetTexture(0, m_pTextureObstacle);
     entity->SetDrawable(mesh);
 
     // Physic
@@ -264,10 +328,10 @@ triebWerk::CEntity* CPatternTileCreator::CreateModel05x10()
     entity->SetPhysicEntity(physicEntity);
 
     twActiveWorld->AddEntity(entity);
-    return entity;
+    m_pFirstEntity = entity;
 }
 
-triebWerk::CEntity* CPatternTileCreator::CreateModel05x10Flipped()
+void CPatternTileCreator::CreateModel05x10Flipped()
 {
     auto entity = twActiveWorld->CreateEntity();
 
@@ -280,9 +344,9 @@ triebWerk::CEntity* CPatternTileCreator::CreateModel05x10Flipped()
 
     // Rendering
     auto mesh = twRenderer->CreateMeshDrawable();
-    mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_obs_05x10x08_base");
-    mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
-    mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(0.9f, 0.9f, 0.9f));
+    (twRandom::GetNumber(0, 1) == 0) ? mesh->m_pMesh = m_pObstacle05x10x08 : mesh->m_pMesh = m_pObstacle05x10x12;
+    mesh->m_Material.SetMaterial(m_pMaterialStandardTexture);
+    mesh->m_Material.m_pPixelShader.SetTexture(0, m_pTextureObstacle);
     entity->SetDrawable(mesh);
 
     // Physic
@@ -294,10 +358,10 @@ triebWerk::CEntity* CPatternTileCreator::CreateModel05x10Flipped()
     entity->SetPhysicEntity(physicEntity);
 
     twActiveWorld->AddEntity(entity);
-    return entity;
+    m_pFirstEntity = entity;
 }
 
-triebWerk::CEntity* CPatternTileCreator::CreateModel05x20()
+void CPatternTileCreator::CreateModel05x20()
 {
     auto entity = twActiveWorld->CreateEntity();
 
@@ -309,9 +373,9 @@ triebWerk::CEntity* CPatternTileCreator::CreateModel05x20()
 
     // Rendering
     auto mesh = twRenderer->CreateMeshDrawable();
-    mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_obs_05x20x08_base");
-    mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
-    mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(0.9f, 0.9f, 0.9f));
+    (twRandom::GetNumber(0, 1) == 0) ? mesh->m_pMesh = m_pObstacle05x20x08 : mesh->m_pMesh = m_pObstacle05x20x12;
+    mesh->m_Material.SetMaterial(m_pMaterialStandardTexture);
+    mesh->m_Material.m_pPixelShader.SetTexture(0, m_pTextureObstacle);
     entity->SetDrawable(mesh);
 
     // Physic
@@ -323,10 +387,10 @@ triebWerk::CEntity* CPatternTileCreator::CreateModel05x20()
     entity->SetPhysicEntity(physicEntity);
 
     twActiveWorld->AddEntity(entity);
-    return entity;
+    m_pFirstEntity = entity;
 }
 
-triebWerk::CEntity* CPatternTileCreator::CreateModel05x20Flipped()
+void CPatternTileCreator::CreateModel05x20Flipped()
 {
     auto entity = twActiveWorld->CreateEntity();
 
@@ -339,9 +403,9 @@ triebWerk::CEntity* CPatternTileCreator::CreateModel05x20Flipped()
 
     // Rendering
     auto mesh = twRenderer->CreateMeshDrawable();
-    mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_obs_05x20x08_base");
-    mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
-    mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(0.9f, 0.9f, 0.9f));
+    (twRandom::GetNumber(0, 1) == 0) ? mesh->m_pMesh = m_pObstacle05x20x08 : mesh->m_pMesh = m_pObstacle05x20x12;
+    mesh->m_Material.SetMaterial(m_pMaterialStandardTexture);
+    mesh->m_Material.m_pPixelShader.SetTexture(0, m_pTextureObstacle);
     entity->SetDrawable(mesh);
 
     // Physic
@@ -353,10 +417,10 @@ triebWerk::CEntity* CPatternTileCreator::CreateModel05x20Flipped()
     entity->SetPhysicEntity(physicEntity);
 
     twActiveWorld->AddEntity(entity);
-    return entity;
+    m_pFirstEntity = entity;
 }
 
-triebWerk::CEntity* CPatternTileCreator::CreateModel05x30()
+void CPatternTileCreator::CreateModel05x30()
 {
     auto entity = twActiveWorld->CreateEntity();
 
@@ -368,9 +432,9 @@ triebWerk::CEntity* CPatternTileCreator::CreateModel05x30()
 
     // Rendering
     auto mesh = twRenderer->CreateMeshDrawable();
-    mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_obs_05x30x08_base");
-    mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
-    mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(0.9f, 0.9f, 0.9f));
+    (twRandom::GetNumber(0, 1) == 0) ? mesh->m_pMesh = m_pObstacle05x30x08 : mesh->m_pMesh = m_pObstacle05x30x12;
+    mesh->m_Material.SetMaterial(m_pMaterialStandardTexture);
+    mesh->m_Material.m_pPixelShader.SetTexture(0, m_pTextureObstacle);
     entity->SetDrawable(mesh);
 
     // Physic
@@ -382,10 +446,10 @@ triebWerk::CEntity* CPatternTileCreator::CreateModel05x30()
     entity->SetPhysicEntity(physicEntity);
 
     twActiveWorld->AddEntity(entity);
-    return entity;
+    m_pFirstEntity = entity;
 }
 
-triebWerk::CEntity* CPatternTileCreator::CreateModel05x30Flipped()
+void CPatternTileCreator::CreateModel05x30Flipped()
 {
     auto entity = twActiveWorld->CreateEntity();
 
@@ -398,9 +462,9 @@ triebWerk::CEntity* CPatternTileCreator::CreateModel05x30Flipped()
 
     // Rendering
     auto mesh = twRenderer->CreateMeshDrawable();
-    mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_obs_05x30x08_base");
-    mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
-    mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(0.9f, 0.9f, 0.9f));
+    (twRandom::GetNumber(0, 1) == 0) ? mesh->m_pMesh = m_pObstacle05x30x08 : mesh->m_pMesh = m_pObstacle05x30x12;
+    mesh->m_Material.SetMaterial(m_pMaterialStandardTexture);
+    mesh->m_Material.m_pPixelShader.SetTexture(0, m_pTextureObstacle);
     entity->SetDrawable(mesh);
 
     // Physic
@@ -412,5 +476,5 @@ triebWerk::CEntity* CPatternTileCreator::CreateModel05x30Flipped()
     entity->SetPhysicEntity(physicEntity);
 
     twActiveWorld->AddEntity(entity);
-    return entity;
+    m_pFirstEntity = entity;
 }

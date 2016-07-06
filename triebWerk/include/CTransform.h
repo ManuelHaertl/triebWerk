@@ -33,7 +33,8 @@ namespace triebWerk
 
         void AddChild(CTransform* const a_pChild);
         void RemoveChild(CTransform* const a_pChild);
-        std::vector<CTransform*>* GetChildren();
+        std::vector<CTransform*>* GetAllChildren();
+        CTransform* GetChildren(const size_t a_Index);
 
         void DetachChildren();
         void DetachFromParent();

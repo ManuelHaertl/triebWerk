@@ -105,10 +105,18 @@ void CPatternManager::SpawnNextTile()
 
     // spawn the tile
     SPatternTile& patternTile = pattern.m_Tiles[m_CurrentTileIndex];
-    auto entity = m_PatternTileCreator.CreateEntity(patternTile, m_PatternSpawnBegin);
-    entity->m_ID.SetDescribtion("Died in Pattern: " + m_pCurrentPattern->m_Name + " Difficulty:  " + std::to_string(m_pCurrentPattern->m_Difficulty) + " Priority: " + std::to_string(m_pCurrentPattern->m_Priority));
-    if (entity != nullptr)
-        m_Entities.push_back(entity);
+    m_PatternTileCreator.CreateEntity(patternTile, m_PatternSpawnBegin);
+
+    if (m_PatternTileCreator.m_pFirstEntity != nullptr)
+    {
+        m_PatternTileCreator.m_pFirstEntity->m_ID.SetDescribtion("Died in Pattern: " + m_pCurrentPattern->m_Name + " Difficulty:  " + std::to_string(m_pCurrentPattern->m_Difficulty) + " Priority: " + std::to_string(m_pCurrentPattern->m_Priority));
+        m_Entities.push_back(m_PatternTileCreator.m_pFirstEntity);
+
+        if (m_PatternTileCreator.m_pSecondEntity != nullptr)
+        {
+            m_Entities.push_back(m_PatternTileCreator.m_pSecondEntity);
+        }
+    }
 
     m_IsSpawned = m_PatternSpawnBegin + patternTile.m_Y;
     m_CurrentTileIndex++;
