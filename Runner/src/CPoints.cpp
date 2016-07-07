@@ -34,10 +34,10 @@ void CPoints::Collected()
     entity->m_Transform.SetPosition(m_pEntity->m_Transform.GetPosition());
 
     auto mesh = twRenderer->CreateMeshDrawable();
-    mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("points2");
+    mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_points");
     mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("PointExplosion"));
     mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
-    mesh->m_Material.m_pGeometryShader.SetTexture(0, twResourceManager->GetTexture2D("noise"));
+    mesh->m_Material.m_pGeometryShader.SetTexture(0, twResourceManager->GetTexture2D("t_noise"));
 	mesh->m_D3DStates.m_pRasterizerState = twEngine.m_pGraphics->CreateRasterizerState(D3D11_CULL_NONE, D3D11_FILL_WIREFRAME);
 
     DirectX::XMFLOAT3 color = { 1.0f, 1.0f, 0.0f };

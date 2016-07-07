@@ -12,8 +12,8 @@ CPatternTileCreator::CPatternTileCreator()
 {
     m_pCheckPoint = twResourceManager->GetMesh("ms_checkpoint");
     m_pPoints = twResourceManager->GetMesh("ms_points");
-    m_pBlock1x1 = twResourceManager->GetMesh("cube");
-    m_pBlock2x2 = twResourceManager->GetMesh("cube");
+    m_pBlock1x1 = twResourceManager->GetMesh("ms_cube");
+    m_pBlock2x2 = twResourceManager->GetMesh("ms_cube");
 
     m_pObstacle05[0] = twResourceManager->GetMesh("ms_obs_05x05x08_base");
     m_pObstacle05[1] = twResourceManager->GetMesh("ms_obs_05x05x12_base");

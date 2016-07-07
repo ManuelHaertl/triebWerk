@@ -202,7 +202,7 @@ void CEnvironmentCreator::CreateGround()
     m_pGround->m_Transform.SetScale(1000.0f, 1.0f, 1000.0f);
 
     auto mesh = twRenderer->CreateMeshDrawable();
-    mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube");
+    mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_cube");
     mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
     mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &color);
     m_pGround->SetDrawable(mesh);
@@ -217,7 +217,7 @@ void CEnvironmentCreator::CreateEndWall()
     m_pEndWall->m_Transform.SetScale(3000.0f, 2500.0f, 1.0f);
 
     auto mesh = twRenderer->CreateMeshDrawable();
-    mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("cube");
+    mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_cube");
     mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardTexture"));
     mesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_endwall"));
     m_pEndWall->SetDrawable(mesh);
