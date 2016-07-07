@@ -22,6 +22,8 @@ float CPlayer::CameraRotationX = 4.7f;
 float CPlayer::CameraPosY = 5.0f;
 float CPlayer::CameraMinusPosZ = 10.0f;
 
+int CPlayer::GodMode = 0;
+
 int CEnvironmentCreator::FeatherSpawnProbability = 40;
 
 float CPatternManager::SpawnDistance = 300.0f;
@@ -143,6 +145,10 @@ void CValueUpdater::UpdateValues()
         else if (value.first == "pl_RotationX")
         {
             CPlayer::RotationX = std::stof(value.second);
+        }
+        else if (value.first == "pl_GodMode")
+        {
+            CPlayer::GodMode = std::stoi(value.second);
         }
         else if (value.first == "c_FOV")
         {

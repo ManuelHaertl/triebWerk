@@ -11,7 +11,7 @@ namespace triebWerk
 	class COBJParser : CFileReader
 	{
 	private:
-		const size_t m_MAX_VERTICES = 20000;
+		const size_t m_MAX_VERTICES = 30000;
 
 	public:
 		CMesh::SVertex* m_pVertices;

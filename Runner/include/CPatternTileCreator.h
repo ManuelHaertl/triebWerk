@@ -5,10 +5,14 @@
 class CPatternTileCreator
 {
 public:
-    triebWerk::CEntity* m_pFirstEntity;
-    triebWerk::CEntity* m_pSecondEntity;
+    triebWerk::CEntity* m_pEntity1;
+    triebWerk::CEntity* m_pEntity2;
+    triebWerk::CEntity* m_pEntity3;
 
 private:
+    static const size_t MaxObstacleHeights = 2;
+    static const size_t MaxObstacleDekos = 3;
+
     SPatternTile m_Tile;
     float m_PatternSpawnBegin;
 
@@ -19,50 +23,38 @@ private:
     triebWerk::CMesh* m_pBlock1x1;
     triebWerk::CMesh* m_pBlock2x2;
 
-    triebWerk::CMesh* m_pObstacle05x05x08;
-    triebWerk::CMesh* m_pObstacle05x05x08Deko1;
-    triebWerk::CMesh* m_pObstacle05x05x08Deko2;
-    triebWerk::CMesh* m_pObstacle05x05x08Deko3;
-    triebWerk::CMesh* m_pObstacle05x05x12;
-    triebWerk::CMesh* m_pObstacle05x05x12Deko1;
-    triebWerk::CMesh* m_pObstacle05x05x12Deko2;
-    triebWerk::CMesh* m_pObstacle05x05x12Deko3;
+    triebWerk::CMesh* m_pObstacle05[MaxObstacleHeights];
+    triebWerk::CMesh* m_pObstacle05Dekos[MaxObstacleHeights][MaxObstacleDekos];
 
-    triebWerk::CMesh* m_pObstacle05x10x08;
-    triebWerk::CMesh* m_pObstacle05x10x08Deko1;
-    triebWerk::CMesh* m_pObstacle05x10x08Deko2;
-    triebWerk::CMesh* m_pObstacle05x10x08Deko3;
-    triebWerk::CMesh* m_pObstacle05x10x12;
-    triebWerk::CMesh* m_pObstacle05x10x12Deko1;
-    triebWerk::CMesh* m_pObstacle05x10x12Deko2;
-    triebWerk::CMesh* m_pObstacle05x10x12Deko3;
+    triebWerk::CMesh* m_pObstacle10[MaxObstacleHeights];
+    triebWerk::CMesh* m_pObstacle10Dekos[MaxObstacleHeights][MaxObstacleDekos];
 
-    triebWerk::CMesh* m_pObstacle05x20x08;
-    triebWerk::CMesh* m_pObstacle05x20x08Deko1;
-    triebWerk::CMesh* m_pObstacle05x20x08Deko2;
-    triebWerk::CMesh* m_pObstacle05x20x08Deko3;
-    triebWerk::CMesh* m_pObstacle05x20x12;
-    triebWerk::CMesh* m_pObstacle05x20x12Deko1;
-    triebWerk::CMesh* m_pObstacle05x20x12Deko2;
-    triebWerk::CMesh* m_pObstacle05x20x12Deko3;
+    triebWerk::CMesh* m_pObstacle20[MaxObstacleHeights];
+    triebWerk::CMesh* m_pObstacle20Dekos[MaxObstacleHeights][MaxObstacleDekos];
 
-    triebWerk::CMesh* m_pObstacle05x30x08;
-    triebWerk::CMesh* m_pObstacle05x30x08Deko1;
-    triebWerk::CMesh* m_pObstacle05x30x08Deko2;
-    triebWerk::CMesh* m_pObstacle05x30x08Deko3;
-    triebWerk::CMesh* m_pObstacle05x30x12;
-    triebWerk::CMesh* m_pObstacle05x30x12Deko1;
-    triebWerk::CMesh* m_pObstacle05x30x12Deko2;
-    triebWerk::CMesh* m_pObstacle05x30x12Deko3;
+    triebWerk::CMesh* m_pObstacle30[MaxObstacleHeights];
+    triebWerk::CMesh* m_pObstacle30Dekos[MaxObstacleHeights][MaxObstacleDekos];
+
+    triebWerk::CMesh* m_pShadow05;
+    triebWerk::CMesh* m_pShadow10;
+    triebWerk::CMesh* m_pShadow20;
+    triebWerk::CMesh* m_pShadow30;
 
     // Textures ----------------------------------------------
 
     triebWerk::CTexture2D* m_pTextureObstacle;
+    triebWerk::CTexture2D* m_pTexturePoints;
+    triebWerk::CTexture2D* m_pTextureCheckpoint;
+    triebWerk::CTexture2D* m_pTextureShadow05;
+    triebWerk::CTexture2D* m_pTextureShadow10;
+    triebWerk::CTexture2D* m_pTextureShadow20;
+    triebWerk::CTexture2D* m_pTextureShadow30;
 
     // Shader ------------------------------------------------
 
     triebWerk::CMaterial* m_pMaterialStandardColor;
     triebWerk::CMaterial* m_pMaterialStandardTexture;
+    triebWerk::CMaterial* m_pMaterialStandardTransparentTexture;
 
 public:
     CPatternTileCreator();
@@ -76,13 +68,12 @@ private:
     void CreateShield();
     void CreateBlock1x1();
     void CreateBlock2x2();
-    void CreateModel05x05();
-    void CreateModel05x05Flipped();
-    void CreateModel05x10();
-    void CreateModel05x10Flipped();
-    void CreateModel05x20();
-    void CreateModel05x20Flipped();
-    void CreateModel05x30();
-    void CreateModel05x30Flipped();
-
+    void CreateModel05x05(const bool a_Rotated);
+    void CreateModel05x10(const bool a_Rotated);
+    void CreateModel05x20(const bool a_Rotated);
+    void CreateModel05x30(const bool a_Rotated);
+    void CreateShadow05(const bool a_Rotated);
+    void CreateShadow10(const bool a_Rotated);
+    void CreateShadow20(const bool a_Rotated);
+    void CreateShadow30(const bool a_Rotated);
 };

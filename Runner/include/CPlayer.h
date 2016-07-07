@@ -23,6 +23,8 @@ public:
     static float CameraPosY;
     static float CameraMinusPosZ;
 
+    static int GodMode;
+
 private:
     bool m_IsDodging;
     float m_DodgeSpeed;
