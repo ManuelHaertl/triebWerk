@@ -62,9 +62,14 @@ void triebWerk::CTransform::RemoveChild(CTransform* const a_pChild)
     }
 }
 
-std::vector<triebWerk::CTransform*>* triebWerk::CTransform::GetChildren()
+std::vector<triebWerk::CTransform*>* triebWerk::CTransform::GetAllChildren()
 {
     return &m_Children;
+}
+
+triebWerk::CTransform* triebWerk::CTransform::GetChildren(const size_t a_Index)
+{
+    return m_Children[a_Index];
 }
 
 void triebWerk::CTransform::DetachChildren()
