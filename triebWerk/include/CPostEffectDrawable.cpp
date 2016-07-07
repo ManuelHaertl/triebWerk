@@ -35,6 +35,12 @@ triebWerk::CPostEffectDrawable::~CPostEffectDrawable()
 
 void triebWerk::CPostEffectDrawable::AddMaterial(const CMaterial * a_pMaterial)
 {
+	if (a_pMaterial == nullptr)
+	{
+		DebugLogfile.LogfText(CDebugLogfile::ELogType::Warning, false, "Warning: You can't add a empty material as PostEffect");
+		return;
+	}
+
 	CMaterial t;
 	m_Materials.push_back(t);
 	m_Materials[m_Materials.size() - 1].SetMaterial(a_pMaterial);

@@ -310,12 +310,12 @@ void triebWerk::CResourceManager::LoadFile(SFile a_File)
 	switch (a_File.FileType)
 	{
 	case EFileType::HLSL:
-		LoadHLSL(a_File);
 		DebugLogfile.LogfText(CDebugLogfile::ELogType::Text, false, "Start loading file: %s", a_File.FilePath.c_str());
+		LoadHLSL(a_File);
 		break;
 	case EFileType::TWF:
-		LoadTWF(a_File);
 		DebugLogfile.LogfText(CDebugLogfile::ELogType::Text, false, "Start loading file: %s", a_File.FilePath.c_str());
+		LoadTWF(a_File);
 		break;
 	case EFileType::MP3:
 	case EFileType::FLAC:
@@ -323,29 +323,29 @@ void triebWerk::CResourceManager::LoadFile(SFile a_File)
 	case EFileType::OGG:
 	case EFileType::MOD:
 	case EFileType::XM:
-		LoadAudio(a_File);
 		DebugLogfile.LogfText(CDebugLogfile::ELogType::Text, false, "Start loading file: %s", a_File.FilePath.c_str());
+		LoadAudio(a_File);
 		break;
 	case EFileType::OBJ:
-		LoadOBJ(a_File);
 		DebugLogfile.LogfText(CDebugLogfile::ELogType::Text, false, "Start loading file: %s", a_File.FilePath.c_str());
+		LoadOBJ(a_File);
 		break;
 	case EFileType::PNG:
-		LoadPNG(a_File);
 		DebugLogfile.LogfText(CDebugLogfile::ELogType::Text, false, "Start loading file: %s", a_File.FilePath.c_str());
+		LoadPNG(a_File);
 		break;
 	case EFileType::DDS:
-		LoadDDS(a_File);
 		DebugLogfile.LogfText(CDebugLogfile::ELogType::Text, false, "Start loading file: %s", a_File.FilePath.c_str());
+		LoadDDS(a_File);
 		break;
 	case EFileType::TMX:
-		LoadTMX(a_File);
 		DebugLogfile.LogfText(CDebugLogfile::ELogType::Text, false, "Start loading file: %s", a_File.FilePath.c_str());
+		LoadTMX(a_File);
 		break;
 	case EFileType::TTF:
 	case EFileType::OTF:
-		LoadFont(a_File);
 		DebugLogfile.LogfText(CDebugLogfile::ELogType::Text, false, "Start loading file: %s", a_File.FilePath.c_str());
+		LoadFont(a_File);
 		break;
 	}
 }
