@@ -7,6 +7,8 @@ triebWerk::CEntity* eps;
 float speed = 1;
 int counter = 0;
 
+triebWerk::CMaterial* g_pFogMa = nullptr;
+triebWerk::CMaterial* g_pPoint = nullptr;
 
 CDebugScene::CDebugScene()
 {
@@ -55,7 +57,7 @@ void CDebugScene::Update()
 
 	if (twKeyboard.IsState(triebWerk::EKey::C, triebWerk::EButtonState::Down))
 	{
-		twAudio->PlaySFX(twResourceManager->GetSound("pew"));
+		twAudio->PlaySFX(twResourceManager->GetSound("SFX_Forcefield"));
 	}
 
 	if (twKeyboard.IsState(triebWerk::EKey::H, triebWerk::EButtonState::Down))
@@ -76,8 +78,8 @@ void CDebugScene::Update()
 		sunEffect[i]->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &time);
 	}
 
-
-	//effect->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &time);
+	g_pFogMa->m_ConstantBuffer.SetValueInBuffer(4, &time);
+	g_pPoint->m_ConstantBuffer.SetValueInBuffer(4, &time);
 }
 
 void CDebugScene::End()
@@ -130,28 +132,81 @@ void CDebugScene::CreateTestCubes()
 //	entity->SetDrawable(mesh);
 //	m_pWorld->AddEntity(entity);
 //
-	//eps = m_pWorld->CreateEntity();
-	//effect = twRenderer->CreatePostEffecthDrawable();
-	//effect->AddMaterial(twResourceManager->GetMaterial("ChromaticAberration"));
+	eps = m_pWorld->CreateEntity();
+	effect = twRenderer->CreatePostEffecthDrawable();
+	effect->AddMaterial(twResourceManager->GetMaterial("ScanLines"));
 	//effect->m_Materials[0].m_pPixelShader.SetTexture(1, twResourceManager->GetTexture2D("WhiteNoise"));
-	//effect->m_RenderTargetSlotToStartOff = 0;
-	//eps->SetDrawable(effect);
-	//m_pWorld->AddEntity(eps);
+	effect->m_RenderTargetSlotToStartOff = 0;
+	eps->SetDrawable(effect);
+	m_pWorld->AddEntity(eps);
 
-	////auto o = twRenderer->GetRenderTarget(1);
-	////o->m_PlaneTransform.SetPosition(0, 0, -0.1f);
+	{
 
 	auto entity = m_pWorld->CreateEntity();
-	entity->m_Transform.SetPosition(0,0,0);
+	entity->m_Transform.SetPosition(0, 2, 0);
+	entity->m_Transform.SetScale(1.0f, 1.0f, 1.0f);
 
 	triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
-	mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("points");
-	mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
-	DirectX::XMFLOAT3 t = DirectX::XMFLOAT3(0.0f, 1.0f, 1.0f);
-	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &t);
+	mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_shadow_05x05");
+	mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("FogShader"));
+	mesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("t_fog_03"));
+	mesh->m_Material.m_pPixelShader.SetTexture(1, twResourceManager->GetTexture2D("t_noise2"));
+	g_pFogMa = &mesh->m_Material;
+	mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
+	mesh->m_RenderMode = triebWerk::CMeshDrawable::ERenderMode::Transparent;
 
 	entity->SetDrawable(mesh);
 	m_pWorld->AddEntity(entity);
+	}
+
+	//auto entity = m_pWorld->CreateEntity();
+	//entity->m_Transform.SetPosition(0,0,0);
+	//entity->m_Transform.SetScale(1.0f, 1.0f, 1.0f);
+
+	//triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
+	//mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_grid");
+	//mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("WireframeGrid"));
+	//mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
+	//DirectX::XMFLOAT3 lineColor = DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f);
+	//DirectX::XMFLOAT3 faceColor = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+	//mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &lineColor);
+	//mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &faceColor);
+
+	//entity->SetDrawable(mesh);
+	//m_pWorld->AddEntity(entity);
+
+	auto entity = m_pWorld->CreateEntity();
+	entity->m_Transform.SetPosition(0,0,0);
+	entity->m_Transform.SetScale(1.0f, 1.0f, 1.0f);
+
+	triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
+	mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_grid");
+	mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
+	mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
+	DirectX::XMFLOAT3 lineColor = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &lineColor);
+
+	entity->SetDrawable(mesh);
+	m_pWorld->AddEntity(entity);
+
+	{
+		auto entity = m_pWorld->CreateEntity();
+		entity->m_Transform.SetPosition(0, 0, 0);
+		entity->m_Transform.SetScale(1.0f, 1.0f, 1.0f);
+
+		triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
+		mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_sphere");
+		mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("Sun"));
+		mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
+		g_pPoint = &mesh->m_Material;
+		mesh->m_Material.m_pVertexShader.SetTexture(0, twResourceManager->GetTexture2D("t_whitenoise"));
+
+		entity->SetDrawable(mesh);
+		m_pWorld->AddEntity(entity);
+	}
+
+	////auto o = twRenderer->GetRenderTarget(1);
+	////o->m_PlaneTransform.SetPosition(0, 0, -0.1f);
 
 	//auto entity2 = m_pWorld->CreateEntity();
 	//entity2->m_Transform.SetPosition(0, 0, 0);
@@ -178,16 +233,25 @@ void CDebugScene::CreateTestCubes()
 				auto entity = m_pWorld->CreateEntity();
 				entity->m_Transform.SetPosition(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z));
 
-				sunEffect[counter] = twRenderer->CreateMeshDrawable();
-				sunEffect[counter]->m_pMesh = twEngine.m_pResourceManager->GetMesh("sphere");
-				sunEffect[counter]->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("Sun"));
-				sunEffect[counter]->m_Material.m_pVertexShader.SetTexture(0, twEngine.m_pResourceManager->GetTexture2D("WhiteNoise"));
-				sunEffect[counter]->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
-				sunEffect[counter]->m_D3DStates.m_pRasterizerState = twGraphic->CreateRasterizerState(D3D11_CULL_NONE, D3D11_FILL_SOLID);
+				triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
+				mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_cube");
+				mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("TextureBlending"));
+				mesh->m_Material.m_pPixelShader.SetTexture(0, twEngine.m_pResourceManager->GetTexture2D("t1"));
+				mesh->m_Material.m_pPixelShader.SetTexture(1, twEngine.m_pResourceManager->GetTexture2D("t2"));
+				mesh->m_Material.m_pPixelShader.SetTexture(2, twEngine.m_pResourceManager->GetTexture2D("t3"));
 
-				entity->SetDrawable(sunEffect[counter]);
+				float dif1T = twRandom::GetNumber(0.0f, 0.4f);
+
+				
+				float dif2T = twRandom::GetNumber(0.0f, 0.6f);;
+				float dif3T = 0.0f;
+
+				mesh->m_Material.m_pVertexShader.SetInstanceData(4, &dif1T, sizeof(float));
+				mesh->m_Material.m_pVertexShader.SetInstanceData(5, &dif2T, sizeof(float));
+				mesh->m_Material.m_pVertexShader.SetInstanceData(6, &dif3T, sizeof(float));
+
+				entity->SetDrawable(mesh);
 				m_pWorld->AddEntity(entity);
-				counter++;
             }
         }
     }*/

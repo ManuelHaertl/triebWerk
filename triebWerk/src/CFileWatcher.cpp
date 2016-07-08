@@ -76,11 +76,19 @@ void triebWerk::CFileWatcher::Spectate(const char * a_pDirectory, bool a_WatchSu
 			fileEvent.Event = EFileEventTypes::Renamed;
 			break;
 		}
-		char charBuffer[100];
-		size_t* pSizeOfChars = nullptr;
-		wcstombs_s(pSizeOfChars, charBuffer, buffer[0].FileName, 100);
 
-		fileEvent.FileName = charBuffer;
+		int size = buffer[0].FileNameLength / sizeof(wchar_t) + 1; // because NULL terminated
+		wchar_t* tempName = new wchar_t[size];
+		char cName[1024] = { 0 };
+		size_t charValue;
+
+		memset(tempName, 0, size * (sizeof(wchar_t)));
+		memcpy(tempName, buffer[0].FileName, buffer[0].FileNameLength);
+		wcstombs_s(&charValue, cName, 1024,tempName, 1023);
+
+		fileEvent.FileName = cName;
+
+		delete tempName;
 
 		m_Events.push_back(fileEvent);
 	}

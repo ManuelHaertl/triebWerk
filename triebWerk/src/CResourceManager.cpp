@@ -228,7 +228,7 @@ triebWerk::CSound * triebWerk::CResourceManager::GetSound(const char * a_pSoundN
 
 	if (foundIterator == m_SoundBuffer.end())
 	{
-		DebugLogfile.LogfText(CDebugLogfile::ELogType::Warning, false, "Warning: No Font was loaded with the Name: %s", a_pSoundName);
+		DebugLogfile.LogfText(CDebugLogfile::ELogType::Warning, false, "Warning: No Sound was loaded with the Name: %s", a_pSoundName);
 		return nullptr;
 	}
 	else
@@ -940,57 +940,65 @@ void triebWerk::CResourceManager::UpdateResourceChanges()
 
 		case EFileType::DDS:
 		{
-			if (events[i].Event == CFileWatcher::EFileEventTypes::Modified)
+			Sleep(10);
+
+			//Create a the PNGFile to load
+			SFile fileToLoad;
+			fileToLoad.FileName = AbstractFileNameFromPath(events[0].FileName);
+			fileToLoad.FilePath = m_FileWatcher.m_PathWatching + "\\" + events[0].FileName;
+			fileToLoad.FileType = EFileType::DDS;
+
+			//Load and update the texture
+			CTexture2D* texture = GetTexture2D(fileToLoad.FileName.c_str());
+			if (texture != nullptr)
 			{
-				//Create a the PNGFile to load
-				SFile fileToLoad;
-				fileToLoad.FileName = AbstractFileNameFromPath(events[0].FileName);
-				fileToLoad.FilePath = m_FileWatcher.m_PathWatching + "\\" + events[0].FileName;
-				fileToLoad.FileType = EFileType::DDS;
+				ID3D11Texture2D* pTexture = nullptr;
+				ID3D11ShaderResourceView* pShaderResource = nullptr;
+				ID3D11Resource* pResource = nullptr;
 
-				//Load and update the texture
-				CTexture2D* texture = GetTexture2D(fileToLoad.FileName.c_str());
-				if (texture != nullptr)
+				const size_t cSize = strlen(fileToLoad.FilePath.c_str()) + 1;
+				wchar_t* wc = new wchar_t[cSize];
+				size_t numberOfChars;
+				mbstowcs_s(&numberOfChars, wc, cSize, fileToLoad.FilePath.c_str(), cSize); //wc, a_File.FileP
+
+				HRESULT hr = DirectX::CreateDDSTextureFromFile(m_pGraphicsHandle->GetDevice(), wc, nullptr, &pShaderResource);
+				delete wc;
+
+				if (FAILED(hr))
 				{
-				/*	std::vector<unsigned char> imageBuffer;
-
-					unsigned int width;
-					unsigned int height;
-
-					unsigned int error = lodepng::decode(imageBuffer, width, height, fileToLoad.FilePath);
-
-					if (error != 0)
-						return;*/
-
-					ID3D11Texture2D* pTexture = nullptr;
-					ID3D11ShaderResourceView* pShaderResource = nullptr;
-					ID3D11Resource* pResource = nullptr;
-
-					const size_t cSize = strlen(fileToLoad.FilePath.c_str()) + 1;
-					wchar_t* wc = new wchar_t[cSize];
-					size_t numberOfChars;
-					mbstowcs_s(&numberOfChars, wc, cSize, fileToLoad.FilePath.c_str(), cSize); //wc, a_File.FileP
-
-					HRESULT hr = DirectX::CreateDDSTextureFromFile(m_pGraphicsHandle->GetDevice(), wc, nullptr, &pShaderResource);
-						delete wc;
-
-					if (FAILED(hr))
-					{
-						DebugLogfile.LogfText(CDebugLogfile::ELogType::Warning, false, "Warning: DDS could not be reloaded in filewatcher! File: %s", fileToLoad.FilePath.c_str());
-						break;
-					}
-
-					pShaderResource->GetResource(&pResource);
-					pTexture = static_cast<ID3D11Texture2D*>(pResource);
-
-					D3D11_TEXTURE2D_DESC textureDesc;
-
-					pTexture->GetDesc(&textureDesc);
-
-					texture->SetTexture(textureDesc.Width, textureDesc.Height, pTexture, pShaderResource);
+					DebugLogfile.LogfText(CDebugLogfile::ELogType::Warning, false, "Warning: DDS could not be reloaded in filewatcher! File: %s", fileToLoad.FilePath.c_str());
+					break;
 				}
+
+				pShaderResource->GetResource(&pResource);
+				pTexture = static_cast<ID3D11Texture2D*>(pResource);
+
+				D3D11_TEXTURE2D_DESC textureDesc;
+
+				pTexture->GetDesc(&textureDesc);
+
+				texture->SetTexture(textureDesc.Width, textureDesc.Height, pTexture, pShaderResource);
 			}
 		}break;
+
+		case EFileType::WAV:
+		{
+				//Create the TWFFile to load 
+				SFile fileToLoad;
+				std::string t = events[i].FileName;
+				fileToLoad.FileName = AbstractFileNameFromPath(events[i].FileName);
+				fileToLoad.FilePath = m_FileWatcher.m_PathWatching + "\\" + t;
+				fileToLoad.FileType = type;
+
+				//Is the tileset in memory 
+				CSound* pSound = GetSound(fileToLoad.FileName.c_str());
+
+				if (pSound != nullptr)
+				{
+					pSound->m_pSoundSource->forceReloadAtNextUse();
+			}
+		}break;
+
 		}
 	}
 
