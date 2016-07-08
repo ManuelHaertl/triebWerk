@@ -12,6 +12,8 @@ public:
 private:
     static const size_t MaxObstacleHeights = 2;
     static const size_t MaxObstacleDekos = 3;
+    static const size_t MaxObstacleTextures = 3;
+    static const size_t MaxObstacleTextureBlendings = 3;
 
     SPatternTile m_Tile;
     float m_PatternSpawnBegin;
@@ -42,7 +44,7 @@ private:
 
     // Textures ----------------------------------------------
 
-    triebWerk::CTexture2D* m_pTextureObstacle;
+    triebWerk::CTexture2D* m_pTextureObstacle[MaxObstacleTextures][MaxObstacleTextureBlendings];
     triebWerk::CTexture2D* m_pTexturePoints;
     triebWerk::CTexture2D* m_pTextureCheckpoint;
     triebWerk::CTexture2D* m_pTextureShadow05;
@@ -55,6 +57,7 @@ private:
     triebWerk::CMaterial* m_pMaterialStandardColor;
     triebWerk::CMaterial* m_pMaterialStandardTexture;
     triebWerk::CMaterial* m_pMaterialStandardTransparentTexture;
+    triebWerk::CMaterial* m_pMaterialTextureBlending;
 
 public:
     CPatternTileCreator();

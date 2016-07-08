@@ -9,6 +9,8 @@ public:
     static float SpawnDistance;
     static float DeleteDistance;
     static float StartFreeDistance;
+    static float StartTextureBlendDistance;
+    static float EndTextureBlendDistance;
 
 private:
     std::list<triebWerk::CEntity*> m_Entities;
@@ -19,6 +21,7 @@ private:
     float m_SpawnTo;
     float m_PatternSpawnBegin;
     float m_DeleteZone;
+    float m_PlayerPosition;
 
     CPattern* m_pCurrentPattern;
     size_t m_CurrentTileIndex;
@@ -39,4 +42,5 @@ private:
     void DeleteEntities();
     //void SpawnPatternTile(const SPatternTile& a_rPatternTile);
     void SetRandomPattern(size_t a_Difficulty);
+    void UpdateTextureBlending();
 };

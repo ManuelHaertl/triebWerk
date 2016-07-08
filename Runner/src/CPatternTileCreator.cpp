@@ -56,7 +56,16 @@ CPatternTileCreator::CPatternTileCreator()
     m_pShadow20 = twResourceManager->GetMesh("ms_shadow_05x20");
     m_pShadow30 = twResourceManager->GetMesh("ms_shadow_05x30");
 
-    m_pTextureObstacle = twResourceManager->GetTexture2D("T_obs_01");
+    m_pTextureObstacle[0][0] = twResourceManager->GetTexture2D("T_obs_01_blend1");
+    m_pTextureObstacle[0][1] = twResourceManager->GetTexture2D("T_obs_01_blend2");
+    m_pTextureObstacle[0][2] = twResourceManager->GetTexture2D("T_obs_01_blend3");
+    m_pTextureObstacle[1][0] = twResourceManager->GetTexture2D("T_obs_02_blend1");
+    m_pTextureObstacle[1][1] = twResourceManager->GetTexture2D("T_obs_02_blend2");
+    m_pTextureObstacle[1][2] = twResourceManager->GetTexture2D("T_obs_02_blend3");
+    m_pTextureObstacle[2][0] = twResourceManager->GetTexture2D("T_obs_03_blend1");
+    m_pTextureObstacle[2][1] = twResourceManager->GetTexture2D("T_obs_03_blend2");
+    m_pTextureObstacle[2][2] = twResourceManager->GetTexture2D("T_obs_03_blend3");
+
     m_pTexturePoints = twResourceManager->GetTexture2D("T_points_diff");
     m_pTextureCheckpoint = twResourceManager->GetTexture2D("T_checkpoint_diff");
     m_pTextureShadow05 = twResourceManager->GetTexture2D("t_shadow_05x05");
@@ -67,6 +76,7 @@ CPatternTileCreator::CPatternTileCreator()
     m_pMaterialStandardColor = twResourceManager->GetMaterial("StandardColor");
     m_pMaterialStandardTexture = twResourceManager->GetMaterial("StandardTexture");
     m_pMaterialStandardTransparentTexture = twResourceManager->GetMaterial("StandardTransparentTexture");
+    m_pMaterialTextureBlending = twResourceManager->GetMaterial("TextureBlending");
 }
 
 CPatternTileCreator::~CPatternTileCreator()
@@ -162,11 +172,14 @@ void CPatternTileCreator::CreatePoints()
     m_pEntity1->m_ID.SetName("Points");
 
     // Transform
-    m_pEntity1->m_Transform.SetPosition(m_Tile.m_X, 1.5f, m_PatternSpawnBegin + m_Tile.m_Y);
+    m_pEntity1->m_Transform.SetPosition(m_Tile.m_X, 1.85f, m_PatternSpawnBegin + m_Tile.m_Y);
+    m_pEntity1->m_Transform.SetScale(2.0f, 2.0f, 2.0f);
 
     // Rendering
     auto mesh = twRenderer->CreateMeshDrawable();
     mesh->m_pMesh = m_pPoints;
+    mesh->m_D3DStates.m_pRasterizerState = twGraphic->CreateRasterizerState(D3D11_CULL_BACK, D3D11_FILL_WIREFRAME);
+    mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
     mesh->m_Material.SetMaterial(m_pMaterialStandardTexture);
     mesh->m_Material.m_pPixelShader.SetTexture(0, m_pTexturePoints);
     m_pEntity1->SetDrawable(mesh);
@@ -240,8 +253,10 @@ void CPatternTileCreator::CreateBlock2x2()
 
 void CPatternTileCreator::CreateModel05x05(const bool a_Rotated)
 {
-    size_t height = twRandom::GetNumber(0, MaxObstacleHeights - 1);
-    size_t deko = twRandom::GetNumber(0, MaxObstacleDekos - 1);
+    const size_t height = twRandom::GetNumber(0, MaxObstacleHeights - 1);
+    const size_t deko = twRandom::GetNumber(0, MaxObstacleDekos - 1);
+    const size_t texture = twRandom::GetNumber(0, MaxObstacleTextures - 1);
+    float textureValueFull = 1.0f, textureValueNone = 0.0f;
 
     // ID
     m_pEntity1->m_ID.SetName("Wall");
@@ -252,9 +267,15 @@ void CPatternTileCreator::CreateModel05x05(const bool a_Rotated)
 
     // Rendering
     auto mesh = twRenderer->CreateMeshDrawable();
+    mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
     mesh->m_pMesh = m_pObstacle05[height];
-    mesh->m_Material.SetMaterial(m_pMaterialStandardTexture);
-    mesh->m_Material.m_pPixelShader.SetTexture(0, m_pTextureObstacle);
+    mesh->m_Material.SetMaterial(m_pMaterialTextureBlending);
+    mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &textureValueFull);
+    mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &textureValueNone);
+    mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(6, &textureValueNone);
+    mesh->m_Material.m_pPixelShader.SetTexture(0, m_pTextureObstacle[texture][0]);
+    mesh->m_Material.m_pPixelShader.SetTexture(1, m_pTextureObstacle[texture][1]);
+    mesh->m_Material.m_pPixelShader.SetTexture(2, m_pTextureObstacle[texture][2]);
     m_pEntity1->SetDrawable(mesh);
 
     // Physic
@@ -272,15 +293,24 @@ void CPatternTileCreator::CreateModel05x05(const bool a_Rotated)
 
     m_pEntity2 = twActiveWorld->CreateEntity();
 
+    // ID
+    m_pEntity2->m_ID.SetName("Wall");
+
     // Transform
     m_pEntity2->m_Transform.SetPosition(m_Tile.m_X, 0.0f, m_PatternSpawnBegin + m_Tile.m_Y);
     if (a_Rotated) m_pEntity2->m_Transform.SetRotationDegrees(0.0f, 90.0f, 0.0f);
 
     // Rendering
     auto dekoMesh = twRenderer->CreateMeshDrawable();
+    dekoMesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
     dekoMesh->m_pMesh = m_pObstacle05Dekos[height][deko];
-    dekoMesh->m_Material.SetMaterial(m_pMaterialStandardTexture);
-    dekoMesh->m_Material.m_pPixelShader.SetTexture(0, m_pTextureObstacle);
+    dekoMesh->m_Material.SetMaterial(m_pMaterialTextureBlending);
+    dekoMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &textureValueFull);
+    dekoMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &textureValueNone);
+    dekoMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(6, &textureValueNone);
+    dekoMesh->m_Material.m_pPixelShader.SetTexture(0, m_pTextureObstacle[texture][0]);
+    dekoMesh->m_Material.m_pPixelShader.SetTexture(1, m_pTextureObstacle[texture][1]);
+    dekoMesh->m_Material.m_pPixelShader.SetTexture(2, m_pTextureObstacle[texture][2]);
     m_pEntity2->SetDrawable(dekoMesh);
 
     twActiveWorld->AddEntity(m_pEntity2);
@@ -290,8 +320,10 @@ void CPatternTileCreator::CreateModel05x05(const bool a_Rotated)
 
 void CPatternTileCreator::CreateModel05x10(const bool a_Rotated)
 {
-    size_t height = twRandom::GetNumber(0, MaxObstacleHeights - 1);
-    size_t deko = twRandom::GetNumber(0, MaxObstacleDekos - 1);
+    const size_t height = twRandom::GetNumber(0, MaxObstacleHeights - 1);
+    const size_t deko = twRandom::GetNumber(0, MaxObstacleDekos - 1);
+    const size_t texture = twRandom::GetNumber(0, MaxObstacleTextures - 1);
+    float textureValueFull = 1.0f, textureValueNone = 0.0f;
 
     // ID
     m_pEntity1->m_ID.SetName("Wall");
@@ -302,9 +334,15 @@ void CPatternTileCreator::CreateModel05x10(const bool a_Rotated)
 
     // Rendering
     auto mesh = twRenderer->CreateMeshDrawable();
+    mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
     mesh->m_pMesh = m_pObstacle10[height];
-    mesh->m_Material.SetMaterial(m_pMaterialStandardTexture);
-    mesh->m_Material.m_pPixelShader.SetTexture(0, m_pTextureObstacle);
+    mesh->m_Material.SetMaterial(m_pMaterialTextureBlending);
+    mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &textureValueFull);
+    mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &textureValueNone);
+    mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(6, &textureValueNone);
+    mesh->m_Material.m_pPixelShader.SetTexture(0, m_pTextureObstacle[texture][0]);
+    mesh->m_Material.m_pPixelShader.SetTexture(1, m_pTextureObstacle[texture][1]);
+    mesh->m_Material.m_pPixelShader.SetTexture(2, m_pTextureObstacle[texture][2]);
     m_pEntity1->SetDrawable(mesh);
 
     // Physic
@@ -322,15 +360,24 @@ void CPatternTileCreator::CreateModel05x10(const bool a_Rotated)
 
     m_pEntity2 = twActiveWorld->CreateEntity();
 
+    // ID
+    m_pEntity2->m_ID.SetName("Wall");
+
     // Transform
     m_pEntity2->m_Transform.SetPosition(m_Tile.m_X, 0.0f, m_PatternSpawnBegin + m_Tile.m_Y);
     if (a_Rotated) m_pEntity2->m_Transform.SetRotationDegrees(0.0f, 90.0f, 0.0f);
 
     // Rendering
     auto dekoMesh = twRenderer->CreateMeshDrawable();
+    dekoMesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
     dekoMesh->m_pMesh = m_pObstacle10Dekos[height][deko];
-    dekoMesh->m_Material.SetMaterial(m_pMaterialStandardTexture);
-    dekoMesh->m_Material.m_pPixelShader.SetTexture(0, m_pTextureObstacle);
+    dekoMesh->m_Material.SetMaterial(m_pMaterialTextureBlending);
+    dekoMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &textureValueFull);
+    dekoMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &textureValueNone);
+    dekoMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(6, &textureValueNone);
+    dekoMesh->m_Material.m_pPixelShader.SetTexture(0, m_pTextureObstacle[texture][0]);
+    dekoMesh->m_Material.m_pPixelShader.SetTexture(1, m_pTextureObstacle[texture][1]);
+    dekoMesh->m_Material.m_pPixelShader.SetTexture(2, m_pTextureObstacle[texture][2]);
     m_pEntity2->SetDrawable(dekoMesh);
 
     twActiveWorld->AddEntity(m_pEntity2);
@@ -340,8 +387,10 @@ void CPatternTileCreator::CreateModel05x10(const bool a_Rotated)
 
 void CPatternTileCreator::CreateModel05x20(const bool a_Rotated)
 {
-    size_t height = twRandom::GetNumber(0, MaxObstacleHeights - 1);
-    size_t deko = twRandom::GetNumber(0, MaxObstacleDekos - 1);
+    const size_t height = twRandom::GetNumber(0, MaxObstacleHeights - 1);
+    const size_t deko = twRandom::GetNumber(0, MaxObstacleDekos - 1);
+    const size_t texture = twRandom::GetNumber(0, MaxObstacleTextures - 1);
+    float textureValueFull = 1.0f, textureValueNone = 0.0f;
 
     // ID
     m_pEntity1->m_ID.SetName("Wall");
@@ -352,9 +401,15 @@ void CPatternTileCreator::CreateModel05x20(const bool a_Rotated)
 
     // Rendering
     auto mesh = twRenderer->CreateMeshDrawable();
+    mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
     mesh->m_pMesh = m_pObstacle20[height];
-    mesh->m_Material.SetMaterial(m_pMaterialStandardTexture);
-    mesh->m_Material.m_pPixelShader.SetTexture(0, m_pTextureObstacle);
+    mesh->m_Material.SetMaterial(m_pMaterialTextureBlending);
+    mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &textureValueFull);
+    mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &textureValueNone);
+    mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(6, &textureValueNone);
+    mesh->m_Material.m_pPixelShader.SetTexture(0, m_pTextureObstacle[texture][0]);
+    mesh->m_Material.m_pPixelShader.SetTexture(1, m_pTextureObstacle[texture][1]);
+    mesh->m_Material.m_pPixelShader.SetTexture(2, m_pTextureObstacle[texture][2]);
     m_pEntity1->SetDrawable(mesh);
 
     // Physic
@@ -372,16 +427,25 @@ void CPatternTileCreator::CreateModel05x20(const bool a_Rotated)
 
     m_pEntity2 = twActiveWorld->CreateEntity();
 
+    // ID
+    m_pEntity2->m_ID.SetName("Wall");
+
     // Transform
     m_pEntity2->m_Transform.SetPosition(m_Tile.m_X, 0.0f, m_PatternSpawnBegin + m_Tile.m_Y);
     if (a_Rotated) m_pEntity2->m_Transform.SetRotationDegrees(0.0f, 90.0f, 0.0f);
 
     // Rendering
-    auto shadowMesh = twRenderer->CreateMeshDrawable();
-    shadowMesh->m_pMesh = m_pObstacle20Dekos[height][deko];
-    shadowMesh->m_Material.SetMaterial(m_pMaterialStandardTexture);
-    shadowMesh->m_Material.m_pPixelShader.SetTexture(0, m_pTextureObstacle);
-    m_pEntity2->SetDrawable(shadowMesh);
+    auto dekoMesh = twRenderer->CreateMeshDrawable();
+    dekoMesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
+    dekoMesh->m_pMesh = m_pObstacle20Dekos[height][deko];
+    dekoMesh->m_Material.SetMaterial(m_pMaterialTextureBlending);
+    dekoMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &textureValueFull);
+    dekoMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &textureValueNone);
+    dekoMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(6, &textureValueNone);
+    dekoMesh->m_Material.m_pPixelShader.SetTexture(0, m_pTextureObstacle[texture][0]);
+    dekoMesh->m_Material.m_pPixelShader.SetTexture(1, m_pTextureObstacle[texture][1]);
+    dekoMesh->m_Material.m_pPixelShader.SetTexture(2, m_pTextureObstacle[texture][2]);
+    m_pEntity2->SetDrawable(dekoMesh);
 
     twActiveWorld->AddEntity(m_pEntity2);
 
@@ -390,8 +454,10 @@ void CPatternTileCreator::CreateModel05x20(const bool a_Rotated)
 
 void CPatternTileCreator::CreateModel05x30(const bool a_Rotated)
 {
-    size_t height = twRandom::GetNumber(0, MaxObstacleHeights - 1);
-    size_t deko = twRandom::GetNumber(0, MaxObstacleDekos - 1);
+    const size_t height = twRandom::GetNumber(0, MaxObstacleHeights - 1);
+    const size_t deko = twRandom::GetNumber(0, MaxObstacleDekos - 1);
+    const size_t texture = twRandom::GetNumber(0, MaxObstacleTextures - 1);
+    float textureValueFull = 1.0f, textureValueNone = 0.0f;
 
     // ID
     m_pEntity1->m_ID.SetName("Wall");
@@ -402,9 +468,15 @@ void CPatternTileCreator::CreateModel05x30(const bool a_Rotated)
 
     // Rendering
     auto mesh = twRenderer->CreateMeshDrawable();
+    mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
     mesh->m_pMesh = m_pObstacle30[height];
-    mesh->m_Material.SetMaterial(m_pMaterialStandardTexture);
-    mesh->m_Material.m_pPixelShader.SetTexture(0, m_pTextureObstacle);
+    mesh->m_Material.SetMaterial(m_pMaterialTextureBlending);
+    mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &textureValueFull);
+    mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &textureValueNone);
+    mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(6, &textureValueNone);
+    mesh->m_Material.m_pPixelShader.SetTexture(0, m_pTextureObstacle[texture][0]);
+    mesh->m_Material.m_pPixelShader.SetTexture(1, m_pTextureObstacle[texture][1]);
+    mesh->m_Material.m_pPixelShader.SetTexture(2, m_pTextureObstacle[texture][2]);
     m_pEntity1->SetDrawable(mesh);
 
     // Physic
@@ -422,16 +494,25 @@ void CPatternTileCreator::CreateModel05x30(const bool a_Rotated)
 
     m_pEntity2 = twActiveWorld->CreateEntity();
 
+    // ID
+    m_pEntity2->m_ID.SetName("Wall");
+
     // Transform
     m_pEntity2->m_Transform.SetPosition(m_Tile.m_X, 0.0f, m_PatternSpawnBegin + m_Tile.m_Y);
     if (a_Rotated) m_pEntity2->m_Transform.SetRotationDegrees(0.0f, 90.0f, 0.0f);
 
     // Rendering
-    auto shadowMesh = twRenderer->CreateMeshDrawable();
-    shadowMesh->m_pMesh = m_pObstacle30Dekos[height][deko];
-    shadowMesh->m_Material.SetMaterial(m_pMaterialStandardTexture);
-    shadowMesh->m_Material.m_pPixelShader.SetTexture(0, m_pTextureObstacle);
-    m_pEntity2->SetDrawable(shadowMesh);
+    auto dekoMesh = twRenderer->CreateMeshDrawable();
+    dekoMesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
+    dekoMesh->m_pMesh = m_pObstacle30Dekos[height][deko];
+    dekoMesh->m_Material.SetMaterial(m_pMaterialTextureBlending);
+    dekoMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &textureValueFull);
+    dekoMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &textureValueNone);
+    dekoMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(6, &textureValueNone);
+    dekoMesh->m_Material.m_pPixelShader.SetTexture(0, m_pTextureObstacle[texture][0]);
+    dekoMesh->m_Material.m_pPixelShader.SetTexture(1, m_pTextureObstacle[texture][1]);
+    dekoMesh->m_Material.m_pPixelShader.SetTexture(2, m_pTextureObstacle[texture][2]);
+    m_pEntity2->SetDrawable(dekoMesh);
 
     twActiveWorld->AddEntity(m_pEntity2);
 

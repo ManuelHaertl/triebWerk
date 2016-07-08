@@ -87,6 +87,9 @@
     <ClCompile Include="src\CPatternTileCreator.cpp">
       <Filter>Quelldateien\Game\Pattern</Filter>
     </ClCompile>
+    <ClCompile Include="src\CPostEffects.cpp">
+      <Filter>Quelldateien\Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\CGameScene.h">
@@ -139,6 +142,9 @@
     </ClInclude>
     <ClInclude Include="include\CPatternTileCreator.h">
       <Filter>Headerdateien\Game\Pattern</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CPostEffects.h">
+      <Filter>Headerdateien\Game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

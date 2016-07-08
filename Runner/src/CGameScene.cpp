@@ -1,6 +1,7 @@
 ﻿#include <CGameScene.h>
 
 #include <CGameInfo.h>
+#include <CPostEffects.h>
 
 CGameScene::CGameScene() :
     m_pPlayer(nullptr),
@@ -21,6 +22,10 @@ void CGameScene::Start()
     m_PatternManager.Start();
     CreatePlayer();
     CreateText();
+
+    auto entity = twActiveWorld->CreateEntity();
+    entity->SetBehaviour(new CPostEffects());
+    twActiveWorld->AddEntity(entity);
 }
 
 void CGameScene::Update()

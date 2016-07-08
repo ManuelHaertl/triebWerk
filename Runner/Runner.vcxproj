@@ -169,6 +169,7 @@
     <ClCompile Include="src\CPatternTileCreator.cpp" />
     <ClCompile Include="src\CPlayer.cpp" />
     <ClCompile Include="src\CPoints.cpp" />
+    <ClCompile Include="src\CPostEffects.cpp" />
     <ClCompile Include="src\CValueUpdater.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
@@ -185,6 +186,7 @@
     <ClInclude Include="include\CPatternTileCreator.h" />
     <ClInclude Include="include\CPlayer.h" />
     <ClInclude Include="include\CPoints.h" />
+    <ClInclude Include="include\CPostEffects.h" />
     <ClInclude Include="include\CValueUpdater.h" />
     <ClInclude Include="include\EPatternCategories.h" />
     <ClInclude Include="include\ETileType.h" />

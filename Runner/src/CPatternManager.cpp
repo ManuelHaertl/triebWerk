@@ -10,7 +10,8 @@ CPatternManager::CPatternManager() :
     m_PatternSpawnBegin(StartFreeDistance),
     m_pCurrentPattern(nullptr),
     m_CurrentTileIndex(0),
-    m_DeleteZone(-DeleteDistance)
+    m_DeleteZone(-DeleteDistance),
+    m_PlayerPosition(0.0f)
 {
     
 }
@@ -36,6 +37,7 @@ void CPatternManager::Update(const float a_MetersFlewn)
 {
     m_SpawnTo += a_MetersFlewn;
     m_DeleteZone += a_MetersFlewn;
+    m_PlayerPosition += a_MetersFlewn;
 
     while (m_IsSpawned < m_SpawnTo)
     {
@@ -43,6 +45,7 @@ void CPatternManager::Update(const float a_MetersFlewn)
     }
 
     DeleteEntities();
+    UpdateTextureBlending();
 }
 
 void CPatternManager::End()
@@ -193,4 +196,49 @@ void CPatternManager::SetRandomPattern(size_t a_Difficulty)
     int random = twRandom::GetNumber(0, max - 1);
 
     m_pCurrentPattern = m_Pattern[a_Difficulty][random];
+}
+
+void CPatternManager::UpdateTextureBlending()
+{
+    size_t hash = triebWerk::StringHasher("Wall");
+
+    for (auto entity : m_Entities)
+    {
+        if (entity->m_ID.GetHash() == hash)
+        {
+            float blend1 = 1.0f, blend2 = 0.0f, blend3 = 0.0f;
+            auto drawable = static_cast<triebWerk::CMeshDrawable*>(entity->GetDrawable());
+
+            float distance = entity->m_Transform.GetPosition().m128_f32[2] - m_PlayerPosition;
+
+            if (distance < EndTextureBlendDistance)
+            {
+                blend1 = 0.0f;
+                blend3 = 1.0f;
+            }
+            else if (distance < StartTextureBlendDistance)
+            {
+                float blendDistance = StartTextureBlendDistance - EndTextureBlendDistance;
+                float blendDistanceHalf = blendDistance / 2.0f;
+                float currentDistance = distance - EndTextureBlendDistance;
+
+                if (currentDistance > blendDistanceHalf)
+                {
+                    blend1 = (distance - EndTextureBlendDistance - blendDistanceHalf) / blendDistanceHalf;
+                    blend2 = 1.0f - blend1;
+                    blend3 = 0.0f;
+                }
+                else
+                {
+                    blend1 = 0.0f;
+                    blend2 = (distance - EndTextureBlendDistance) / blendDistanceHalf;
+                    blend3 = 1.0f - blend2;
+                }
+            }
+
+            drawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &blend1);
+            drawable->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &blend2);
+            drawable->m_Material.m_ConstantBuffer.SetValueInBuffer(6, &blend3);
+        }
+    }
 }

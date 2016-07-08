@@ -29,6 +29,8 @@ int CEnvironmentCreator::FeatherSpawnProbability = 40;
 float CPatternManager::SpawnDistance = 300.0f;
 float CPatternManager::DeleteDistance = 10.0f;
 float CPatternManager::StartFreeDistance = 100.0f;
+float CPatternManager::StartTextureBlendDistance = 150.0f;
+float CPatternManager::EndTextureBlendDistance = 15.0f;
 
 CValueUpdater::CValueUpdater() :
     m_pValues(nullptr)
@@ -177,6 +179,14 @@ void CValueUpdater::UpdateValues()
         else if (value.first == "en_FeatherProbability")
         {
             CEnvironmentCreator::FeatherSpawnProbability = std::stoi(value.second);
+        }
+        else if (value.first == "pm_StartTextureBlendDistance")
+        {
+            CPatternManager::StartTextureBlendDistance = std::stof(value.second);
+        }
+        else if (value.first == "pm_EndTextureBlendDistance")
+        {
+            CPatternManager::EndTextureBlendDistance = std::stof(value.second);
         }
     }
 }
