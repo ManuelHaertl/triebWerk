@@ -32,7 +32,7 @@ void CPoints::Update()
     m_pEntity->m_Transform.RotateDegrees(0.0f, 0.0f, dt * RotateSpeedZ);
     m_pSphere->m_Transform.RotateDegrees(dt * m_RotateSpeedX, dt * m_RotateSpeedY, dt * m_RotateSpeedZ);
 
-    m_pSphereBuffer->SetValueInBuffer(4, &timeSinceStartup);
+    //m_pSphereBuffer->SetValueInBuffer(4, &timeSinceStartup);
 }
 
 void CPoints::End()
@@ -79,11 +79,10 @@ void CPoints::CreateSphere()
 
     // Rendering
     auto mesh = twRenderer->CreateMeshDrawable();
-    mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
     mesh->m_pMesh = twResourceManager->GetMesh("ms_sphere");
     mesh->m_Material.SetMaterial(twResourceManager->GetMaterial("Sun"));
     mesh->m_Material.m_pVertexShader.SetTexture(0, twResourceManager->GetTexture2D("t_whitenoise"));
-    mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &DirectX::XMFLOAT3(1.0f, 1.0f, 0.0f));
+    mesh->m_Material.m_pVertexShader.SetInstanceData(4, &DirectX::XMFLOAT3(1.0f, 1.0f, 0.0f), 12);
     m_pSphere->SetDrawable(mesh);
 
     m_pSphereBuffer = &mesh->m_Material.m_ConstantBuffer;
