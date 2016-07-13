@@ -67,7 +67,6 @@ CPatternTileCreator::CPatternTileCreator()
     m_pTextureObstacle[2][2] = twResourceManager->GetTexture2D("T_obs_03_blend3");
 
     m_pTexturePoints = twResourceManager->GetTexture2D("T_points_diff");
-    m_pTextureCheckpoint = twResourceManager->GetTexture2D("T_checkpoint_diff");
     m_pTextureShadow05 = twResourceManager->GetTexture2D("t_shadow_05x05");
     m_pTextureShadow10 = twResourceManager->GetTexture2D("t_shadow_05x10");
     m_pTextureShadow20 = twResourceManager->GetTexture2D("t_shadow_05x20");

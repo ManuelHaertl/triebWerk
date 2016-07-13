@@ -46,7 +46,6 @@ private:
 
     triebWerk::CTexture2D* m_pTextureObstacle[MaxObstacleTextures][MaxObstacleTextureBlendings];
     triebWerk::CTexture2D* m_pTexturePoints;
-    triebWerk::CTexture2D* m_pTextureCheckpoint;
     triebWerk::CTexture2D* m_pTextureShadow05;
     triebWerk::CTexture2D* m_pTextureShadow10;
     triebWerk::CTexture2D* m_pTextureShadow20;
