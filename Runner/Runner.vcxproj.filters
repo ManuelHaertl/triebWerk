@@ -43,6 +43,12 @@
     <Filter Include="Quelldateien\Game\Tiles">
       <UniqueIdentifier>{30c28bf0-e3e4-40c3-a81f-09c276170203}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headerdateien\Game\Player">
+      <UniqueIdentifier>{46e72688-923b-4bd0-b6a3-0ece296ebffd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Game\Player">
+      <UniqueIdentifier>{157fabc6-5081-45f6-9594-08e86ebf23e3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -50,9 +56,6 @@
     </ClCompile>
     <ClCompile Include="src\CGameScene.cpp">
       <Filter>Quelldateien\Scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CPlayer.cpp">
-      <Filter>Quelldateien\Game</Filter>
     </ClCompile>
     <ClCompile Include="src\CPattern.cpp">
       <Filter>Quelldateien\Game\Pattern</Filter>
@@ -90,13 +93,16 @@
     <ClCompile Include="src\CPostEffects.cpp">
       <Filter>Quelldateien\Game</Filter>
     </ClCompile>
+    <ClCompile Include="src\CDifficultyChanger.cpp">
+      <Filter>Quelldateien\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CPlayer.cpp">
+      <Filter>Quelldateien\Game\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\CGameScene.h">
       <Filter>Headerdateien\Scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="include\CPlayer.h">
-      <Filter>Headerdateien\Game</Filter>
     </ClInclude>
     <ClInclude Include="include\CPattern.h">
       <Filter>Headerdateien\Game\Pattern</Filter>
@@ -134,9 +140,6 @@
     <ClInclude Include="include\CCheckpoint.h">
       <Filter>Headerdateien\Game\Tiles</Filter>
     </ClInclude>
-    <ClInclude Include="include\SPlayerInput.h">
-      <Filter>Headerdateien\Game</Filter>
-    </ClInclude>
     <ClInclude Include="include\CCollectedPoint.h">
       <Filter>Headerdateien\Game\Tiles</Filter>
     </ClInclude>
@@ -145,6 +148,15 @@
     </ClInclude>
     <ClInclude Include="include\CPostEffects.h">
       <Filter>Headerdateien\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CDifficultyChanger.h">
+      <Filter>Headerdateien\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SPlayerInput.h">
+      <Filter>Headerdateien\Game\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CPlayer.h">
+      <Filter>Headerdateien\Game\Player</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

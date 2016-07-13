@@ -77,6 +77,7 @@ CPatternTileCreator::CPatternTileCreator()
     m_pMaterialStandardTexture = twResourceManager->GetMaterial("StandardTexture");
     m_pMaterialStandardTransparentTexture = twResourceManager->GetMaterial("StandardTransparentTexture");
     m_pMaterialTextureBlending = twResourceManager->GetMaterial("TextureBlending");
+    m_pMaterialWireframe = twResourceManager->GetMaterial("Wireframe");
 }
 
 CPatternTileCreator::~CPatternTileCreator()
@@ -150,8 +151,10 @@ void CPatternTileCreator::CreateCheckpoint()
     // Rendering
     auto mesh = twRenderer->CreateMeshDrawable();
     mesh->m_pMesh = m_pCheckPoint;
-    mesh->m_Material.SetMaterial(m_pMaterialStandardTexture);
-    mesh->m_Material.m_pPixelShader.SetTexture(0, m_pTextureCheckpoint);
+    mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
+    mesh->m_Material.SetMaterial(m_pMaterialWireframe);
+    mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(0.0f, 1.0f, 1.0f));
+    mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
     m_pEntity1->SetDrawable(mesh);
 
     // Physic

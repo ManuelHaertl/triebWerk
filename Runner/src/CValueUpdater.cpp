@@ -1,18 +1,22 @@
 #include <CValueUpdater.h>
 
 #include <CEnvironmentCreator.h>
+#include <CCheckpoint.h>
+#include <CDifficultyChanger.h>
 #include <CGameInfo.h>
 #include <CPatternManager.h>
 #include <CPlayer.h>
 
-
-float CPlayer::FlySpeed = 75.0f;
 float CPlayer::Acceleration = 250.0f;
 float CPlayer::Drag = 150.0f;
 float CPlayer::MaxSpeed = 30.0f;
 float CPlayer::DodgeDistance = 15.0f;
 float CPlayer::DodgeTime = 0.5f;
 float CPlayer::DodgeCooldown = 0.5f;
+
+float CPlayer::ShieldTime = 2.0f;
+float CPlayer::ShieldCooldown = 10.0f;
+
 float CPlayer::MaxRotation = 25.0f;
 float CPlayer::RotationCameraFactor = 0.03f;
 
@@ -32,6 +36,17 @@ float CPatternManager::StartFreeDistance = 100.0f;
 float CPatternManager::StartTextureBlendDistance = 150.0f;
 float CPatternManager::EndTextureBlendDistance = 15.0f;
 
+float CCheckpoint::AddedMultiplier = 0.5f;
+float CCheckpoint::HighestMultiplier = 5.0f;
+
+float CDifficultyChanger::ScoreDifficulty2 = 1000.0f;
+float CDifficultyChanger::ScoreDifficulty3 = 2000.0f;
+float CDifficultyChanger::ScoreDifficulty4 = 3000.0f;
+float CDifficultyChanger::ScoreDifficulty5 = 4000.0f;
+float CDifficultyChanger::SpeedRaiseTime = 60.0f;
+float CDifficultyChanger::AddedSpeed = 5.0f;
+float CDifficultyChanger::MaxSpeed = 85.0f;
+
 CValueUpdater::CValueUpdater() :
     m_pValues(nullptr)
 {
@@ -43,10 +58,6 @@ CValueUpdater::~CValueUpdater()
 
 void CValueUpdater::Start()
 {
-    auto startValues = twResourceManager->GetTWFData("start_values");
-    if (startValues != nullptr)
-        UpdateStartValues(startValues);
-
     m_pValues = twResourceManager->GetTWFData("values");
     m_pMainCamera = twRenderer->GetCurrentActiveCamera();
 
@@ -67,50 +78,23 @@ void CValueUpdater::End()
 {
 }
 
-void CValueUpdater::UpdateStartValues(triebWerk::CTWFData* a_pValues)
+void CValueUpdater::UpdateValues()
 {
     CGameInfo& gameInfo = CGameInfo::Instance();
 
-    for (auto value : a_pValues->m_ConfigurationTable)
+    for (auto value : m_pValues->m_ConfigurationTable)
     {
-        if (value.first == "g_Difficulty")
-        {
-            gameInfo.m_Difficulty = std::stoi(value.second);
-        }
-        else if (value.first == "g_PointsPerMeter")
+        // Game
+        if (value.first == "g_PointsPerMeter")
         {
             gameInfo.m_PointsPerMeter = std::stof(value.second);
         }
-        else if (value.first == "g_AddedMultiplicator")
-        {
-            gameInfo.m_AddedMultiplier = std::stof(value.second);
-        }
-        else if (value.first == "g_HighestMultiplicator")
-        {
-            gameInfo.m_HighestMultiplier = std::stof(value.second);
-        }
-        else if (value.first == "pm_SpawnDistance")
-        {
-            CPatternManager::SpawnDistance = std::stof(value.second);
-        }
-        else if (value.first == "pm_DeleteDistance")
-        {
-            CPatternManager::DeleteDistance = std::stof(value.second);
-        }
-        else if (value.first == "pm_StartFreeDistance")
-        {
-            CPatternManager::StartFreeDistance = std::stof(value.second);
-        }
-    }
-}
 
-void CValueUpdater::UpdateValues()
-{
-    for (auto value : m_pValues->m_ConfigurationTable)
-    {
-        if (value.first == "pl_FlySpeed")
+        // Player
+        else if (value.first == "pl_FlySpeed")
         {
-            CPlayer::FlySpeed = std::stof(value.second);
+            gameInfo.m_FlySpeed = std::stof(value.second);
+            gameInfo.m_StartFlySpeed = std::stof(value.second);
         }
         else if (value.first == "pl_Acceleration")
         {
@@ -136,6 +120,14 @@ void CValueUpdater::UpdateValues()
         {
             CPlayer::DodgeCooldown = std::stof(value.second);
         }
+        else if (value.first == "pl_ShieldTime")
+        {
+            CPlayer::ShieldTime = std::stof(value.second);
+        }
+        else if (value.first == "pl_ShieldCooldown")
+        {
+            CPlayer::ShieldCooldown = std::stof(value.second);
+        }
         else if (value.first == "pl_MaxRotation")
         {
             CPlayer::MaxRotation = std::stof(value.second);
@@ -152,6 +144,48 @@ void CValueUpdater::UpdateValues()
         {
             CPlayer::GodMode = std::stoi(value.second);
         }
+
+        // Checkpoints
+        else if (value.first == "cp_AddedMultiplicator")
+        {
+            CCheckpoint::AddedMultiplier = std::stof(value.second);
+        }
+        else if (value.first == "cp_HighestMultiplicator")
+        {
+            CCheckpoint::HighestMultiplier = std::stof(value.second);
+        }
+
+        // Difficulty Changer
+        else if (value.first == "dc_ScoreDifficulty2")
+        {
+            CDifficultyChanger::ScoreDifficulty2 = std::stof(value.second);
+        }
+        else if (value.first == "dc_ScoreDifficulty3")
+        {
+            CDifficultyChanger::ScoreDifficulty3 = std::stof(value.second);
+        }
+        else if (value.first == "dc_ScoreDifficulty4")
+        {
+            CDifficultyChanger::ScoreDifficulty4 = std::stof(value.second);
+        }
+        else if (value.first == "dc_ScoreDifficulty5")
+        {
+            CDifficultyChanger::ScoreDifficulty5 = std::stof(value.second);
+        }
+        else if (value.first == "dc_SpeedRaiseTime")
+        {
+            CDifficultyChanger::SpeedRaiseTime = std::stof(value.second);
+        }
+        else if (value.first == "dc_AddedSpeed")
+        {
+            CDifficultyChanger::AddedSpeed = std::stof(value.second);
+        }
+        else if (value.first == "dc_MaxSpeed")
+        {
+            CDifficultyChanger::MaxSpeed = std::stof(value.second);
+        }
+
+        // Camera
         else if (value.first == "c_FOV")
         {
             m_pMainCamera->SetFOV(DirectX::XMConvertToRadians(std::stof(value.second)));
@@ -176,10 +210,14 @@ void CValueUpdater::UpdateValues()
         {
             CPlayer::CameraMinusPosZ = std::stof(value.second);
         }
+
+        // Environment
         else if (value.first == "en_FeatherProbability")
         {
             CEnvironmentCreator::FeatherSpawnProbability = std::stoi(value.second);
         }
+
+        // Pattern Manager
         else if (value.first == "pm_StartTextureBlendDistance")
         {
             CPatternManager::StartTextureBlendDistance = std::stof(value.second);

@@ -160,6 +160,7 @@
     <ClCompile Include="src\CCheckpoint.cpp" />
     <ClCompile Include="src\CCollectedPoint.cpp" />
     <ClCompile Include="src\CDebugScene.cpp" />
+    <ClCompile Include="src\CDifficultyChanger.cpp" />
     <ClCompile Include="src\CEnvironmentCreator.cpp" />
     <ClCompile Include="src\CGameInfo.cpp" />
     <ClCompile Include="src\CGameScene.cpp" />
@@ -177,6 +178,7 @@
     <ClInclude Include="include\CCheckpoint.h" />
     <ClInclude Include="include\CCollectedPoint.h" />
     <ClInclude Include="include\CDebugScene.h" />
+    <ClInclude Include="include\CDifficultyChanger.h" />
     <ClInclude Include="include\CEnvironmentCreator.h" />
     <ClInclude Include="include\CGameInfo.h" />
     <ClInclude Include="include\CGameScene.h" />

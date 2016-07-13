@@ -58,6 +58,7 @@ private:
     triebWerk::CMaterial* m_pMaterialStandardTexture;
     triebWerk::CMaterial* m_pMaterialStandardTransparentTexture;
     triebWerk::CMaterial* m_pMaterialTextureBlending;
+    triebWerk::CMaterial* m_pMaterialWireframe;
 
 public:
     CPatternTileCreator();

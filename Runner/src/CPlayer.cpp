@@ -6,15 +6,19 @@
 #include <CMeshDrawable.h>
 #include <CPoints.h>
 
-CPlayer::CPlayer() :
-    m_IsDodging(false),
-    m_DodgeSpeed(0.0f),
-    m_CurrentDodgeCooldownTime(0.0f),
-    m_CurrentDodgeTime(0.0f),
-    m_pMainCamera(nullptr),
-    m_IsDead(false),
-    m_MetersFlewn(0.0f),
-    m_LastZ(0.0f)
+CPlayer::CPlayer()
+    : m_IsDodging(false)
+    , m_DodgeSpeed(0.0f)
+    , m_CurrentDodgeTime(0.0f)
+    , m_CurrentDodgeCooldownTime(0.0f)
+    , m_IsShieldActive(false)
+    , m_CurrentShieldTime(0.0f)
+    , m_CurrentShieldCooldownTime(0.0f)
+    , m_pTrailMesh(nullptr)
+    , m_pMainCamera(nullptr)
+    , m_IsDead(false)
+    , m_MetersFlewn(0.0f)
+    , m_LastZ(0.0f)
 {
 }
 
@@ -26,18 +30,25 @@ void CPlayer::Start()
 {
     m_pMainCamera = twEngine.m_pRenderer->GetCurrentActiveCamera();
     m_LastZ = m_pEntity->m_Transform.GetPosition().m128_f32[2];
+
+    CreateTrail();
 }
 
 void CPlayer::Update()
 {
     CheckInput();
     SetSpeed();
+    SetShield();
     CalculateDistanceFlewn();
     AddPointsForFlewnDistance();
+    UpdateTrail();
 }
 
 void CPlayer::LateUpdate()
 {
+    m_pTrail->m_Transform.SetPosition(m_pEntity->m_Transform.GetPosition());
+    m_pTrail->m_Transform.SetRotation(m_pEntity->m_Transform.GetRotation());
+
     if (!twDebug->IsInDebug())
     {
         SetCamera();
@@ -73,7 +84,7 @@ void CPlayer::CollisionEnter(triebWerk::CCollisionEvent a_Collision)
     }
     else if (entity->m_ID.GetHash() == triebWerk::StringHasher("Wall"))
     {
-        if (GodMode == false)
+        if (m_IsShieldActive == false && GodMode == false)
         {
             //if (m_IsDead == false)
             //    triebWerk::CDebugLogfile::Instance().LogfText(triebWerk::CDebugLogfile::ELogType::Warning, false, entity->m_ID.GetDescribtion().c_str());
@@ -110,6 +121,19 @@ bool CPlayer::HasDied() const
     return m_IsDead;
 }
 
+void CPlayer::CreateTrail()
+{
+    m_pTrail = twActiveWorld->CreateEntity();
+
+    m_pTrailMesh = twRenderer->CreateMeshDrawable();
+    m_pTrailMesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_effect_trail");
+    m_pTrailMesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("PlayerTrail"));
+    m_pTrailMesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_effect_trail_red"));
+    m_pTrail->SetDrawable(m_pTrailMesh);
+
+    twActiveWorld->AddEntity(m_pTrail);
+}
+
 void CPlayer::CheckInput()
 {
     // Gamepad Input
@@ -125,6 +149,8 @@ void CPlayer::CheckInput()
         m_PlayerInput.m_DodgeRight =
             twGamepad.IsState(triebWerk::EGamepadButton::RT, triebWerk::EButtonState::Down, 0) ||
             twGamepad.IsState(triebWerk::EGamepadButton::RB, triebWerk::EButtonState::Down, 0);
+
+        m_PlayerInput.m_Shield = twGamepad.IsState(triebWerk::EGamepadButton::A, triebWerk::EButtonState::Down, 0);
 
         float xValue = static_cast<float>(twGamepad.GetLeftAnalogX(0));
 
@@ -155,7 +181,9 @@ void CPlayer::CheckInput()
 
         m_PlayerInput.m_DodgeLeft = twKeyboard.IsState(triebWerk::EKey::Q, triebWerk::EButtonState::Down);
         m_PlayerInput.m_DodgeRight = twKeyboard.IsState(triebWerk::EKey::E, triebWerk::EButtonState::Down);
-          
+        
+        m_PlayerInput.m_Shield = twKeyboard.IsState(triebWerk::EKey::S, triebWerk::EButtonState::Down);
+
         if (m_PlayerInput.m_Left)
             m_PlayerInput.m_MoveKeyDistance = -1.0f;
         else if (m_PlayerInput.m_Right)
@@ -230,8 +258,25 @@ void CPlayer::SetSpeed()
     }
 
     // set the new speed
-    velocity.m128_f32[2] = FlySpeed;
+    velocity.m128_f32[2] = CGameInfo::Instance().m_FlySpeed;
     m_pEntity->GetPhysicEntity()->GetBody()->m_Velocity = velocity;
+}
+
+void CPlayer::SetShield()
+{
+    float dt = twTime->GetDeltaTime();
+    m_CurrentShieldTime -= dt;
+    m_CurrentDodgeCooldownTime -= dt;
+
+    if (m_PlayerInput.m_Shield && m_CurrentDodgeCooldownTime <= 0.0f)
+    {
+        m_CurrentShieldTime = ShieldTime;
+        m_CurrentDodgeCooldownTime = ShieldCooldown;
+    }
+
+    m_IsShieldActive = m_CurrentShieldTime > 0.0f;
+
+        std::cout << m_CurrentDodgeCooldownTime << std::endl;
 }
 
 void CPlayer::CalculateDistanceFlewn()
@@ -246,6 +291,14 @@ void CPlayer::AddPointsForFlewnDistance()
 {
     CGameInfo& gameInfo = CGameInfo::Instance();
     gameInfo.m_CurrentPoints += m_MetersFlewn * gameInfo.m_PointsPerMeter;
+}
+
+void CPlayer::UpdateTrail()
+{
+    float dt = twTime->GetDeltaTime();
+    float curvature = m_PlayerInput.m_MoveKeyDistance;
+    m_pTrailMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &dt);
+    m_pTrailMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &curvature);
 }
 
 void CPlayer::SetCamera()

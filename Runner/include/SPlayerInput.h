@@ -6,4 +6,5 @@ struct SPlayerInput
     float m_MoveKeyDistance;
     bool m_DodgeLeft;
     bool m_DodgeRight;
+    bool m_Shield;
 };

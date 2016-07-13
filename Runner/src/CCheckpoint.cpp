@@ -24,6 +24,9 @@ void CCheckpoint::End()
     if (!m_HasCollected)
     {
         CGameInfo& gameInfo = CGameInfo::Instance();
-        gameInfo.m_Multiplier += gameInfo.m_AddedMultiplier;
+        gameInfo.m_Multiplier += AddedMultiplier;
+
+        if (gameInfo.m_Multiplier > HighestMultiplier)
+            gameInfo.m_Multiplier = HighestMultiplier;
     }
 }

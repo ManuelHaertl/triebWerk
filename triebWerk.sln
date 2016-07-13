@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "triebWerk", "triebWerk\triebWerk.vcxproj", "{AC7DE28F-AD9A-43CD-AA34-F6A5AE7F2A5F}"
 EndProject
@@ -12,24 +12,30 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Runner", "Runner\Runner.vcx
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AC7DE28F-AD9A-43CD-AA34-F6A5AE7F2A5F}.Debug|Any CPU.ActiveCfg = Debug|Win32
 		{AC7DE28F-AD9A-43CD-AA34-F6A5AE7F2A5F}.Debug|x64.ActiveCfg = Debug|x64
 		{AC7DE28F-AD9A-43CD-AA34-F6A5AE7F2A5F}.Debug|x64.Build.0 = Debug|x64
 		{AC7DE28F-AD9A-43CD-AA34-F6A5AE7F2A5F}.Debug|x86.ActiveCfg = Debug|Win32
 		{AC7DE28F-AD9A-43CD-AA34-F6A5AE7F2A5F}.Debug|x86.Build.0 = Debug|Win32
+		{AC7DE28F-AD9A-43CD-AA34-F6A5AE7F2A5F}.Release|Any CPU.ActiveCfg = Release|Win32
 		{AC7DE28F-AD9A-43CD-AA34-F6A5AE7F2A5F}.Release|x64.ActiveCfg = Release|x64
 		{AC7DE28F-AD9A-43CD-AA34-F6A5AE7F2A5F}.Release|x64.Build.0 = Release|x64
 		{AC7DE28F-AD9A-43CD-AA34-F6A5AE7F2A5F}.Release|x86.ActiveCfg = Release|Win32
 		{AC7DE28F-AD9A-43CD-AA34-F6A5AE7F2A5F}.Release|x86.Build.0 = Release|Win32
+		{8C232324-D578-4C3F-9F6A-0C36EE8080F7}.Debug|Any CPU.ActiveCfg = Debug|Win32
 		{8C232324-D578-4C3F-9F6A-0C36EE8080F7}.Debug|x64.ActiveCfg = Debug|x64
 		{8C232324-D578-4C3F-9F6A-0C36EE8080F7}.Debug|x64.Build.0 = Debug|x64
 		{8C232324-D578-4C3F-9F6A-0C36EE8080F7}.Debug|x86.ActiveCfg = Debug|Win32
 		{8C232324-D578-4C3F-9F6A-0C36EE8080F7}.Debug|x86.Build.0 = Debug|Win32
+		{8C232324-D578-4C3F-9F6A-0C36EE8080F7}.Release|Any CPU.ActiveCfg = Release|Win32
 		{8C232324-D578-4C3F-9F6A-0C36EE8080F7}.Release|x64.ActiveCfg = Release|x64
 		{8C232324-D578-4C3F-9F6A-0C36EE8080F7}.Release|x64.Build.0 = Release|x64
 		{8C232324-D578-4C3F-9F6A-0C36EE8080F7}.Release|x86.ActiveCfg = Release|Win32

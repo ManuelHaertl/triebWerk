@@ -1,4 +1,5 @@
 #pragma once
+#include <CDifficultyChanger.h>
 #include <CEnvironmentCreator.h>
 #include <CPatternManager.h>
 #include <CPlayer.h>
@@ -8,6 +9,7 @@ class CGameScene : public triebWerk::IScene
 {
 private:
     CValueUpdater m_ValueUpdater;
+    CDifficultyChanger m_DifficultyChanger;
     CEnvironmentCreator m_EnvironmentCreator;
     CPatternManager m_PatternManager;
     CPlayer* m_pPlayer;

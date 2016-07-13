@@ -3,6 +3,8 @@ class CGameInfo
 {
 public:
     // current game scores
+    float m_FlySpeed;
+
     int m_Difficulty;
     float m_TotalPoints;
     float m_CurrentPoints;
@@ -10,13 +12,13 @@ public:
 
     // const values
     float m_PointsPerMeter;
-    float m_AddedMultiplier;
-    float m_HighestMultiplier;
+    float m_StartFlySpeed;
 
-public:
+private:
     CGameInfo();
     ~CGameInfo();
 
+public:
     static CGameInfo& Instance();
     void Reset();
 };

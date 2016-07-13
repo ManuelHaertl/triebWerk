@@ -18,6 +18,7 @@ void CGameScene::Start()
     twDebug->Disable();
 
     m_ValueUpdater.Start();
+    m_DifficultyChanger.Start();
     m_EnvironmentCreator.Start();
     m_PatternManager.Start();
     CreatePlayer();
@@ -31,6 +32,7 @@ void CGameScene::Start()
 void CGameScene::Update()
 {
     m_ValueUpdater.Update();
+    m_DifficultyChanger.Update();
 
     if (m_pPlayer->HasDied())
     {
@@ -103,8 +105,6 @@ void CGameScene::CreatePlayer()
 
     // Transform
     player->m_Transform.SetPosition(0.0f, 1.0f, 0.0f);
-    player->m_Transform.SetRotationDegrees(0.0f, 0.0f, 0.0f);
-    player->m_Transform.SetScale(1.0f, 1.0f, 1.0f);
 
     // Behaviour
     m_pPlayer = new CPlayer();

@@ -16,6 +16,5 @@ public:
     void End();
 
 private:
-    void UpdateStartValues(triebWerk::CTWFData* a_pValues);
     void UpdateValues();
 };

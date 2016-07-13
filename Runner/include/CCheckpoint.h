@@ -4,6 +4,9 @@
 class CCheckpoint : public triebWerk::IBehaviour
 {
 public:
+    static float AddedMultiplier;
+    static float HighestMultiplier;
+
     bool m_HasCollected;
 
 public:

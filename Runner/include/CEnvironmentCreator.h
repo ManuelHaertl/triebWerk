@@ -29,11 +29,21 @@ private:
     float m_FeathersDeleteZone;
     std::list<triebWerk::CEntity*> m_FeathersEntities;
 
-    // Ground Plane
-    triebWerk::CEntity* m_pGround;
+    // Grid Plane
+    const float GridMoveDistance = 650.0f;
+    const float GridLength = 1000.0f;
 
-    // End Wall
-    triebWerk::CEntity* m_pEndWall;
+    float m_GridAllLength;
+    float m_GridMoveZone;
+
+    size_t m_GridCount;
+    std::list<triebWerk::CEntity*> m_GridEntities;
+
+    // Background
+    triebWerk::CEntity* m_pBGPlane;
+    triebWerk::CEntity* m_pBGSnake;
+    triebWerk::CEntity* m_pBGBassLeft;
+    triebWerk::CEntity* m_pBGBassRight;
 
     // Snake Loop
     const float SnakeRotateSpeed1 = -3.0f;
@@ -45,6 +55,9 @@ private:
     triebWerk::CEntity* m_pSnake1;
     triebWerk::CEntity* m_pSnake2;
     triebWerk::CEntity* m_pSnake3;
+
+    // Fog
+    triebWerk::CElementContainer<triebWerk::CMeshDrawable*> m_Fogs;
 
 public:
     CEnvironmentCreator();
@@ -60,11 +73,14 @@ public:
 private:
     void SpawnFeathers();
     void DeleteFeathers();
-    void CreateFloor();
+    void CreateRoad();
     void CreateCollisionSideWalls();
-    void CreateGround();
-    void CreateEndWall();
+    void CreateGrid();
+    void CreateBackground();
     void CreateSnakeLoops();
-    void CheckFloorPosition(const float a_MetersFlewn);
+    void CreateFog();
+    void MoveRoad(const float a_MetersFlewn);
+    void MoveGrid(const float a_MetersFlewn);
+    void UpdateFog();
     void RotateSnakes();
 };
