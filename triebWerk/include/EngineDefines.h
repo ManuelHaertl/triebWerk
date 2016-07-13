@@ -16,5 +16,6 @@
 #define twActiveWorld triebWerk::CEngine::Instance().m_pSceneManager->m_pActiveScene->m_pScene->m_pWorld
 #define twGraphic triebWerk::CEngine::Instance().m_pGraphics
 #define twAudio triebWerk::CEngine::Instance().m_pSoundEngine
+#define twWindow triebWerk::CEngine::Instance().m_pWindow
 
 #define twRandom triebWerk::CRandom

@@ -391,6 +391,8 @@ void triebWerk::CRenderer::DrawRenderTarget(CRenderTarget* a_pRenderTarget)
 	//used to swap the rendertarget doublebuffer
 	bool swapRenderTarget = true;
 
+	m_pGraphicsHandle->GetDeviceContext()->CopyResource(a_pRenderTarget->m_DefaultSceneTexture.GetD3D11Texture(), a_pRenderTarget->m_Texture[0].GetD3D11Texture());
+
 	//Draw every effect in the drawable
 	for (unsigned int i = 0; i < a_pRenderTarget->m_pPostEffect->m_Materials.size(); i++)
 	{
@@ -404,8 +406,8 @@ void triebWerk::CRenderer::DrawRenderTarget(CRenderTarget* a_pRenderTarget)
 		{
 			//use the rendertarget which is not in use
 			int swapBufferSlot = static_cast<int>(swapRenderTarget);
-			a_pRenderTarget->SetRenderTarget(swapBufferSlot);
-			a_pRenderTarget->ClearRenderTarget(swapBufferSlot);
+			a_pRenderTarget->SetRenderTarget(static_cast<unsigned short>(swapBufferSlot));
+			a_pRenderTarget->ClearRenderTarget(static_cast<unsigned short>(swapBufferSlot));
 
 			//swap the buffers so the current rendertarget is in use and the old one will be cleared
 			swapRenderTarget = !swapRenderTarget;
@@ -467,8 +469,6 @@ void triebWerk::CRenderer::DrawMesh(const CMeshDrawable * a_pDrawable)
 
 	}break;
 	}
-
-
 }
 
 void triebWerk::CRenderer::RenderFont(CFontDrawable * a_pDrawable)
@@ -518,10 +518,33 @@ void triebWerk::CRenderer::RenderMesh(CMeshDrawable * a_pDrawable)
 
 void triebWerk::CRenderer::RenderInstancedMeshBatch(size_t a_Index)
 {
-	//Draw the InstanceBatch
-	m_pRenderTargetList[m_ActiveRenderTargetSlot].m_RenderBatch.m_pInstancedMeshBuffer[a_Index].Draw(m_pCurrentCamera);
-	//Resets the InstanceBatch for the next frame
-	m_pRenderTargetList[m_ActiveRenderTargetSlot].m_RenderBatch.m_pInstancedMeshBuffer[a_Index].Reset();
+	auto pDeviceContext = m_pGraphicsHandle->GetDeviceContext();
+
+	CInstancedMeshBatch* pMeshBatch = &m_pRenderTargetList[m_ActiveRenderTargetSlot].m_RenderBatch.m_pInstancedMeshBuffer[a_Index];
+
+	SetSpefificStates(&pMeshBatch->DEBUG_pDrawable->m_D3DStates);
+
+	//Set the shader pipleline
+	SetShader(pMeshBatch->m_pMaterial);
+
+	pMeshBatch->m_pMaterial->m_ConstantBuffer.SetConstantBuffer(m_pGraphicsHandle->GetDeviceContext(), DirectX::XMMatrixIdentity(), m_pCurrentCamera->GetViewMatrix(), m_pCurrentCamera->GetProjection(), true);
+
+	//set the resource needed by the shader pipeline 
+	SetResources(pMeshBatch->m_pMaterial);
+
+	//Set the buffers
+	pMeshBatch->SetBuffers();
+
+	//Draw Buffer
+	pDeviceContext->DrawIndexedInstanced(static_cast<UINT>(pMeshBatch->m_Identifier.m_pMeshDeterminer->m_IndexCount), static_cast<UINT>(pMeshBatch->m_InstanceCount), 0, 0, 0);
+
+	//Reset the MeshBatch
+	pMeshBatch->Reset();
+
+	////Draw the InstanceBatch
+	//m_pRenderTargetList[m_ActiveRenderTargetSlot].m_RenderBatch.m_pInstancedMeshBuffer[a_Index].Draw(m_pCurrentCamera);
+	////Resets the InstanceBatch for the next frame
+	//m_pRenderTargetList[m_ActiveRenderTargetSlot].m_RenderBatch.m_pInstancedMeshBuffer[a_Index].Reset();
 }
 
 void triebWerk::CRenderer::InsertTransparent(CMeshDrawable * a_pDrawable)
@@ -546,8 +569,11 @@ bool HowToSort(triebWerk::CMeshDrawable * a_pDraw1, triebWerk::CMeshDrawable * a
 
 void triebWerk::CRenderer::SortTransparentObjects()
 {
-	//Sort transparent meshs form far to near
-	std::sort(m_pRenderTargetList[m_ActiveRenderTargetSlot].m_RenderBatch.m_pTransparentMeshBuffer, m_pRenderTargetList[m_ActiveRenderTargetSlot].m_RenderBatch.m_pTransparentMeshBuffer + m_pRenderTargetList[m_ActiveRenderTargetSlot].m_RenderBatch.m_TransparentMeshCounter, HowToSort);
+	if (m_pRenderTargetList[m_ActiveRenderTargetSlot].m_RenderBatch.m_TransparentMeshCounter > 0)
+	{
+		//Sort transparent meshs form far to near
+		std::sort(m_pRenderTargetList[m_ActiveRenderTargetSlot].m_RenderBatch.m_pTransparentMeshBuffer, m_pRenderTargetList[m_ActiveRenderTargetSlot].m_RenderBatch.m_pTransparentMeshBuffer + m_pRenderTargetList[m_ActiveRenderTargetSlot].m_RenderBatch.m_TransparentMeshCounter, HowToSort);
+	}
 }
 
 void triebWerk::CRenderer::InstanceBatching(CMeshDrawable * a_pDrawable, const unsigned int a_RenderTargetSlot)
@@ -559,9 +585,9 @@ void triebWerk::CRenderer::InstanceBatching(CMeshDrawable * a_pDrawable, const u
 	for (size_t i = 0; i < batchCount; i++)
 	{
 		if (a_pDrawable->m_pMesh == m_pRenderTargetList[a_RenderTargetSlot].m_RenderBatch.m_pInstancedMeshBuffer[i].m_Identifier.m_pMeshDeterminer &&
-			a_pDrawable->m_Material.m_ID.GetHash() == m_pRenderTargetList[a_RenderTargetSlot].m_RenderBatch.m_pInstancedMeshBuffer[i].m_Identifier.m_pMaterialDeterminer &&
-			CConstantBuffer::CompareConstantBuffer(m_pRenderTargetList[a_RenderTargetSlot].m_RenderBatch.m_pInstancedMeshBuffer[i].m_Identifier.m_pConstantBuffer,
-				a_pDrawable->m_Material.m_ConstantBuffer.GetBufferPoint(), a_pDrawable->m_Material.m_ConstantBuffer.m_BufferSize))
+			a_pDrawable->m_Material.m_ID.GetHash() == m_pRenderTargetList[a_RenderTargetSlot].m_RenderBatch.m_pInstancedMeshBuffer[i].m_Identifier.m_pMaterialDeterminer)
+			//CConstantBuffer::CompareConstantBuffer(m_pRenderTargetList[a_RenderTargetSlot].m_RenderBatch.m_pInstancedMeshBuffer[i].m_Identifier.m_pConstantBuffer,
+			//a_pDrawable->m_Material.m_ConstantBuffer.GetBufferPoint(), a_pDrawable->m_Material.m_ConstantBuffer.m_BufferSize)
 		{
 			m_pRenderTargetList[a_RenderTargetSlot].m_RenderBatch.m_pInstancedMeshBuffer[i].AddDrawable(a_pDrawable);
 			createNewInstanceBatch = false;

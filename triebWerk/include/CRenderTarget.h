@@ -5,6 +5,7 @@
 #include <d3d11.h>
 #include <CRenderBatch.h>
 #include <CPostEffectDrawable.h>
+#include <vector>
 
 namespace triebWerk
 {
@@ -13,6 +14,7 @@ namespace triebWerk
 	public:
 		//For doublebuffering
 		CTexture2D m_Texture[2];
+		CTexture2D m_DefaultSceneTexture;
 		ID3D11RenderTargetView* m_pRenderTargetView[2];
 		CRenderBatch m_RenderBatch;
 		CPostEffectDrawable* m_pPostEffect;
@@ -38,6 +40,7 @@ namespace triebWerk
 		void ClearRenderTarget(const unsigned short a_Slot) const;
 		void SetClearColor(const float a_R, const float a_G, const float a_B, const float a_A);
 		void Resize(unsigned int a_ScreenWidth, unsigned int a_ScreenHeight);
+		CTexture2D* GetSceneTexture();
 		void Clear();
 
 	private:

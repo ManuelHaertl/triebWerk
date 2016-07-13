@@ -45,8 +45,8 @@ namespace triebWerk
 
 		static LRESULT CALLBACK WindowProcedure(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-		inline unsigned short GetScreenWidth() const;
-		inline unsigned short GetScreenHeight() const;
+		unsigned short GetScreenWidth() const;
+		unsigned short GetScreenHeight() const;
 		
 		bool IsWindowFullscreen();
 		void UpdateWindow();
