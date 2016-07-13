@@ -17,7 +17,8 @@ public:
     void Pause();
 
 private:
-    void CreateTestCubes();
+    void CreatePlayground();
 	void CreateDebugFont();
+	void CreateMultipleObjects();
     void ResetCamera();
 };

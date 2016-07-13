@@ -33,17 +33,30 @@ triebWerk::CPostEffectDrawable::~CPostEffectDrawable()
 //	return &m_AdditionalEffects[a_Index];
 //}
 
-void triebWerk::CPostEffectDrawable::AddMaterial(const CMaterial * a_pMaterial)
+triebWerk::CMaterial* triebWerk::CPostEffectDrawable::AddMaterial(const CMaterial * a_pMaterial)
 {
 	if (a_pMaterial == nullptr)
 	{
 		DebugLogfile.LogfText(CDebugLogfile::ELogType::Warning, false, "Warning: You can't add a empty material as PostEffect");
-		return;
+		return nullptr;
 	}
 
 	CMaterial t;
 	m_Materials.push_back(t);
 	m_Materials[m_Materials.size() - 1].SetMaterial(a_pMaterial);
+
+	return const_cast<CMaterial*>(&m_Materials[m_Materials.size() - 1]);
+}
+
+triebWerk::CMaterial* triebWerk::CPostEffectDrawable::GetMaterial(const int a_Slot) const
+{
+	if (a_Slot + 1 > m_Materials.size())
+	{
+		DebugLogfile.LogfText(CDebugLogfile::ELogType::Warning, false, "No Material at this Slot in the CPostEffectDrawable");
+		return nullptr;
+	}
+
+	return const_cast<CMaterial*>(&m_Materials[a_Slot]);
 }
 
 triebWerk::IDrawable::EDrawableType triebWerk::CPostEffectDrawable::GetType()

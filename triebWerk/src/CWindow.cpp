@@ -194,12 +194,12 @@ HWND& triebWerk::CWindow::GetWindowHandle()
 	return m_WindowHandle;
 }
 
-inline unsigned short triebWerk::CWindow::GetScreenWidth() const
+unsigned short triebWerk::CWindow::GetScreenWidth() const
 {
 	return m_Width;
 }
 
-inline unsigned short triebWerk::CWindow::GetScreenHeight() const
+unsigned short triebWerk::CWindow::GetScreenHeight() const
 {
 	return m_Height;
 }
