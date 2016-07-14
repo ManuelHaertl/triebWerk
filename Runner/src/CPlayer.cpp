@@ -67,7 +67,7 @@ void CPlayer::CollisionEnter(triebWerk::CCollisionEvent a_Collision)
         points->Collected();
 
         // add a fixed amount to the total points
-        CGameInfo::Instance().m_TotalPoints += points->m_Points;
+        CGameInfo::Instance().m_TotalPoints += points->GetPointAmount();
     }
     else if (entity->m_ID.GetHash() == triebWerk::StringHasher("Checkpoint"))
     {
@@ -81,6 +81,7 @@ void CPlayer::CollisionEnter(triebWerk::CCollisionEvent a_Collision)
         gameInfo.m_TotalPoints += gameInfo.m_CurrentPoints * gameInfo.m_Multiplier;
         gameInfo.m_CurrentPoints = 0;
         gameInfo.m_Multiplier = 1.0f;
+        gameInfo.m_EffectCheckpoint = true;
     }
     else if (entity->m_ID.GetHash() == triebWerk::StringHasher("Wall"))
     {
@@ -214,6 +215,8 @@ void CPlayer::SetSpeed()
         m_CurrentDodgeTime = DodgeTime;
         m_IsDodging = true;
 
+        CGameInfo::Instance().m_EffectDodge = true;
+
         m_DodgeSpeed = DodgeDistance / DodgeTime;
         if (m_PlayerInput.m_DodgeLeft)
             m_DodgeSpeed *= -1;
@@ -266,17 +269,15 @@ void CPlayer::SetShield()
 {
     float dt = twTime->GetDeltaTime();
     m_CurrentShieldTime -= dt;
-    m_CurrentDodgeCooldownTime -= dt;
+    m_CurrentShieldCooldownTime -= dt;
 
-    if (m_PlayerInput.m_Shield && m_CurrentDodgeCooldownTime <= 0.0f)
+    if (m_PlayerInput.m_Shield && m_CurrentShieldCooldownTime <= 0.0f)
     {
         m_CurrentShieldTime = ShieldTime;
-        m_CurrentDodgeCooldownTime = ShieldCooldown;
+        m_CurrentShieldCooldownTime = ShieldCooldown;
     }
 
     m_IsShieldActive = m_CurrentShieldTime > 0.0f;
-
-        std::cout << m_CurrentDodgeCooldownTime << std::endl;
 }
 
 void CPlayer::CalculateDistanceFlewn()

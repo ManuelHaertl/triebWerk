@@ -4,13 +4,22 @@
 class CPostEffects : public triebWerk::IBehaviour
 {
 public:
-    float m_ChromaticAberrationStrength;
+    static float ChromaticAberrationStrength;
+
+    static float CheckpointEffectLength;
+    static float CheckpointEffectStrength;
+
+    static float DodgeEffectStrength;
+    static float DodgeEffectLength;
 
 private:
     triebWerk::CPostEffectDrawable* m_pPostEffect;
     triebWerk::CMaterial* m_pChromaticAberration;
     triebWerk::CMaterial* m_pRipple;
     triebWerk::CMaterial* m_pScanLines;
+
+    float m_CurrentChromaticAberrationStrength;
+    float m_CurrentDodgeTime;
 
 public:
     CPostEffects();
@@ -23,4 +32,5 @@ private:
     void AddChromaticAberration();
     void AddRipple();
     void AddScanLines();
+    void UpdateCheckpointEffect();
 };

@@ -67,7 +67,7 @@ public:
 
 private:
     void CreateCheckpoint();
-    void CreatePoints();
+    void CreatePoints(const size_t a_Amount);
     void CreateShield();
     void CreateBlock1x1();
     void CreateBlock2x2();

@@ -4,12 +4,16 @@
 class CPoints : public triebWerk::IBehaviour
 {
 public:
-    int m_Points = 10;
+    static int Points[3];
 
 private:
+    static DirectX::XMFLOAT3 Color[3];
+
     const float RotateSpeedZ = 130.0f;
     const float MinRotateSpeed = 15.0f;
     const float MaxRotateSpeed = 130.0f;
+
+    const size_t m_AmountID;
 
     float m_RotateSpeedX;
     float m_RotateSpeedY;
@@ -19,7 +23,7 @@ private:
     triebWerk::CConstantBuffer* m_pSphereBuffer;
 
 public:
-    CPoints();
+    CPoints(const size_t a_AmountID);
     ~CPoints();
 
     void Start();
@@ -27,6 +31,7 @@ public:
     void End();
 
     void Collected();
+    int GetPointAmount() const;
 
 private:
     void CreateSphere();

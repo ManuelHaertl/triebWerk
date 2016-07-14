@@ -2,7 +2,7 @@
 class CGameInfo
 {
 public:
-    // current game scores
+    // Current game scores
     float m_FlySpeed;
 
     int m_Difficulty;
@@ -10,9 +10,13 @@ public:
     float m_CurrentPoints;
     float m_Multiplier;
 
-    // const values
+    // Const values
     float m_PointsPerMeter;
     float m_StartFlySpeed;
+
+    // Effect Information
+    bool m_EffectCheckpoint;
+    bool m_EffectDodge;
 
 private:
     CGameInfo();
