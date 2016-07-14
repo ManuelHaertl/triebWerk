@@ -8,6 +8,7 @@ public:
     static float HighestMultiplier;
 
     bool m_HasCollected;
+	triebWerk::CMaterial* m_pMaterial;
 
 public:
     CCheckpoint();

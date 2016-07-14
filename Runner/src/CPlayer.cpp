@@ -296,7 +296,7 @@ void CPlayer::AddPointsForFlewnDistance()
 
 void CPlayer::UpdateTrail()
 {
-    float dt = twTime->GetDeltaTime();
+    float dt = twTime->GetTimeSinceStartup();
     float curvature = m_PlayerInput.m_MoveKeyDistance;
     m_pTrailMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &dt);
     m_pTrailMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &curvature);
