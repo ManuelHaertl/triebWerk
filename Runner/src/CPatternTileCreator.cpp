@@ -151,6 +151,7 @@ void CPatternTileCreator::CreateCheckpoint()
     auto mesh = twRenderer->CreateMeshDrawable();
     mesh->m_pMesh = m_pCheckPoint;
     mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
+	mesh->m_D3DStates.m_pRasterizerState = twGraphic->CreateRasterizerState(D3D11_CULL_NONE, D3D11_FILL_SOLID);
     mesh->m_Material.SetMaterial(m_pMaterialWireframe);
     mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(0.0f, 1.0f, 1.0f));
     mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));

@@ -50,9 +50,8 @@ void CPoints::Collected()
     // create a new one
     auto entity = twActiveWorld->CreateEntity();
     entity->m_Transform.SetPosition(m_pEntity->m_Transform.GetPosition());
-
     auto mesh = twRenderer->CreateMeshDrawable();
-    mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_points");
+    mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_pointsEffect");
     mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("PointExplosion"));
     mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
     mesh->m_Material.m_pGeometryShader.SetTexture(0, twResourceManager->GetTexture2D("t_noise"));

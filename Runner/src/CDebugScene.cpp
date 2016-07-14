@@ -64,42 +64,54 @@ void CDebugScene::CreatePlayground()
 {
 	auto entity = m_pWorld->CreateEntity();
 	entity->m_Transform.SetPosition(0, 0, 0);
-	triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
-	mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_player");
-	mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardTextureEmissiv"));
-	mesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("t_player_diff"));
-	mesh->m_Material.m_pPixelShader.SetTexture(1, twResourceManager->GetTexture2D("t_player_emissive_16"));
+	auto mesh = twRenderer->CreateMeshDrawable();
+	mesh->m_pMesh = twResourceManager->GetMesh("ms_checkpoint");
+	mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
+	mesh->m_Material.SetMaterial(twResourceManager->GetMaterial("Wireframe"));
+	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(0.0f, 1.0f, 1.0f));
+	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 	entity->SetDrawable(mesh);
+
 	m_pWorld->AddEntity(entity);
 
-	{
-		auto entity = m_pWorld->CreateEntity();
-		entity->m_Transform.SetPosition(0, 0, 0);
-		entity->m_Transform.SetScale(500, 500, 500);
-		triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
-		mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_cube");
-		mesh->m_D3DStates.m_pRasterizerState = twGraphic->CreateRasterizerState(D3D11_CULL_NONE, D3D11_FILL_SOLID);
-		mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
-		entity->SetDrawable(mesh);
-		m_pWorld->AddEntity(entity);
-	}
+	//auto entity = m_pWorld->CreateEntity();
+	//entity->m_Transform.SetPosition(0, 0, 0);
+	//triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
+	//mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_player");
+	//mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardTextureEmissiv"));
+	//mesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("t_player_diff"));
+	//mesh->m_Material.m_pPixelShader.SetTexture(1, twResourceManager->GetTexture2D("t_player_emissive_16"));
+	//entity->SetDrawable(mesh);
+	//m_pWorld->AddEntity(entity);
 
-	auto entityBloom = m_pWorld->CreateEntity();
-	auto postEffect = twRenderer->CreatePostEffecthDrawable();
-	postEffect->AddMaterial(twResourceManager->GetMaterial("Extract"));
-	postEffect->AddMaterial(twResourceManager->GetMaterial("Blur"));
-	float screenHeight = twWindow->GetScreenHeight();
-	float screenWidth = twWindow->GetScreenWidth();
-	float strength = 2.0f;
+	//{
+	//	auto entity = m_pWorld->CreateEntity();
+	//	entity->m_Transform.SetPosition(0, 0, 0);
+	//	entity->m_Transform.SetScale(500, 500, 500);
+	//	triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
+	//	mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_cube");
+	//	mesh->m_D3DStates.m_pRasterizerState = twGraphic->CreateRasterizerState(D3D11_CULL_NONE, D3D11_FILL_SOLID);
+	//	mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
+	//	entity->SetDrawable(mesh);
+	//	m_pWorld->AddEntity(entity);
+	//}
 
-	postEffect->m_Materials[1].m_ConstantBuffer.SetValueInBuffer(4, &screenWidth);
-	postEffect->m_Materials[1].m_ConstantBuffer.SetValueInBuffer(5, &screenHeight);
-	postEffect->m_Materials[1].m_ConstantBuffer.SetValueInBuffer(6, &strength);
+	//auto entityBloom = m_pWorld->CreateEntity();
+	//auto postEffect = twRenderer->CreatePostEffecthDrawable();
+	//postEffect->AddMaterial(twResourceManager->GetMaterial("Extract"));
+	//postEffect->AddMaterial(twResourceManager->GetMaterial("Blur"));
+	//float screenHeight = twWindow->GetScreenHeight();
+	//float screenWidth = twWindow->GetScreenWidth();
+	//float strength = 2.0f;
 
-	postEffect->AddMaterial(twResourceManager->GetMaterial("Bloom"));
-	postEffect->m_Materials[2].m_pPixelShader.SetTexture(1, twRenderer->GetRenderTarget(0)->GetSceneTexture());
-	entityBloom->SetDrawable(postEffect);
-	m_pWorld->AddEntity(entityBloom);
+	//postEffect->m_Materials[1].m_ConstantBuffer.SetValueInBuffer(4, &screenWidth);
+	//postEffect->m_Materials[1].m_ConstantBuffer.SetValueInBuffer(5, &screenHeight);
+	//postEffect->m_Materials[1].m_ConstantBuffer.SetValueInBuffer(6, &strength);
+
+	//postEffect->AddMaterial(twResourceManager->GetMaterial("Bloom"));
+	//postEffect->m_Materials[2].m_pPixelShader.SetTexture(1, twRenderer->GetRenderTarget(0)->GetSceneTexture());
+	//entityBloom->SetDrawable(postEffect);
+	//m_pWorld->AddEntity(entityBloom);
 }
 
 void CDebugScene::CreateDebugFont()
