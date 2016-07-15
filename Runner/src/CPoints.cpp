@@ -20,6 +20,8 @@ CPoints::~CPoints()
 
 void CPoints::Start()
 {
+    static_cast<triebWerk::CMeshDrawable*>(m_pEntity->GetDrawable())->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &(Color[m_AmountID]));
+
     m_RotateSpeedX = twRandom::GetNumber(MinRotateSpeed, MaxRotateSpeed);
     m_RotateSpeedY = twRandom::GetNumber(MinRotateSpeed, MaxRotateSpeed);
     m_RotateSpeedZ = twRandom::GetNumber(MinRotateSpeed, MaxRotateSpeed);

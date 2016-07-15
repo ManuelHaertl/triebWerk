@@ -1,5 +1,6 @@
 #include <CFont.h>
 
+#include <iostream>
 #include <cmath>
 #include <CFontFace.h>
 #include <CGraphics.h>
@@ -184,30 +185,40 @@ void triebWerk::CFont::DrawAllLetterInBuffer(int a_PenX, int a_PenY)
         if (error)
             continue;
 
+        std::cout << m_AllLetter[i];
         SLetterCoordinate& letterCoordinate = m_LetterCoordinates[i];
         letterCoordinate.uBegin = (float)a_PenX / fWidth;
         letterCoordinate.vBegin = 0.0f;
 
+        int width;
         DrawSingleLetter(
             &glyph->bitmap,
             a_PenX + glyph->bitmap_left,
-            a_PenY - glyph->bitmap_top);
+            a_PenY - glyph->bitmap_top,
+            width);
 
-        int width = glyph->advance.x >> 6;
+        width = glyph->advance.x >> 6;
         a_PenX += width;
 
-        letterCoordinate.width = width;
-        letterCoordinate.height = m_Height;
+        std::cout << " " << width << std::endl;
+
+        letterCoordinate.width = (float)width;
+        letterCoordinate.height = (float)m_Height;
         letterCoordinate.uEnd = (float)a_PenX / fWidth;
         letterCoordinate.vEnd = 1.0f;
     }
 }
 
-void triebWerk::CFont::DrawSingleLetter(FT_Bitmap* a_pBitmap, FT_Int a_X, FT_Int a_Y)
+void triebWerk::CFont::DrawSingleLetter(FT_Bitmap* a_pBitmap, FT_Int a_X, FT_Int a_Y, int& a_rWidth)
 {
     FT_Int  i, j, p, q;
     FT_Int  x_max = a_X + a_pBitmap->width;
     FT_Int  y_max = a_Y + a_pBitmap->rows;
+
+    bool left = false;
+    bool right = false;
+    int leftX = 0;
+    int rightX = 0;
 
     for (i = a_X, p = 0; i < x_max; i++, p++)
     {
@@ -216,10 +227,33 @@ void triebWerk::CFont::DrawSingleLetter(FT_Bitmap* a_pBitmap, FT_Int a_X, FT_Int
             if (i < 0 || j < 0 || i >= m_Width || j >= m_Height)
                 continue;
 
+            if (left == false)
+            {
+                left = true;
+                leftX = i;
+            }
+            else if (i < leftX)
+            {
+                leftX = i;
+            }
+
+            if (right == false)
+            {
+                right = true;
+                rightX = i;
+            }
+            else if (i > rightX)
+            {
+                rightX = i;
+            }
+
             size_t cur = j * m_Width + i;
             m_pBuffer[cur] |= a_pBitmap->buffer[q * a_pBitmap->width + p];
         }
     }
+
+    a_rWidth = rightX - leftX;
+    std::cout << " " << a_rWidth;
 }
 
 void triebWerk::CFont::CreateTexture()

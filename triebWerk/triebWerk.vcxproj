@@ -201,6 +201,9 @@
     <ClCompile Include="src\CTime.cpp" />
     <ClCompile Include="src\CTMXParser.cpp" />
     <ClCompile Include="src\CTransform.cpp" />
+    <ClCompile Include="src\CUIEntity.cpp" />
+    <ClCompile Include="src\CUITransform.cpp" />
+    <ClCompile Include="src\CUIWorld.cpp" />
     <ClCompile Include="src\CVertexShader.cpp" />
     <ClCompile Include="src\CWindow.cpp" />
     <ClCompile Include="src\CWorld.cpp" />
@@ -273,6 +276,9 @@
     <ClInclude Include="include\CTime.h" />
     <ClInclude Include="include\CTMXParser.h" />
     <ClInclude Include="include\CTransform.h" />
+    <ClInclude Include="include\CUIEntity.h" />
+    <ClInclude Include="include\CUITransform.h" />
+    <ClInclude Include="include\CUIWorld.h" />
     <ClInclude Include="include\CVertexShader.h" />
     <ClInclude Include="include\CWindow.h" />
     <ClInclude Include="include\CWorld.h" />
@@ -296,6 +302,7 @@
     <ClInclude Include="include\IScene.h" />
     <ClInclude Include="include\IShader.h" />
     <ClInclude Include="include\SEngineConfiguration.h" />
+    <ClInclude Include="include\SUIScreenInformation.h" />
     <ClInclude Include="src\CResourceManager.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

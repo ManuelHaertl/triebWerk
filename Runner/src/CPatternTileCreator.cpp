@@ -189,8 +189,7 @@ void CPatternTileCreator::CreatePoints(const size_t a_Amount)
     mesh->m_pMesh = m_pPoints;
     mesh->m_D3DStates.m_pRasterizerState = twGraphic->CreateRasterizerState(D3D11_CULL_BACK, D3D11_FILL_WIREFRAME);
     mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
-    mesh->m_Material.SetMaterial(m_pMaterialStandardTexture);
-    mesh->m_Material.m_pPixelShader.SetTexture(0, m_pTexturePoints);
+    mesh->m_Material.SetMaterial(m_pMaterialStandardColor);
     m_pEntity1->SetDrawable(mesh);
 
     // Physic

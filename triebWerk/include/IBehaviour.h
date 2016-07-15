@@ -4,11 +4,13 @@
 namespace triebWerk
 {
     class CEntity;
+    class CUIEntity;
 
     class IBehaviour
     {
     public:
         CEntity* m_pEntity;
+        CUIEntity* m_pUIEntity;
 
     public:
         IBehaviour();

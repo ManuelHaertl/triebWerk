@@ -29,7 +29,7 @@ namespace triebWerk
     private:
         std::string m_Text;
         float m_LineSpacing;
-        int m_Width, m_Height;
+        float m_Width, m_Height;
 
     public:
         CText();

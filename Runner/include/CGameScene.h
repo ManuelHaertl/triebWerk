@@ -15,6 +15,8 @@ private:
     CPlayer* m_pPlayer;
     float m_LastPlayerPos;
 
+    triebWerk::CText* m_pPoints;
+
 public:
     CGameScene();
     ~CGameScene();

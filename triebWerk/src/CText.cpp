@@ -83,19 +83,19 @@ void triebWerk::CText::CreateLetterInfo()
 
     CalculateWidthAndHeight();
 
-    int currentWidth = m_Width / -2;
-    int currentHeight = m_Height / -2;
+    float currentWidth = 0.0f;
+    float currentHeight = 0.0f;
 
     for (size_t i = 0; i < m_LetterCount; ++i)
     {
         SLetterCoordinate letter = m_pFont->m_LetterCoordinates[m_Text[i]];
-        currentWidth += letter.width / 2;
 
         m_pLetterInfo[i].letterCoordinate = letter;
         m_pLetterInfo[i].offsetX = currentWidth;
         m_pLetterInfo[i].offsetY = currentHeight;
 
-        if (i + 1< m_LetterCount)
+        currentWidth += m_pFont->m_LetterCoordinates[m_Text[i]].width / 2;
+        if (i + 1 < m_LetterCount)
             currentWidth += m_pFont->m_LetterCoordinates[m_Text[i + 1]].width / 2;
     }
 
@@ -104,7 +104,7 @@ void triebWerk::CText::CreateLetterInfo()
 
 void triebWerk::CText::CalculateWidthAndHeight()
 {
-    m_Width = 0;
+    m_Width = 0.0f;
     m_Height = m_pFont->m_LetterCoordinates[m_Text[0]].height;
 
     for (size_t i = 0; i < m_LetterCount; ++i)
