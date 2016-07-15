@@ -3,9 +3,9 @@
 #include <CGameInfo.h>
 #include <CPostEffects.h>
 
-CGameScene::CGameScene() :
-    m_pPlayer(nullptr),
-    m_LastPlayerPos(0.0f)
+CGameScene::CGameScene()
+    : m_pPlayer(nullptr)
+    , m_LastPlayerPos(0.0f)
 {
 }
 
@@ -22,7 +22,7 @@ void CGameScene::Start()
     m_EnvironmentCreator.Start();
     m_PatternManager.Start();
     CreatePlayer();
-    CreateText();
+    //CreateText();
 
     auto entity = twActiveWorld->CreateEntity();
     entity->SetBehaviour(new CPostEffects());
@@ -42,6 +42,7 @@ void CGameScene::Update()
         CGameInfo::Instance().Reset();
     }
 
+
     //std::string points =
     //    "Total: " +
     //    std::to_string(CGameInfo::Instance().m_TotalPoints) +
@@ -53,6 +54,9 @@ void CGameScene::Update()
     //    std::to_string(CGameInfo::Instance().m_Difficulty);
     //
     //m_pPoints->Update(points, nullptr, 0);
+
+
+    //m_pPoints->SetText(std::to_string(CGameInfo::Instance().m_CurrentPoints));
 
     if (twKeyboard.IsState(triebWerk::EKey::F3, triebWerk::EButtonState::Down))
     {
@@ -136,4 +140,18 @@ void CGameScene::CreatePlayer()
 
 void CGameScene::CreateText()
 {
+    auto font = twFontManager->LoadFont(twResourceManager->GetFontFace("Rubik-Regular"), 40);
+    m_pPoints = twFontManager->CreateText();
+    m_pPoints->Set(font, "Points: 0", 1.0f);
+
+    auto entity = m_pWorld->CreateEntity();
+    entity->m_Transform.SetPosition(-400.0f, 0.0f, 0.0f);
+
+    auto fontDraw = twRenderer->CreateFontDrawable();
+    fontDraw->m_pText = m_pPoints;
+    fontDraw->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardFont"));
+    fontDraw->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+
+    entity->SetDrawable(fontDraw);
+    m_pWorld->AddEntity(entity);
 }

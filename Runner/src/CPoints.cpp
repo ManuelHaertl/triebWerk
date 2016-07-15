@@ -2,8 +2,11 @@
 
 #include <CCollectedPoint.h>
 
-CPoints::CPoints()
-    : m_RotateSpeedX(0.0f)
+DirectX::XMFLOAT3 CPoints::Color[3] = { DirectX::XMFLOAT3(1.0f, 1.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f), DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f) };
+
+CPoints::CPoints(const size_t a_AmountID)
+    : m_AmountID(a_AmountID)
+    , m_RotateSpeedX(0.0f)
     , m_RotateSpeedY(0.0f)
     , m_RotateSpeedZ(0.0f)
     , m_pSphere(nullptr)
@@ -17,6 +20,8 @@ CPoints::~CPoints()
 
 void CPoints::Start()
 {
+    static_cast<triebWerk::CMeshDrawable*>(m_pEntity->GetDrawable())->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &(Color[m_AmountID]));
+
     m_RotateSpeedX = twRandom::GetNumber(MinRotateSpeed, MaxRotateSpeed);
     m_RotateSpeedY = twRandom::GetNumber(MinRotateSpeed, MaxRotateSpeed);
     m_RotateSpeedZ = twRandom::GetNumber(MinRotateSpeed, MaxRotateSpeed);
@@ -57,14 +62,18 @@ void CPoints::Collected()
     mesh->m_Material.m_pGeometryShader.SetTexture(0, twResourceManager->GetTexture2D("t_noise"));
 	mesh->m_D3DStates.m_pRasterizerState = twEngine.m_pGraphics->CreateRasterizerState(D3D11_CULL_NONE, D3D11_FILL_WIREFRAME);
 
-    DirectX::XMFLOAT3 color = { 1.0f, 1.0f, 0.0f };
     int speed = 0;
-    mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &color);
+    mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &(Color[m_AmountID]));
     mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &speed);
 
     entity->SetDrawable(mesh);
     entity->SetBehaviour(new CCollectedPoint());
     twActiveWorld->AddEntity(entity);
+}
+
+int CPoints::GetPointAmount() const
+{
+    return Points[m_AmountID];
 }
 
 void CPoints::CreateSphere()
@@ -81,7 +90,7 @@ void CPoints::CreateSphere()
     mesh->m_pMesh = twResourceManager->GetMesh("ms_sphere");
     mesh->m_Material.SetMaterial(twResourceManager->GetMaterial("Sun"));
     mesh->m_Material.m_pVertexShader.SetTexture(0, twResourceManager->GetTexture2D("t_whitenoise"));
-    mesh->m_Material.m_pVertexShader.SetInstanceData(4, &DirectX::XMFLOAT3(1.0f, 1.0f, 0.0f), 12);
+    mesh->m_Material.m_pVertexShader.SetInstanceData(4, &(Color[m_AmountID]), 12);
     m_pSphere->SetDrawable(mesh);
 
     m_pSphereBuffer = &mesh->m_Material.m_ConstantBuffer;

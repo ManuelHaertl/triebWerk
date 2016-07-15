@@ -97,8 +97,14 @@ void CPatternTileCreator::CreateEntity(const SPatternTile& a_rTile, const float 
     case ETileType::Checkpoint:
         CreateCheckpoint();
         break;
-    case ETileType::Points:
-        CreatePoints();
+    case ETileType::Points1:
+        CreatePoints(0);
+        break;
+    case ETileType::Points2:
+        CreatePoints(1);
+        break;
+    case ETileType::Points3:
+        CreatePoints(2);
         break;
     case ETileType::Shield:
         CreateShield();
@@ -169,7 +175,7 @@ void CPatternTileCreator::CreateCheckpoint()
     m_pEntity1->SetBehaviour(new CCheckpoint());
 }
 
-void CPatternTileCreator::CreatePoints()
+void CPatternTileCreator::CreatePoints(const size_t a_Amount)
 {
     // ID
     m_pEntity1->m_ID.SetName("Points");
@@ -183,8 +189,7 @@ void CPatternTileCreator::CreatePoints()
     mesh->m_pMesh = m_pPoints;
     mesh->m_D3DStates.m_pRasterizerState = twGraphic->CreateRasterizerState(D3D11_CULL_BACK, D3D11_FILL_WIREFRAME);
     mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
-    mesh->m_Material.SetMaterial(m_pMaterialStandardTexture);
-    mesh->m_Material.m_pPixelShader.SetTexture(0, m_pTexturePoints);
+    mesh->m_Material.SetMaterial(m_pMaterialStandardColor);
     m_pEntity1->SetDrawable(mesh);
 
     // Physic
@@ -196,7 +201,7 @@ void CPatternTileCreator::CreatePoints()
     m_pEntity1->SetPhysicEntity(physicEntity);
 
     // Behaviour
-    m_pEntity1->SetBehaviour(new CPoints());
+    m_pEntity1->SetBehaviour(new CPoints(a_Amount));
 }
 
 void CPatternTileCreator::CreateShield()

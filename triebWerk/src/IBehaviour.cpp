@@ -1,7 +1,8 @@
 #include <IBehaviour.h>
 
-triebWerk::IBehaviour::IBehaviour() :
-    m_pEntity(nullptr)
+triebWerk::IBehaviour::IBehaviour()
+    : m_pEntity(nullptr)
+    , m_pUIEntity(nullptr)
 {
 }
 

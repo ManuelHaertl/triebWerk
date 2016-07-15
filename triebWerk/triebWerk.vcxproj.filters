@@ -235,6 +235,12 @@
     <Filter Include="Quelldateien\Resource\Resources\Audio">
       <UniqueIdentifier>{c517ebf9-9d5c-46b2-955f-613253a08ca1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headerdateien\UI">
+      <UniqueIdentifier>{5b07e42e-bbbe-4da4-af2e-fcdb071837a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\UI">
+      <UniqueIdentifier>{6a0d434f-1d61-4a9b-a9a3-9d7e462a6e15}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CEngine.cpp">
@@ -449,6 +455,15 @@
     </ClCompile>
     <ClCompile Include="src\CDDSParser.cpp">
       <Filter>Quelldateien\Resource\Parser</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CUIWorld.cpp">
+      <Filter>Quelldateien\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CUITransform.cpp">
+      <Filter>Quelldateien\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CUIEntity.cpp">
+      <Filter>Quelldateien\UI</Filter>
     </ClCompile>
     <ClCompile Include="src\CUIDrawable.cpp">
       <Filter>Quelldateien\Rendering\Drawables</Filter>
@@ -706,6 +721,18 @@
     </ClInclude>
     <ClInclude Include="include\CDDSParser.h">
       <Filter>Headerdateien\Resource\Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CUIWorld.h">
+      <Filter>Headerdateien\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CUIEntity.h">
+      <Filter>Headerdateien\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CUITransform.h">
+      <Filter>Headerdateien\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SUIScreenInformation.h">
+      <Filter>Headerdateien\UI</Filter>
     </ClInclude>
     <ClInclude Include="include\CUIDrawable.h">
       <Filter>Headerdateien\Rendering\Drawables</Filter>

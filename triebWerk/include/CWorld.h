@@ -1,6 +1,4 @@
 #pragma once
-#include <vector>
-
 #include <CElementContainer.h>
 #include <CFrameContainer.h>
 #include <CEntity.h>

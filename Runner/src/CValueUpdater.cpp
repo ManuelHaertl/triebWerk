@@ -6,6 +6,8 @@
 #include <CGameInfo.h>
 #include <CPatternManager.h>
 #include <CPlayer.h>
+#include <CPoints.h>
+#include <CPostEffects.h>
 
 float CPlayer::Acceleration = 250.0f;
 float CPlayer::Drag = 150.0f;
@@ -46,6 +48,14 @@ float CDifficultyChanger::ScoreDifficulty5 = 4000.0f;
 float CDifficultyChanger::SpeedRaiseTime = 60.0f;
 float CDifficultyChanger::AddedSpeed = 5.0f;
 float CDifficultyChanger::MaxSpeed = 85.0f;
+
+int CPoints::Points[3] = { 10, 20, 50 };
+
+float CPostEffects::ChromaticAberrationStrength = 0.8f;
+float CPostEffects::CheckpointEffectLength = 0.2f;
+float CPostEffects::CheckpointEffectStrength = 1.5f;
+float CPostEffects::DodgeEffectStrength = 10.0f;
+float CPostEffects::DodgeEffectLength = 2.0f;
 
 CValueUpdater::CValueUpdater() :
     m_pValues(nullptr)
@@ -115,10 +125,15 @@ void CValueUpdater::UpdateValues()
         else if (value.first == "pl_DodgeTime")
         {
             CPlayer::DodgeTime = std::stof(value.second);
+            CPostEffects::DodgeEffectLength = CPlayer::DodgeTime;
         }
         else if (value.first == "pl_DodgeCooldown")
         {
             CPlayer::DodgeCooldown = std::stof(value.second);
+        }
+        else if (value.first == "pl_DodgeEffectStrength")
+        {
+            CPostEffects::DodgeEffectStrength = std::stof(value.second);
         }
         else if (value.first == "pl_ShieldTime")
         {
@@ -145,6 +160,12 @@ void CValueUpdater::UpdateValues()
             CPlayer::GodMode = std::stoi(value.second);
         }
 
+        // PostEffects
+        else if (value.first == "pe_ChromaticAberrationStrength")
+        {
+            CPostEffects::ChromaticAberrationStrength = std::stof(value.second);
+        }
+
         // Checkpoints
         else if (value.first == "cp_AddedMultiplicator")
         {
@@ -153,6 +174,14 @@ void CValueUpdater::UpdateValues()
         else if (value.first == "cp_HighestMultiplicator")
         {
             CCheckpoint::HighestMultiplier = std::stof(value.second);
+        }
+        else if (value.first == "cp_EffectLength")
+        {
+            CPostEffects::CheckpointEffectLength = std::stof(value.second);
+        }
+        else if (value.first == "cp_EffectStrength")
+        {
+            CPostEffects::CheckpointEffectStrength = std::stof(value.second);
         }
 
         // Difficulty Changer

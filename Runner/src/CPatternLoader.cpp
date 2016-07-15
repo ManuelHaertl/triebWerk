@@ -139,8 +139,12 @@ ETileType::Type CPatternLoader::GetTileType(const short a_Tile) const
         return ETileType::ModelSize;
     case ETileType::Checkpoint:
         return ETileType::Checkpoint;
-    case ETileType::Points:
-        return ETileType::Points;
+    case ETileType::Points1:
+        return ETileType::Points1;
+    case ETileType::Points2:
+        return ETileType::Points2;
+    case ETileType::Points3:
+        return ETileType::Points3;
     case ETileType::Shield:
         return ETileType::Shield;
     case ETileType::Block1x1:

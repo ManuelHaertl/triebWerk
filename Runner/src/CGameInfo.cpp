@@ -7,6 +7,8 @@ CGameInfo::CGameInfo()
     , m_Multiplier(1.0f)
     , m_PointsPerMeter(0.5f)
     , m_StartFlySpeed(60.0f)
+    , m_EffectCheckpoint(false)
+    , m_EffectDodge(false)
 {
     
 }
@@ -28,4 +30,6 @@ void CGameInfo::Reset()
     m_TotalPoints = 0;
     m_CurrentPoints = 0;
     m_Multiplier = 1.0f;
+    m_EffectCheckpoint = false;
+    m_EffectDodge = false;
 }
