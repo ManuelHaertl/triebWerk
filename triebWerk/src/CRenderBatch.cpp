@@ -8,7 +8,8 @@ triebWerk::CRenderBatch::CRenderBatch() :
 	m_OpaqueMeshCounter(0),
 	m_TransparentMeshCounter(0),
 	m_InstancedMeshBatchCount(0),
-	m_FontCommandCount(0)
+	m_FontCommandCount(0),
+	m_UIElementCount(0)
 {
 
 }
@@ -24,6 +25,7 @@ void triebWerk::CRenderBatch::Create(CGraphics * a_pGraphics)
 	m_pOpaqueMeshBuffer = new CMeshDrawable*[m_MaxDrawables];
 	m_pInstancedMeshBuffer = new CInstancedMeshBatch[m_MaxInstancedMeshBatch];
 	m_pFontBuffer = new CFontDrawable*[m_MaxFonts];
+	m_pUIBuffer = new CUIDrawable*[m_MaxUIElements];
 
 	//Initialize the InstancedBatches for later use
 	for (size_t i = 0; i < m_MaxInstancedMeshBatch; i++)
@@ -42,6 +44,8 @@ void triebWerk::CRenderBatch::Free()
 		delete[] m_pInstancedMeshBuffer;
 	if (m_pFontBuffer != nullptr)
 		delete[] m_pFontBuffer;
+	if (m_pUIBuffer != nullptr)
+		delete[] m_pUIBuffer;
 }
 
 void triebWerk::CRenderBatch::Reset()
@@ -51,4 +55,5 @@ void triebWerk::CRenderBatch::Reset()
 	m_TransparentMeshCounter = 0;
 	m_InstancedMeshBatchCount = 0;
 	m_FontCommandCount = 0;
+	m_UIElementCount = 0;
 }

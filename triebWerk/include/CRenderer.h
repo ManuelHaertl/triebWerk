@@ -10,6 +10,7 @@
 #include <CFontDrawable.h>
 #include <CRenderBatch.h>
 #include <CPostEffectDrawable.h>
+#include <CUIDrawable.h>
 
 namespace triebWerk
 {
@@ -77,6 +78,9 @@ namespace triebWerk
 		//Creates a new mesh drawable.
 		//Renderer handles ownership
 		CPostEffectDrawable* CreatePostEffecthDrawable();
+		//Creates a new mesh drawable.
+		//Renderer handles ownership
+		CUIDrawable* CreateUIDrawable();
 		//--------------------------------------
 
 		//World Functions
@@ -120,10 +124,16 @@ namespace triebWerk
 		void RenderInstancedMeshBatch(size_t a_Index);
 		//--------------------------------------
 		
-		//MeshDrawable
+		//Font
 		//--------------------------------------
 		//Render the font buffer
 		void RenderFont(CFontDrawable* a_pFont);
+		//--------------------------------------
+
+		//Font
+		//--------------------------------------
+		//Render the font buffer
+		void RenderUI(CUIDrawable* a_pUI);
 		//--------------------------------------
 	};
 }

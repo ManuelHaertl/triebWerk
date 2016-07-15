@@ -450,6 +450,9 @@
     <ClCompile Include="src\CDDSParser.cpp">
       <Filter>Quelldateien\Resource\Parser</Filter>
     </ClCompile>
+    <ClCompile Include="src\CUIDrawable.cpp">
+      <Filter>Quelldateien\Rendering\Drawables</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\CEngine.h">
@@ -703,6 +706,9 @@
     </ClInclude>
     <ClInclude Include="include\CDDSParser.h">
       <Filter>Headerdateien\Resource\Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CUIDrawable.h">
+      <Filter>Headerdateien\Rendering\Drawables</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

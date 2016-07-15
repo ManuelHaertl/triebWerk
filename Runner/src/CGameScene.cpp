@@ -136,8 +136,4 @@ void CGameScene::CreatePlayer()
 
 void CGameScene::CreateText()
 {
-    auto font = twFontManager->LoadFont(twResourceManager->GetFontFace("Rubik-Regular"), 12);
-
-    auto text = twFontManager->CreateText();
-    text->Set(font, "Hallo", 1.0f);
 }

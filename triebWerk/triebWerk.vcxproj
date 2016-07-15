@@ -201,6 +201,7 @@
     <ClCompile Include="src\CTime.cpp" />
     <ClCompile Include="src\CTMXParser.cpp" />
     <ClCompile Include="src\CTransform.cpp" />
+    <ClCompile Include="src\CUIDrawable.cpp" />
     <ClCompile Include="src\CVertexShader.cpp" />
     <ClCompile Include="src\CWindow.cpp" />
     <ClCompile Include="src\CWorld.cpp" />
@@ -273,6 +274,7 @@
     <ClInclude Include="include\CTime.h" />
     <ClInclude Include="include\CTMXParser.h" />
     <ClInclude Include="include\CTransform.h" />
+    <ClInclude Include="include\CUIDrawable.h" />
     <ClInclude Include="include\CVertexShader.h" />
     <ClInclude Include="include\CWindow.h" />
     <ClInclude Include="include\CWorld.h" />
