@@ -45,7 +45,7 @@ void CEnvironmentCreator::Start()
     CreateBackground();
     CreateGrid();
     CreateSnakeLoops();
-    CreateFog();
+    //CreateFog();
 }
 
 void CEnvironmentCreator::Update(const float a_MetersFlewn)
@@ -250,7 +250,7 @@ void CEnvironmentCreator::CreateGrid()
         mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_grid");
         mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
         mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("WireframeGrid"));
-        mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
+        mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(1.0f, 0.0f, 1.0f));
         mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
         entity->SetDrawable(mesh);
 

@@ -14,6 +14,8 @@ triebWerk::CFontDrawable::~CFontDrawable()
 {
 	if (m_pText != nullptr)
 		delete m_pText;
+	if (m_pVertexBuffer != nullptr)
+		m_pVertexBuffer;
 }
 
 void triebWerk::CFontDrawable::SetText(CText * a_pText)

@@ -232,6 +232,7 @@
     <ClInclude Include="include\CFontDrawable.h" />
     <ClInclude Include="include\CGeometryShader.h" />
     <ClInclude Include="include\CInstancedFontBatch.h" />
+    <ClInclude Include="include\SafeDeletes.h" />
     <ClInclude Include="include\CPostEffectDrawable.h" />
     <ClInclude Include="include\CRenderBatch.h" />
     <ClInclude Include="include\CRenderTarget.h" />

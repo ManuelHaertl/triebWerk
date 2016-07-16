@@ -9,6 +9,7 @@ CGameInfo::CGameInfo()
     , m_StartFlySpeed(60.0f)
     , m_EffectCheckpoint(false)
     , m_EffectDodge(false)
+	, m_EffectShield(false)
 {
     
 }

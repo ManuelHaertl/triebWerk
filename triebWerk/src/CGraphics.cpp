@@ -1,21 +1,27 @@
 #include <CGraphics.h>
 #include <iostream>
 #include <CEngine.h>
-#include <CMeshDrawable.h>
+#include <SafeDeletes.h>
 
-triebWerk::CGraphics::CGraphics() :
-	m_IsFullscreen(false),
-	m_IsVSynced(false),
-	m_pDepthStencilBuffer(nullptr),
-	m_pDepthStencilState(nullptr),
-	m_pDevice(nullptr),
-	m_pDepthStencilView(nullptr),
-	m_pDeviceContext(nullptr),
-	m_pInputLayout(nullptr),
-	m_pRasterState(nullptr),
-	m_pRenderTargetView(nullptr),
-	m_pSwapChain(nullptr),
-	m_pBlendState(nullptr)
+triebWerk::CGraphics::CGraphics()
+	: m_IsVSynced(false)
+	, m_IsFullscreen(false)
+	, m_pSwapChain(nullptr)
+	, m_pBackBufferTexture(nullptr)
+	, m_pDevice(nullptr)
+	, m_pDeviceContext(nullptr)
+	, m_pRenderTargetView(nullptr)
+	, m_pDepthStencilBuffer(nullptr)
+	, m_pDepthStencilView(nullptr)
+	, m_pCullNoneDefaultRasterizerState(nullptr)
+	, m_pWireframeDefaultRasterizerState(nullptr)
+	, m_pDefaultRasterizerState(nullptr)
+	, m_pDepthStencilState(nullptr)
+	, m_pBlendState(nullptr)
+	, m_pSamplerState(nullptr)
+	, m_Numerator(0)
+	, m_Denominator(0)
+	, m_VideoCardMemory(0)
 {
 	//default clear color
 	SetClearColor(0.2f, 0.2f, 0.2f, 1.0f);
@@ -27,21 +33,79 @@ triebWerk::CGraphics::~CGraphics()
 
 bool triebWerk::CGraphics::Initialize(HWND & a_rWindowHandle, const unsigned int a_ScreenWidth, const unsigned int a_ScreenHeight, const bool a_Fullscreen, const bool a_VSync)
 {
-	SetDisplayProperties();
+	bool result = false;
 
-	//Note: This value will not be use because the msdn documentation says that you shouldnt initialize the swapchain in fullscreen
-	//instead of use the resize buffer function
 	m_IsFullscreen = a_Fullscreen;
 	m_IsVSynced = a_VSync;
 
-	HRESULT result;
-	DXGI_SWAP_CHAIN_DESC swapChainDesc;
-	D3D11_TEXTURE2D_DESC depthBufferDesc;
-	D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
-	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
-	D3D11_RASTERIZER_DESC rasterDesc;
-	D3D11_VIEWPORT viewport;
+	m_WindowObjectHandle = a_rWindowHandle;
 
+	SetDisplayProperties();
+
+	//Create and initialize the device and swapchain
+	result = CreateSwapChain(a_ScreenWidth, a_ScreenHeight);
+	if (result == false)
+	{
+		DebugLogfile.LogfText(CDebugLogfile::ELogType::Error, false, "Error: Could not create the swapchain or device!");
+		return false;
+	}
+
+	//Create and initialize the depth buffer related objects
+	result = CreateDepthBuffer(a_ScreenWidth, a_ScreenHeight);
+	if (result == false)
+	{
+		DebugLogfile.LogfText(CDebugLogfile::ELogType::Error, false, "Error: Could not create the depth buffer!");
+		return false;
+	}
+
+
+	//If the depth buffer and the swapchain were successfully created set the rendertarget
+	m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
+
+
+	//Create and set the rasterizer state
+	result = CreateDefaultRasterizerStates();
+	if (result == false)
+	{
+		DebugLogfile.LogfText(CDebugLogfile::ELogType::Error, false, "Error: Could not create rasterizer states!");
+		return false;
+	}
+	m_pDeviceContext->RSSetState(m_pDefaultRasterizerState);
+
+
+	//Create and set the blend state
+	result = CreateDefaultBlendStates();
+	if (result == false)
+	{
+		DebugLogfile.LogfText(CDebugLogfile::ELogType::Error, false, "Error: Could not create the blend states!");
+		return false;
+	}
+	this->m_pDeviceContext->OMSetBlendState(m_pBlendState, 0, 0xffffffff);
+
+	CreateDefaultSamplerStates();
+	if (result == false)
+	{
+		DebugLogfile.LogfText(CDebugLogfile::ELogType::Error, false, "Error: Could not create the sampler states!");
+		return false;
+	}
+	m_pDeviceContext->VSSetSamplers(0, 1, &m_pSamplerState);
+	m_pDeviceContext->PSSetSamplers(0, 1, &m_pSamplerState);
+	m_pDeviceContext->GSSetSamplers(0, 1, &m_pSamplerState);
+	m_pDeviceContext->CSSetSamplers(0, 1, &m_pSamplerState);
+	m_pDeviceContext->HSSetSamplers(0, 1, &m_pSamplerState);
+	m_pDeviceContext->DSSetSamplers(0, 1, &m_pSamplerState);
+
+
+	SetViewport(a_ScreenWidth, a_ScreenHeight);
+
+	return true;
+}
+
+bool triebWerk::CGraphics::CreateSwapChain(const unsigned int a_ScreenWidth, const unsigned int a_ScreenHeight)
+{
+	HRESULT result = NULL;
+
+	DXGI_SWAP_CHAIN_DESC swapChainDesc;
 	// Initialize the swap chain description.
 	ZeroMemory(&swapChainDesc, sizeof(swapChainDesc));
 	swapChainDesc.BufferCount = 1;
@@ -51,7 +115,7 @@ bool triebWerk::CGraphics::Initialize(HWND & a_rWindowHandle, const unsigned int
 	swapChainDesc.BufferDesc.RefreshRate.Numerator = m_Numerator;
 	swapChainDesc.BufferDesc.RefreshRate.Denominator = m_Denominator;
 	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	swapChainDesc.OutputWindow = a_rWindowHandle;
+	swapChainDesc.OutputWindow = m_WindowObjectHandle;
 	swapChainDesc.Windowed = true;
 	swapChainDesc.SampleDesc.Count = 1;
 	swapChainDesc.SampleDesc.Quality = 0;
@@ -64,34 +128,37 @@ bool triebWerk::CGraphics::Initialize(HWND & a_rWindowHandle, const unsigned int
 		NULL,
 		D3D_DRIVER_TYPE_HARDWARE,
 		NULL,
-		0,
+		TW_CREATE_DEVICE_FLAG,
 		&ENGINE_FEATURE_LEVEL,
-		1,
+		SUPPORTED_FEATURE_LEVEL_COUNT,
 		D3D11_SDK_VERSION,
 		&swapChainDesc,
 		&m_pSwapChain,
 		&m_pDevice,
-		NULL,
+		&m_SupportedFeatureLevels,
 		&m_pDeviceContext);
-	
-	if (FAILED(result))
-	{
-		DebugLogfile.LogfText(CDebugLogfile::ELogType::Error, false, "Error: Swapchain coud not be created!");
-		return false;
-	}
 
+	if (FAILED(result))
+		return false;
 
 	result = m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&m_pBackBufferTexture);
 	if (FAILED(result))
 		return false;
 
-	//Create render target view 
 	result = m_pDevice->CreateRenderTargetView(m_pBackBufferTexture, NULL, &m_pRenderTargetView);
 	if (FAILED(result))
 		return false;
 
+	return true;
+}
+
+bool triebWerk::CGraphics::CreateDepthBuffer(const unsigned int a_ScreenWidth, const unsigned int a_ScreenHeight)
+{
+	HRESULT result = NULL;
+
+	D3D11_TEXTURE2D_DESC depthBufferDesc;
 	//Set up the description of the depth buffer
-	ZeroMemory(&depthBufferDesc, sizeof(depthBufferDesc));
+	ZeroMemory(&depthBufferDesc, sizeof(D3D11_TEXTURE2D_DESC));
 	depthBufferDesc.Width = a_ScreenWidth;
 	depthBufferDesc.Height = a_ScreenHeight;
 	depthBufferDesc.MipLevels = 1;
@@ -108,8 +175,9 @@ bool triebWerk::CGraphics::Initialize(HWND & a_rWindowHandle, const unsigned int
 	if (FAILED(result))
 		return false;
 
+	D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
 	// Initialize the description of the stencil state.
-	ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
+	ZeroMemory(&depthStencilDesc, sizeof(D3D11_DEPTH_STENCIL_DESC));
 	depthStencilDesc.DepthEnable = true;
 	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 	depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
@@ -131,6 +199,7 @@ bool triebWerk::CGraphics::Initialize(HWND & a_rWindowHandle, const unsigned int
 
 	m_pDeviceContext->OMSetDepthStencilState(m_pDepthStencilState, 1);
 
+	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
 	// Initialize the depthStencilViewDesc.
 	ZeroMemory(&depthStencilViewDesc, sizeof(depthStencilViewDesc));
 	depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -141,23 +210,77 @@ bool triebWerk::CGraphics::Initialize(HWND & a_rWindowHandle, const unsigned int
 	if (FAILED(result))
 		return false;
 
-	m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
+	return true;
+}
 
+bool triebWerk::CGraphics::CreateDefaultRasterizerStates()
+{
+	HRESULT result = NULL;
+
+
+	//Default triebWerk rasterizer state which will be used if no other was set
+	D3D11_RASTERIZER_DESC defaultRasterizerState;
 	// Setup the raster state
-	rasterDesc.AntialiasedLineEnable = true;
-	rasterDesc.CullMode = D3D11_CULL_BACK;
-	rasterDesc.DepthBias = 0;
-	rasterDesc.DepthBiasClamp = 0.0f;
-	rasterDesc.DepthClipEnable = true;
-	rasterDesc.FillMode = D3D11_FILL_SOLID;
-	rasterDesc.FrontCounterClockwise = true;
-	rasterDesc.MultisampleEnable = false;
-	rasterDesc.ScissorEnable = false;
-	rasterDesc.SlopeScaledDepthBias = 0.0f;
+	ZeroMemory(&defaultRasterizerState, sizeof(D3D11_RASTERIZER_DESC));
+	defaultRasterizerState.AntialiasedLineEnable = true;
+	defaultRasterizerState.CullMode = D3D11_CULL_BACK;
+	defaultRasterizerState.DepthBias = 0;
+	defaultRasterizerState.DepthBiasClamp = 0.0f;
+	defaultRasterizerState.DepthClipEnable = true;
+	defaultRasterizerState.FillMode = D3D11_FILL_SOLID;
+	defaultRasterizerState.FrontCounterClockwise = true;
+	defaultRasterizerState.MultisampleEnable = false;
+	defaultRasterizerState.ScissorEnable = false;
+	defaultRasterizerState.SlopeScaledDepthBias = 0.0f;
 
-	result = m_pDevice->CreateRasterizerState(&rasterDesc, &m_pRasterState);
+	result = m_pDevice->CreateRasterizerState(&defaultRasterizerState, &m_pDefaultRasterizerState);
 	if (FAILED(result))
 		return false;
+
+	//Default cull none rasterizer state 
+	D3D11_RASTERIZER_DESC defaultCullNoneRasterizerState;
+	// Setup the raster state
+	ZeroMemory(&defaultCullNoneRasterizerState, sizeof(D3D11_RASTERIZER_DESC));
+	defaultCullNoneRasterizerState.AntialiasedLineEnable = true;
+	defaultCullNoneRasterizerState.CullMode = D3D11_CULL_NONE;
+	defaultCullNoneRasterizerState.DepthBias = 0;
+	defaultCullNoneRasterizerState.DepthBiasClamp = 0.0f;
+	defaultCullNoneRasterizerState.DepthClipEnable = true;
+	defaultCullNoneRasterizerState.FillMode = D3D11_FILL_SOLID;
+	defaultCullNoneRasterizerState.FrontCounterClockwise = true;
+	defaultCullNoneRasterizerState.MultisampleEnable = false;
+	defaultCullNoneRasterizerState.ScissorEnable = false;
+	defaultCullNoneRasterizerState.SlopeScaledDepthBias = 0.0f;
+
+	result = m_pDevice->CreateRasterizerState(&defaultCullNoneRasterizerState, &m_pCullNoneDefaultRasterizerState);
+	if (FAILED(result))
+		return false;
+
+	//Default wireframe rasterizer state 
+	D3D11_RASTERIZER_DESC defaultWireframeRasterizerState;
+	// Setup the raster state
+	ZeroMemory(&defaultRasterizerState, sizeof(D3D11_RASTERIZER_DESC));
+	defaultWireframeRasterizerState.AntialiasedLineEnable = true;
+	defaultWireframeRasterizerState.CullMode = D3D11_CULL_NONE;
+	defaultWireframeRasterizerState.DepthBias = 0;
+	defaultWireframeRasterizerState.DepthBiasClamp = 0.0f;
+	defaultWireframeRasterizerState.DepthClipEnable = true;
+	defaultWireframeRasterizerState.FillMode = D3D11_FILL_WIREFRAME;
+	defaultWireframeRasterizerState.FrontCounterClockwise = true;
+	defaultWireframeRasterizerState.MultisampleEnable = false;
+	defaultWireframeRasterizerState.ScissorEnable = false;
+	defaultWireframeRasterizerState.SlopeScaledDepthBias = 0.0f;
+
+	result = m_pDevice->CreateRasterizerState(&defaultWireframeRasterizerState, &m_pWireframeDefaultRasterizerState);
+	if (FAILED(result))
+		return false;
+
+	return true;
+}
+
+bool triebWerk::CGraphics::CreateDefaultBlendStates()
+{
+	HRESULT result = NULL;
 
 	D3D11_BLEND_DESC blendStateDescription;
 	ZeroMemory(&blendStateDescription, sizeof(D3D11_BLEND_DESC));
@@ -173,11 +296,16 @@ bool triebWerk::CGraphics::Initialize(HWND & a_rWindowHandle, const unsigned int
 	blendStateDescription.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
 	result = this->m_pDevice->CreateBlendState(&blendStateDescription, &m_pBlendState);
-	this->m_pDeviceContext->OMSetBlendState(m_pBlendState, 0, 0xffffffff);
+	if (FAILED(result))
+		return false;
 
-	m_pDeviceContext->RSSetState(m_pRasterState);
+	return true;
+}
 
-	
+bool triebWerk::CGraphics::CreateDefaultSamplerStates()
+{
+	HRESULT result = NULL;
+
 	D3D11_SAMPLER_DESC samplerStateDesc;
 	ZeroMemory(&samplerStateDesc, sizeof(D3D11_SAMPLER_DESC));
 	samplerStateDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
@@ -191,12 +319,14 @@ bool triebWerk::CGraphics::Initialize(HWND & a_rWindowHandle, const unsigned int
 	samplerStateDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
 
 	result = m_pDevice->CreateSamplerState(&samplerStateDesc, &m_pSamplerState);
+	if (FAILED(result))
+		return false;
+}
 
-	m_pDeviceContext->VSSetSamplers(0, 1, &m_pSamplerState);
-	m_pDeviceContext->PSSetSamplers(0, 1, &m_pSamplerState);
-
-	//TODO: Move this to the camera
-	// Setup the viewport for rendering.
+void triebWerk::CGraphics::SetViewport(const unsigned int a_ScreenWidth, const unsigned int a_ScreenHeight)
+{
+	D3D11_VIEWPORT viewport;
+	ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));
 	viewport.Width = (float)a_ScreenWidth;
 	viewport.Height = (float)a_ScreenHeight;
 	viewport.MinDepth = 0.0f;
@@ -205,41 +335,23 @@ bool triebWerk::CGraphics::Initialize(HWND & a_rWindowHandle, const unsigned int
 	viewport.TopLeftY = 0.0f;
 
 	m_pDeviceContext->RSSetViewports(1, &viewport);
-
-	return true;
 }
 
 void triebWerk::CGraphics::Shutdown()
 {
-	if (m_pDepthStencilBuffer != nullptr)
-		m_pDepthStencilBuffer->Release();
-	
-	if (m_pDepthStencilState != nullptr)
-		m_pDepthStencilState->Release();
-	
-	if (m_pDepthStencilView != nullptr)
-		m_pDepthStencilView->Release();
-	
-	if (m_pDevice != nullptr)
-		m_pDevice->Release();
-	
-	if (m_pDeviceContext != nullptr)
-		m_pDeviceContext->Release();
-	
-	if (m_pRasterState != nullptr)
-		m_pRasterState->Release();
-
-	if (m_pRenderTargetView != nullptr)
-		m_pRenderTargetView->Release();
-
-	if (m_pSwapChain != nullptr)
-		m_pSwapChain->Release();
-
-	if (m_pBackBufferTexture != nullptr)
-		m_pBackBufferTexture->Release();
-
-	if (m_pInputLayout != nullptr)
-		m_pInputLayout->Release();
+	SafeDirectXRelease(&m_pSwapChain);
+	SafeDirectXRelease(&m_pBackBufferTexture);
+	SafeDirectXRelease(&m_pDevice);
+	SafeDirectXRelease(&m_pDeviceContext);
+	SafeDirectXRelease(&m_pRenderTargetView);
+	SafeDirectXRelease(&m_pDepthStencilBuffer);
+	SafeDirectXRelease(&m_pDepthStencilView);
+	SafeDirectXRelease(&m_pCullNoneDefaultRasterizerState);
+	SafeDirectXRelease(&m_pWireframeDefaultRasterizerState);
+	SafeDirectXRelease(&m_pDefaultRasterizerState);
+	SafeDirectXRelease(&m_pDepthStencilState);
+	SafeDirectXRelease(&m_pBlendState);
+	SafeDirectXRelease(&m_pSamplerState);
 }	
 
 void triebWerk::CGraphics::SetBackBufferRenderTarget()
@@ -261,7 +373,17 @@ void triebWerk::CGraphics::Present()
 
 ID3D11RasterizerState* triebWerk::CGraphics::GetDefaultRasterizerState() const
 {
-	return m_pRasterState;
+	return m_pDefaultRasterizerState;
+}
+
+ID3D11RasterizerState * triebWerk::CGraphics::GetDefaultWireframeRasterizerState() const
+{
+	return m_pWireframeDefaultRasterizerState;
+}
+
+ID3D11RasterizerState * triebWerk::CGraphics::GetDefaultCullNoneRasterizerState() const
+{
+	return m_pCullNoneDefaultRasterizerState;
 }
 
 ID3D11BlendState * triebWerk::CGraphics::GetDefaultBlendState() const
@@ -421,7 +543,7 @@ ID3D11ShaderResourceView * triebWerk::CGraphics::CreateID3D11ShaderResourceViewF
 		return temp;
 }
 
-ID3D11Buffer * triebWerk::CGraphics::CreateVertexBuffer(void* a_pVertexData, size_t a_VertexCount)
+ID3D11Buffer * triebWerk::CGraphics::CreateVertexBuffer(const void* a_pVertexData, const size_t a_VertexCount) const
 {
 	ID3D11Buffer* pVertexBuffer;
 
@@ -444,7 +566,7 @@ ID3D11Buffer * triebWerk::CGraphics::CreateVertexBuffer(void* a_pVertexData, siz
 	return pVertexBuffer;
 }
 
-ID3D11Buffer * triebWerk::CGraphics::CreateIndexBuffer(void * a_pIndexData, size_t a_ByteWidth)
+ID3D11Buffer * triebWerk::CGraphics::CreateIndexBuffer(const void * a_pIndexData, const size_t a_ByteWidth) const
 {
 	ID3D11Buffer* pIndexBuffer;
 
@@ -466,7 +588,7 @@ ID3D11Buffer * triebWerk::CGraphics::CreateIndexBuffer(void * a_pIndexData, size
 	return pIndexBuffer;
 }
 
-ID3D11Buffer * triebWerk::CGraphics::CreateDefaultQuad(UINT* a_pStrideOut, UINT* a_pOutVertexCount)
+ID3D11Buffer * triebWerk::CGraphics::CreateDefaultQuad(UINT* a_pStrideOut, UINT* a_pOutVertexCount) const
 {
 	ID3D11Buffer* pVertexBuffer;
 
@@ -521,7 +643,7 @@ ID3D11Buffer * triebWerk::CGraphics::CreateDefaultQuad(UINT* a_pStrideOut, UINT*
 	return pVertexBuffer;
 }
 
-ID3D11RasterizerState * triebWerk::CGraphics::CreateRasterizerState(D3D11_CULL_MODE a_CullMode, D3D11_FILL_MODE a_FillMode)
+ID3D11RasterizerState * triebWerk::CGraphics::CreateRasterizerState(const D3D11_CULL_MODE a_CullMode, const D3D11_FILL_MODE a_FillMode) const
 {
 	ID3D11RasterizerState* rasterState = nullptr;
 	D3D11_RASTERIZER_DESC rasterDesc;
@@ -602,9 +724,10 @@ void triebWerk::CGraphics::ConfigureBackBuffer()
 
 	hr = m_pDevice->CreateRenderTargetView(m_pBackBufferTexture, nullptr, &m_pRenderTargetView);
 
-	m_pBackBufferTexture->GetDesc(&m_bbDesc);
+	D3D11_TEXTURE2D_DESC backBufferTextureDesc;
+	m_pBackBufferTexture->GetDesc(&backBufferTextureDesc);
 
-	CD3D11_TEXTURE2D_DESC depthStencilDesc(DXGI_FORMAT_D24_UNORM_S8_UINT,static_cast<UINT> (m_bbDesc.Width),static_cast<UINT> (m_bbDesc.Height),1,1,D3D11_BIND_DEPTH_STENCIL);
+	CD3D11_TEXTURE2D_DESC depthStencilDesc(DXGI_FORMAT_D24_UNORM_S8_UINT,static_cast<UINT> (backBufferTextureDesc.Width),static_cast<UINT> (backBufferTextureDesc.Height),1,1,D3D11_BIND_DEPTH_STENCIL);
 
 	hr = m_pDevice->CreateTexture2D(&depthStencilDesc,nullptr,&m_pDepthStencilBuffer);
 
@@ -616,8 +739,8 @@ void triebWerk::CGraphics::ConfigureBackBuffer()
 
 	D3D11_VIEWPORT viewport;
 	ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));
-	viewport.Height = (float)m_bbDesc.Height;
-	viewport.Width = (float)m_bbDesc.Width;
+	viewport.Height = static_cast<float>(backBufferTextureDesc.Height);
+	viewport.Width = static_cast<float>(backBufferTextureDesc.Width);
 	viewport.MinDepth = 0;
 	viewport.MaxDepth = 1;
 
@@ -746,13 +869,7 @@ int triebWerk::CGraphics::SizeOfFormatElement(DXGI_FORMAT a_Format)
 	}
 }
 
-void triebWerk::CGraphics::RemapTextureBuffer(const void * a_pData, size_t a_DataSize, ID3D11Texture2D * a_pTextureToRemap)
+void triebWerk::CGraphics::RemapTextureBuffer(const void * a_pData, const size_t a_DataSize, ID3D11Texture2D * a_pTextureToRemap) const
 {
     m_pDeviceContext->UpdateSubresource(a_pTextureToRemap, 0, nullptr, a_pData, a_DataSize, 0);
-
-	//D3D11_MAPPED_SUBRESOURCE subResourceTextureBuffer;
-
-	//m_pDeviceContext->Map(a_pTextureToRemap, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &subResourceTextureBuffer);
-	//memcpy(subResourceTextureBuffer.pData, a_pData, a_DataSize * subResourceTextureBuffer.RowPitch);
-	//m_pDeviceContext->Unmap(a_pTextureToRemap, NULL);
 }

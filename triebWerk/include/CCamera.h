@@ -28,6 +28,12 @@ namespace triebWerk
 
 		D3D11_VIEWPORT m_Viewport;
 
+		float m_TimeToShake;
+		float m_ShakePower;
+		DirectX::XMVECTOR m_ShakeStartPosition;
+		DirectX::XMVECTOR m_BufferPosition;
+		bool m_IsShaking;
+
 	public:
 		CCamera();
 		CCamera(float a_Aspect, float a_FOV, float a_Near, float a_Far, unsigned int a_ScreenHeight, unsigned int a_ScreenWidth);
@@ -38,6 +44,8 @@ namespace triebWerk
 
 		//Resize the aspect and the ui projection
 		void Resize(unsigned int a_NewScreenWidth, unsigned int a_NewScreenHeight);
+
+		void SetScreenShake(const float a_ShakeStrenght, const float a_ShakeTime);
 
 		DirectX::XMMATRIX& GetViewMatrix();
 		DirectX::XMMATRIX& GetProjection();
@@ -57,5 +65,7 @@ namespace triebWerk
         void CalculateView();
 		void CalculateProjection();
 		void CalculateUIProjection();
+		
+		void UpdateScreenShake(const float a_DeltaTimer);
 	};
 }

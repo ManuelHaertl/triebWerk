@@ -737,5 +737,8 @@
     <ClInclude Include="include\CUIDrawable.h">
       <Filter>Headerdateien\Rendering\Drawables</Filter>
     </ClInclude>
+    <ClInclude Include="include\SafeDeletes.h">
+      <Filter>Headerdateien\Core</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -532,12 +532,14 @@ void CPatternTileCreator::CreateShadow05(const bool a_Rotated)
     m_pEntity3 = twActiveWorld->CreateEntity();
 
     // Transform
-    m_pEntity3->m_Transform.SetPosition(m_Tile.m_X, 0.001f, m_PatternSpawnBegin + m_Tile.m_Y);
+    m_pEntity3->m_Transform.SetPosition(m_Tile.m_X, 0.01f, m_PatternSpawnBegin + m_Tile.m_Y);
     if (a_Rotated) m_pEntity3->m_Transform.SetRotationDegrees(0.0f, 90.0f, 0.0f);
 
     // Rendering
     auto shadowMesh = twRenderer->CreateMeshDrawable();
     shadowMesh->m_pMesh = m_pShadow05;
+	shadowMesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
+	shadowMesh->m_RenderMode = triebWerk::CMeshDrawable::ERenderMode::Transparent;
     shadowMesh->m_Material.SetMaterial(m_pMaterialStandardTransparentTexture);
     shadowMesh->m_Material.m_pPixelShader.SetTexture(0, m_pTextureShadow05);
     m_pEntity3->SetDrawable(shadowMesh);
@@ -550,12 +552,14 @@ void CPatternTileCreator::CreateShadow10(const bool a_Rotated)
     m_pEntity3 = twActiveWorld->CreateEntity();
 
     // Transform
-    m_pEntity3->m_Transform.SetPosition(m_Tile.m_X, 0.001f, m_PatternSpawnBegin + m_Tile.m_Y);
+    m_pEntity3->m_Transform.SetPosition(m_Tile.m_X, 0.01f, m_PatternSpawnBegin + m_Tile.m_Y);
     if (a_Rotated) m_pEntity3->m_Transform.SetRotationDegrees(0.0f, 90.0f, 0.0f);
 
     // Rendering
     auto shadowMesh = twRenderer->CreateMeshDrawable();
     shadowMesh->m_pMesh = m_pShadow10;
+	shadowMesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
+	shadowMesh->m_RenderMode = triebWerk::CMeshDrawable::ERenderMode::Transparent;
     shadowMesh->m_Material.SetMaterial(m_pMaterialStandardTransparentTexture);
     shadowMesh->m_Material.m_pPixelShader.SetTexture(0, m_pTextureShadow10);
     m_pEntity3->SetDrawable(shadowMesh);
@@ -568,12 +572,14 @@ void CPatternTileCreator::CreateShadow20(const bool a_Rotated)
     m_pEntity3 = twActiveWorld->CreateEntity();
 
     // Transform
-    m_pEntity3->m_Transform.SetPosition(m_Tile.m_X, 0.001f, m_PatternSpawnBegin + m_Tile.m_Y);
+    m_pEntity3->m_Transform.SetPosition(m_Tile.m_X, 0.01f, m_PatternSpawnBegin + m_Tile.m_Y);
     if (a_Rotated) m_pEntity3->m_Transform.SetRotationDegrees(0.0f, 90.0f, 0.0f);
 
     // Rendering
     auto shadowMesh = twRenderer->CreateMeshDrawable();
     shadowMesh->m_pMesh = m_pShadow20;
+	shadowMesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
+	shadowMesh->m_RenderMode = triebWerk::CMeshDrawable::ERenderMode::Transparent;
     shadowMesh->m_Material.SetMaterial(m_pMaterialStandardTransparentTexture);
     shadowMesh->m_Material.m_pPixelShader.SetTexture(0, m_pTextureShadow20);
     m_pEntity3->SetDrawable(shadowMesh);
@@ -586,12 +592,14 @@ void CPatternTileCreator::CreateShadow30(const bool a_Rotated)
     m_pEntity3 = twActiveWorld->CreateEntity();
 
     // Transform
-    m_pEntity3->m_Transform.SetPosition(m_Tile.m_X, 0.001f, m_PatternSpawnBegin + m_Tile.m_Y);
+    m_pEntity3->m_Transform.SetPosition(m_Tile.m_X, 0.01f, m_PatternSpawnBegin + m_Tile.m_Y);
     if (a_Rotated) m_pEntity3->m_Transform.SetRotationDegrees(0.0f, 90.0f, 0.0f);
 
     // Rendering
     auto shadowMesh = twRenderer->CreateMeshDrawable();
     shadowMesh->m_pMesh = m_pShadow30;
+	shadowMesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
+	shadowMesh->m_RenderMode = triebWerk::CMeshDrawable::ERenderMode::Transparent;
     shadowMesh->m_Material.SetMaterial(m_pMaterialStandardTransparentTexture);
     shadowMesh->m_Material.m_pPixelShader.SetTexture(0, m_pTextureShadow30);
     m_pEntity3->SetDrawable(shadowMesh);

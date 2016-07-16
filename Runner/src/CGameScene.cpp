@@ -3,6 +3,8 @@
 #include <CGameInfo.h>
 #include <CPostEffects.h>
 
+bool loud = false;
+
 CGameScene::CGameScene()
     : m_pPlayer(nullptr)
     , m_LastPlayerPos(0.0f)
@@ -17,10 +19,13 @@ void CGameScene::Start()
 {
     twDebug->Disable();
 
+	twAudio->PlayBGM(twResourceManager->GetSound("Vermair - Rendez Vous"), true, true);
+	twAudio->m_pDevice->setSoundVolume(static_cast<float>(loud));
     m_ValueUpdater.Start();
     m_DifficultyChanger.Start();
     m_EnvironmentCreator.Start();
     m_PatternManager.Start();
+	m_UI.Start();
     CreatePlayer();
     //CreateText();
 
@@ -42,6 +47,17 @@ void CGameScene::Update()
         CGameInfo::Instance().Reset();
     }
 
+
+	if (twGamepad.IsState(triebWerk::EGamepadButton::Start, triebWerk::EButtonState::Down, 0))
+	{
+		twWindow->ChangeWindowSettings(true, 1920, 1080);
+	}
+
+	if (twGamepad.IsState(triebWerk::EGamepadButton::Back, triebWerk::EButtonState::Down, 0))
+	{
+		loud = !loud;
+		twAudio->m_pDevice->setSoundVolume(static_cast<float>(loud));
+	}
 
     //std::string points =
     //    "Total: " +
@@ -85,6 +101,7 @@ void CGameScene::Update()
 
     m_EnvironmentCreator.Update(metersFlewn);
     m_PatternManager.Update(metersFlewn);
+	m_UI.Update();
 }
 
 void CGameScene::End()
@@ -92,6 +109,7 @@ void CGameScene::End()
     m_EnvironmentCreator.End();
     m_PatternManager.End();
     m_ValueUpdater.End();
+	m_UI.End();
 }
 
 void CGameScene::Resume()
@@ -117,8 +135,9 @@ void CGameScene::CreatePlayer()
     // Drawable
     triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
     mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_player");
-    mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardTexture"));
+    mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardTextureEmissiv"));
     mesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("t_player_diff"));
+	mesh->m_Material.m_pPixelShader.SetTexture(1, twResourceManager->GetTexture2D("t_player_emissive_18"));
     player->SetDrawable(mesh);
 
     // Physic
@@ -140,7 +159,7 @@ void CGameScene::CreatePlayer()
 
 void CGameScene::CreateText()
 {
-    auto font = twFontManager->LoadFont(twResourceManager->GetFontFace("Rubik-Regular"), 40);
+   /* auto font = twFontManager->LoadFont(twResourceManager->GetFontFace("Rubik-Regular"), 40);
     m_pPoints = twFontManager->CreateText();
     m_pPoints->Set(font, "Points: 0", 1.0f);
 
@@ -153,5 +172,5 @@ void CGameScene::CreateText()
     fontDraw->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 
     entity->SetDrawable(fontDraw);
-    m_pWorld->AddEntity(entity);
+    m_pWorld->AddEntity(entity);*/
 }

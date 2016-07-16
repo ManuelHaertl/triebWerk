@@ -44,6 +44,11 @@ void CDebugScene::Update()
 		effect->RemoveMaterial(0);
 	};
 
+	if (twKeyboard.IsState(triebWerk::EKey::U, triebWerk::EButtonState::Down))
+	{
+		twRenderer->GetCurrentActiveCamera()->SetScreenShake(0.1f, 1.6f);
+	};
+
 	float timer = twTime->GetTimeSinceStartup();
 
 	if (g_pPoint != nullptr)
@@ -92,7 +97,7 @@ void CDebugScene::CreatePlayground()
 	//auto entity = m_pWorld->CreateEntity();
 	//entity->m_Transform.SetPosition(0, 0, 0);
 	//triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
-	//mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_player");
+	//mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("");
 	//mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardTextureEmissiv"));
 	//mesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("t_player_diff"));
 	//mesh->m_Material.m_pPixelShader.SetTexture(1, twResourceManager->GetTexture2D("t_player_emissive_16"));

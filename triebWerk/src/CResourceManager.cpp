@@ -1,7 +1,9 @@
 #include <CResourceManager.h>
 
-triebWerk::CResourceManager::CResourceManager() :
-	m_pGraphicsHandle(nullptr)
+triebWerk::CResourceManager::CResourceManager() 
+	: m_pGraphicsHandle(nullptr)
+	, m_pFontLibraryHandle(nullptr)
+	, m_pSoundEngineHandle(nullptr)
 {
 }
 
@@ -19,7 +21,6 @@ bool triebWerk::CResourceManager::Initialize(CGraphics* a_pGraphics, FT_Library*
 #ifdef _DEBUG
 	m_FileWatcher.Watch("data", true);
 #endif //DEBUG
-	//return error;
 
 	LoadAllFilesInFolder("data/Default/");
 
@@ -109,8 +110,10 @@ void triebWerk::CResourceManager::LoadAllFilesInFolder(const char * a_pPath)
 	DebugLogfile.LogfText(CDebugLogfile::ELogType::Text, false, ":::::::::::::::::::::: Finish ::::::::::::::::::::::");
 }
 
-void triebWerk::CResourceManager::LoadAllSpecificFilesInFolder(EFileType a_FileType, const char * a_pPath)
+void triebWerk::CResourceManager::LoadAllSpecificFilesInFolder(const EFileType a_FileType, const char * a_pPath)
 {
+	DebugLogfile.LogfText(CDebugLogfile::ELogType::Text, false, ":::::::::::::::::::::: LoadSpecificFilesInFolder ::::::::::::::::::::::");
+
 	std::vector<SFile> filesToLoad = SearchFolderForAllFiles(a_pPath);
 
 	for (auto file : filesToLoad)
@@ -120,6 +123,8 @@ void triebWerk::CResourceManager::LoadAllSpecificFilesInFolder(EFileType a_FileT
 			LoadFile(file);
 		}
 	}
+
+	DebugLogfile.LogfText(CDebugLogfile::ELogType::Text, false, ":::::::::::::::::::::: Finish ::::::::::::::::::::::");
 }
 
 void triebWerk::CResourceManager::LoadSpecificFile(const char * a_pPath)
@@ -237,84 +242,17 @@ triebWerk::CSound * triebWerk::CResourceManager::GetSound(const char * a_pSoundN
 	}
 }
 
-void triebWerk::CResourceManager::UnloadTileset(const char * a_pTilesetName)
+void triebWerk::CResourceManager::LoadFile(const SFile& a_File)
 {
-	auto foundIterator = m_TilesetBuffer.find(StringHasher(RemoveFileType(a_pTilesetName)));
-
-	if (foundIterator == m_TilesetBuffer.end())
-	{
-		return;
-	}
-	else
-	{
-		foundIterator->second->ClearMap();
-		delete foundIterator->second;
-		m_TilesetBuffer.erase(StringHasher(RemoveFileType(a_pTilesetName)));
-	}
-}
-
-void triebWerk::CResourceManager::UnloadConfiguration(const char * a_pConfigurationName)
-{
-	auto foundIterator = m_TWFBuffer.find(StringHasher(RemoveFileType(a_pConfigurationName)));
-
-	if (foundIterator == m_TWFBuffer.end())
-	{
-		return;
-	}
-	else
-	{
-		delete foundIterator->second;
-		m_TWFBuffer.erase(StringHasher(RemoveFileType(a_pConfigurationName)));
-	}
-}
-
-void triebWerk::CResourceManager::UnloadTexture2D(const char * a_pTexture2DName)
-{
-	auto foundIterator = m_TextureBuffer.find(StringHasher(RemoveFileType(a_pTexture2DName)));
-
-	if (foundIterator == m_TextureBuffer.end())
-	{
-		return;
-	}
-	else
-	{
-		foundIterator->second->GetD3D11Texture()->Release();
-		foundIterator->second->GetShaderResourceView()->Release();
-		delete foundIterator->second;
-
-		m_TextureBuffer.erase(StringHasher(RemoveFileType(a_pTexture2DName)));
-	}
-}
-
-void triebWerk::CResourceManager::UnloadMesh(const char * a_pMeshName)
-{
-	auto foundIterator = m_MeshBuffer.find(StringHasher(RemoveFileType(a_pMeshName)));
-
-	if (foundIterator == m_MeshBuffer.end())
-	{
-		return;
-	}
-	else
-	{
-		foundIterator->second->m_pVertexBuffer->Release();
-		//delete foundIterator->second->m_pVertices;
-		delete foundIterator->second;
-		m_MeshBuffer.erase(StringHasher(RemoveFileType(a_pMeshName)));
-	}
-}
-
-void triebWerk::CResourceManager::LoadFile(SFile a_File)
-{
-
+	if(static_cast<int>(a_File.FileType) < 13) //is a supported filetype
+		DebugLogfile.LogfText(CDebugLogfile::ELogType::Text, false, "Start loading file: %s", a_File.FilePath.c_str());
 
 	switch (a_File.FileType)
 	{
 	case EFileType::HLSL:
-		DebugLogfile.LogfText(CDebugLogfile::ELogType::Text, false, "Start loading file: %s", a_File.FilePath.c_str());
 		LoadHLSL(a_File);
 		break;
 	case EFileType::TWF:
-		DebugLogfile.LogfText(CDebugLogfile::ELogType::Text, false, "Start loading file: %s", a_File.FilePath.c_str());
 		LoadTWF(a_File);
 		break;
 	case EFileType::MP3:
@@ -323,41 +261,33 @@ void triebWerk::CResourceManager::LoadFile(SFile a_File)
 	case EFileType::OGG:
 	case EFileType::MOD:
 	case EFileType::XM:
-		DebugLogfile.LogfText(CDebugLogfile::ELogType::Text, false, "Start loading file: %s", a_File.FilePath.c_str());
 		LoadAudio(a_File);
 		break;
 	case EFileType::OBJ:
-		DebugLogfile.LogfText(CDebugLogfile::ELogType::Text, false, "Start loading file: %s", a_File.FilePath.c_str());
 		LoadOBJ(a_File);
 		break;
 	case EFileType::PNG:
-		DebugLogfile.LogfText(CDebugLogfile::ELogType::Text, false, "Start loading file: %s", a_File.FilePath.c_str());
 		LoadPNG(a_File);
 		break;
 	case EFileType::DDS:
-		DebugLogfile.LogfText(CDebugLogfile::ELogType::Text, false, "Start loading file: %s", a_File.FilePath.c_str());
 		LoadDDS(a_File);
 		break;
 	case EFileType::TMX:
-		DebugLogfile.LogfText(CDebugLogfile::ELogType::Text, false, "Start loading file: %s", a_File.FilePath.c_str());
 		LoadTMX(a_File);
 		break;
 	case EFileType::TTF:
 	case EFileType::OTF:
-		DebugLogfile.LogfText(CDebugLogfile::ELogType::Text, false, "Start loading file: %s", a_File.FilePath.c_str());
 		LoadFont(a_File);
 		break;
 	}
 }
 
-void triebWerk::CResourceManager::LoadPNG(SFile a_File)
+void triebWerk::CResourceManager::LoadPNG(const SFile& a_File)
 {
 	size_t hash = StringHasher(RemoveFileType(a_File.FileName));
 	if (ExistsResourceInBuffer(EFileType::PNG, hash))
 		return;
 
-
-	//PixelBuffer
 	std::vector<unsigned char> imageBuffer;
 
 	unsigned int width;
@@ -386,7 +316,7 @@ void triebWerk::CResourceManager::LoadPNG(SFile a_File)
 
 }
 
-void triebWerk::CResourceManager::LoadOBJ(SFile a_File)
+void triebWerk::CResourceManager::LoadOBJ(const SFile& a_File)
 {
 	size_t hash = StringHasher(RemoveFileType(a_File.FileName));
 	if (ExistsResourceInBuffer(EFileType::OBJ, hash))
@@ -414,7 +344,7 @@ void triebWerk::CResourceManager::LoadOBJ(SFile a_File)
 	m_MeshBuffer.insert(CMeshPair(hash, mesh));
 }
 
-void triebWerk::CResourceManager::LoadAudio(SFile a_File)
+void triebWerk::CResourceManager::LoadAudio(const SFile& a_File)
 {
 	size_t hash = StringHasher(RemoveFileType(a_File.FileName));
 	if (ExistsResourceInBuffer(EFileType::MP3, hash))
@@ -438,7 +368,7 @@ void triebWerk::CResourceManager::LoadAudio(SFile a_File)
 	m_SoundBuffer.insert(CSoundPair(hash, sound));
 }
 
-void triebWerk::CResourceManager::LoadTMX(SFile a_File)
+void triebWerk::CResourceManager::LoadTMX(const SFile& a_File)
 {
 	size_t hash = StringHasher(RemoveFileType(a_File.FileName));
 	if (ExistsResourceInBuffer(EFileType::TMX, hash))
@@ -458,26 +388,26 @@ void triebWerk::CResourceManager::LoadTMX(SFile a_File)
 	m_TilesetBuffer.insert(CTilesetPair(hash, tileset));
 }
 
-void triebWerk::CResourceManager::LoadHLSL(SFile a_File)
+void triebWerk::CResourceManager::LoadHLSL(const SFile& a_File)
 {
 	size_t hash = StringHasher(RemoveFileType(a_File.FileName));
 	if (ExistsResourceInBuffer(EFileType::HLSL, hash))
 		return;
 
-	CMaterial* temp = new CMaterial();
+	CMaterial* pMaterial = new CMaterial();
 	CHLSLParser hlslParser;
-	bool success = hlslParser.ParseShader(a_File.FilePath.c_str(), m_pGraphicsHandle, temp);
+	bool success = hlslParser.ParseShader(a_File.FilePath.c_str(), m_pGraphicsHandle, pMaterial);
 
 	if (!success)
 	{
-		delete temp;
+		delete pMaterial;
 		return;
 	}
 
-	m_MaterialBuffer.insert(CMaterialPair(hash, temp));
+	m_MaterialBuffer.insert(CMaterialPair(hash, pMaterial));
 }
 
-void triebWerk::CResourceManager::LoadTWF(SFile a_File)
+void triebWerk::CResourceManager::LoadTWF(const SFile& a_File)
 {
 	size_t hash = StringHasher(RemoveFileType(a_File.FileName));
 	if (ExistsResourceInBuffer(EFileType::TWF, hash))
@@ -490,7 +420,7 @@ void triebWerk::CResourceManager::LoadTWF(SFile a_File)
 	m_TWFBuffer.insert(CTWFDataPair(hash, twfData));
 }
 
-void triebWerk::CResourceManager::LoadFont(SFile a_File)
+void triebWerk::CResourceManager::LoadFont(const SFile& a_File)
 {
 	size_t hash = StringHasher(RemoveFileType(a_File.FileName));
 	if (ExistsResourceInBuffer(EFileType::TTF, hash))
@@ -502,7 +432,7 @@ void triebWerk::CResourceManager::LoadFont(SFile a_File)
     m_FontBuffer.insert(CFontPair(hash, pFontFace));
 }
 
-void triebWerk::CResourceManager::LoadDDS(SFile a_File)
+void triebWerk::CResourceManager::LoadDDS(const SFile& a_File)
 {
 	size_t hash = StringHasher(RemoveFileType(a_File.FileName));
 	if (ExistsResourceInBuffer(EFileType::DDS, hash))
@@ -618,7 +548,7 @@ std::vector<triebWerk::CResourceManager::SFile> triebWerk::CResourceManager::Sea
 	return filesToLoad;
 }
 
-bool triebWerk::CResourceManager::ExistsResourceInBuffer(EFileType a_FileType, size_t a_Hash)
+bool triebWerk::CResourceManager::ExistsResourceInBuffer(const EFileType& a_FileType, const size_t a_Hash)
 {
 	switch (a_FileType)
 	{
