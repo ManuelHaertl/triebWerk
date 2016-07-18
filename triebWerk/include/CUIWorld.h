@@ -12,9 +12,10 @@ namespace triebWerk
         static const size_t Start_Reserve_Size = 2;
         size_t m_CurrentSize;
 
-        CElementContainer<CEntity*> m_Entities;
+        CElementContainer<CUIEntity*> m_Entities;
         CFrameContainer<IBehaviour*> m_UpdateEntities;
-        CFrameContainer<CEntity*> m_DrawEntities;
+        CFrameContainer<CUIEntity*> m_DrawEntities;
+        CFrameContainer<CUIEntity*> m_RemoveEntities;
 
         CRenderer* m_pRenderingHandle;
     public:
