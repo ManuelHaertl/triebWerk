@@ -97,7 +97,7 @@ namespace triebWerk
 		void LoadAllFilesInFolder(const char* a_pPath);
 
 		//Loads only the EFileType in a specific directory and subdirectory
-		void LoadAllSpecificFilesInFolder(EFileType a_FileType, const char* a_pPath);
+		void LoadAllSpecificFilesInFolder(const EFileType a_FileType, const char* a_pPath);
 
 		//Loads only the one file specified in the path
 		void LoadSpecificFile(const char* a_pPath);
@@ -115,28 +115,22 @@ namespace triebWerk
 		template<typename T>
 		void GetAll(const char* a_pPath, std::vector<T*>* a_pOutData);
 
-		//Unload
-		void UnloadTileset(const char* a_pTilesetName);
-		void UnloadConfiguration(const char* a_pConfigurationName);
-		void UnloadTexture2D(const char* a_pTexture2DName);
-		void UnloadMesh(const char* a_pMeshName);
-
 	private:
 		//Load actual data
-		void LoadFile(SFile a_File);
-		void LoadPNG(SFile a_File);
-		void LoadOBJ(SFile a_File);
-		void LoadAudio(SFile a_File);
-		void LoadTMX(SFile a_File);
-		void LoadHLSL(SFile a_File);
-		void LoadTWF(SFile a_File);
-		void LoadFont(SFile a_File);
-		void LoadDDS(SFile a_File);
+		void LoadFile(const SFile& a_File);
+		void LoadPNG(const SFile& a_File);
+		void LoadOBJ(const SFile& a_File);
+		void LoadAudio(const SFile& a_File);
+		void LoadTMX(const SFile& a_File);
+		void LoadHLSL(const SFile& a_File);
+		void LoadTWF(const SFile& a_File);
+		void LoadFont(const SFile& a_File);
+		void LoadDDS(const SFile& a_File);
 
 		bool SetModulPath();
 		std::vector<SFile> SearchFolderForAllFiles(const char* a_FolderToLoad);
 
-		bool ExistsResourceInBuffer(EFileType a_FileType, size_t a_Hash);
+		bool ExistsResourceInBuffer(const EFileType& a_FileType, const size_t a_Hash);
 
 		//String helper functions
 		bool CompareFileTypes(const std::string& a_Name, const char* a_ExpectedType);

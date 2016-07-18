@@ -99,6 +99,9 @@
     <ClCompile Include="src\CPlayer.cpp">
       <Filter>Quelldateien\Game\Player</Filter>
     </ClCompile>
+    <ClCompile Include="src\CUI.cpp">
+      <Filter>Quelldateien\Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\CGameScene.h">
@@ -157,6 +160,9 @@
     </ClInclude>
     <ClInclude Include="include\CPlayer.h">
       <Filter>Headerdateien\Game\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CUI.h">
+      <Filter>Headerdateien\Game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

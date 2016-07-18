@@ -17,6 +17,7 @@ public:
     // Effect Information
     bool m_EffectCheckpoint;
     bool m_EffectDodge;
+	bool m_EffectShield;
 
 private:
     CGameInfo();

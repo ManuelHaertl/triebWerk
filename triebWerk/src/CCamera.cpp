@@ -1,5 +1,7 @@
 #include <CCamera.h>
 #include <iostream>
+#include <CEngine.h>
+#include <CRandom.h>
 
 triebWerk::CCamera::CCamera() :
 	m_Aspect(0.0f),
@@ -8,7 +10,10 @@ triebWerk::CCamera::CCamera() :
 	m_NearPlane(0.0f),
 	m_ScreenHeight(0),
 	m_ScreenWidth(0),
-	m_Modified(false)
+	m_TimeToShake(0.0f),
+	m_ShakePower(0.0f),
+	m_Modified(false),
+	m_IsShaking(false)
 {
 	m_ProjectionMatrix = DirectX::XMMatrixIdentity();
 	m_ViewMatrix = DirectX::XMMatrixIdentity();
@@ -43,6 +48,20 @@ void triebWerk::CCamera::Update()
         CalculateProjection();
         m_Modified = false;
     }
+
+	if(m_TimeToShake > 0 && m_IsShaking)
+	{ 
+		float dt = CEngine::Instance().m_pTime->GetDeltaTime();
+		m_TimeToShake -= dt;
+		UpdateScreenShake(dt);
+	}
+	else if(m_IsShaking)
+	{
+		m_IsShaking = false;
+		//m_Transform.SetPosition(m_ShakeStartPosition);
+		m_TimeToShake = 0.0f;
+		m_ShakePower = 0.0f;
+	}
 }
 
 void triebWerk::CCamera::Resize(unsigned int a_NewScreenWidth, unsigned int a_ScreenHeight)
@@ -53,6 +72,15 @@ void triebWerk::CCamera::Resize(unsigned int a_NewScreenWidth, unsigned int a_Sc
 
 	CalculateProjection();
 	CalculateUIProjection();
+}
+
+void triebWerk::CCamera::SetScreenShake(const float a_ShakeStrenght, const float a_ShakeTime)
+{
+	m_ShakePower = a_ShakeStrenght;
+	m_TimeToShake = a_ShakeTime;
+	m_IsShaking = true;
+
+	m_BufferPosition = m_Transform.GetPosition();
 }
 
 DirectX::XMMATRIX & triebWerk::CCamera::GetViewMatrix()
@@ -128,4 +156,18 @@ void triebWerk::CCamera::CalculateProjection()
 void triebWerk::CCamera::CalculateUIProjection()
 {
 	m_UIProjectionMatrix = DirectX::XMMatrixOrthographicLH(m_ScreenWidth, m_ScreenHeight, -0.1f, 100.0f);
+}
+
+void triebWerk::CCamera::UpdateScreenShake(const float a_DeltaTime)
+{
+	DirectX::XMVECTOR nextPos;
+
+	nextPos.m128_f32[0] = CRandom::GetNumber(-1.0f, 1.0f) * a_DeltaTime * m_ShakePower * 100 + m_BufferPosition.m128_f32[0];
+	nextPos.m128_f32[1] = CRandom::GetNumber(-1.0f, 1.0f) * a_DeltaTime * m_ShakePower * 100 + m_BufferPosition.m128_f32[1];
+
+	nextPos.m128_f32[2] =m_Transform.GetPosition().m128_f32[2];
+
+	m_BufferPosition = m_Transform.GetPosition();
+
+	m_Transform.SetPosition(nextPos);
 }

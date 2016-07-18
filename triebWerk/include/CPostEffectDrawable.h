@@ -1,7 +1,7 @@
 #pragma once
 #include <IDrawable.h>
 #include <CMaterial.h>
-#include <CElementContainer.h>
+#include <list>
 
 namespace triebWerk
 {
@@ -9,9 +9,10 @@ namespace triebWerk
 	{
 	public:
 		unsigned int m_RenderTargetSlotToStartOff;
-		std::vector<CMaterial> m_Materials;
+		std::vector<CMaterial*> m_Materials;
 
 	private:
+
 
 	public:
 		CPostEffectDrawable();
@@ -24,7 +25,13 @@ namespace triebWerk
 		CMaterial* AddMaterial(const CMaterial* a_pMaterial);
 
 		//Gets the Material from the posteffect pipeline
-		CMaterial* GetMaterial(const int a_Slot) const; 
+		CMaterial* GetMaterial(const int a_Slot) const;
+		CMaterial* GetMaterial(const char* a_pNameOfMaterial) const;
+
+		//Remove the effect at the given slot
+		//Keep in mind that the list of effects will change and resizes
+		void RemoveMaterial(const int a_SlotToRemove);
+		void RemoveMaterial(const char* a_pNameOfMaterial);
 
 		IDrawable::EDrawableType GetType() final;
 		

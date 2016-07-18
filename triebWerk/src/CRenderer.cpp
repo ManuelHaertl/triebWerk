@@ -143,6 +143,13 @@ void triebWerk::CRenderer::AddRenderCommand(IDrawable* a_pRenderCommand)
 			m_pRenderTargetList[pPostEffectDrawable->m_RenderTargetSlotToStartOff].m_pPostEffect = pPostEffectDrawable;
 
 		}break;
+		case IDrawable::EDrawableType::UI:
+		{
+			CUIDrawable* pUIDrawable = reinterpret_cast<CUIDrawable*>(a_pRenderCommand);
+
+			m_pRenderTargetList[renderSlot].m_RenderBatch.m_pUIBuffer[m_pRenderTargetList[renderSlot].m_RenderBatch.m_UIElementCount] = pUIDrawable;
+			m_pRenderTargetList[renderSlot].m_RenderBatch.m_UIElementCount++;
+		}break;
 		}
 
 	}
@@ -196,6 +203,13 @@ triebWerk::CPostEffectDrawable* triebWerk::CRenderer::CreatePostEffecthDrawable(
 {
 	CPostEffectDrawable* pDrawable = new CPostEffectDrawable();
 	
+	return pDrawable;
+}
+
+triebWerk::CUIDrawable * triebWerk::CRenderer::CreateUIDrawable()
+{
+	CUIDrawable* pDrawable = new CUIDrawable(m_pGraphicsHandle);
+
 	return pDrawable;
 }
 
@@ -414,16 +428,16 @@ void triebWerk::CRenderer::DrawRenderTarget(CRenderTarget* a_pRenderTarget)
 		}
 
 		//set the rendertarget where the prevoius effect was drawn into
-		a_pRenderTarget->m_pPostEffect->m_Materials[i].m_pPixelShader.SetTexture(0, &a_pRenderTarget->m_Texture[swapRenderTarget]);
+		a_pRenderTarget->m_pPostEffect->m_Materials[i]->m_pPixelShader.SetTexture(0, &a_pRenderTarget->m_Texture[swapRenderTarget]);
 
 		//set resources and shader
-		SetShader(&a_pRenderTarget->m_pPostEffect->m_Materials[i]);
+		SetShader(a_pRenderTarget->m_pPostEffect->m_Materials[i]);
 
 		//offset the next rendertarget so it wont be culled - not happy with this solution at the moment but it works 
 		a_pRenderTarget->m_PlaneTransform.SetPosition(0, 0, static_cast<float>(i * -0.01f));
-		a_pRenderTarget->m_pPostEffect->m_Materials[i].m_ConstantBuffer.SetConstantBuffer(m_pGraphicsHandle->GetDeviceContext(), a_pRenderTarget->m_PlaneTransform.GetTransformation(), DirectX::XMMatrixIdentity(), m_ScreenAligendQuadProjection, false);
+		a_pRenderTarget->m_pPostEffect->m_Materials[i]->m_ConstantBuffer.SetConstantBuffer(m_pGraphicsHandle->GetDeviceContext(), a_pRenderTarget->m_PlaneTransform.GetTransformation(), DirectX::XMMatrixIdentity(), m_ScreenAligendQuadProjection, false);
 
-		SetResources(&a_pRenderTarget->m_pPostEffect->m_Materials[i]);
+		SetResources(a_pRenderTarget->m_pPostEffect->m_Materials[i]);
 
 		UINT offset = 0;
 		m_pGraphicsHandle->GetDeviceContext()->IASetVertexBuffers(0, 1, &a_pRenderTarget->m_pPlaneBuffer, &a_pRenderTarget->m_Stride, &offset);
@@ -494,6 +508,22 @@ void triebWerk::CRenderer::RenderFont(CFontDrawable * a_pDrawable)
 	//pDeviceContext->Draw(a_pDrawable->m_VertexCount, 0);
 
 	CInstancedFontBatch::Draw(a_pDrawable, m_pGraphicsHandle->GetDevice(), m_pGraphicsHandle->GetDeviceContext(), m_pCurrentCamera);
+}
+
+void triebWerk::CRenderer::RenderUI(CUIDrawable * a_pUI)
+{
+	//set resources and shader
+	SetShader(&a_pUI->m_Material);
+
+	//offset the next rendertarget so it wont be culled - not happy with this solution at the moment but it works 
+	a_pUI->m_Material.m_ConstantBuffer.SetConstantBuffer(m_pGraphicsHandle->GetDeviceContext(), a_pUI->m_Transformation, DirectX::XMMatrixIdentity(), m_pCurrentCamera->GetUIProjection(), false);
+
+	SetResources(&a_pUI->m_Material);
+
+	UINT offset = 0;
+	m_pGraphicsHandle->GetDeviceContext()->IASetVertexBuffers(0, 1, &a_pUI->m_pVertexBuffer, &a_pUI->m_Stride, &offset);
+
+	m_pGraphicsHandle->GetDeviceContext()->Draw(a_pUI->m_VertexCount, 0);
 }
 
 void triebWerk::CRenderer::RenderMesh(CMeshDrawable * a_pDrawable)

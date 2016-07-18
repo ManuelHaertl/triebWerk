@@ -1,8 +1,5 @@
 #pragma once
 
-#pragma once
-#include <string>
-
 namespace triebWerk
 {
 	enum class EFileType

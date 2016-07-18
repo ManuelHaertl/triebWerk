@@ -204,6 +204,7 @@
     <ClCompile Include="src\CUIEntity.cpp" />
     <ClCompile Include="src\CUITransform.cpp" />
     <ClCompile Include="src\CUIWorld.cpp" />
+    <ClCompile Include="src\CUIDrawable.cpp" />
     <ClCompile Include="src\CVertexShader.cpp" />
     <ClCompile Include="src\CWindow.cpp" />
     <ClCompile Include="src\CWorld.cpp" />
@@ -231,6 +232,7 @@
     <ClInclude Include="include\CFontDrawable.h" />
     <ClInclude Include="include\CGeometryShader.h" />
     <ClInclude Include="include\CInstancedFontBatch.h" />
+    <ClInclude Include="include\SafeDeletes.h" />
     <ClInclude Include="include\CPostEffectDrawable.h" />
     <ClInclude Include="include\CRenderBatch.h" />
     <ClInclude Include="include\CRenderTarget.h" />
@@ -279,6 +281,7 @@
     <ClInclude Include="include\CUIEntity.h" />
     <ClInclude Include="include\CUITransform.h" />
     <ClInclude Include="include\CUIWorld.h" />
+    <ClInclude Include="include\CUIDrawable.h" />
     <ClInclude Include="include\CVertexShader.h" />
     <ClInclude Include="include\CWindow.h" />
     <ClInclude Include="include\CWorld.h" />

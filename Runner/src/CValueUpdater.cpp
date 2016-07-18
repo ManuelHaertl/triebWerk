@@ -56,6 +56,8 @@ float CPostEffects::CheckpointEffectLength = 0.2f;
 float CPostEffects::CheckpointEffectStrength = 1.5f;
 float CPostEffects::DodgeEffectStrength = 10.0f;
 float CPostEffects::DodgeEffectLength = 2.0f;
+float CPostEffects::ShieldEffectLength = 0.0f;
+float CPostEffects::ShieldEffectStrength = 1.5f;
 
 CValueUpdater::CValueUpdater() :
     m_pValues(nullptr)
@@ -138,7 +140,12 @@ void CValueUpdater::UpdateValues()
         else if (value.first == "pl_ShieldTime")
         {
             CPlayer::ShieldTime = std::stof(value.second);
+			CPostEffects::ShieldEffectLength = CPlayer::ShieldTime;
         }
+		else if (value.first == "pl_ShieldEffectStrength")
+		{
+			CPostEffects::ShieldEffectStrength = std::stof(value.second);
+		}
         else if (value.first == "pl_ShieldCooldown")
         {
             CPlayer::ShieldCooldown = std::stof(value.second);

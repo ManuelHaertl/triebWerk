@@ -25,6 +25,11 @@ namespace triebWerk
 		bool m_IsSizing;
 
 	public:
+		static int GetMaximalDisplayWidth();
+		static int GetMaximalDisplayHeight();
+
+
+	public:
 		CWindow();
 		~CWindow();
 
@@ -52,8 +57,5 @@ namespace triebWerk
 		void UpdateWindow();
 
 		void GetDPIFromDisplay(unsigned int* a_OutDPIX, unsigned int* a_OutDPIY);
-
-		static int GetMaximalDisplayWidth();
-		static int GetMaximalDisplayHeight();
 	};
 }
