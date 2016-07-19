@@ -6,6 +6,7 @@
 #include <cfloat>
 #include <CMesh.h>
 #include <CDebugLogfile.h>
+#include <CRenderQuad.h>
 
 //#ifdef _DEBUG
 //#define TW_CREATE_DEVICE_FLAG D3D11_CREATE_DEVICE_DEBUG
@@ -105,6 +106,7 @@ namespace triebWerk
 		ID3D11Buffer* CreateVertexBuffer(const void* a_pVertexData, const size_t a_VertexCount) const;
 		ID3D11Buffer* CreateIndexBuffer(const void* a_pIndexData, const size_t a_ByteWidth) const;
 		ID3D11Buffer* CreateDefaultQuad(UINT* a_pOutStride, UINT* a_pOutVertexCount) const;
+		CRenderQuad* CreateCRenderQuad() const;
 		ID3D11RasterizerState* CreateRasterizerState(const D3D11_CULL_MODE a_CullMode, const D3D11_FILL_MODE a_FillMode) const;
 
 		void RemapTextureBuffer(const void * a_pData, const size_t a_DataSize, ID3D11Texture2D * a_pTextureToRemap) const;

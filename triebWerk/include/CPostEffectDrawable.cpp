@@ -31,7 +31,7 @@ triebWerk::CMaterial* triebWerk::CPostEffectDrawable::AddMaterial(const CMateria
 
 triebWerk::CMaterial* triebWerk::CPostEffectDrawable::GetMaterial(const int a_Slot) const
 {
-	if (a_Slot + 1 > m_Materials.size())
+	if (static_cast<size_t>(a_Slot) + 1 > m_Materials.size())
 	{
 		DebugLogfile.LogfText(CDebugLogfile::ELogType::Warning, false, "No Material at this Slot in the CPostEffectDrawable");
 		return nullptr;
@@ -80,5 +80,12 @@ triebWerk::IDrawable::EDrawableType triebWerk::CPostEffectDrawable::GetType()
 
 void triebWerk::CPostEffectDrawable::SetTransform(const DirectX::XMMATRIX & a_rTransform)
 {
+}
 
+bool triebWerk::CPostEffectDrawable::IsDrawableValid()
+{
+	if (m_Materials.size() > 0 && m_RenderTargetSlotToStartOff >= 0)
+		return true;
+	else
+		return false;
 }

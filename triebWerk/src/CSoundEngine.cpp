@@ -1,4 +1,5 @@
 #include <CSoundEngine.h>
+#include <CDebugLogfile.h>
 
 triebWerk::CSoundEngine::CSoundEngine()
 {
@@ -34,7 +35,12 @@ void triebWerk::CSoundEngine::UpdateSoundVolumes()
 void triebWerk::CSoundEngine::PlayBGM(CSound * a_pBGM, bool a_OverrideSameBGM, bool a_ShouldLoop)
 {
 
-	if (this->m_CurrentBackgroundMusic == nullptr)
+	if (a_pBGM == nullptr)
+	{
+		DebugLogfile.LogfText(CDebugLogfile::ELogType::Warning, false, "Warning: Tried to play a nullptr music resource!");
+		return;
+	}
+	else
 	{
 		this->m_CurrentBackgroundMusic = this->m_pDevice->play2D(a_pBGM->m_pSoundSource, a_ShouldLoop, false, true);
 	}

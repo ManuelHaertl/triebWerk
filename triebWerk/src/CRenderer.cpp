@@ -76,6 +76,10 @@ void triebWerk::CRenderer::Shutdown()
 
 void triebWerk::CRenderer::AddRenderCommand(IDrawable* a_pRenderCommand)
 {
+	//Check if drawable could be drawen if not stop function
+	if (a_pRenderCommand->IsDrawableValid() == false)
+		return;
+
 	int renderSlot = a_pRenderCommand->GetRenderTargetSlot();
 
 	m_CommandCounter++;
@@ -89,12 +93,6 @@ void triebWerk::CRenderer::AddRenderCommand(IDrawable* a_pRenderCommand)
 		{
 			//Cast the drawable to a meshdrawable
 			CMeshDrawable* pMeshDrawable = reinterpret_cast<CMeshDrawable*>(a_pRenderCommand);
-
-			//Is the drawable valid if not dont add it to the buffer
-			if (!CMeshDrawable::IsValidDrawable(pMeshDrawable))
-			{
-				break;
-			}
 
 			//sort out opaque and transparent
 			switch (pMeshDrawable->m_RenderMode)
@@ -126,12 +124,8 @@ void triebWerk::CRenderer::AddRenderCommand(IDrawable* a_pRenderCommand)
 		{
 			CFontDrawable* pFontDrawable = reinterpret_cast<CFontDrawable*>(a_pRenderCommand);
 			
-			//Add font if valid to render buffer
-			if (CFontDrawable::IsValidDrawable(pFontDrawable))
-			{
-				m_pRenderTargetList[renderSlot].m_RenderBatch.m_pFontBuffer[m_pRenderTargetList[renderSlot].m_RenderBatch.m_FontCommandCount] = pFontDrawable;
-				m_pRenderTargetList[renderSlot].m_RenderBatch.m_FontCommandCount++;
-			}
+			m_pRenderTargetList[renderSlot].m_RenderBatch.m_pFontBuffer[m_pRenderTargetList[renderSlot].m_RenderBatch.m_FontCommandCount] = pFontDrawable;
+			m_pRenderTargetList[renderSlot].m_RenderBatch.m_FontCommandCount++;
 		}break;
 		case IDrawable::EDrawableType::PostEffect:
 		{
@@ -175,52 +169,13 @@ void triebWerk::CRenderer::RemoveCamera(CCamera * a_pCamera)
 	}
 }
 
-void triebWerk::CRenderer::SetActiveCamera(CCamera * a_pCamera)
-{
-	m_pCurrentCamera = a_pCamera;
-}
-
-triebWerk::CCamera* triebWerk::CRenderer::GetCurrentActiveCamera()
-{
-	return m_pCurrentCamera;
-}
-
-triebWerk::CFontDrawable * triebWerk::CRenderer::CreateFontDrawable()
-{
-	CFontDrawable* drawable = new CFontDrawable(m_pGraphicsHandle);
-
-	return drawable;
-}
-
-triebWerk::CMeshDrawable* triebWerk::CRenderer::CreateMeshDrawable()
-{
-	CMeshDrawable* drawable = new CMeshDrawable();
-
-	return drawable;
-}
-
-triebWerk::CPostEffectDrawable* triebWerk::CRenderer::CreatePostEffecthDrawable()
-{
-	CPostEffectDrawable* pDrawable = new CPostEffectDrawable();
-	
-	return pDrawable;
-}
-
-triebWerk::CUIDrawable * triebWerk::CRenderer::CreateUIDrawable()
-{
-	CUIDrawable* pDrawable = new CUIDrawable(m_pGraphicsHandle);
-
-	return pDrawable;
-}
-
 void triebWerk::CRenderer::DrawScene()
 {
-	//Update the camera to draw with
 	m_pCurrentCamera->Update();
 
 	for (size_t i = 0; i < m_MaxRenderTargetCount; i++)
 	{
-		if (m_pRenderTargetList[i].m_pPostEffect != nullptr)
+		if (m_pRenderTargetList[i].m_pPostEffect != nullptr) // Should this rendertarget be drawn
 		{
 			m_pRenderTargetList[i].SetRenderTarget(0);
 			m_pRenderTargetList[i].ClearRenderTarget(0);
@@ -229,15 +184,18 @@ void triebWerk::CRenderer::DrawScene()
 			//Renders all Meshes in buffer
 			RenderMeshDrawables();
 			ResetRenderStates();
-			//Render all fonts
+			//Render UI
+			RenderUIDrawables();
 			RenderFontDrawables();
 			ResetRenderStates();
 		}
 	}
 
+	//Switch to default backbuffer
 	m_pGraphicsHandle->SetBackBufferRenderTarget();
 	m_pGraphicsHandle->ClearRenderTarget();
 
+	//draw the rendertargets with the specific post effects
 	for (size_t i = 0; i < m_MaxRenderTargetCount; i++)
 	{
 		//Draw Default Render Target if it has a effect
@@ -247,6 +205,7 @@ void triebWerk::CRenderer::DrawScene()
 		}
 	}
 
+	//swap buffers and present the picture
 	m_pGraphicsHandle->Present();
 
 	//Reset all buffers
@@ -257,7 +216,6 @@ void triebWerk::CRenderer::DrawScene()
 	
 	m_PostEffectCounter = 0;
 	m_CommandCounter = 0;
-
 	m_pRenderTargetList[0].m_pPostEffect = m_pDefaultPostEffect;
 }
 
@@ -312,7 +270,15 @@ void triebWerk::CRenderer::RenderFontDrawables()
 {
 	for (size_t i = 0; i < m_pRenderTargetList[m_ActiveRenderTargetSlot].m_RenderBatch.m_FontCommandCount; i++)
 	{
-		RenderFont(m_pRenderTargetList[m_ActiveRenderTargetSlot].m_RenderBatch.m_pFontBuffer[i]);
+		DrawFont(m_pRenderTargetList[m_ActiveRenderTargetSlot].m_RenderBatch.m_pFontBuffer[i]);
+	}
+}
+
+void triebWerk::CRenderer::RenderUIDrawables()
+{
+	for (size_t i = 0; i < m_pRenderTargetList[m_ActiveRenderTargetSlot].m_RenderBatch.m_UIElementCount; i++)
+	{
+		DrawUI(m_pRenderTargetList[m_ActiveRenderTargetSlot].m_RenderBatch.m_pUIBuffer[i]);
 	}
 }
 
@@ -439,10 +405,10 @@ void triebWerk::CRenderer::DrawRenderTarget(CRenderTarget* a_pRenderTarget)
 
 		SetResources(a_pRenderTarget->m_pPostEffect->m_Materials[i]);
 
-		UINT offset = 0;
-		m_pGraphicsHandle->GetDeviceContext()->IASetVertexBuffers(0, 1, &a_pRenderTarget->m_pPlaneBuffer, &a_pRenderTarget->m_Stride, &offset);
+		//Draw
+		a_pRenderTarget->m_pQuad->SetBuffer(m_pGraphicsHandle->GetDeviceContext());
 
-		m_pGraphicsHandle->GetDeviceContext()->Draw(a_pRenderTarget->m_VertexCount, 0);
+		m_pGraphicsHandle->GetDeviceContext()->Draw(a_pRenderTarget->m_pQuad->m_VertexCount, 0);
 	}
 }
 
@@ -485,7 +451,7 @@ void triebWerk::CRenderer::DrawMesh(const CMeshDrawable * a_pDrawable)
 	}
 }
 
-void triebWerk::CRenderer::RenderFont(CFontDrawable * a_pDrawable)
+void triebWerk::CRenderer::DrawFont(CFontDrawable * a_pDrawable)
 {
 	//ID3D11DeviceContext* pDeviceContext = m_pGraphicsHandle->GetDeviceContext();
 
@@ -510,7 +476,7 @@ void triebWerk::CRenderer::RenderFont(CFontDrawable * a_pDrawable)
 	CInstancedFontBatch::Draw(a_pDrawable, m_pGraphicsHandle->GetDevice(), m_pGraphicsHandle->GetDeviceContext(), m_pCurrentCamera);
 }
 
-void triebWerk::CRenderer::RenderUI(CUIDrawable * a_pUI)
+void triebWerk::CRenderer::DrawUI(CUIDrawable * a_pUI)
 {
 	//set resources and shader
 	SetShader(&a_pUI->m_Material);
@@ -636,4 +602,42 @@ void triebWerk::CRenderer::InstanceBatching(CMeshDrawable * a_pDrawable, const u
 		m_pRenderTargetList[a_RenderTargetSlot].m_RenderBatch.m_pInstancedMeshBuffer[m_pRenderTargetList[a_RenderTargetSlot].m_RenderBatch.m_InstancedMeshBatchCount].AddDrawable(a_pDrawable);
 		m_pRenderTargetList[a_RenderTargetSlot].m_RenderBatch.m_InstancedMeshBatchCount++;
 	}
+}
+
+void triebWerk::CRenderer::SetActiveCamera(CCamera * a_pCamera)
+{
+	m_pCurrentCamera = a_pCamera;
+}
+
+triebWerk::CCamera* triebWerk::CRenderer::GetCurrentActiveCamera()
+{
+	return m_pCurrentCamera;
+}
+
+triebWerk::CFontDrawable * triebWerk::CRenderer::CreateFontDrawable()
+{
+	CFontDrawable* drawable = new CFontDrawable(m_pGraphicsHandle);
+
+	return drawable;
+}
+
+triebWerk::CMeshDrawable* triebWerk::CRenderer::CreateMeshDrawable()
+{
+	CMeshDrawable* drawable = new CMeshDrawable();
+
+	return drawable;
+}
+
+triebWerk::CPostEffectDrawable* triebWerk::CRenderer::CreatePostEffecthDrawable()
+{
+	CPostEffectDrawable* pDrawable = new CPostEffectDrawable();
+
+	return pDrawable;
+}
+
+triebWerk::CUIDrawable * triebWerk::CRenderer::CreateUIDrawable()
+{
+	CUIDrawable* pDrawable = new CUIDrawable(m_pGraphicsHandle);
+
+	return pDrawable;
 }

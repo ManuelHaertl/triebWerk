@@ -2,7 +2,6 @@
 
 #include <CTexture2D.h>
 #include <CGraphics.h>
-#include <d3d11.h>
 #include <CRenderBatch.h>
 #include <CPostEffectDrawable.h>
 #include <vector>
@@ -20,10 +19,8 @@ namespace triebWerk
 		CPostEffectDrawable* m_pPostEffect;
 
 		//Objects needed to draw the RenderTarget
-		UINT m_Stride;
-		UINT m_VertexCount;
+		CRenderQuad* m_pQuad;
 		CTransform m_PlaneTransform;
-		ID3D11Buffer* m_pPlaneBuffer;
 
 	private:
 		CGraphics* m_pGraphicsHandle;

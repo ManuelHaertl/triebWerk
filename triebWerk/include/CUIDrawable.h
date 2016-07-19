@@ -27,7 +27,7 @@ namespace triebWerk
 		void SetTransform(const DirectX::XMMATRIX& a_rTransform) final;
 
 		//Return if this is a valid drawable to render properly
-		static bool IsValidDrawable(const CUIDrawable* a_pDrawableToTest);
+		bool IsDrawableValid() final;
 
 	};
 }

@@ -3,11 +3,9 @@
 
 triebWerk::CRenderTarget::CRenderTarget() :
 	m_pGraphicsHandle(nullptr),
-	m_pPlaneBuffer(nullptr),
+	m_pQuad(nullptr),
 	m_pPostEffect(nullptr),
-	m_Slot(0),
-	m_Stride(0),
-	m_VertexCount(0)
+	m_Slot(0)
 {
 	m_ClearColor[0] = 1.0f;
 	m_ClearColor[1] = 0.4f;
@@ -17,6 +15,7 @@ triebWerk::CRenderTarget::CRenderTarget() :
 
 triebWerk::CRenderTarget::~CRenderTarget()
 {
+	delete m_pQuad;
 	Clear();
 }
 
@@ -115,7 +114,8 @@ void triebWerk::CRenderTarget::Initialize(CGraphics * a_pGraphic, const unsigned
 	m_DefaultSceneTexture.SetTexture(a_Width, a_Height, pTexture, pShaderResource);
 
 	//Create a screen aligent quad for the render target texture drawing
-	m_pPlaneBuffer = a_pGraphic->CreateDefaultQuad(&m_Stride, &m_VertexCount);
+	//m_pPlaneBuffer = a_pGraphic->CreateDefaultQuad(&m_Stride, &m_VertexCount);
+	m_pQuad = a_pGraphic->CreateCRenderQuad();
 
 	//scale the texture at the screen size
 	m_PlaneTransform.SetScale(static_cast<float>(m_Texture[0].GetWidth()), static_cast<float>(m_Texture[0].GetHeight()), 0);

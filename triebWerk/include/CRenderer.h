@@ -100,6 +100,7 @@ namespace triebWerk
 		//Render the differnet drawable types
 		void RenderMeshDrawables();
 		void RenderFontDrawables();
+		void RenderUIDrawables();
 
 		//Render pipeline functions
 		void SetResources(const CMaterial* a_pMaterial);
@@ -127,13 +128,13 @@ namespace triebWerk
 		//Font
 		//--------------------------------------
 		//Render the font buffer
-		void RenderFont(CFontDrawable* a_pFont);
+		void DrawFont(CFontDrawable* a_pFont);
 		//--------------------------------------
 
 		//Font
 		//--------------------------------------
 		//Render the font buffer
-		void RenderUI(CUIDrawable* a_pUI);
+		void DrawUI(CUIDrawable* a_pUI);
 		//--------------------------------------
 	};
 }

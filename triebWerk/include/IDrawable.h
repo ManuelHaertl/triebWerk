@@ -33,6 +33,7 @@ namespace triebWerk
 	public:
 		virtual EDrawableType GetType() = 0;
 		virtual void SetTransform(const DirectX::XMMATRIX& a_rTransform) = 0;
+		virtual bool IsDrawableValid() = 0;
 
 		//Set the RenderTarget where it will be drawn
 		//If the slot doesnt exist it wont be drawn

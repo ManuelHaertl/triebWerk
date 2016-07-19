@@ -83,7 +83,7 @@ void CPostEffects::AddGrain()
 
 void CPostEffects::AddBlur()
 {
-	//auto blur = m_pPostEffect->AddMaterial(twResourceManager->GetMaterial("RadialBlur"));
+	auto blur = m_pPostEffect->AddMaterial(twResourceManager->GetMaterial("RadialBlur"));
 	//float width = twWindow->GetScreenWidth();
 	//float height = twWindow->GetScreenHeight();
 	//float tr = 0.0f;

@@ -18,15 +18,6 @@ triebWerk::CFontDrawable::~CFontDrawable()
 		m_pVertexBuffer;
 }
 
-void triebWerk::CFontDrawable::SetText(CText * a_pText)
-{
-	//m_ScaleOfTextureX = a_pText->GetWidth();
-	//m_ScaleOfTextureY = a_pText->GetHeight();
-	//m_pText = a_pText;
-
-	//m_Material.m_pPixelShader.SetTexture(0, a_pText->GetTexture());
-}
-
 triebWerk::IDrawable::EDrawableType triebWerk::CFontDrawable::GetType()
 {
 	return IDrawable::EDrawableType::Font;
@@ -37,9 +28,9 @@ void triebWerk::CFontDrawable::SetTransform(const DirectX::XMMATRIX & a_rTransfo
 	m_Transformation = a_rTransform;
 }
 
-bool triebWerk::CFontDrawable::IsValidDrawable(const CFontDrawable * a_pDrawableToTest)
+bool triebWerk::CFontDrawable::IsDrawableValid()
 {
-	if (a_pDrawableToTest->m_Material.m_ID.GetHash() != 0 && a_pDrawableToTest->m_pVertexBuffer != nullptr)
+	if (m_Material.m_ID.GetHash() != 0 && m_pVertexBuffer != nullptr)
 	{
 		return true;
 	}

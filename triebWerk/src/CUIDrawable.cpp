@@ -23,9 +23,9 @@ void triebWerk::CUIDrawable::SetTransform(const DirectX::XMMATRIX & a_rTransform
 	m_Transformation = a_rTransform;
 }
 
-bool triebWerk::CUIDrawable::IsValidDrawable(const CUIDrawable * a_pDrawableToTest)
+bool triebWerk::CUIDrawable::IsDrawableValid()
 {
-	if (a_pDrawableToTest->m_Material.m_ID.GetHash() != 0 && a_pDrawableToTest->m_pVertexBuffer != nullptr)
+	if (m_Material.m_ID.GetHash() != 0 && m_pVertexBuffer != nullptr)
 	{
 		return true;
 	}
