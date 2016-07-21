@@ -13,6 +13,11 @@ private:
     const std::string StringCategorySingle = "Single";
     const std::string StringCategoryTwice = "Twice";
     const std::string StringCategoryVary = "Vary";
+    const std::string StringMoving = "Moving";
+    const std::string StringDistance = "Distance";
+    const std::string StringPosStart = "PosStart";
+    const std::string StringPosEnd = "PosEnd";
+    const std::string StringTime = "Time";
 
     std::vector<CPattern*> m_AllPattern;
     std::vector<CPattern*> m_CategoriesPattern[CPattern::MaxCategories];
@@ -27,6 +32,7 @@ private:
     void SetMapLayer(triebWerk::CMapLayer* const a_pLayer, CPattern* a_pPattern);
     void SetObjectLayer(triebWerk::CObjectLayer* const a_pLayer, CPattern* a_pPattern);
     void SetTile(const ETileType::Type a_Type, const float a_X, const float a_Y, CPattern* a_pPattern);
+    void SetTile(const ETileType::Type a_Type, const triebWerk::CLayerObject& a_rObject, const float a_X, const float a_Y, CPattern* a_pPattern);
     void InsertPatternTile(const SPatternTile& a_rPatternTile, CPattern* a_pPattern);
     ETileType::Type GetTileType(const short a_Tile) const;
     ETileType::Type GetModelTileType(const int a_ModelWidth, const int a_ModelHeight) const;

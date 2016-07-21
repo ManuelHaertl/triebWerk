@@ -37,6 +37,7 @@ void CPostEffects::Update()
     UpdateCheckpointEffect();
 	UpdateShieldEffect();
 	UpdateGrainEffect();
+    UpdateBlur();
 
     float time = twTime->GetTimeSinceStartup();
 
@@ -83,13 +84,9 @@ void CPostEffects::AddGrain()
 
 void CPostEffects::AddBlur()
 {
-	//auto blur = m_pPostEffect->AddMaterial(twResourceManager->GetMaterial("RadialBlur"));
-	//float width = twWindow->GetScreenWidth();
-	//float height = twWindow->GetScreenHeight();
-	//float tr = 0.0f;
-	//blur->m_ConstantBuffer.SetValueInBuffer(4, &width);
-	//blur->m_ConstantBuffer.SetValueInBuffer(5, &height);
-	//blur->m_ConstantBuffer.SetValueInBuffer(6, &tr);
+    m_pBlur = m_pPostEffect->AddMaterial(twResourceManager->GetMaterial("RadialBlur"));
+    float strength = 00.0f;
+    m_pBlur->m_ConstantBuffer.SetValueInBuffer(4, &strength);
 }
 
 void CPostEffects::UpdateCheckpointEffect()
@@ -97,28 +94,32 @@ void CPostEffects::UpdateCheckpointEffect()
     CGameInfo& gameInfo = CGameInfo::Instance();
     if (gameInfo.m_EffectDodge)
     {
-        gameInfo.m_EffectDodge = false;
-        m_CurrentDodgeTime = DodgeEffectLength;
-    }
 
-    m_CurrentDodgeTime -= twTime->GetDeltaTime();
-
-    if (m_CurrentDodgeTime > 0)
-    {
-        float lerpValue = m_CurrentDodgeTime;
-        float half = DodgeEffectLength / 2.0f;
-
-        if (lerpValue > half)
-            lerpValue = DodgeEffectLength - m_CurrentDodgeTime;
-
-        m_CurrentChromaticAberrationStrength = (lerpValue / half) * DodgeEffectStrength;
-
-        std::cout << "Lerp " << m_CurrentChromaticAberrationStrength << std::endl;
+        m_CurrentChromaticAberrationStrength = (DodgeEffectStrengthMax - DodgeEffectStrengthMin) * gameInfo.m_EffectDodgeStrength + DodgeEffectStrengthMin;
     }
     else
     {
         m_CurrentChromaticAberrationStrength = ChromaticAberrationStrength;
     }
+
+    //m_CurrentDodgeTime -= twTime->GetDeltaTime();
+
+    //if (m_CurrentDodgeTime > 0)
+    //{
+    //    float lerpValue = m_CurrentDodgeTime;
+    //    float half = DodgeEffectLength / 2.0f;
+
+    //    if (lerpValue > half)
+    //        lerpValue = DodgeEffectLength - m_CurrentDodgeTime;
+
+    //    m_CurrentChromaticAberrationStrength = (lerpValue / half) * DodgeEffectStrength;
+
+    //    std::cout << "Lerp " << m_CurrentChromaticAberrationStrength << std::endl;
+    //}
+    //else
+    //{
+    //    m_CurrentChromaticAberrationStrength = ChromaticAberrationStrength;
+    //}
 }
 
 void CPostEffects::UpdateShieldEffect()
@@ -157,4 +158,14 @@ void CPostEffects::UpdateGrainEffect()
 {
 	float time = twTime->GetTimeSinceStartup();
 	m_pGrain->m_ConstantBuffer.SetValueInBuffer(4, &time);
+}
+
+void CPostEffects::UpdateBlur()
+{
+    float strength = 0.0f;
+
+    if (CGameInfo::Instance().m_EffectBoost)
+        strength = BoostEffectStrength;
+
+    m_pBlur->m_ConstantBuffer.SetValueInBuffer(4, &strength);
 }

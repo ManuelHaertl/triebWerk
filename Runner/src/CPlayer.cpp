@@ -7,10 +7,9 @@
 #include <CPoints.h>
 
 CPlayer::CPlayer()
-    : m_IsDodging(false)
-    , m_DodgeSpeed(0.0f)
-    , m_CurrentDodgeTime(0.0f)
-    , m_CurrentDodgeCooldownTime(0.0f)
+    : m_CurrentResource(MaxResource)
+    , m_InFullControlMode(false)
+    , m_InBoostMode(false)
     , m_IsShieldActive(false)
     , m_CurrentShieldTime(0.0f)
     , m_CurrentShieldCooldownTime(0.0f)
@@ -37,10 +36,10 @@ void CPlayer::Start()
 void CPlayer::Update()
 {
     CheckInput();
+    CheckResource();
     SetSpeed();
     SetShield();
     CalculateDistanceFlewn();
-    AddPointsForFlewnDistance();
     UpdateTrail();
 }
 
@@ -48,6 +47,8 @@ void CPlayer::LateUpdate()
 {
     m_pTrail->m_Transform.SetPosition(m_pEntity->m_Transform.GetPosition());
     m_pTrail->m_Transform.SetRotation(m_pEntity->m_Transform.GetRotation());
+
+    CGameInfo::Instance().m_PlayerPosition = m_pEntity->m_Transform.GetPosition().m128_f32[2];
 
     if (!twDebug->IsInDebug())
     {
@@ -83,12 +84,12 @@ void CPlayer::CollisionEnter(triebWerk::CCollisionEvent a_Collision)
         gameInfo.m_Multiplier = 1.0f;
         gameInfo.m_EffectCheckpoint = true;
     }
-    else if (entity->m_ID.GetHash() == triebWerk::StringHasher("Wall"))
+    else if (entity->m_Tag.HasTag("Death"))
     {
         if (m_IsShieldActive == false && GodMode == false)
         {
-            //if (m_IsDead == false)
-            //    triebWerk::CDebugLogfile::Instance().LogfText(triebWerk::CDebugLogfile::ELogType::Warning, false, entity->m_ID.GetDescribtion().c_str());
+            if (m_IsDead == false)
+                triebWerk::CDebugLogfile::Instance().LogfText(triebWerk::CDebugLogfile::ELogType::Text, false, entity->m_ID.GetDescribtion().c_str());
             m_IsDead = true;
         }
     }
@@ -101,10 +102,9 @@ void CPlayer::CollisionStay(triebWerk::CCollisionEvent a_Collision)
 
 void CPlayer::Reset()
 {
-    m_IsDodging = false;
-    m_DodgeSpeed = 0.0f;
-    m_CurrentDodgeCooldownTime = 0.0f;
-    m_CurrentDodgeTime = 0.0f;
+    m_CurrentResource = MaxResource;
+    m_InFullControlMode = false;
+    m_InBoostMode = false;
     m_IsDead = false;
     m_MetersFlewn = 0.0f;
     m_LastZ = 0.0f;
@@ -144,13 +144,13 @@ void CPlayer::CheckInput()
         m_PlayerInput.m_Left = twGamepad.IsState(triebWerk::EGamepadButton::LAnalogLeft, triebWerk::EButtonState::Pressed, 0);
         m_PlayerInput.m_Right = twGamepad.IsState(triebWerk::EGamepadButton::LAnalogRight, triebWerk::EButtonState::Pressed, 0);
 
-        m_PlayerInput.m_DodgeLeft =
-            twGamepad.IsState(triebWerk::EGamepadButton::LT, triebWerk::EButtonState::Down, 0) ||
-            twGamepad.IsState(triebWerk::EGamepadButton::LB, triebWerk::EButtonState::Down, 0);
+        m_PlayerInput.m_FullControl =
+            twGamepad.IsState(triebWerk::EGamepadButton::LT, triebWerk::EButtonState::Pressed, 0) ||
+            twGamepad.IsState(triebWerk::EGamepadButton::LB, triebWerk::EButtonState::Pressed, 0);
 
-        m_PlayerInput.m_DodgeRight =
-            twGamepad.IsState(triebWerk::EGamepadButton::RT, triebWerk::EButtonState::Down, 0) ||
-            twGamepad.IsState(triebWerk::EGamepadButton::RB, triebWerk::EButtonState::Down, 0);
+        m_PlayerInput.m_Boost =
+            twGamepad.IsState(triebWerk::EGamepadButton::RT, triebWerk::EButtonState::Pressed, 0) ||
+            twGamepad.IsState(triebWerk::EGamepadButton::RB, triebWerk::EButtonState::Pressed, 0);
 
         m_PlayerInput.m_Shield = twGamepad.IsState(triebWerk::EGamepadButton::A, triebWerk::EButtonState::Down, 0);
 
@@ -181,8 +181,8 @@ void CPlayer::CheckInput()
         m_PlayerInput.m_Left = twKeyboard.IsState(triebWerk::EKey::Left, triebWerk::EButtonState::Pressed);
         m_PlayerInput.m_Right = twKeyboard.IsState(triebWerk::EKey::Right, triebWerk::EButtonState::Pressed);
 
-        m_PlayerInput.m_DodgeLeft = twKeyboard.IsState(triebWerk::EKey::Q, triebWerk::EButtonState::Down);
-        m_PlayerInput.m_DodgeRight = twKeyboard.IsState(triebWerk::EKey::E, triebWerk::EButtonState::Down);
+        m_PlayerInput.m_FullControl = twKeyboard.IsState(triebWerk::EKey::Q, triebWerk::EButtonState::Down);
+        m_PlayerInput.m_Boost = twKeyboard.IsState(triebWerk::EKey::E, triebWerk::EButtonState::Down);
         
         m_PlayerInput.m_Shield = twKeyboard.IsState(triebWerk::EKey::S, triebWerk::EButtonState::Down);
 
@@ -195,41 +195,88 @@ void CPlayer::CheckInput()
     }
 }
 
+void CPlayer::CheckResource()
+{
+    CGameInfo& gameInfo = CGameInfo::Instance();
+    bool gainResource = true;
+    bool fullControlEffect = false;
+    bool fullBoostEffect = false;
+
+    // Full Control
+    if (m_PlayerInput.m_FullControl)
+    {
+        gainResource = false;
+
+        if (m_CurrentResource > 0.0f)
+            fullControlEffect = true;
+    }
+
+    if (fullControlEffect)
+    {
+        m_CurrentResource -= FullControlCost * twTime->GetDeltaTime();
+        m_InFullControlMode = true;
+        gameInfo.m_EffectDodge = true;
+    }
+    else
+    {
+        m_InFullControlMode = false;
+        gameInfo.m_EffectDodge = false;
+    }
+
+    // Boost
+    if (m_PlayerInput.m_Boost)
+    {
+        gainResource = false;
+
+        if (m_CurrentResource > 0.0f)
+            fullBoostEffect = true;
+    }
+
+    if (fullBoostEffect)
+    {
+        m_CurrentResource -= BoostCost * twTime->GetDeltaTime();
+        m_InBoostMode = true;
+        gameInfo.m_EffectBoost = true;
+        gameInfo.m_FlyBoostSpeed = BoostSpeed;
+    }
+    else
+    {
+        m_InBoostMode = false;
+        gameInfo.m_EffectBoost = false;
+        gameInfo.m_FlyBoostSpeed = 0.0f;
+    }
+
+    // Resource
+    if (gainResource)
+    {
+        m_CurrentResource += ResourcePerSecond * twTime->GetDeltaTime();
+
+        if (m_CurrentResource > MaxResource)
+            m_CurrentResource = MaxResource;
+    }
+
+    std::cout << "Resource: " << m_CurrentResource << std::endl;
+}
+
 void CPlayer::SetSpeed()
 {
+    CGameInfo& gameInfo = CGameInfo::Instance();
+
     DirectX::XMVECTOR velocity = m_pEntity->GetPhysicEntity()->GetBody()->m_Velocity;
+    
 
-    m_CurrentDodgeCooldownTime -= twTime->GetDeltaTime();
-    if (m_IsDodging)
+    // Handles speed in X direction
+    if (m_InFullControlMode == true)
     {
-        m_CurrentDodgeTime -= twTime->GetDeltaTime();
-        if (m_CurrentDodgeTime <= 0.0f)
-        {
+        if (m_PlayerInput.m_Left)
+            velocity.m128_f32[0] = FullControlSpeed * m_PlayerInput.m_MoveKeyDistance;
+        else if (m_PlayerInput.m_Right)
+            velocity.m128_f32[0] = FullControlSpeed * m_PlayerInput.m_MoveKeyDistance;
+        else
             velocity.m128_f32[0] = 0.0f;
-            m_IsDodging = false;
-        }
+
+        CGameInfo::Instance().m_EffectDodgeStrength = std::fabsf(m_PlayerInput.m_MoveKeyDistance);
     }
-
-    if ((m_PlayerInput.m_DodgeLeft || m_PlayerInput.m_DodgeRight) && m_CurrentDodgeCooldownTime <= 0.0f)
-    {
-        m_CurrentDodgeCooldownTime = DodgeCooldown;
-        m_CurrentDodgeTime = DodgeTime;
-        m_IsDodging = true;
-
-        CGameInfo::Instance().m_EffectDodge = true;
-
-        m_DodgeSpeed = DodgeDistance / DodgeTime;
-        if (m_PlayerInput.m_DodgeLeft)
-            m_DodgeSpeed *= -1;
-    }
-    if (m_IsDodging)
-    {
-        if (DodgeTime == 0.0f)
-            DodgeTime = 0.001f;
-        
-        velocity.m128_f32[0] = m_DodgeSpeed;
-    }
-
     else
     {
         float currentMaxSpeed = MaxSpeed * m_PlayerInput.m_MoveKeyDistance;
@@ -261,8 +308,10 @@ void CPlayer::SetSpeed()
         }
     }
 
+    // Speed in Y Direction
+    velocity.m128_f32[2] = gameInfo.m_FlyStandardSpeed + gameInfo.m_FlyDifficultySpeed + gameInfo.m_FlyBoostSpeed;
+
     // set the new speed
-    velocity.m128_f32[2] = CGameInfo::Instance().m_FlySpeed;
     m_pEntity->GetPhysicEntity()->GetBody()->m_Velocity = velocity;
 }
 
@@ -289,12 +338,6 @@ void CPlayer::CalculateDistanceFlewn()
 
     m_MetersFlewn = currentZ - m_LastZ;
     m_LastZ = currentZ;
-}
-
-void CPlayer::AddPointsForFlewnDistance()
-{
-    CGameInfo& gameInfo = CGameInfo::Instance();
-    gameInfo.m_CurrentPoints += m_MetersFlewn * gameInfo.m_PointsPerMeter;
 }
 
 void CPlayer::UpdateTrail()

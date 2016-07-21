@@ -102,6 +102,9 @@
     <ClCompile Include="src\CUI.cpp">
       <Filter>Quelldateien\Game</Filter>
     </ClCompile>
+    <ClCompile Include="src\CMovingObstacle.cpp">
+      <Filter>Quelldateien\Game\Tiles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\CGameScene.h">
@@ -163,6 +166,9 @@
     </ClInclude>
     <ClInclude Include="include\CUI.h">
       <Filter>Headerdateien\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CMovingObstacle.h">
+      <Filter>Headerdateien\Game\Tiles</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

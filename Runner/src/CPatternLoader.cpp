@@ -102,7 +102,7 @@ void CPatternLoader::SetObjectLayer(triebWerk::CObjectLayer* const a_pLayer, CPa
             if (type == ETileType::ModelSize)
                 type = GetModelTileType(objectProperty.m_Width / 64, objectProperty.m_Height / 64);
 
-            SetTile(type, xPos, yPos, a_pPattern);
+            SetTile(type, objectProperty, xPos, yPos, a_pPattern);
         }
     }
 }
@@ -113,6 +113,54 @@ void CPatternLoader::SetTile(const ETileType::Type a_Type, const float a_X, cons
     patternTile.m_X = a_X;
     patternTile.m_Y = a_Y;
     patternTile.m_Type = a_Type;
+
+    InsertPatternTile(patternTile, a_pPattern);
+}
+
+void CPatternLoader::SetTile(const ETileType::Type a_Type, const triebWerk::CLayerObject& a_rObject, const float a_X, const float a_Y, CPattern * a_pPattern)
+{
+    SPatternTile patternTile;
+    patternTile.m_X = a_X;
+    patternTile.m_Y = a_Y;
+    patternTile.m_Type = a_Type;
+
+    for (auto prop : a_rObject.m_Properties)
+    {
+        if (prop.first == StringMoving)
+        {
+            patternTile.m_Moving = true;
+        }
+        else if (prop.first == StringDistance)
+            patternTile.m_Distance = std::stof(prop.second);
+        else if (prop.first == StringPosStart)
+            patternTile.m_PosStart = std::stof(prop.second);
+        else if (prop.first == StringPosEnd)
+            patternTile.m_PosEnd = std::stof(prop.second);
+        else if (prop.first == StringTime)
+            patternTile.m_Time = std::stof(prop.second);
+    }
+
+    if (patternTile.m_Moving)
+    {
+        switch (patternTile.m_Type)
+        {
+        case ETileType::Model05x05:
+            (patternTile.m_PosStart > patternTile.m_PosEnd) ?
+                patternTile.m_Type = ETileType::Moving05x05Down :
+                patternTile.m_Type = ETileType::Moving05x05Up;
+            break;
+        case ETileType::Model05x10:
+            (patternTile.m_PosStart > patternTile.m_PosEnd) ?
+                patternTile.m_Type = ETileType::Moving05x10Down :
+                patternTile.m_Type = ETileType::Moving05x10Up;
+            break;
+        case ETileType::Model05x10Flipped:
+            (patternTile.m_PosStart > patternTile.m_PosEnd) ?
+                patternTile.m_Type = ETileType::Moving05x10DownFlipped :
+                patternTile.m_Type = ETileType::Moving05x10UpFlipped;
+            break;
+        }
+    }
 
     InsertPatternTile(patternTile, a_pPattern);
 }

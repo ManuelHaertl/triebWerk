@@ -163,6 +163,7 @@
     <ClCompile Include="src\CSceneManager.cpp" />
     <ClCompile Include="src\CSound.cpp" />
     <ClCompile Include="src\CSoundEngine.cpp" />
+    <ClCompile Include="src\CTag.cpp" />
     <ClCompile Include="src\CText.cpp" />
     <ClCompile Include="src\CTWFData.cpp" />
     <ClCompile Include="src\CConstantBuffer.cpp" />
@@ -232,6 +233,7 @@
     <ClInclude Include="include\CFontDrawable.h" />
     <ClInclude Include="include\CGeometryShader.h" />
     <ClInclude Include="include\CInstancedFontBatch.h" />
+    <ClInclude Include="include\CTag.h" />
     <ClInclude Include="include\SafeDeletes.h" />
     <ClInclude Include="include\CPostEffectDrawable.h" />
     <ClInclude Include="include\CRenderBatch.h" />

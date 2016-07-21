@@ -4,17 +4,26 @@
 #include <CCheckpoint.h>
 #include <CDifficultyChanger.h>
 #include <CGameInfo.h>
+#include <CGameScene.h>
 #include <CPatternManager.h>
 #include <CPlayer.h>
 #include <CPoints.h>
 #include <CPostEffects.h>
 
+float CGameScene::PointsPerMeter = 0.5f;
+
 float CPlayer::Acceleration = 250.0f;
 float CPlayer::Drag = 150.0f;
 float CPlayer::MaxSpeed = 30.0f;
-float CPlayer::DodgeDistance = 15.0f;
-float CPlayer::DodgeTime = 0.5f;
-float CPlayer::DodgeCooldown = 0.5f;
+
+float CPlayer::MaxResource = 10.0f;
+float CPlayer::ResourcePerSecond = 1.0f;
+
+float CPlayer::FullControlSpeed = 100.0f;
+float CPlayer::FullControlCost = 2.0f;
+
+float CPlayer::BoostSpeed = 15.0f;
+float CPlayer::BoostCost = 2.0f;
 
 float CPlayer::ShieldTime = 2.0f;
 float CPlayer::ShieldCooldown = 10.0f;
@@ -54,8 +63,10 @@ int CPoints::Points[3] = { 10, 20, 50 };
 float CPostEffects::ChromaticAberrationStrength = 0.8f;
 float CPostEffects::CheckpointEffectLength = 0.2f;
 float CPostEffects::CheckpointEffectStrength = 1.5f;
-float CPostEffects::DodgeEffectStrength = 10.0f;
+float CPostEffects::DodgeEffectStrengthMin = 2.0f;
+float CPostEffects::DodgeEffectStrengthMax = 5.0f;
 float CPostEffects::DodgeEffectLength = 2.0f;
+float CPostEffects::BoostEffectStrength = 2.0f;
 float CPostEffects::ShieldEffectLength = 0.0f;
 float CPostEffects::ShieldEffectStrength = 1.5f;
 
@@ -99,14 +110,13 @@ void CValueUpdater::UpdateValues()
         // Game
         if (value.first == "g_PointsPerMeter")
         {
-            gameInfo.m_PointsPerMeter = std::stof(value.second);
+            CGameScene::PointsPerMeter = std::stof(value.second);
         }
 
         // Player
         else if (value.first == "pl_FlySpeed")
         {
-            gameInfo.m_FlySpeed = std::stof(value.second);
-            gameInfo.m_StartFlySpeed = std::stof(value.second);
+            gameInfo.m_FlyStandardSpeed = std::stof(value.second);
         }
         else if (value.first == "pl_Acceleration")
         {
@@ -120,23 +130,43 @@ void CValueUpdater::UpdateValues()
         {
             CPlayer::MaxSpeed = std::stof(value.second);
         }
-        else if (value.first == "pl_DodgeDistance")
+        else if (value.first == "pl_MaxResource")
         {
-            CPlayer::DodgeDistance = std::stof(value.second);
+            CPlayer::MaxResource = std::stof(value.second);
         }
-        else if (value.first == "pl_DodgeTime")
+        else if (value.first == "pl_ResourcePerSecond")
         {
-            CPlayer::DodgeTime = std::stof(value.second);
-            CPostEffects::DodgeEffectLength = CPlayer::DodgeTime;
+            CPlayer::ResourcePerSecond = std::stof(value.second);
         }
-        else if (value.first == "pl_DodgeCooldown")
+        else if (value.first == "pl_FullControlSpeed")
         {
-            CPlayer::DodgeCooldown = std::stof(value.second);
+            CPlayer::FullControlSpeed = std::stof(value.second);
         }
-        else if (value.first == "pl_DodgeEffectStrength")
+        else if (value.first == "pl_FullControlCost")
         {
-            CPostEffects::DodgeEffectStrength = std::stof(value.second);
+            CPlayer::FullControlCost = std::stof(value.second);
         }
+        else if (value.first == "pl_FullControlEffectStrengthMin")
+        {
+            CPostEffects::DodgeEffectStrengthMin = std::stof(value.second);
+        }
+        else if (value.first == "pl_FullControlEffectStrengthMax")
+        {
+            CPostEffects::DodgeEffectStrengthMax = std::stof(value.second);
+        }
+        else if (value.first == "pl_BoostSpeed")
+        {
+            CPlayer::BoostSpeed = std::stof(value.second);
+        }
+        else if (value.first == "pl_BoostCost")
+        {
+            CPlayer::BoostCost = std::stof(value.second);
+        }
+        else if (value.first == "pl_BoostEffectStrength")
+        {
+            CPostEffects::BoostEffectStrength = std::stof(value.second);
+        }
+
         else if (value.first == "pl_ShieldTime")
         {
             CPlayer::ShieldTime = std::stof(value.second);

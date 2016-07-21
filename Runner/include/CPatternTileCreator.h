@@ -5,9 +5,7 @@
 class CPatternTileCreator
 {
 public:
-    triebWerk::CEntity* m_pEntity1;
-    triebWerk::CEntity* m_pEntity2;
-    triebWerk::CEntity* m_pEntity3;
+    std::vector<triebWerk::CEntity*> m_Entities;
 
 private:
     static const size_t MaxObstacleHeights = 2;
@@ -42,6 +40,11 @@ private:
     triebWerk::CMesh* m_pShadow20;
     triebWerk::CMesh* m_pShadow30;
 
+    triebWerk::CMesh* m_pMoving05Up;
+    triebWerk::CMesh* m_pMoving05Down;
+    triebWerk::CMesh* m_pMoving10Up;
+    triebWerk::CMesh* m_pMoving10Down;
+
     // Textures ----------------------------------------------
 
     triebWerk::CTexture2D* m_pTextureObstacle[MaxObstacleTextures][MaxObstacleTextureBlendings];
@@ -63,6 +66,7 @@ public:
     CPatternTileCreator();
     ~CPatternTileCreator();
 
+    void Start(triebWerk::CEntity* a_pPlayer);
     void CreateEntity(const SPatternTile& a_rTile, const float a_PatternSpawnBegin);
 
 private:
@@ -79,4 +83,6 @@ private:
     void CreateShadow10(const bool a_Rotated);
     void CreateShadow20(const bool a_Rotated);
     void CreateShadow30(const bool a_Rotated);
+    void CreateMoving05x05(const bool a_Up);
+    void CreateMoving05x10(const bool a_Up, const bool a_Rotated);
 };

@@ -21,6 +21,7 @@ namespace triebWerk
         void Remove(const T& a_pElement);
         void Resize(size_t a_ElementCount);
         void Clear();
+        bool Contains(const T& a_rElement);
         
         size_t GetSize() const;
         size_t GetMaxSize() const;
@@ -31,7 +32,7 @@ namespace triebWerk
     template<class T>
     inline CElementContainer<T>::CElementContainer() :
         m_Size(0),
-        m_MaxSize(32)
+        m_MaxSize(1)
     {
         m_ElementSize = sizeof(T);
         m_pElements = new T[m_MaxSize];
@@ -108,6 +109,18 @@ namespace triebWerk
     inline void CElementContainer<T>::Clear()
     {
         m_Size = 0;
+    }
+
+    template<class T>
+    inline bool CElementContainer<T>::Contains(const T& a_rElement)
+    {
+        for (size_t i = 0; i < m_Size; ++i)
+        {
+            if (m_pElements[i] == a_rElement)
+                return true;
+        }
+
+        return false;
     }
 
     template<class T>

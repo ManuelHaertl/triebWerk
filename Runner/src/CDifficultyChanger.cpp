@@ -32,6 +32,7 @@ void CDifficultyChanger::Update()
         gameInfo.m_Difficulty = 4;
     else
     {
+        gameInfo.m_Difficulty = 5;
         m_CurrentSpeedRaiseTime -= twTime->GetDeltaTime();
         if (m_CurrentSpeedRaiseTime <= 0.0f)
         {
@@ -49,7 +50,7 @@ void CDifficultyChanger::AddSpeed()
 {
     CGameInfo& gameInfo = CGameInfo::Instance();
 
-    gameInfo.m_FlySpeed += AddedSpeed;
-    if (gameInfo.m_FlySpeed > MaxSpeed)
-        gameInfo.m_FlySpeed = MaxSpeed;
+    gameInfo.m_FlyDifficultySpeed += AddedSpeed;
+    if (gameInfo.m_FlyDifficultySpeed > MaxSpeed)
+        gameInfo.m_FlyDifficultySpeed = MaxSpeed;
 }

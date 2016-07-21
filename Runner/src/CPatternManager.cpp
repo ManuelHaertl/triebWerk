@@ -110,16 +110,17 @@ void CPatternManager::SpawnNextTile()
     SPatternTile& patternTile = pattern.m_Tiles[m_CurrentTileIndex];
     m_PatternTileCreator.CreateEntity(patternTile, m_PatternSpawnBegin);
 
-    if (m_PatternTileCreator.m_pEntity1 != nullptr)
+    size_t size = m_PatternTileCreator.m_Entities.size();
+    for (size_t i = 0; i < size; ++i)
     {
-        m_PatternTileCreator.m_pEntity1->m_ID.SetDescribtion("Died in Pattern: " + m_pCurrentPattern->m_Name + " Difficulty:  " + std::to_string(m_pCurrentPattern->m_Difficulty) + " Priority: " + std::to_string(m_pCurrentPattern->m_Priority));
-        m_Entities.push_back(m_PatternTileCreator.m_pEntity1);
-
-        if (m_PatternTileCreator.m_pEntity2 != nullptr)
-            m_Entities.push_back(m_PatternTileCreator.m_pEntity2);
-
-        if (m_PatternTileCreator.m_pEntity3 != nullptr)
-            m_Entities.push_back(m_PatternTileCreator.m_pEntity3);
+        auto entity = m_PatternTileCreator.m_Entities[i];
+        
+        // For Debug purpose
+        if (entity->m_Tag.HasTag("Death"))
+            entity->m_ID.SetDescribtion("Died in Pattern: " + m_pCurrentPattern->m_Name + " Difficulty:  " + std::to_string(m_pCurrentPattern->m_Difficulty) + " Priority: " + std::to_string(m_pCurrentPattern->m_Priority));
+    
+        twActiveWorld->AddEntity(entity);
+        m_Entities.push_back(entity);
     }
 
     m_IsSpawned = m_PatternSpawnBegin + patternTile.m_Y;
@@ -200,11 +201,9 @@ void CPatternManager::SetRandomPattern(size_t a_Difficulty)
 
 void CPatternManager::UpdateTextureBlending()
 {
-    size_t hash = triebWerk::StringHasher("Wall");
-
     for (auto entity : m_Entities)
     {
-        if (entity->m_ID.GetHash() == hash)
+        if (entity->m_Tag.HasTag("WallEffect"))
         {
             float blend1 = 1.0f, blend2 = 0.0f, blend3 = 0.0f;
             auto drawable = static_cast<triebWerk::CMeshDrawable*>(entity->GetDrawable());

@@ -9,9 +9,14 @@ public:
     static float Drag;
     static float MaxSpeed;
 
-    static float DodgeDistance;
-    static float DodgeTime;
-    static float DodgeCooldown;
+    static float MaxResource;
+    static float ResourcePerSecond;
+
+    static float FullControlSpeed;
+    static float FullControlCost;
+
+    static float BoostSpeed;
+    static float BoostCost;
 
     static float ShieldTime;
     static float ShieldCooldown;
@@ -28,10 +33,10 @@ public:
     static int GodMode;
 
 private:
-    bool m_IsDodging;
-    float m_DodgeSpeed;
-    float m_CurrentDodgeTime;
-    float m_CurrentDodgeCooldownTime;
+    float m_CurrentResource;
+
+    bool m_InFullControlMode;    
+    bool m_InBoostMode;
 
     bool m_IsShieldActive;
     float m_CurrentShieldTime;
@@ -66,10 +71,10 @@ public:
 private:
     void CreateTrail();
     void CheckInput();
+    void CheckResource();
     void SetSpeed();
     void SetShield();
     void CalculateDistanceFlewn();
-    void AddPointsForFlewnDistance();
     void UpdateTrail();
     void SetCamera();
     void SetRotation();

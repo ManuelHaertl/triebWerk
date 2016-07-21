@@ -9,8 +9,11 @@ public:
     static float CheckpointEffectLength;
     static float CheckpointEffectStrength;
 
-    static float DodgeEffectStrength;
+    static float DodgeEffectStrengthMin;
+    static float DodgeEffectStrengthMax;
     static float DodgeEffectLength;
+
+    static float BoostEffectStrength;
 
 	static float ShieldEffectLength;
 	static float ShieldEffectStrength;
@@ -21,7 +24,8 @@ private:
     triebWerk::CMaterial* m_pRipple;
     triebWerk::CMaterial* m_pScanLines;
 	triebWerk::CMaterial* m_pGrain;
-	triebWerk::CMaterial* m_pShield;
+    triebWerk::CMaterial* m_pShield;
+    triebWerk::CMaterial* m_pBlur;
 
     float m_CurrentChromaticAberrationStrength;
     float m_CurrentDodgeTime;
@@ -45,4 +49,5 @@ private:
     void UpdateCheckpointEffect();
 	void UpdateShieldEffect();
 	void UpdateGrainEffect();
+    void UpdateBlur();
 };

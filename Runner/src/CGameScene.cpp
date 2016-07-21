@@ -6,7 +6,7 @@
 bool loud = false;
 
 CGameScene::CGameScene()
-    : m_pPlayer(nullptr)
+    : m_pPlayerScript(nullptr)
     , m_LastPlayerPos(0.0f)
 {
 }
@@ -21,17 +21,14 @@ void CGameScene::Start()
 
 	twAudio->PlayBGM(twResourceManager->GetSound("Vermair - Rendez Vous"), true, true);
 	twAudio->m_pDevice->setSoundVolume(static_cast<float>(loud));
+    CreatePlayer();
+    CreatePostEffects();
+
     m_ValueUpdater.Start();
     m_DifficultyChanger.Start();
     m_EnvironmentCreator.Start();
     m_PatternManager.Start();
 	m_UI.Start();
-    CreatePlayer();
-    //CreateText();
-
-    auto entity = twActiveWorld->CreateEntity();
-    entity->SetBehaviour(new CPostEffects());
-    twActiveWorld->AddEntity(entity);
 }
 
 void CGameScene::Update()
@@ -39,9 +36,9 @@ void CGameScene::Update()
     m_ValueUpdater.Update();
     m_DifficultyChanger.Update();
 
-    if (m_pPlayer->HasDied())
+    if (m_pPlayerScript->HasDied())
     {
-        m_pPlayer->Reset();
+        m_pPlayerScript->Reset();
         m_PatternManager.Reset();
         m_EnvironmentCreator.Reset();
         CGameInfo::Instance().Reset();
@@ -82,22 +79,8 @@ void CGameScene::Update()
             twDebug->Disable();
     }
 
-    if (twKeyboard.IsState(triebWerk::EKey::Up, triebWerk::EButtonState::Down))
-    {
-        if (CGameInfo::Instance().m_Difficulty < 5)
-            CGameInfo::Instance().m_Difficulty++;
-
-        std::cout << "Difficulty: " << CGameInfo::Instance().m_Difficulty << std::endl;
-    }
-    if (twKeyboard.IsState(triebWerk::EKey::Down, triebWerk::EButtonState::Down))
-    {
-        if (CGameInfo::Instance().m_Difficulty > 1)
-            CGameInfo::Instance().m_Difficulty--;
-
-        std::cout << "Difficulty: " << CGameInfo::Instance().m_Difficulty << std::endl;
-    }
-
-    const float metersFlewn = m_pPlayer->GetMetersFlewn();
+    const float metersFlewn = m_pPlayerScript->GetMetersFlewn();
+    CGameInfo::Instance().m_CurrentPoints += metersFlewn * PointsPerMeter;
 
     m_EnvironmentCreator.Update(metersFlewn);
     m_PatternManager.Update(metersFlewn);
@@ -121,16 +104,16 @@ void CGameScene::CreatePlayer()
 {
     DirectX::XMFLOAT3 colorPlayer = { 0.0f, 0.0f, 1.0f };
 
-    auto player = m_pWorld->CreateEntity();
+    auto entity = m_pWorld->CreateEntity();
 
     m_LastPlayerPos = 0.0f;
 
     // Transform
-    player->m_Transform.SetPosition(0.0f, 1.0f, 0.0f);
+    entity->m_Transform.SetPosition(0.0f, 1.0f, 0.0f);
 
     // Behaviour
-    m_pPlayer = new CPlayer();
-    player->SetBehaviour(m_pPlayer);
+    m_pPlayerScript = new CPlayer();
+    entity->SetBehaviour(m_pPlayerScript);
 
     // Drawable
     triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
@@ -138,7 +121,7 @@ void CGameScene::CreatePlayer()
     mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardTextureEmissiv"));
     mesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("t_player_diff"));
 	mesh->m_Material.m_pPixelShader.SetTexture(1, twResourceManager->GetTexture2D("t_player_emissive_18"));
-    player->SetDrawable(mesh);
+    entity->SetDrawable(mesh);
 
     // Physic
     auto physicEntity = m_pWorld->m_pPhysicWorld->CreatePhysicEntity();
@@ -152,25 +135,14 @@ void CGameScene::CreatePlayer()
     body->m_GravityFactor = 0.0f;
     physicEntity->SetBody(body);
 
-    player->SetPhysicEntity(physicEntity);
+    entity->SetPhysicEntity(physicEntity);
 
-    m_pWorld->AddEntity(player);
+    m_pWorld->AddEntity(entity);
 }
 
-void CGameScene::CreateText()
+void CGameScene::CreatePostEffects()
 {
-   /* auto font = twFontManager->LoadFont(twResourceManager->GetFontFace("Rubik-Regular"), 40);
-    m_pPoints = twFontManager->CreateText();
-    m_pPoints->Set(font, "Points: 0", 1.0f);
-
-    auto entity = m_pWorld->CreateEntity();
-    entity->m_Transform.SetPosition(-400.0f, 0.0f, 0.0f);
-
-    auto fontDraw = twRenderer->CreateFontDrawable();
-    fontDraw->m_pText = m_pPoints;
-    fontDraw->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardFont"));
-    fontDraw->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
-
-    entity->SetDrawable(fontDraw);
-    m_pWorld->AddEntity(entity);*/
+    auto entity = twActiveWorld->CreateEntity();
+    entity->SetBehaviour(new CPostEffects());
+    twActiveWorld->AddEntity(entity);
 }

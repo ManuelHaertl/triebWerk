@@ -468,6 +468,9 @@
     <ClCompile Include="src\CUIDrawable.cpp">
       <Filter>Quelldateien\Rendering\Drawables</Filter>
     </ClCompile>
+    <ClCompile Include="src\CTag.cpp">
+      <Filter>Quelldateien\World\Entity</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\CEngine.h">
@@ -739,6 +742,9 @@
     </ClInclude>
     <ClInclude Include="include\SafeDeletes.h">
       <Filter>Headerdateien\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CTag.h">
+      <Filter>Headerdateien\World\Entity</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

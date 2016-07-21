@@ -8,13 +8,16 @@
 
 class CGameScene : public triebWerk::IScene
 {
+public:
+    static float PointsPerMeter;
+
 private:
     CValueUpdater m_ValueUpdater;
     CDifficultyChanger m_DifficultyChanger;
     CEnvironmentCreator m_EnvironmentCreator;
     CPatternManager m_PatternManager;
 	CUI m_UI;
-	CPlayer* m_pPlayer;
+	CPlayer* m_pPlayerScript;
     float m_LastPlayerPos;
 
 public:
@@ -28,5 +31,5 @@ public:
 
 private:
     void CreatePlayer();
-    void CreateText();
+    void CreatePostEffects();
 };

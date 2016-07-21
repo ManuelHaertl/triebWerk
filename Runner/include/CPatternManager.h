@@ -26,6 +26,7 @@ private:
     CPattern* m_pCurrentPattern;
     size_t m_CurrentTileIndex;
 
+
 public:
     CPatternManager();
     ~CPatternManager();

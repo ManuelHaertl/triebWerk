@@ -164,6 +164,7 @@
     <ClCompile Include="src\CEnvironmentCreator.cpp" />
     <ClCompile Include="src\CGameInfo.cpp" />
     <ClCompile Include="src\CGameScene.cpp" />
+    <ClCompile Include="src\CMovingObstacle.cpp" />
     <ClCompile Include="src\CPattern.cpp" />
     <ClCompile Include="src\CPatternLoader.cpp" />
     <ClCompile Include="src\CPatternManager.cpp" />
@@ -183,6 +184,7 @@
     <ClInclude Include="include\CEnvironmentCreator.h" />
     <ClInclude Include="include\CGameInfo.h" />
     <ClInclude Include="include\CGameScene.h" />
+    <ClInclude Include="include\CMovingObstacle.h" />
     <ClInclude Include="include\CPattern.h" />
     <ClInclude Include="include\CPatternLoader.h" />
     <ClInclude Include="include\CPatternManager.h" />

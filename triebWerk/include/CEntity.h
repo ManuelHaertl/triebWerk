@@ -1,8 +1,9 @@
 #pragma once
-#include <CTransform.h>
 #include <CID.h>
 #include <CPhysicEntity.h>
 #include <CPhysicWorld.h>
+#include <CTag.h>
+#include <CTransform.h>
 #include <IBehaviour.h>
 #include <IDrawable.h>
 
@@ -13,6 +14,7 @@ namespace triebWerk
     public:
         CTransform m_Transform;
         CID m_ID;
+        CTag m_Tag;
 
     private:
         CPhysicEntity* m_pPhysicEntity;

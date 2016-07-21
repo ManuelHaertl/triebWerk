@@ -52,7 +52,9 @@ void CEnvironmentCreator::Update(const float a_MetersFlewn)
 {
     m_FeathersSpawnTo += a_MetersFlewn;
     m_FeathersDeleteZone += a_MetersFlewn;
-    m_pBGPlane->GetPhysicEntity()->GetBody()->m_Velocity.m128_f32[2] = CGameInfo::Instance().m_FlySpeed;
+
+    float speed = CGameInfo::Instance().m_FlyStandardSpeed + CGameInfo::Instance().m_FlyDifficultySpeed + CGameInfo::Instance().m_FlyBoostSpeed;
+    m_pBGPlane->GetPhysicEntity()->GetBody()->m_Velocity.m128_f32[2] = speed;
 
     while (m_FeathersIsSpawnedTo < m_FeathersSpawnTo)
     {
@@ -281,7 +283,7 @@ void CEnvironmentCreator::CreateBackground()
     auto physicEntity = twActivePhysic->CreatePhysicEntity();
     auto body = twActivePhysic->CreateBody();
     body->m_GravityFactor = 0.0f;
-    body->m_Velocity.m128_f32[2] = CGameInfo::Instance().m_FlySpeed;
+    body->m_Velocity.m128_f32[2] = CGameInfo::Instance().m_FlyStandardSpeed;
     physicEntity->SetBody(body);
     m_pBGPlane->SetPhysicEntity(physicEntity);
 
