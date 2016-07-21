@@ -194,6 +194,8 @@ void CPatternTileCreator::CreateCheckpoint()
 
     // Behaviour
     entity->SetBehaviour(new CCheckpoint());
+
+    twActiveWorld->AddEntity(entity);
 }
 
 void CPatternTileCreator::CreatePoints(const size_t a_Amount)
@@ -226,6 +228,8 @@ void CPatternTileCreator::CreatePoints(const size_t a_Amount)
 
     // Behaviour
     entity->SetBehaviour(new CPoints(a_Amount));
+
+    twActiveWorld->AddEntity(entity);
 }
 
 void CPatternTileCreator::CreateShield()
@@ -259,6 +263,8 @@ void CPatternTileCreator::CreateBlock1x1()
     collider->m_CheckCollision = false;
     physicEntity->AddCollider(collider);
     entity->SetPhysicEntity(physicEntity);
+
+    twActiveWorld->AddEntity(entity);
 }
 
 void CPatternTileCreator::CreateBlock2x2()
@@ -287,6 +293,8 @@ void CPatternTileCreator::CreateBlock2x2()
     collider->m_CheckCollision = false;
     physicEntity->AddCollider(collider);
     entity->SetPhysicEntity(physicEntity);
+
+    twActiveWorld->AddEntity(entity);
 }
 
 void CPatternTileCreator::CreateModel05x05(const bool a_Rotated)
@@ -330,6 +338,8 @@ void CPatternTileCreator::CreateModel05x05(const bool a_Rotated)
     collider->m_CheckCollision = false;
     physicEntity->AddCollider(collider);
     entity1->SetPhysicEntity(physicEntity);
+
+    twActiveWorld->AddEntity(entity1);
 
     // --------- Deko ---------
 
@@ -403,6 +413,8 @@ void CPatternTileCreator::CreateModel05x10(const bool a_Rotated)
     physicEntity->AddCollider(collider);
     entity1->SetPhysicEntity(physicEntity);
 
+    twActiveWorld->AddEntity(entity1);
+
     // --------- Deko ---------
 
     auto entity2 = twActiveWorld->CreateEntity();
@@ -428,9 +440,9 @@ void CPatternTileCreator::CreateModel05x10(const bool a_Rotated)
     dekoMesh->m_Material.m_pPixelShader.SetTexture(2, m_pTextureObstacle[texture][2]);
     entity2->SetDrawable(dekoMesh);
 
-    twActiveWorld->AddEntity(entity2);
-
     CreateShadow10(a_Rotated);
+
+    twActiveWorld->AddEntity(entity2);
 }
 
 void CPatternTileCreator::CreateModel05x20(const bool a_Rotated)
@@ -475,12 +487,12 @@ void CPatternTileCreator::CreateModel05x20(const bool a_Rotated)
     physicEntity->AddCollider(collider);
     entity1->SetPhysicEntity(physicEntity);
 
+    twActiveWorld->AddEntity(entity1);
+
     // --------- Deko ---------
 
     auto entity2 = twActiveWorld->CreateEntity();
     m_Entities.push_back(entity2);
-
-    entity2 = twActiveWorld->CreateEntity();
 
     // ID
     entity2->m_Tag.AddTag("WallEffect");
@@ -502,9 +514,9 @@ void CPatternTileCreator::CreateModel05x20(const bool a_Rotated)
     dekoMesh->m_Material.m_pPixelShader.SetTexture(2, m_pTextureObstacle[texture][2]);
     entity2->SetDrawable(dekoMesh);
 
-    twActiveWorld->AddEntity(entity2);
-
     CreateShadow20(a_Rotated);
+
+    twActiveWorld->AddEntity(entity2);
 }
 
 void CPatternTileCreator::CreateModel05x30(const bool a_Rotated)
@@ -549,6 +561,8 @@ void CPatternTileCreator::CreateModel05x30(const bool a_Rotated)
     physicEntity->AddCollider(collider);
     entity1->SetPhysicEntity(physicEntity);
 
+    twActiveWorld->AddEntity(entity1);
+
     // --------- Deko ---------
 
     auto entity2 = twActiveWorld->CreateEntity();
@@ -574,9 +588,9 @@ void CPatternTileCreator::CreateModel05x30(const bool a_Rotated)
     dekoMesh->m_Material.m_pPixelShader.SetTexture(2, m_pTextureObstacle[texture][2]);
     entity2->SetDrawable(dekoMesh);
 
-    twActiveWorld->AddEntity(entity2);
-
     CreateShadow30(a_Rotated);
+
+    twActiveWorld->AddEntity(entity2);
 }
 
 void CPatternTileCreator::CreateShadow05(const bool a_Rotated)
@@ -705,6 +719,8 @@ void CPatternTileCreator::CreateMoving05x05(const bool a_Up)
 
     // Behaviour
     entity->SetBehaviour(new CMovingObstacle(m_Tile.m_PosStart, m_Tile.m_PosEnd, m_Tile.m_Time, m_Tile.m_Distance));
+
+    twActiveWorld->AddEntity(entity);
 }
 
 void CPatternTileCreator::CreateMoving05x10(const bool a_Up, const bool a_Rotated)
@@ -759,4 +775,6 @@ void CPatternTileCreator::CreateMoving05x10(const bool a_Up, const bool a_Rotate
 
     // Behaviour
     entity->SetBehaviour(new CMovingObstacle(m_Tile.m_PosStart, m_Tile.m_PosEnd, m_Tile.m_Time, m_Tile.m_Distance));
+
+    twActiveWorld->AddEntity(entity);
 }

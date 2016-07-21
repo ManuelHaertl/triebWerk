@@ -278,7 +278,7 @@ void CEnvironmentCreator::CreateBackground()
 	auto physicEntity = twActivePhysic->CreatePhysicEntity();
 	auto body = twActivePhysic->CreateBody();
 	body->m_GravityFactor = 0.0f;
-	body->m_Velocity.m128_f32[2] = CGameInfo::Instance().m_FlySpeed;
+	body->m_Velocity.m128_f32[2] = CGameInfo::Instance().m_FlyBoostSpeed + CGameInfo::Instance().m_FlyDifficultySpeed + CGameInfo::Instance().m_FlyStandardSpeed;
 	physicEntity->SetBody(body);
 	m_pBGPlane->SetPhysicEntity(physicEntity);
 

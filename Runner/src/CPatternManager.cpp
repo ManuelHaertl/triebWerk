@@ -119,7 +119,6 @@ void CPatternManager::SpawnNextTile()
         if (entity->m_Tag.HasTag("Death"))
             entity->m_ID.SetDescribtion("Died in Pattern: " + m_pCurrentPattern->m_Name + " Difficulty:  " + std::to_string(m_pCurrentPattern->m_Difficulty) + " Priority: " + std::to_string(m_pCurrentPattern->m_Priority));
     
-        twActiveWorld->AddEntity(entity);
         m_Entities.push_back(entity);
     }
 

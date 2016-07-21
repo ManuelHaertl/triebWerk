@@ -66,7 +66,7 @@ public:
     CPatternTileCreator();
     ~CPatternTileCreator();
 
-    void Start(triebWerk::CEntity* a_pPlayer);
+    void Start();
     void CreateEntity(const SPatternTile& a_rTile, const float a_PatternSpawnBegin);
 
 private:
