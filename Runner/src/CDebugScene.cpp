@@ -6,6 +6,7 @@ triebWerk::CMeshDrawable* sunEffect[200];
 triebWerk::CEntity* eps;
 float timeTo = 0.0f;
 int counter = 0;
+float g_Shrinking = 10.0f;
 
 triebWerk::CMaterial* g_pFogMa = nullptr;
 triebWerk::CMaterial* g_pPoint = nullptr;
@@ -25,7 +26,7 @@ void CDebugScene::Start()
 
     ResetCamera();
 	CreatePlayground();
-	CreateMultipleObjects();
+	//CreateMultipleObjects();
 	CreateDebugFont();
 }
 
@@ -39,31 +40,48 @@ void CDebugScene::Update()
             twDebug->Disable();
     }
 
-	if (twKeyboard.IsState(triebWerk::EKey::R, triebWerk::EButtonState::Down))
-	{
-		effect->RemoveMaterial(0);
-	};
 
 	if (twKeyboard.IsState(triebWerk::EKey::U, triebWerk::EButtonState::Down))
 	{
 		twRenderer->GetCurrentActiveCamera()->SetScreenShake(0.1f, 1.6f);
-	};
-
-	float timer = twTime->GetTimeSinceStartup();
-
-	if (g_pPoint != nullptr)
-		g_pPoint->m_ConstantBuffer.SetValueInBuffer(4, &timer);
-
-	if (twKeyboard.IsState(triebWerk::EKey::C, triebWerk::EButtonState::Pressed))
-	{
-		timeTo += 1.0f * twTime->GetDeltaTime();
-
-		effect->m_Materials[1]->m_ConstantBuffer.SetValueInBuffer(4, &timeTo);
 	}
-	else
+
+	if (twKeyboard.IsState(triebWerk::EKey::Q, triebWerk::EButtonState::Down))
 	{
-		timeTo = 0.0f;
+		float t = -2.0f;
+		g_pFogMa->m_ConstantBuffer.SetValueInBuffer(4, &t);
 	}
+	if (twKeyboard.IsState(triebWerk::EKey::Y, triebWerk::EButtonState::Down))
+	{
+		float t = -4.0f;
+		g_pFogMa->m_ConstantBuffer.SetValueInBuffer(4, &t);
+	}
+
+	if (twKeyboard.IsState(triebWerk::EKey::E, triebWerk::EButtonState::Pressed))
+	{
+
+		g_Shrinking -= twTime->GetDeltaTime() * 3;
+
+		std::cout << g_Shrinking << std::endl;
+
+		if (g_Shrinking < 0.0f)
+			g_Shrinking = 0;
+
+		g_pFogMa->m_ConstantBuffer.SetValueInBuffer(9, &g_Shrinking);
+	}
+
+	if (twKeyboard.IsState(triebWerk::EKey::R, triebWerk::EButtonState::Pressed))
+	{
+
+		g_Shrinking += twTime->GetDeltaTime() * 3;
+
+		std::cout << g_Shrinking << std::endl;
+
+		g_pFogMa->m_ConstantBuffer.SetValueInBuffer(9, &g_Shrinking);
+	}
+
+
+
 }
 
 void CDebugScene::End()
@@ -82,70 +100,75 @@ void CDebugScene::Pause()
 
 void CDebugScene::CreatePlayground()
 {
+	{
+		auto entity = m_pWorld->CreateEntity();
+		entity->m_Transform.SetPosition(0, 0, 0);
+		entity->m_Transform.SetScale(500, 500, 500);
+
+		triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
+		mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_cube");
+		mesh->m_D3DStates.m_pRasterizerState = twGraphic->GetDefaultCullNoneRasterizerState();
+		mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
+		entity->SetDrawable(mesh);
+
+		m_pWorld->AddEntity(entity);
+	}
+	{
+		auto entity = m_pWorld->CreateEntity();
+		entity->m_Transform.SetPosition(0, 0, 0);
+		entity->m_Transform.SetScale(1, 1, 1);
+
+		triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
+		mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("grid");
+		mesh->m_D3DStates.m_pRasterizerState = twGraphic->GetDefaultCullNoneRasterizerState();
+		DirectX::XMFLOAT3 co2 = DirectX::XMFLOAT3(1, 1, 1);
+		DirectX::XMFLOAT3 co1 = DirectX::XMFLOAT3(0, 0, 0);
+		mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("WireframeGrid"));
+		mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &co2);
+		mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &co1);
+		entity->SetDrawable(mesh);
+
+		m_pWorld->AddEntity(entity);
+	}
+
 	auto entity = m_pWorld->CreateEntity();
-	entity->m_Transform.SetPosition(0, 0, 0);
-	entity->m_Transform.SetScale(500, 5000, 500);
-	auto mesh = twRenderer->CreateMeshDrawable();
-	mesh->m_pMesh = twResourceManager->GetMesh("ms_cube");
-	mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
-	mesh->m_D3DStates.m_pRasterizerState = twGraphic->CreateRasterizerState(D3D11_CULL_NONE, D3D11_FILL_SOLID);
-	mesh->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardColor"));
+	entity->m_Transform.SetPosition(0,0,0);
+
+	triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
+	mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("triangle");
+	mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("Wall"));
+	g_pFogMa = &mesh->m_Material;
+	mesh->m_D3DStates.m_pRasterizerState = twGraphic->GetDefaultCullNoneRasterizerState();
+	mesh->m_Material.m_pGeometryShader.SetTexture(0, twResourceManager->GetTexture2D("t_noisecolor"));
+	mesh->m_Material.m_pGeometryShader.SetTexture(1, twResourceManager->GetTexture2D("t_noise"));
+	mesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_obs_02_blend1"));
+	mesh->m_Material.m_pPixelShader.SetTexture(1, twResourceManager->GetTexture2D("T_obs_02_blend2"));
+	mesh->m_Material.m_pPixelShader.SetTexture(2, twResourceManager->GetTexture2D("T_obs_02_blend3"));
+	mesh->m_Material.m_pPixelShader.SetTexture(3, twResourceManager->GetTexture2D("t_obs_all_emissive_blend2"));
+	mesh->m_Material.m_pPixelShader.SetTexture(4, twResourceManager->GetTexture2D("t_obs_all_emissive_blend2"));
+	mesh->m_Material.m_pPixelShader.SetTexture(5, twResourceManager->GetTexture2D("t_obs_all_emissive_blend2"));
+
+	float power1 = 0.0f;
+	float power2 = 0.0f;
+	float power3 = 1.0f;
+	DirectX::XMFLOAT3 color = DirectX::XMFLOAT3(0.0f, 0.0f, 0.8f);
+
+	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &power1);
+	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &power2);
+	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(6, &power3);
+	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(7, &color);
+	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(9, &power2);
+
 	entity->SetDrawable(mesh);
 
 	m_pWorld->AddEntity(entity);
-
-	//auto entity = m_pWorld->CreateEntity();
-	//entity->m_Transform.SetPosition(0, 0, 0);
-	//triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
-	//mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("");
-	//mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardTextureEmissiv"));
-	//mesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("t_player_diff"));
-	//mesh->m_Material.m_pPixelShader.SetTexture(1, twResourceManager->GetTexture2D("t_player_emissive_16"));
-	//entity->SetDrawable(mesh);
-	//m_pWorld->AddEntity(entity);
-
-	//{
-	//	auto entity = m_pWorld->CreateEntity();
-	//	entity->m_Transform.SetPosition(0, 0, 0);
-	//	entity->m_Transform.SetScale(500, 500, 500);
-	//	triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
-	//	mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_cube");
-	//	mesh->m_D3DStates.m_pRasterizerState = twGraphic->CreateRasterizerState(D3D11_CULL_NONE, D3D11_FILL_SOLID);
-	//	mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
-	//	entity->SetDrawable(mesh);
-	//	m_pWorld->AddEntity(entity);
-	//}
-
-	auto entityBloom = m_pWorld->CreateEntity();
-	effect = twRenderer->CreatePostEffecthDrawable();
-	//postEffect->AddMaterial(twResourceManager->GetMaterial("Extract"));
-	//postEffect->AddMaterial(twResourceManager->GetMaterial("Blur"));
-	//float screenHeight = twWindow->GetScreenHeight();
-	//float screenWidth = twWindow->GetScreenWidth();
-	//float strength = 1.0f;
-
-	//postEffect->m_Materials[1].m_ConstantBuffer.SetValueInBuffer(4, &screenWidth);
-	//postEffect->m_Materials[1].m_ConstantBuffer.SetValueInBuffer(5, &screenHeight);
-	//postEffect->m_Materials[1].m_ConstantBuffer.SetValueInBuffer(6, &strength);
-
-	//postEffect->AddMaterial(twResourceManager->GetMaterial("Bloom"));
-	//postEffect->m_Materials[2].m_pPixelShader.SetTexture(1, twRenderer->GetRenderTarget(0)->GetSceneTexture());
-	effect->AddMaterial(twResourceManager->GetMaterial("LensDistortion"));
-	float power = 1.0f;
-	effect->m_Materials[0]->m_ConstantBuffer.SetValueInBuffer(4, &power);
-	effect->AddMaterial(twResourceManager->GetMaterial("Shockwave"));
-	effect->AddMaterial(twResourceManager->GetMaterial("ScanLines"));
-
-
-	entityBloom->SetDrawable(effect);
-	m_pWorld->AddEntity(entityBloom);
 }
 
 void CDebugScene::CreateDebugFont()
 {
 	auto font = twFontManager->LoadFont(twResourceManager->GetFontFace("Rubik-Regular"), 40);
 	auto text = twFontManager->CreateText();
-	text->Set(font, "Fonn", 1.0f);
+	text->Set(font, "Font", 1.0f);
 
 	auto entity = m_pWorld->CreateEntity();
 	entity->m_Transform.SetPosition(400.0f, 300.0f, 0.0f);
@@ -153,7 +176,7 @@ void CDebugScene::CreateDebugFont()
 	auto fontDraw = twRenderer->CreateFontDrawable();
 	fontDraw->m_pText = text;
 	fontDraw->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardFont"));
-	DirectX::XMFLOAT3 t = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
+	DirectX::XMFLOAT3 t = DirectX::XMFLOAT3(0.0f, 0.0f, 0.8f);
 	fontDraw->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &t);
 
 	entity->SetDrawable(fontDraw);

@@ -42,7 +42,6 @@ namespace triebWerk
 
 	public:
 		void Initialize(CGraphics* a_pGraphicsHandle);
-		//void Draw(CCamera* a_pCamera);
 		void SetBuffers();
 		void AddDrawable(CMeshDrawable* a_pDrawable);
 		void Reset();

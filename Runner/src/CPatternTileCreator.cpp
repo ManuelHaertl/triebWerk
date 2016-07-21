@@ -9,7 +9,7 @@ CPatternTileCreator::CPatternTileCreator()
     , m_Tile()
     , m_PatternSpawnBegin(0.0f)
 {
-    m_pCheckPoint = twResourceManager->GetMesh("ms_checkpoint");
+    m_pCheckPoint = twResourceManager->GetMesh("ms_checkpoint_prisma");
     m_pPoints = twResourceManager->GetMesh("ms_points");
     m_pBlock1x1 = twResourceManager->GetMesh("ms_cube");
     m_pBlock2x2 = twResourceManager->GetMesh("ms_cube");

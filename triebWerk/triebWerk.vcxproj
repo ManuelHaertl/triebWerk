@@ -158,6 +158,7 @@
     <ClCompile Include="src\CInstancedFontBatch.cpp" />
     <ClCompile Include="src\CInstancedMeshBatch.cpp" />
     <ClCompile Include="src\CRenderBatch.cpp" />
+    <ClCompile Include="src\CRenderQuad.cpp" />
     <ClCompile Include="src\CRenderTarget.cpp" />
     <ClCompile Include="src\CSceneHolder.cpp" />
     <ClCompile Include="src\CSceneManager.cpp" />
@@ -233,6 +234,7 @@
     <ClInclude Include="include\CFontDrawable.h" />
     <ClInclude Include="include\CGeometryShader.h" />
     <ClInclude Include="include\CInstancedFontBatch.h" />
+    <ClInclude Include="include\CRenderQuad.h" />
     <ClInclude Include="include\CTag.h" />
     <ClInclude Include="include\SafeDeletes.h" />
     <ClInclude Include="include\CPostEffectDrawable.h" />

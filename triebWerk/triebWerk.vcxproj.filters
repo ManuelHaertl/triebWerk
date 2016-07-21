@@ -471,6 +471,9 @@
     <ClCompile Include="src\CTag.cpp">
       <Filter>Quelldateien\World\Entity</Filter>
     </ClCompile>
+    <ClCompile Include="src\CRenderQuad.cpp">
+      <Filter>Quelldateien\Rendering\Batches</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\CEngine.h">
@@ -745,6 +748,9 @@
     </ClInclude>
     <ClInclude Include="include\CTag.h">
       <Filter>Headerdateien\World\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CRenderQuad.h">
+      <Filter>Headerdateien\Rendering\Batches</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

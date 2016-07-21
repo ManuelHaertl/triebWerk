@@ -42,7 +42,7 @@ bool triebWerk::CConstantBuffer::CompareConstantBuffer(const char * a_pBufferA, 
 
 void triebWerk::CConstantBuffer::SetValueInBuffer(int a_IndexOfValue, void * a_pValueAdress)
 {
-	if (a_IndexOfValue >= m_Variables.size())
+	if (static_cast<size_t>(a_IndexOfValue) >= m_Variables.size())
 	{
 		DebugLogfile.LogfText(CDebugLogfile::ELogType::Warning, false, "Warning: Tried to write in a none existing constant buffer index!");
 		return;

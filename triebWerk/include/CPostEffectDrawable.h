@@ -37,6 +37,8 @@ namespace triebWerk
 		
 		//Probly bad design of IDrawable this function does nothing as PostEffect
 		void SetTransform(const DirectX::XMMATRIX& a_rTransform) final;
+		
+		bool IsDrawableValid() final;
 
 	};
 }

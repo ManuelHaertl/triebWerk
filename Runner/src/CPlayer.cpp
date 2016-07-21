@@ -72,17 +72,7 @@ void CPlayer::CollisionEnter(triebWerk::CCollisionEvent a_Collision)
     }
     else if (entity->m_ID.GetHash() == triebWerk::StringHasher("Checkpoint"))
     {
-        entity->GetDrawable()->SetActive(false);
-        entity->RemovePhysicEntity();
-
-        ((CCheckpoint*)entity->GetBehaviour())->m_HasCollected = true;
-
-        // Add the points you collected by flying
-        CGameInfo& gameInfo = CGameInfo::Instance();
-        gameInfo.m_TotalPoints += gameInfo.m_CurrentPoints * gameInfo.m_Multiplier;
-        gameInfo.m_CurrentPoints = 0;
-        gameInfo.m_Multiplier = 1.0f;
-        gameInfo.m_EffectCheckpoint = true;
+        ((CCheckpoint*)entity->GetBehaviour())->Collected();
     }
     else if (entity->m_Tag.HasTag("Death"))
     {
@@ -129,8 +119,11 @@ void CPlayer::CreateTrail()
     m_pTrailMesh = twRenderer->CreateMeshDrawable();
     m_pTrailMesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_effect_trail");
     m_pTrailMesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("PlayerTrail"));
-    m_pTrailMesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_effect_trail_blue"));
-	m_pTrailMesh->m_Material.m_pPixelShader.SetTexture(1, twResourceManager->GetTexture2D("t_noise_trail"));
+    m_pTrailMesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_effect_trail_red"));
+	m_pTrailMesh->m_Material.m_pPixelShader.SetTexture(2, twResourceManager->GetTexture2D("T_effect_trail_blue"));
+	m_pTrailMesh->m_Material.m_pPixelShader.SetTexture(1, twResourceManager->GetTexture2D("t_noise"));
+	float blend = 0.0f;
+	m_pTrailMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(6, &blend);
     m_pTrail->SetDrawable(m_pTrailMesh);
 
     twActiveWorld->AddEntity(m_pTrail);

@@ -30,7 +30,7 @@ void triebWerk::CInstancedFontBatch::Draw(CFontDrawable* a_pDrawable, ID3D11Devi
 	instanceData.SysMemPitch = 0;
 	instanceData.SysMemSlicePitch = 0;
 
-	HRESULT t = a_pDevice->CreateBuffer(&instanceBufferDesc, &instanceData, &pInstanceBuffer);
+	a_pDevice->CreateBuffer(&instanceBufferDesc, &instanceData, &pInstanceBuffer);
 
 	unsigned int strides[2];
 	unsigned int offsets[2];
