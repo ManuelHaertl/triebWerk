@@ -41,9 +41,6 @@ private:
 
     // Background
     triebWerk::CEntity* m_pBGPlane;
-    triebWerk::CEntity* m_pBGSnake;
-    triebWerk::CEntity* m_pBGBassLeft;
-    triebWerk::CEntity* m_pBGBassRight;
 
     // Snake Loop
     const float SnakeRotateSpeed1 = -3.0f;

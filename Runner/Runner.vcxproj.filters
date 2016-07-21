@@ -102,6 +102,9 @@
     <ClCompile Include="src\CUI.cpp">
       <Filter>Quelldateien\Game</Filter>
     </ClCompile>
+    <ClCompile Include="src\CBackground.cpp">
+      <Filter>Quelldateien\Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\CGameScene.h">
@@ -162,6 +165,9 @@
       <Filter>Headerdateien\Game\Player</Filter>
     </ClInclude>
     <ClInclude Include="include\CUI.h">
+      <Filter>Headerdateien\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CBackground.h">
       <Filter>Headerdateien\Game</Filter>
     </ClInclude>
   </ItemGroup>
