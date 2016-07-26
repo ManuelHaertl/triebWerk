@@ -1,11 +1,12 @@
 #include <CWorld.h>
 #include <thread>
 
-triebWerk::CWorld::CWorld() :
-    m_pPhysicWorld(nullptr),
-    m_CurrentSize(Start_Reserve_Size),
-    m_pRenderingHandle(nullptr),
-    m_PhysicTimeStamp(0.0f)
+triebWerk::CWorld::CWorld()
+    : m_pPhysicWorld(nullptr)
+    , m_pUIWorld(nullptr)
+    , m_CurrentSize(Start_Reserve_Size)
+    , m_pRenderingHandle(nullptr)
+    , m_PhysicTimeStamp(0.0f)
 {
 }
 
@@ -18,6 +19,7 @@ void triebWerk::CWorld::Initialize(CRenderer* a_pRenderer, const float a_PhysicT
     Shutdown();
 
     m_pPhysicWorld = new CPhysicWorld();
+    m_pUIWorld = new CUIWorld();
 
     // reserve some spots so the vector doesn't need
     // to get resized too often during runtime
@@ -38,7 +40,11 @@ void triebWerk::CWorld::Update(const bool a_Render, const bool a_UpdatePhysic)
         UpdateEntityBehaviour();
         UpdatePhysic();
         LateUpdateEntityBehaviour();
+
         RenderEntities();
+        m_pUIWorld->Update();
+        m_pRenderingHandle->DrawScene();
+
         DeleteRemoveEntities();
 
         m_UpdateEntities.Reset();
@@ -49,7 +55,11 @@ void triebWerk::CWorld::Update(const bool a_Render, const bool a_UpdatePhysic)
         GetEntityBehaviourAndDrawable();
         UpdateEntityBehaviour();
         LateUpdateEntityBehaviour();
+
         RenderEntities();
+        m_pUIWorld->Update();
+        m_pRenderingHandle->DrawScene();
+
         DeleteRemoveEntities();
 
         m_UpdateEntities.Reset();
@@ -74,6 +84,13 @@ void triebWerk::CWorld::Shutdown()
     {
         delete m_pPhysicWorld;
         m_pPhysicWorld = nullptr;
+    }
+
+    if (m_pUIWorld != nullptr)
+    {
+        m_pUIWorld->Shutdown();
+        delete m_pUIWorld;
+        m_pUIWorld = nullptr;
     }
 }
 
@@ -215,8 +232,6 @@ void triebWerk::CWorld::RenderEntities()
         m_DrawEntities[i]->GetDrawable()->SetTransform(m_DrawEntities[i]->m_Transform.GetTransformation());
         m_pRenderingHandle->AddRenderCommand(m_DrawEntities[i]->GetDrawable());
     }
-
-    m_pRenderingHandle->DrawScene();
 }
 
 void triebWerk::CWorld::DeleteRemoveEntities()

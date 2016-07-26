@@ -9,13 +9,9 @@ public:
     static float CheckpointEffectLength;
     static float CheckpointEffectStrength;
 
-    static float DodgeEffectStrengthMin;
-    static float DodgeEffectStrengthMax;
-    static float DodgeEffectLength;
-
+    static float FullControlEffectStrengthMin;
+    static float FullControlEffectStrengthMax;
     static float BoostEffectStrength;
-
-	static float ShieldEffectLength;
 	static float ShieldEffectStrength;
 
 private:
@@ -29,7 +25,6 @@ private:
 
     float m_CurrentChromaticAberrationStrength;
     float m_CurrentDodgeTime;
-	float m_CurrentShieldTime;
 
 public:
     CPostEffects();
@@ -46,7 +41,7 @@ private:
 	void AddShieldEffect();
 	void AddGrain();
 
-    void UpdateCheckpointEffect();
+    void UpdateFullControlEffect();
 	void UpdateShieldEffect();
 	void UpdateGrainEffect();
     void UpdateBlur();

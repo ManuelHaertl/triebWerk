@@ -42,8 +42,12 @@ private:
 
     triebWerk::CMesh* m_pMoving05Up;
     triebWerk::CMesh* m_pMoving05Down;
+    triebWerk::CMesh* m_pMoving05Left;
+    triebWerk::CMesh* m_pMoving05Right;
     triebWerk::CMesh* m_pMoving10Up;
     triebWerk::CMesh* m_pMoving10Down;
+    triebWerk::CMesh* m_pMoving10Left;
+    triebWerk::CMesh* m_pMoving10Right;
 
     // Textures ----------------------------------------------
 
@@ -83,6 +87,6 @@ private:
     void CreateShadow10(const bool a_Rotated);
     void CreateShadow20(const bool a_Rotated);
     void CreateShadow30(const bool a_Rotated);
-    void CreateMoving05x05(const bool a_Up);
-    void CreateMoving05x10(const bool a_Up, const bool a_Rotated);
+    void CreateMoving05x05();
+    void CreateMoving05x10(const bool a_Rotated);
 };

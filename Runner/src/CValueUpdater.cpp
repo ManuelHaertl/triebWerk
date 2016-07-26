@@ -25,8 +25,7 @@ float CPlayer::FullControlCost = 2.0f;
 float CPlayer::BoostSpeed = 15.0f;
 float CPlayer::BoostCost = 2.0f;
 
-float CPlayer::ShieldTime = 2.0f;
-float CPlayer::ShieldCooldown = 10.0f;
+float CPlayer::ShieldCost = 4.0f;
 
 float CPlayer::MaxRotation = 25.0f;
 float CPlayer::RotationCameraFactor = 0.03f;
@@ -63,11 +62,9 @@ int CPoints::Points[3] = { 10, 20, 50 };
 float CPostEffects::ChromaticAberrationStrength = 0.8f;
 float CPostEffects::CheckpointEffectLength = 0.2f;
 float CPostEffects::CheckpointEffectStrength = 1.5f;
-float CPostEffects::DodgeEffectStrengthMin = 2.0f;
-float CPostEffects::DodgeEffectStrengthMax = 5.0f;
-float CPostEffects::DodgeEffectLength = 2.0f;
+float CPostEffects::FullControlEffectStrengthMin = 2.0f;
+float CPostEffects::FullControlEffectStrengthMax = 5.0f;
 float CPostEffects::BoostEffectStrength = 2.0f;
-float CPostEffects::ShieldEffectLength = 0.0f;
 float CPostEffects::ShieldEffectStrength = 1.5f;
 
 CValueUpdater::CValueUpdater() :
@@ -148,11 +145,11 @@ void CValueUpdater::UpdateValues()
         }
         else if (value.first == "pl_FullControlEffectStrengthMin")
         {
-            CPostEffects::DodgeEffectStrengthMin = std::stof(value.second);
+            CPostEffects::FullControlEffectStrengthMin = std::stof(value.second);
         }
         else if (value.first == "pl_FullControlEffectStrengthMax")
         {
-            CPostEffects::DodgeEffectStrengthMax = std::stof(value.second);
+            CPostEffects::FullControlEffectStrengthMax = std::stof(value.second);
         }
         else if (value.first == "pl_BoostSpeed")
         {
@@ -166,20 +163,14 @@ void CValueUpdater::UpdateValues()
         {
             CPostEffects::BoostEffectStrength = std::stof(value.second);
         }
-
-        else if (value.first == "pl_ShieldTime")
+        else if (value.first == "pl_ShieldCost")
         {
-            CPlayer::ShieldTime = std::stof(value.second);
-			CPostEffects::ShieldEffectLength = CPlayer::ShieldTime;
+            CPlayer::ShieldCost = std::stof(value.second);
         }
 		else if (value.first == "pl_ShieldEffectStrength")
 		{
 			CPostEffects::ShieldEffectStrength = std::stof(value.second);
 		}
-        else if (value.first == "pl_ShieldCooldown")
-        {
-            CPlayer::ShieldCooldown = std::stof(value.second);
-        }
         else if (value.first == "pl_MaxRotation")
         {
             CPlayer::MaxRotation = std::stof(value.second);

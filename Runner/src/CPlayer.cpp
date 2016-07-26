@@ -10,9 +10,7 @@ CPlayer::CPlayer()
     : m_CurrentResource(MaxResource)
     , m_InFullControlMode(false)
     , m_InBoostMode(false)
-    , m_IsShieldActive(false)
-    , m_CurrentShieldTime(0.0f)
-    , m_CurrentShieldCooldownTime(0.0f)
+    , m_InShieldMode(false)
     , m_pTrailMesh(nullptr)
     , m_pMainCamera(nullptr)
     , m_IsDead(false)
@@ -39,7 +37,6 @@ void CPlayer::Update()
     CheckInput();
     CheckResource();
     SetSpeed();
-    SetShield();
     CalculateDistanceFlewn();
     UpdateTrail();
 }
@@ -77,7 +74,7 @@ void CPlayer::CollisionEnter(triebWerk::CCollisionEvent a_Collision)
     }
     else if (entity->m_Tag.HasTag("Death"))
     {
-        if (m_IsShieldActive == false && GodMode == false)
+        if (m_InShieldMode == false && GodMode == false)
         {
             if (m_IsDead == false)
                 triebWerk::CDebugLogfile::Instance().LogfText(triebWerk::CDebugLogfile::ELogType::Text, false, entity->m_ID.GetDescribtion().c_str());
@@ -101,6 +98,7 @@ void CPlayer::Reset()
     m_LastZ = 0.0f;
 
     m_pEntity->m_Transform.SetPosition(0.0f, 1.0f, 0.0f);
+    CGameInfo::Instance().m_PlayerPosition = 0.0f;
 }
 
 float CPlayer::GetMetersFlewn() const
@@ -169,7 +167,7 @@ void CPlayer::CheckInput()
             twGamepad.IsState(triebWerk::EGamepadButton::RT, triebWerk::EButtonState::Pressed, 0) ||
             twGamepad.IsState(triebWerk::EGamepadButton::RB, triebWerk::EButtonState::Pressed, 0);
 
-        m_PlayerInput.m_Shield = twGamepad.IsState(triebWerk::EGamepadButton::A, triebWerk::EButtonState::Down, 0);
+        m_PlayerInput.m_Shield = twGamepad.IsState(triebWerk::EGamepadButton::A, triebWerk::EButtonState::Pressed, 0);
 
         float xValue = static_cast<float>(twGamepad.GetLeftAnalogX(0));
 
@@ -217,7 +215,8 @@ void CPlayer::CheckResource()
     CGameInfo& gameInfo = CGameInfo::Instance();
     bool gainResource = true;
     bool fullControlEffect = false;
-    bool fullBoostEffect = false;
+    bool boostEffect = false;
+    bool shieldEffect = false;
 
     // Full Control
     if (m_PlayerInput.m_FullControl)
@@ -232,12 +231,12 @@ void CPlayer::CheckResource()
     {
         m_CurrentResource -= FullControlCost * twTime->GetDeltaTime();
         m_InFullControlMode = true;
-        gameInfo.m_EffectDodge = true;
+        gameInfo.m_EffectFullControl = true;
     }
     else
     {
         m_InFullControlMode = false;
-        gameInfo.m_EffectDodge = false;
+        gameInfo.m_EffectFullControl = false;
     }
 
     // Boost
@@ -246,10 +245,10 @@ void CPlayer::CheckResource()
         gainResource = false;
 
         if (m_CurrentResource > 0.0f)
-            fullBoostEffect = true;
+            boostEffect = true;
     }
 
-    if (fullBoostEffect)
+    if (boostEffect)
     {
         m_CurrentResource -= BoostCost * twTime->GetDeltaTime();
         m_InBoostMode = true;
@@ -261,6 +260,27 @@ void CPlayer::CheckResource()
         m_InBoostMode = false;
         gameInfo.m_EffectBoost = false;
         gameInfo.m_FlyBoostSpeed = 0.0f;
+    }
+
+    // Shield
+    if (m_PlayerInput.m_Shield)
+    {
+        gainResource = false;
+
+        if (m_CurrentResource > 0.0f)
+            shieldEffect = true;
+    }
+
+    if (shieldEffect)
+    {
+        m_CurrentResource -= ShieldCost * twTime->GetDeltaTime();
+        m_InShieldMode = true;
+        gameInfo.m_EffectShield = true;
+    }
+    else
+    {
+        m_InShieldMode = false;
+        gameInfo.m_EffectShield = false;
     }
 
     // Resource
@@ -292,7 +312,7 @@ void CPlayer::SetSpeed()
         else
             velocity.m128_f32[0] = 0.0f;
 
-        CGameInfo::Instance().m_EffectDodgeStrength = std::fabsf(m_PlayerInput.m_MoveKeyDistance);
+        CGameInfo::Instance().m_EffectFullControlStrength = std::fabsf(m_PlayerInput.m_MoveKeyDistance);
     }
     else
     {
@@ -330,23 +350,6 @@ void CPlayer::SetSpeed()
 
     // set the new speed
     m_pEntity->GetPhysicEntity()->GetBody()->m_Velocity = velocity;
-}
-
-void CPlayer::SetShield()
-{
-    float dt = twTime->GetDeltaTime();
-    m_CurrentShieldTime -= dt;
-    m_CurrentShieldCooldownTime -= dt;
-
-    if (m_PlayerInput.m_Shield && m_CurrentShieldCooldownTime <= 0.0f)
-    {
-        m_CurrentShieldTime = ShieldTime;
-        m_CurrentShieldCooldownTime = ShieldCooldown;
-		CGameInfo::Instance().m_EffectShield = true;
-    }
-
-	
-    m_IsShieldActive = m_CurrentShieldTime > 0.0f;
 }
 
 void CPlayer::CalculateDistanceFlewn()

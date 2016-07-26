@@ -17,8 +17,8 @@ public:
 
     // Effect Information
     bool m_EffectCheckpoint;
-    bool m_EffectDodge;
-    float m_EffectDodgeStrength;
+    bool m_EffectFullControl;
+    float m_EffectFullControlStrength;
 	bool m_EffectShield;
     bool m_EffectBoost;
 

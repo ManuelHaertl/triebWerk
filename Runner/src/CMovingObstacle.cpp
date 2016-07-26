@@ -1,19 +1,16 @@
 #include <CMovingObstacle.h>
 #include <CGameInfo.h>
 
-CMovingObstacle::CMovingObstacle(const float a_PositionStart, const float a_PositionEnd, const float a_Time, const float a_Distance)
+CMovingObstacle::CMovingObstacle(const DirectX::XMVECTOR a_PositionStart, const DirectX::XMVECTOR a_PositionEnd, const float a_Time, const float a_Distance, triebWerk::CEntity* a_pShadow)
     : PositionStart(a_PositionStart)
     , PositionEnd(a_PositionEnd)
     , Time(a_Time)
     , Distance(a_Distance)
-    , m_Up(false)
+    , m_pShadow(a_pShadow)
     , m_IsMoving(false)
-    , m_UpDownValue(0.0f)
-    , m_Speed(0.0f)
     , m_CurrentTime(0.0f)
 {
-    m_Speed = (PositionEnd - PositionStart) / Time;
-    m_Up = PositionStart < PositionEnd;
+
 }
 
 CMovingObstacle::~CMovingObstacle()
@@ -29,28 +26,24 @@ void CMovingObstacle::Update()
 {
     if (m_IsMoving)
     {
-        auto pos = m_pEntity->m_Transform.GetPosition();
-        pos.m128_f32[1] += m_Speed * twTime->GetDeltaTime();
+        m_CurrentTime += twTime->GetDeltaTime();
+        if (m_CurrentTime > Time)
+            m_CurrentTime = Time;
 
-        if (m_Up && pos.m128_f32[1] > PositionEnd)
-            pos.m128_f32[1] = PositionEnd;
-        else if (!m_Up && pos.m128_f32[1] < PositionEnd)
-            pos.m128_f32[1] = PositionEnd;
+        float lerpValue = m_CurrentTime / Time;
+        DirectX::XMVECTOR newPos = DirectX::XMVectorLerp(PositionStart, PositionEnd, lerpValue);
+        m_pEntity->m_Transform.SetPosition(newPos);
 
-        m_pEntity->m_Transform.SetPosition(pos);
+        newPos.m128_f32[1] = 0.001f;
+        m_pShadow->m_Transform.SetPosition(newPos);
     }
     else
     {
-        float playerPos = CGameInfo::Instance().m_PlayerPosition;
-        float obstaclePos = m_pEntity->m_Transform.GetPosition().m128_f32[2];
-
-        float dist = obstaclePos - playerPos;
-
+        // check when the player is in range to move the object
+        float dist = m_pEntity->m_Transform.GetPosition().m128_f32[2] - CGameInfo::Instance().m_PlayerPosition;
         if (dist < Distance)
-        {
             m_IsMoving = true;
-        }
-    }    
+    }
 }
 
 void CMovingObstacle::End()
