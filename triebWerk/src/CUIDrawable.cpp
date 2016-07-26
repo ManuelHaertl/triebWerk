@@ -15,7 +15,7 @@ triebWerk::CUIDrawable::~CUIDrawable()
 
 triebWerk::IDrawable::EDrawableType triebWerk::CUIDrawable::GetType()
 {
-	return IDrawable::EDrawableType();
+	return IDrawable::EDrawableType::UI;
 }
 
 void triebWerk::CUIDrawable::SetTransform(const DirectX::XMMATRIX & a_rTransform)

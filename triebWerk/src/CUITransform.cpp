@@ -1,13 +1,15 @@
 #include <CUITransform.h>
 
+float triebWerk::CUITransform::ReferenceWidth = 800.0f;
+float triebWerk::CUITransform::ReferenceHeight = 600.0f;
+float triebWerk::CUITransform::ReferenceScale = 1.0f;
+
 triebWerk::CUITransform::CUITransform()
     : m_Modified(false)
     , m_AnchorPoint(DirectX::XMFLOAT2(0.f, 0.0f))
     , m_PositionOffset(DirectX::XMVectorZero())
     , m_Scale(DirectX::XMVectorZero())
     , m_Rotation(0.0f)
-    , m_RealPosition(DirectX::XMVectorZero())
-    , m_RealScale(DirectX::XMVectorZero())
     , m_Pivot(DirectX::XMVectorZero())
     , m_Transformation(DirectX::XMMatrixIdentity())
 {
@@ -46,7 +48,13 @@ DirectX::XMMATRIX& triebWerk::CUITransform::GetTransformation()
 {
     if (m_Modified)
     {
-        m_Transformation = DirectX::XMMatrixTransformation2D(m_Pivot, 0.0f, m_RealScale, m_Pivot, m_Rotation, m_RealPosition);
+        float x = ((ReferenceWidth / 2.0f * m_AnchorPoint.x) + m_PositionOffset.m128_f32[0]) * ReferenceScale;
+        float y = ((ReferenceHeight / 2.0f * m_AnchorPoint.y) + m_PositionOffset.m128_f32[1]) * ReferenceScale;
+
+        DirectX::XMVECTOR realPosition = DirectX::XMVectorSet(x, y, m_PositionOffset.m128_f32[2], 0.0f);
+        DirectX::XMVECTOR realScale = DirectX::XMVectorScale(m_Scale, ReferenceScale);
+
+        m_Transformation = DirectX::XMMatrixTransformation2D(m_Pivot, 0.0f, realScale, m_Pivot, m_Rotation, realPosition);
         m_Modified = false;
     }
 
@@ -120,13 +128,9 @@ void triebWerk::CUITransform::SetPivot(const DirectX::XMVECTOR a_Pivot)
     Modified();
 }
 
-void triebWerk::CUITransform::SetScreenInformation(const SUIScreenInformation& a_rScreenInformation)
+void triebWerk::CUITransform::UpdateScreenInformation()
 {
-    float x = ((a_rScreenInformation.m_Width / 2.0f * m_AnchorPoint.x) + m_PositionOffset.m128_f32[0]) * a_rScreenInformation.m_Scale;
-    float y = ((a_rScreenInformation.m_Height / 2.0f * m_AnchorPoint.y) + m_PositionOffset.m128_f32[1]) * a_rScreenInformation.m_Scale;
-
-    m_RealPosition = DirectX::XMVectorSet(x, y, m_PositionOffset.m128_f32[2], 0.0f);    
-    m_RealScale = DirectX::XMVectorScale(m_Scale, a_rScreenInformation.m_Scale);
+    m_Modified = true;
 }
 
 inline void triebWerk::CUITransform::Modified()
