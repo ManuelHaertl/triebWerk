@@ -799,9 +799,6 @@ void triebWerk::CResourceManager::UpdateResourceChanges()
 						meshIn->m_IndexCount = objParser.m_IndexCount;
 						meshIn->m_VertexCount = objParser.m_VertexCount;
 						meshIn->m_pVertices = new CMesh::SVertex[objParser.m_VertexCount];
-						std::cout << fileToLoad.FilePath << std::endl;
-						std::cout << meshIn->m_VertexCount << std::endl;
-						std::cout << meshIn->m_IndexCount << std::endl;
 						memcpy(meshIn->m_pVertices, objParser.m_pVertices, sizeof(CMesh::SVertex) * objParser.m_VertexCount);
 
 						meshIn->m_pVertexBuffer = m_pGraphicsHandle->CreateVertexBuffer(meshIn->m_pVertices, meshIn->m_VertexCount);

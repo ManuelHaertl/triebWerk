@@ -19,6 +19,12 @@ void CCheckpoint::Collected()
 	m_pCheckpointPlaneTop->GetDrawable()->SetActive(false);
 	m_pCheckpointPlaneMiddle->GetDrawable()->SetActive(false);
 
+	for (size_t i = 0; i < m_GodrayCount; i++)
+	{
+		//Godrays
+		m_pGodrayTop[i]->GetDrawable()->SetActive(false);
+	}
+
 	m_pEntity->RemovePhysicEntity();
 
 	// Add the points you collected by flying
@@ -79,29 +85,52 @@ void CCheckpoint::Start()
 	m_pCheckpointPlaneTop->SetDrawable(pMeshDrawableTop);
 
 	twActiveWorld->AddEntity(m_pCheckpointPlaneTop);
+
+	//Godrays
+	m_pGodrayButtom = twActiveWorld->CreateEntity();
+	DirectX::XMVECTOR positionGodBegin = m_pEntity->m_Transform.GetPosition();
+	m_pGodrayButtom->m_Transform.SetPosition(positionGodBegin.m128_f32[0], 4.0f, positionGodBegin.m128_f32[2]);
+
+	m_pGodrayButtom->m_Transform.SetParent(&m_pEntity->m_Transform);
+	
+	triebWerk::CMeshDrawable* pGodrayDrawable = twRenderer->CreateMeshDrawable();
+	pGodrayDrawable->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
+	pGodrayDrawable->m_RenderMode = triebWerk::CMeshDrawable::ERenderMode::Transparent;
+	pGodrayDrawable->m_pMesh = twResourceManager->GetMesh("ms_godray");
+	pGodrayDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardTransparentTexture"));
+	pGodrayDrawable->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_godray_cp_end"));
+	m_pGodrayButtom->SetDrawable(pGodrayDrawable);
+	
+	twActiveWorld->AddEntity(m_pGodrayButtom);
+
+	for (size_t i = 0; i < m_GodrayCount; i++)
+	{
+		//Godrays
+		m_pGodrayTop[i] = twActiveWorld->CreateEntity();
+		DirectX::XMVECTOR pos = m_pEntity->m_Transform.GetPosition();
+		pos.m128_f32[1] += (i * 2) + 5.5f;
+		m_pGodrayTop[i]->m_Transform.SetPosition(pos);
+		m_pGodrayTop[i]->m_Transform.SetParent(&m_pEntity->m_Transform);
+
+		triebWerk::CMeshDrawable* pGodrayTopDrawable = twRenderer->CreateMeshDrawable();
+		pGodrayTopDrawable->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
+		pGodrayTopDrawable->m_RenderMode = triebWerk::CMeshDrawable::ERenderMode::Transparent;
+		pGodrayTopDrawable->m_pMesh = twResourceManager->GetMesh("ms_godray");
+		pGodrayTopDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardTransparentTexture"));
+		pGodrayTopDrawable->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_godray_cp_middle"));
+		m_pGodrayTop[i]->SetDrawable(pGodrayTopDrawable);
+
+		twActiveWorld->AddEntity(m_pGodrayTop[i]);
+	}
+	
 }
 
 void CCheckpoint::Update()
 {
-	DirectX::XMVECTOR pos = m_pEntity->m_Transform.GetPosition();
-	pos.m128_f32[1] = std::sin(twTime->GetTimeSinceStartup() * 10) * 0.5f + 0.9f;
-	m_pEntity->m_Transform.SetPosition(pos);
-
-	if (m_RotationModifier > 70)
-	{
-		m_Counter = -1.0f;
-	}
-	if (m_RotationModifier < -70)
-	{
-		m_Counter = 1.0f;
-	}
-
-	m_RotationModifier += m_Counter * 220 *  twTime->GetDeltaTime();
-
-	std::cout << m_RotationModifier << std::endl;
-
-	m_pEntity->m_Transform.SetRotationDegrees(0, 0, m_RotationModifier);
-	//m_pEntity->m_Transform.RotateDegrees(0, 180.0f * twTime->GetDeltaTime(), 0);
+	DirectX::XMVECTOR leftPos = m_pEntity->m_Transform.GetPosition();
+	leftPos.m128_f32[1] = (std::sin(twTime->GetTimeSinceStartup() * 15)* 0.5f + 0.8f);
+	m_pEntity->m_Transform.SetPosition(leftPos);
+	m_pEntity->m_Transform.RotateDegrees(0.0f, 50 * twTime->GetTimeSinceStartup(), 0.0f);
 }
 
 void CCheckpoint::End()
@@ -109,6 +138,13 @@ void CCheckpoint::End()
 	twActiveWorld->RemoveEntity(m_pCheckpointPlaneButtom);
 	twActiveWorld->RemoveEntity(m_pCheckpointPlaneMiddle);
 	twActiveWorld->RemoveEntity(m_pCheckpointPlaneTop);
+	twActiveWorld->RemoveEntity(m_pGodrayButtom);
+
+	for (size_t i = 0; i < m_GodrayCount; i++)
+	{
+		//Godrays
+		twActiveWorld->RemoveEntity(m_pGodrayTop[i]);
+	}
 
     if (!m_HasCollected)
 	{

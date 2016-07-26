@@ -62,7 +62,7 @@ void CDebugScene::Update()
 
 		g_Shrinking -= twTime->GetDeltaTime() * 3;
 
-		std::cout << g_Shrinking << std::endl;
+		//std::cout << g_Shrinking << std::endl;
 
 		if (g_Shrinking < 0.0f)
 			g_Shrinking = 0;
@@ -75,7 +75,7 @@ void CDebugScene::Update()
 
 		g_Shrinking += twTime->GetDeltaTime() * 3;
 
-		std::cout << g_Shrinking << std::endl;
+		//std::cout << g_Shrinking << std::endl;
 
 		g_pFogMa->m_ConstantBuffer.SetValueInBuffer(9, &g_Shrinking);
 	}
@@ -113,55 +113,54 @@ void CDebugScene::CreatePlayground()
 
 		m_pWorld->AddEntity(entity);
 	}
+
+	auto entity = m_pWorld->CreateEntity();
+	entity->m_Transform.SetPosition(0,0,0);
+
 	{
 		auto entity = m_pWorld->CreateEntity();
 		entity->m_Transform.SetPosition(0, 0, 0);
 		entity->m_Transform.SetScale(1, 1, 1);
 
 		triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
-		mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("grid");
-		mesh->m_D3DStates.m_pRasterizerState = twGraphic->GetDefaultCullNoneRasterizerState();
-		DirectX::XMFLOAT3 co2 = DirectX::XMFLOAT3(1, 1, 1);
-		DirectX::XMFLOAT3 co1 = DirectX::XMFLOAT3(0, 0, 0);
-		mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("WireframeGrid"));
-		mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &co2);
-		mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &co1);
+		mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_plane");
+		mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("Background1Texture"));
+		mesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_floor_emissve_grid"));
+		mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(0, 1, 1));
 		entity->SetDrawable(mesh);
 
 		m_pWorld->AddEntity(entity);
 	}
 
-	auto entity = m_pWorld->CreateEntity();
-	entity->m_Transform.SetPosition(0,0,0);
 
-	triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
-	mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("triangle");
-	mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("Wall"));
-	g_pFogMa = &mesh->m_Material;
-	mesh->m_D3DStates.m_pRasterizerState = twGraphic->GetDefaultCullNoneRasterizerState();
-	mesh->m_Material.m_pGeometryShader.SetTexture(0, twResourceManager->GetTexture2D("t_noisecolor"));
-	mesh->m_Material.m_pGeometryShader.SetTexture(1, twResourceManager->GetTexture2D("t_noise"));
-	mesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_obs_02_blend1"));
-	mesh->m_Material.m_pPixelShader.SetTexture(1, twResourceManager->GetTexture2D("T_obs_02_blend2"));
-	mesh->m_Material.m_pPixelShader.SetTexture(2, twResourceManager->GetTexture2D("T_obs_02_blend3"));
-	mesh->m_Material.m_pPixelShader.SetTexture(3, twResourceManager->GetTexture2D("t_obs_all_emissive_blend2"));
-	mesh->m_Material.m_pPixelShader.SetTexture(4, twResourceManager->GetTexture2D("t_obs_all_emissive_blend2"));
-	mesh->m_Material.m_pPixelShader.SetTexture(5, twResourceManager->GetTexture2D("t_obs_all_emissive_blend2"));
-
-	float power1 = 0.0f;
-	float power2 = 0.0f;
-	float power3 = 1.0f;
-	DirectX::XMFLOAT3 color = DirectX::XMFLOAT3(0.0f, 0.0f, 0.8f);
-
-	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &power1);
-	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &power2);
-	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(6, &power3);
-	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(7, &color);
-	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(9, &power2);
-
-	entity->SetDrawable(mesh);
-
-	m_pWorld->AddEntity(entity);
+	//triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
+	//mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("triangle");
+	//mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("Wall"));
+	//g_pFogMa = &mesh->m_Material;
+	//mesh->m_D3DStates.m_pRasterizerState = twGraphic->GetDefaultCullNoneRasterizerState();
+	//mesh->m_Material.m_pGeometryShader.SetTexture(0, twResourceManager->GetTexture2D("t_noisecolor"));
+	//mesh->m_Material.m_pGeometryShader.SetTexture(1, twResourceManager->GetTexture2D("t_noise"));
+	//mesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_obs_02_blend1"));
+	//mesh->m_Material.m_pPixelShader.SetTexture(1, twResourceManager->GetTexture2D("T_obs_02_blend2"));
+	//mesh->m_Material.m_pPixelShader.SetTexture(2, twResourceManager->GetTexture2D("T_obs_02_blend3"));
+	//mesh->m_Material.m_pPixelShader.SetTexture(3, twResourceManager->GetTexture2D("t_obs_all_emissive_blend2"));
+	//mesh->m_Material.m_pPixelShader.SetTexture(4, twResourceManager->GetTexture2D("t_obs_all_emissive_blend2"));
+	//mesh->m_Material.m_pPixelShader.SetTexture(5, twResourceManager->GetTexture2D("t_obs_all_emissive_blend2"));
+	//
+	//float power1 = 0.0f;
+	//float power2 = 0.0f;
+	//float power3 = 1.0f;
+	//DirectX::XMFLOAT3 color = DirectX::XMFLOAT3(0.0f, 0.0f, 0.8f);
+	//
+	//mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &power1);
+	//mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &power2);
+	//mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(6, &power3);
+	//mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(7, &color);
+	//mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(9, &power2);
+	//
+	//entity->SetDrawable(mesh);
+	//
+	//m_pWorld->AddEntity(entity);
 }
 
 void CDebugScene::CreateDebugFont()

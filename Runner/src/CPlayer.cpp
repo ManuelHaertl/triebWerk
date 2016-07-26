@@ -31,6 +31,7 @@ void CPlayer::Start()
     m_LastZ = m_pEntity->m_Transform.GetPosition().m128_f32[2];
 
     CreateTrail();
+	CreateFloorEffect();
 }
 
 void CPlayer::Update()
@@ -127,6 +128,29 @@ void CPlayer::CreateTrail()
     m_pTrail->SetDrawable(m_pTrailMesh);
 
     twActiveWorld->AddEntity(m_pTrail);
+}
+
+void CPlayer::CreateFloorEffect()
+{
+	auto entity = twActiveWorld->CreateEntity();
+	DirectX::XMVECTOR pos = m_pEntity->m_Transform.GetPosition();
+	pos.m128_f32[1] -= 1.8f;
+	pos.m128_f32[2] -= 0.5f;
+	entity->m_Transform.SetPosition(pos);
+	entity->m_Transform.SetScale(5, 5, 5);
+
+	m_pEntity->m_Transform.AddChild(&entity->m_Transform);
+
+	triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
+	mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_plane");
+	mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("Background1Texture"));
+	mesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_floor_emissve_grid"));
+	mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
+	mesh->m_RenderMode = triebWerk::CMeshDrawable::ERenderMode::Transparent;
+	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT4(0, 1, 1,1));
+	entity->SetDrawable(mesh);
+
+	twActiveWorld->AddEntity(entity);
 }
 
 void CPlayer::CheckInput()
@@ -248,7 +272,7 @@ void CPlayer::CheckResource()
             m_CurrentResource = MaxResource;
     }
 
-    std::cout << "Resource: " << m_CurrentResource << std::endl;
+    //std::cout << "Resource: " << m_CurrentResource << std::endl;
 }
 
 void CPlayer::SetSpeed()

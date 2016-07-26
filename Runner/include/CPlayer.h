@@ -70,6 +70,7 @@ public:
 
 private:
     void CreateTrail();
+	void CreateFloorEffect();
     void CheckInput();
     void CheckResource();
     void SetSpeed();
