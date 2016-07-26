@@ -18,8 +18,7 @@ public:
     static float BoostSpeed;
     static float BoostCost;
 
-    static float ShieldTime;
-    static float ShieldCooldown;
+    static float ShieldCost;
 
     static float MaxRotation;
     static float RotationCameraFactor;
@@ -35,12 +34,9 @@ public:
 private:
     float m_CurrentResource;
 
-    bool m_InFullControlMode;    
+    bool m_InFullControlMode;
     bool m_InBoostMode;
-
-    bool m_IsShieldActive;
-    float m_CurrentShieldTime;
-    float m_CurrentShieldCooldownTime;
+    bool m_InShieldMode;
 
     triebWerk::CEntity* m_pTrail;
     triebWerk::CMeshDrawable* m_pTrailMesh;
@@ -73,7 +69,6 @@ private:
     void CheckInput();
     void CheckResource();
     void SetSpeed();
-    void SetShield();
     void CalculateDistanceFlewn();
     void UpdateTrail();
     void SetCamera();

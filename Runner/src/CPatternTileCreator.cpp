@@ -57,8 +57,12 @@ CPatternTileCreator::CPatternTileCreator()
 
     m_pMoving05Up = twResourceManager->GetMesh("ms_obs_05x05x07_movable_up");
     m_pMoving05Down = twResourceManager->GetMesh("ms_obs_05x05x07_movable_down");
+    m_pMoving05Left = twResourceManager->GetMesh("ms_obs_05x05x07_movable_left");
+    m_pMoving05Right = twResourceManager->GetMesh("ms_obs_05x05x07_movable_right");
     m_pMoving10Up = twResourceManager->GetMesh("ms_obs_05x10x07_movable_up");
     m_pMoving10Down = twResourceManager->GetMesh("ms_obs_05x10x07_movable_down");
+    m_pMoving10Left = twResourceManager->GetMesh("ms_obs_05x10x07_movable_left");
+    m_pMoving10Right = twResourceManager->GetMesh("ms_obs_05x10x07_movable_right");
 
     m_pTextureObstacle[0][0] = twResourceManager->GetTexture2D("T_obs_01_blend1");
     m_pTextureObstacle[0][1] = twResourceManager->GetTexture2D("T_obs_01_blend2");
@@ -141,23 +145,14 @@ void CPatternTileCreator::CreateEntity(const SPatternTile& a_rTile, const float 
     case ETileType::Model05x30Flipped:
         CreateModel05x30(true);
         break;
-    case ETileType::Moving05x05Up:
-        CreateMoving05x05(true);
+    case ETileType::Moving05x05:
+        CreateMoving05x05();
         break;
-    case ETileType::Moving05x05Down:
-        CreateMoving05x05(false);
+    case ETileType::Moving05x10:
+        CreateMoving05x10(false);
         break;
-    case ETileType::Moving05x10Up:
-        CreateMoving05x10(true, false);
-        break;
-    case ETileType::Moving05x10UpFlipped:
-        CreateMoving05x10(true, true);
-        break;
-    case ETileType::Moving05x10Down:
-        CreateMoving05x10(false, false);
-        break;
-    case ETileType::Moving05x10DownFlipped:
-        CreateMoving05x10(false, true);
+    case ETileType::Moving05x10Flipped:
+        CreateMoving05x10(true);
         break;
     }
 }
@@ -677,7 +672,7 @@ void CPatternTileCreator::CreateShadow30(const bool a_Rotated)
     twActiveWorld->AddEntity(entity);
 }
 
-void CPatternTileCreator::CreateMoving05x05(const bool a_Up)
+void CPatternTileCreator::CreateMoving05x05()
 {
     const size_t texture = twRandom::GetNumber(0, MaxObstacleTextures - 1);
     float textureValueFull = 1.0f, textureValueNone = 0.0f;
@@ -690,15 +685,27 @@ void CPatternTileCreator::CreateMoving05x05(const bool a_Up)
     entity->m_Tag.AddTag("WallEffect");
 
     // Transform
-    entity->m_Transform.SetPosition(m_Tile.m_X, m_Tile.m_PosStart, m_PatternSpawnBegin + m_Tile.m_Y);
+    entity->m_Transform.SetPosition(m_Tile.m_X, m_Tile.m_PosYStart, m_PatternSpawnBegin + m_Tile.m_Y);
 
     // Rendering
     auto mesh = twRenderer->CreateMeshDrawable();
     mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
-    if (a_Up)
+
+    switch (m_Tile.m_Moving)
+    {
+    case SPatternTile::EMovingDirection::Up:
         mesh->m_pMesh = m_pMoving05Up;
-    else
+        break;
+    case SPatternTile::EMovingDirection::Down:
         mesh->m_pMesh = m_pMoving05Down;
+        break;
+    case SPatternTile::EMovingDirection::Left:
+        mesh->m_pMesh = m_pMoving05Left;
+        break;
+    case SPatternTile::EMovingDirection::Right:
+        mesh->m_pMesh = m_pMoving05Right;
+        break;
+    }
     mesh->m_Material.SetMaterial(m_pMaterialTextureBlending);
     mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &textureValueFull);
     mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &textureValueNone);
@@ -717,13 +724,18 @@ void CPatternTileCreator::CreateMoving05x05(const bool a_Up)
     physicEntity->AddCollider(collider);
     entity->SetPhysicEntity(physicEntity);
 
+    // Shadow
+    CreateShadow05(false);
+
     // Behaviour
-    entity->SetBehaviour(new CMovingObstacle(m_Tile.m_PosStart, m_Tile.m_PosEnd, m_Tile.m_Time, m_Tile.m_Distance));
+    DirectX::XMVECTOR start = DirectX::XMVectorSet(m_Tile.m_X, m_Tile.m_PosYStart, m_PatternSpawnBegin + m_Tile.m_Y, 0.0f);
+    DirectX::XMVECTOR end = DirectX::XMVectorSet(m_Tile.m_PosXEnd, m_Tile.m_PosYEnd, m_PatternSpawnBegin + m_Tile.m_Y + m_Tile.m_PosZEnd, 0.0f);
+    entity->SetBehaviour(new CMovingObstacle(start, end, m_Tile.m_Time, m_Tile.m_Distance, m_Entities[1]));
 
     twActiveWorld->AddEntity(entity);
 }
 
-void CPatternTileCreator::CreateMoving05x10(const bool a_Up, const bool a_Rotated)
+void CPatternTileCreator::CreateMoving05x10(const bool a_Rotated)
 {
     const size_t texture = twRandom::GetNumber(0, MaxObstacleTextures - 1);
     float textureValueFull = 1.0f, textureValueNone = 0.0f;
@@ -736,16 +748,27 @@ void CPatternTileCreator::CreateMoving05x10(const bool a_Up, const bool a_Rotate
     entity->m_Tag.AddTag("WallEffect");
 
     // Transform
-    entity->m_Transform.SetPosition(m_Tile.m_X, m_Tile.m_PosStart, m_PatternSpawnBegin + m_Tile.m_Y);
+    entity->m_Transform.SetPosition(m_Tile.m_X, m_Tile.m_PosYStart, m_PatternSpawnBegin + m_Tile.m_Y);
     if (a_Rotated) entity->m_Transform.SetRotationDegrees(0.0f, 90.0f, 0.0f);
 
     // Rendering
     auto mesh = twRenderer->CreateMeshDrawable();
     mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
-    if (a_Up)
+    switch (m_Tile.m_Moving)
+    {
+    case SPatternTile::EMovingDirection::Up:
         mesh->m_pMesh = m_pMoving10Up;
-    else
+        break;
+    case SPatternTile::EMovingDirection::Down:
         mesh->m_pMesh = m_pMoving10Down;
+        break;
+    case SPatternTile::EMovingDirection::Left:
+        mesh->m_pMesh = m_pMoving10Left;
+        break;
+    case SPatternTile::EMovingDirection::Right:
+        mesh->m_pMesh = m_pMoving10Right;
+        break;
+    }
     mesh->m_Material.SetMaterial(m_pMaterialTextureBlending);
     mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &textureValueFull);
     mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &textureValueNone);
@@ -773,8 +796,13 @@ void CPatternTileCreator::CreateMoving05x10(const bool a_Up, const bool a_Rotate
     physicEntity->AddCollider(collider);
     entity->SetPhysicEntity(physicEntity);
 
+    // Shadow
+    CreateShadow10(a_Rotated);
+
     // Behaviour
-    entity->SetBehaviour(new CMovingObstacle(m_Tile.m_PosStart, m_Tile.m_PosEnd, m_Tile.m_Time, m_Tile.m_Distance));
+    DirectX::XMVECTOR start = DirectX::XMVectorSet(m_Tile.m_X, m_Tile.m_PosYStart, m_PatternSpawnBegin + m_Tile.m_Y, 0.0f);
+    DirectX::XMVECTOR end = DirectX::XMVectorSet(m_Tile.m_PosXEnd, m_Tile.m_PosYEnd, m_PatternSpawnBegin + m_Tile.m_Y + m_Tile.m_PosZEnd, 0.0f);
+    entity->SetBehaviour(new CMovingObstacle(start, end, m_Tile.m_Time, m_Tile.m_Distance, m_Entities[1]));
 
     twActiveWorld->AddEntity(entity);
 }

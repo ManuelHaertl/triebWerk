@@ -7,6 +7,8 @@ triebWerk::CUIWorld::CUIWorld()
     , m_DrawEntities()
     , m_RemoveEntities()
     , m_pRenderingHandle(nullptr)
+    , m_ReferenceResolutionX(0.0f)
+    , m_ReferenceResolutionY(0.0f)
 {
 }
 
@@ -53,6 +55,17 @@ void triebWerk::CUIWorld::Update()
     {
         m_UpdateEntities[i]->Update();
     }
+
+    // Render entities
+    size = m_DrawEntities.GetSize();
+    for (size_t i = 0; i < size; ++i)
+    {
+        m_DrawEntities[i]->GetDrawable()->SetTransform(m_DrawEntities[i]->m_Transform.GetTransformation());
+        m_pRenderingHandle->AddRenderCommand(m_DrawEntities[i]->GetDrawable());
+    }
+
+    m_UpdateEntities.Reset();
+    m_DrawEntities.Reset();
 }
 
 void triebWerk::CUIWorld::Shutdown()

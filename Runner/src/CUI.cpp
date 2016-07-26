@@ -17,7 +17,7 @@ CUI::~CUI()
 
 void CUI::Start()
 {
-	m_pFont = twFontManager->LoadFont(twResourceManager->GetFontFace("Rubik-Regular"), 20);
+	m_pFont = twFontManager->LoadFont(twResourceManager->GetFontFace("AGENCYB"), 20);
 
 	CreateTotalPoints();
 	CreateCurrentPoints();

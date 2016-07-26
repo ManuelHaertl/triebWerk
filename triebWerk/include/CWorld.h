@@ -3,6 +3,7 @@
 #include <CFrameContainer.h>
 #include <CEntity.h>
 #include <CPhysicWorld.h>
+#include <CUIWorld.h>
 #include <CRenderer.h>
 
 namespace triebWerk
@@ -11,6 +12,7 @@ namespace triebWerk
     {
     public:
         CPhysicWorld* m_pPhysicWorld;
+        CUIWorld* m_pUIWorld;
 
     private:
 		static const size_t Start_Reserve_Size = 2;

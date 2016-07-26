@@ -10,8 +10,8 @@ CGameInfo::CGameInfo()
     , m_Multiplier(1.0f)
     , m_PlayerPosition(0.0f)
     , m_EffectCheckpoint(false)
-    , m_EffectDodge(false)
-    , m_EffectDodgeStrength(1.0f)
+    , m_EffectFullControl(false)
+    , m_EffectFullControlStrength(1.0f)
 	, m_EffectShield(false)
 {
     
@@ -36,6 +36,6 @@ void CGameInfo::Reset()
     m_CurrentPoints = 0;
     m_Multiplier = 1.0f;
     m_EffectCheckpoint = false;
-    m_EffectDodge = false;
-    m_EffectDodgeStrength = 1.0f;
+    m_EffectFullControl = false;
+    m_EffectFullControlStrength = 1.0f;
 }

@@ -18,6 +18,9 @@ namespace triebWerk
         CFrameContainer<CUIEntity*> m_RemoveEntities;
 
         CRenderer* m_pRenderingHandle;
+        float m_ReferenceResolutionX;
+        float m_ReferenceResolutionY;
+
     public:
         CUIWorld();
         ~CUIWorld();

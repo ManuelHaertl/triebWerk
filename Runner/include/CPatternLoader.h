@@ -15,8 +15,10 @@ private:
     const std::string StringCategoryVary = "Vary";
     const std::string StringMoving = "Moving";
     const std::string StringDistance = "Distance";
-    const std::string StringPosStart = "PosStart";
-    const std::string StringPosEnd = "PosEnd";
+    const std::string StringPosXEnd = "PosXEnd";
+    const std::string StringPosYStart = "PosYStart";
+    const std::string StringPosYEnd = "PosYEnd";
+    const std::string StringPosZEnd = "PosZEnd";
     const std::string StringTime = "Time";
 
     std::vector<CPattern*> m_AllPattern;

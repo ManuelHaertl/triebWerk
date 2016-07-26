@@ -124,42 +124,68 @@ void CPatternLoader::SetTile(const ETileType::Type a_Type, const triebWerk::CLay
     patternTile.m_Y = a_Y;
     patternTile.m_Type = a_Type;
 
+    bool noPosYEnd = false;
     for (auto prop : a_rObject.m_Properties)
     {
         if (prop.first == StringMoving)
         {
-            patternTile.m_Moving = true;
+            switch (patternTile.m_Type)
+            {
+            case ETileType::Model05x05:
+                patternTile.m_Type = ETileType::Moving05x05;
+                break;
+            case ETileType::Model05x10:
+                patternTile.m_Type = ETileType::Moving05x10;
+                break;
+            case ETileType::Model05x10Flipped:
+                patternTile.m_Type = ETileType::Moving05x10Flipped;
+                break;
+            }
+
+            if (prop.second == "Up")
+                patternTile.m_Moving = SPatternTile::EMovingDirection::Up;
+            else if (prop.second == "Down")
+                patternTile.m_Moving = SPatternTile::EMovingDirection::Down;
+            else if (prop.second == "Left")
+                patternTile.m_Moving = SPatternTile::EMovingDirection::Left;
+            else if (prop.second == "Right")
+                patternTile.m_Moving = SPatternTile::EMovingDirection::Right;
         }
         else if (prop.first == StringDistance)
             patternTile.m_Distance = std::stof(prop.second);
-        else if (prop.first == StringPosStart)
-            patternTile.m_PosStart = std::stof(prop.second);
-        else if (prop.first == StringPosEnd)
-            patternTile.m_PosEnd = std::stof(prop.second);
+        else if (prop.first == StringPosXEnd)
+        {
+            if (prop.second == "")
+                patternTile.m_PosXEnd = patternTile.m_X;
+            else
+                patternTile.m_PosXEnd = std::stof(prop.second);
+        }
+        else if (prop.first == StringPosYStart)
+        {
+            if (prop.second == "")
+                patternTile.m_PosYStart = 0.0f;
+            else
+                patternTile.m_PosYStart = std::stof(prop.second);
+
+            if (noPosYEnd)
+                patternTile.m_PosYEnd = patternTile.m_PosYStart;
+        }
+        else if (prop.first == StringPosYEnd)
+        {
+            if (prop.second == "")
+                noPosYEnd = true;
+            else
+                patternTile.m_PosYEnd = std::stof(prop.second);
+        }
+        else if (prop.first == StringPosZEnd)
+        {
+            if (prop.second == "")
+                patternTile.m_PosZEnd = 0.0f;
+            else
+                patternTile.m_PosZEnd = std::stof(prop.second);
+        }
         else if (prop.first == StringTime)
             patternTile.m_Time = std::stof(prop.second);
-    }
-
-    if (patternTile.m_Moving)
-    {
-        switch (patternTile.m_Type)
-        {
-        case ETileType::Model05x05:
-            (patternTile.m_PosStart > patternTile.m_PosEnd) ?
-                patternTile.m_Type = ETileType::Moving05x05Down :
-                patternTile.m_Type = ETileType::Moving05x05Up;
-            break;
-        case ETileType::Model05x10:
-            (patternTile.m_PosStart > patternTile.m_PosEnd) ?
-                patternTile.m_Type = ETileType::Moving05x10Down :
-                patternTile.m_Type = ETileType::Moving05x10Up;
-            break;
-        case ETileType::Model05x10Flipped:
-            (patternTile.m_PosStart > patternTile.m_PosEnd) ?
-                patternTile.m_Type = ETileType::Moving05x10DownFlipped :
-                patternTile.m_Type = ETileType::Moving05x10UpFlipped;
-            break;
-        }
     }
 
     InsertPatternTile(patternTile, a_pPattern);

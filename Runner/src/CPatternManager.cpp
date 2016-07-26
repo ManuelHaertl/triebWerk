@@ -181,7 +181,7 @@ void CPatternManager::DeleteEntities()
         if (entity->m_Transform.GetPosition().m128_f32[2] < m_DeleteZone)
         {
             twActiveWorld->RemoveEntity(entity);
-            m_Entities.erase(m_Entities.begin());
+            m_Entities.remove(entity);
         }
         else
         {
