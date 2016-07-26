@@ -13,6 +13,9 @@ private:
     static const size_t MaxObstacleTextures = 3;
     static const size_t MaxObstacleTextureBlendings = 3;
 
+	DirectX::XMFLOAT3 LineColor = DirectX::XMFLOAT3(1, 1, 1);
+	DirectX::XMFLOAT3 FaceColor = DirectX::XMFLOAT3(0, 0, 0);
+
     SPatternTile m_Tile;
     float m_PatternSpawnBegin;
 
@@ -52,18 +55,22 @@ private:
     // Textures ----------------------------------------------
 
     triebWerk::CTexture2D* m_pTextureObstacle[MaxObstacleTextures][MaxObstacleTextureBlendings];
+	triebWerk::CTexture2D* m_pTextureEmissive[MaxObstacleTextureBlendings];
     triebWerk::CTexture2D* m_pTexturePoints;
     triebWerk::CTexture2D* m_pTextureShadow05;
     triebWerk::CTexture2D* m_pTextureShadow10;
     triebWerk::CTexture2D* m_pTextureShadow20;
     triebWerk::CTexture2D* m_pTextureShadow30;
+	triebWerk::CTexture2D* m_pTextureEmissiveMoveable;
+	triebWerk::CTexture2D* m_pTextureNoise;
+	triebWerk::CTexture2D* m_pTextureColorNoise;
 
     // Shader ------------------------------------------------
 
     triebWerk::CMaterial* m_pMaterialStandardColor;
     triebWerk::CMaterial* m_pMaterialStandardTexture;
     triebWerk::CMaterial* m_pMaterialStandardTransparentTexture;
-    triebWerk::CMaterial* m_pMaterialTextureBlending;
+    triebWerk::CMaterial* m_pMaterialObstacle;
     triebWerk::CMaterial* m_pMaterialWireframe;
 
 public:
@@ -79,14 +86,14 @@ private:
     void CreateShield();
     void CreateBlock1x1();
     void CreateBlock2x2();
-    void CreateModel05x05(const bool a_Rotated);
-    void CreateModel05x10(const bool a_Rotated);
-    void CreateModel05x20(const bool a_Rotated);
-    void CreateModel05x30(const bool a_Rotated);
+    void CreateModel05x05(const bool a_Rotated);//
+    void CreateModel05x10(const bool a_Rotated);//
+    void CreateModel05x20(const bool a_Rotated);//
+    void CreateModel05x30(const bool a_Rotated);//
     void CreateShadow05(const bool a_Rotated);
     void CreateShadow10(const bool a_Rotated);
     void CreateShadow20(const bool a_Rotated);
     void CreateShadow30(const bool a_Rotated);
-    void CreateMoving05x05();
-    void CreateMoving05x10(const bool a_Rotated);
+    void CreateMoving05x05(); //
+    void CreateMoving05x10(const bool a_Rotated);//
 };

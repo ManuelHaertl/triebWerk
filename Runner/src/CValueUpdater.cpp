@@ -45,6 +45,9 @@ float CPatternManager::DeleteDistance = 10.0f;
 float CPatternManager::StartFreeDistance = 100.0f;
 float CPatternManager::StartTextureBlendDistance = 150.0f;
 float CPatternManager::EndTextureBlendDistance = 15.0f;
+float CPatternManager::StartBuildDistance = 200.0f;
+float CPatternManager::EndBuildDistance = 100.0f;
+float CPatternManager::BuildStrength = 10.0f;
 
 float CCheckpoint::AddedMultiplier = 0.5f;
 float CCheckpoint::HighestMultiplier = 5.0f;
@@ -283,5 +286,17 @@ void CValueUpdater::UpdateValues()
         {
             CPatternManager::EndTextureBlendDistance = std::stof(value.second);
         }
+		else if (value.first == "pm_StartBuildDistance")
+		{
+			CPatternManager::StartBuildDistance = std::stof(value.second);
+		}
+		else if (value.first == "pm_EndBuildDistance")
+		{
+			CPatternManager::EndBuildDistance = std::stof(value.second);
+		}
+		else if (value.first == "pm_BuildStrength")
+		{
+			CPatternManager::BuildStrength = std::stof(value.second);
+		}
     }
 }

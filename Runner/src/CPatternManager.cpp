@@ -10,8 +10,7 @@ CPatternManager::CPatternManager() :
     m_PatternSpawnBegin(StartFreeDistance),
     m_pCurrentPattern(nullptr),
     m_CurrentTileIndex(0),
-    m_DeleteZone(-DeleteDistance),
-    m_PlayerPosition(0.0f)
+    m_DeleteZone(-DeleteDistance)
 {
     
 }
@@ -37,7 +36,6 @@ void CPatternManager::Update(const float a_MetersFlewn)
 {
     m_SpawnTo += a_MetersFlewn;
     m_DeleteZone += a_MetersFlewn;
-    m_PlayerPosition += a_MetersFlewn;
 
     while (m_IsSpawned < m_SpawnTo)
     {
@@ -207,7 +205,7 @@ void CPatternManager::UpdateTextureBlending()
             float blend1 = 1.0f, blend2 = 0.0f, blend3 = 0.0f;
             auto drawable = static_cast<triebWerk::CMeshDrawable*>(entity->GetDrawable());
 
-            float distance = entity->m_Transform.GetPosition().m128_f32[2] - m_PlayerPosition;
+            float distance = entity->m_Transform.GetPosition().m128_f32[2] - CGameInfo::Instance().m_PlayerPosition;
 
             if (distance < EndTextureBlendDistance)
             {
@@ -237,6 +235,20 @@ void CPatternManager::UpdateTextureBlending()
             drawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &blend1);
             drawable->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &blend2);
             drawable->m_Material.m_ConstantBuffer.SetValueInBuffer(6, &blend3);
+
+			float buildValue;
+
+			if (distance < EndBuildDistance)
+			{
+				float buildDistance = 0.0f;
+				drawable->m_Material.m_ConstantBuffer.SetValueInBuffer(9, &buildDistance);
+			}
+			else if (distance <= StartBuildDistance)
+			{
+				float buildDistance = (distance - EndBuildDistance) / 10;
+				drawable->m_Material.m_ConstantBuffer.SetValueInBuffer(9, &buildDistance);
+
+			}
         }
     }
 }

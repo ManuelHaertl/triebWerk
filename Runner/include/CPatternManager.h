@@ -12,6 +12,10 @@ public:
     static float StartTextureBlendDistance;
     static float EndTextureBlendDistance;
 
+	static float StartBuildDistance;
+	static float EndBuildDistance;
+	static float BuildStrength;
+
 private:
     std::list<triebWerk::CEntity*> m_Entities;
     std::vector<CPattern*> m_Pattern[CPattern::MaxDifficulty];
@@ -21,7 +25,6 @@ private:
     float m_SpawnTo;
     float m_PatternSpawnBegin;
     float m_DeleteZone;
-    float m_PlayerPosition;
 
     CPattern* m_pCurrentPattern;
     size_t m_CurrentTileIndex;
