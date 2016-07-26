@@ -23,6 +23,7 @@ CDebugScene::~CDebugScene()
 void CDebugScene::Start()
 {
     m_Position = DirectX::XMVectorSet(0.0, 0.0, -10.0f, 0.0f);
+	twActiveUIWorld->SetReferenceResolution(1200.0f, 800.0f, triebWerk::CUIWorld::EScreenMatchState::Width);
 
     ResetCamera();
 	CreatePlayground();
@@ -114,24 +115,17 @@ void CDebugScene::CreatePlayground()
 		m_pWorld->AddEntity(entity);
 	}
 
-	auto entity = m_pWorld->CreateEntity();
-	entity->m_Transform.SetPosition(0,0,0);
+	auto entity = twActiveUIWorld->CreateUIEntity();
+	entity->m_Transform.SetAnchorPoint(0.0f, 1.0f);
+	entity->m_Transform.SetPositionOffset(0.0f, 0.0f, 0.0f);
+	entity->m_Transform.SetScale(1.0f, 1.0f, 1.0f);
 
-	{
-		auto entity = m_pWorld->CreateEntity();
-		entity->m_Transform.SetPosition(0, 0, 0);
-		entity->m_Transform.SetScale(1, 1, 1);
+	auto drawable = twRenderer->CreateUIDrawable();
+	drawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardUI"));
+	drawable->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_ui_ingame_counter_mid"));
 
-		triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
-		mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_plane");
-		mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("Background1Texture"));
-		mesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_floor_emissve_grid"));
-		mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(0, 1, 1));
-		entity->SetDrawable(mesh);
-
-		m_pWorld->AddEntity(entity);
-	}
-
+	entity->SetDrawable(drawable);
+	twActiveUIWorld->AddUIEntity(entity);
 
 	//triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
 	//mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("triangle");

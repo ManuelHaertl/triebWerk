@@ -21,6 +21,12 @@ triebWerk::IDrawable::EDrawableType triebWerk::CUIDrawable::GetType()
 void triebWerk::CUIDrawable::SetTransform(const DirectX::XMMATRIX & a_rTransform)
 {
 	m_Transformation = a_rTransform;
+
+	if (m_Material.m_pPixelShader.m_pTextures[0] != nullptr)
+	{
+		m_Transformation.r[0].m128_f32[0] *= m_Material.m_pPixelShader.m_pTextures[0]->GetWidth();
+		m_Transformation.r[1].m128_f32[1] *= m_Material.m_pPixelShader.m_pTextures[0]->GetHeight();
+	}
 }
 
 bool triebWerk::CUIDrawable::IsDrawableValid()

@@ -60,10 +60,10 @@ void CUI::End()
 void CUI::CreateTextures()
 {
     auto entity = twActiveUIWorld->CreateUIEntity();
-    entity->m_Transform.SetAnchorPoint(0.0f, 0.0f);
+    entity->m_Transform.SetAnchorPoint(0.0f, 1.0f);
     entity->m_Transform.SetPositionOffset(0.0f, 0.0f, 0.0f);
-    entity->m_Transform.SetScale(300.0f, 300.0f, 0.0f);
-    
+	entity->m_Transform.SetScale(1.0f, 1.0f, 1.0f);
+
     auto drawable = twRenderer->CreateUIDrawable();
     drawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardUI"));
     drawable->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_ui_ingame_counter_mid"));
