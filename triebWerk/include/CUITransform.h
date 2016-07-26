@@ -1,12 +1,16 @@
 #pragma once
 #include <DirectXMath.h>
 #include <CElementContainer.h>
-#include <SUIScreenInformation.h>
 
 namespace triebWerk
 {
     class CUITransform
     {
+    public:
+        static float ReferenceWidth;
+        static float ReferenceHeight;
+        static float ReferenceScale;
+
     private:
         bool m_Modified;
 
@@ -14,14 +18,9 @@ namespace triebWerk
         DirectX::XMVECTOR m_PositionOffset;
         DirectX::XMVECTOR m_Scale;
         float m_Rotation;
-        
-        DirectX::XMVECTOR m_RealPosition;
-        DirectX::XMVECTOR m_RealScale;
 
         DirectX::XMVECTOR m_Pivot;
         DirectX::XMMATRIX m_Transformation;
-
-        static SUIScreenInformation m_ScreenInformation;
 
     public:
         CUITransform();
@@ -52,7 +51,7 @@ namespace triebWerk
         void SetPivot(const float a_X, const float a_Y, const float a_Z);
         void SetPivot(const DirectX::XMVECTOR a_Pivot);
 
-        void SetScreenInformation(const SUIScreenInformation& a_rScreenInformation);
+        void UpdateScreenInformation();
 
     private:
         inline void Modified();

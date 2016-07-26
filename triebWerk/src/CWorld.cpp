@@ -20,6 +20,7 @@ void triebWerk::CWorld::Initialize(CRenderer* a_pRenderer, const float a_PhysicT
 
     m_pPhysicWorld = new CPhysicWorld();
     m_pUIWorld = new CUIWorld();
+    m_pUIWorld->Initialize(a_pRenderer);
 
     // reserve some spots so the vector doesn't need
     // to get resized too often during runtime

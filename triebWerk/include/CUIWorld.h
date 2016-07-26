@@ -8,6 +8,13 @@ namespace triebWerk
 {
     class CUIWorld
     {
+    public:
+        enum class EScreenMatchState
+        {
+            Width,
+            Height
+        };
+
     private:
         static const size_t Start_Reserve_Size = 2;
         size_t m_CurrentSize;
@@ -18,8 +25,11 @@ namespace triebWerk
         CFrameContainer<CUIEntity*> m_RemoveEntities;
 
         CRenderer* m_pRenderingHandle;
+
+        DirectX::XMFLOAT2 m_ScreenResolution;
         float m_ReferenceResolutionX;
         float m_ReferenceResolutionY;
+        EScreenMatchState m_ScreenMatchState;
 
     public:
         CUIWorld();
@@ -29,6 +39,9 @@ namespace triebWerk
         void Update();
         void Shutdown();
 
+        void SetScreenResolution(const int m_Width, const int m_Height);
+        void SetReferenceResolution(const float m_Width, const float m_Height, const EScreenMatchState m_MatchState);
+
         CUIEntity* CreateUIEntity() const;
         void AddUIEntity(CUIEntity* a_pUIEntity);
         void RemoveUIEntity(CUIEntity* a_pUIEntity);
@@ -37,6 +50,7 @@ namespace triebWerk
         size_t GetEntityCount() const;
 
     private:
-        void DeleteEntity(CEntity* a_pEntity);
+        void DeleteEntity(CUIEntity* a_pUIEntity);
+        void UpdateScreenInformation();
     };
 }

@@ -155,8 +155,11 @@ void triebWerk::CEngine::ProcessWindowMessages()
 
             //TODO: Listen only to finished resized
         case WM_SIZE:
+        {
             m_pGraphics->UpdateSwapchainConfiguration();
+            m_pSceneManager->m_pActiveScene->m_pScene->m_pWorld->m_pUIWorld->SetScreenResolution(LOWORD(msg.lParam), HIWORD(msg.lParam));
             break;
+        }
 
         default:
             m_pInput->UpdateMSG(msg);

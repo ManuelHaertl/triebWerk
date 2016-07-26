@@ -20,6 +20,7 @@ public:
 	void End();
 
 private:
+    void CreateTextures();
 	void CreateTotalPoints();
 	void CreateCurrentPoints();
 	void CreateMultiplier();
