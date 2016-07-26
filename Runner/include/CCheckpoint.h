@@ -16,9 +16,6 @@ public:
 	triebWerk::CEntity* m_pCheckpointPlaneMiddle;
 	triebWerk::CEntity* m_pCheckpointPlaneTop;
 	triebWerk::CEntity* m_pGodrayButtom;
-	
-	const static size_t m_GodrayCount = 40;
-	triebWerk::CEntity* m_pGodrayTop[m_GodrayCount];
 
 public:
     CCheckpoint();

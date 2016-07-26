@@ -18,12 +18,7 @@ void CCheckpoint::Collected()
 	m_pCheckpointPlaneButtom->GetDrawable()->SetActive(false);
 	m_pCheckpointPlaneTop->GetDrawable()->SetActive(false);
 	m_pCheckpointPlaneMiddle->GetDrawable()->SetActive(false);
-
-	for (size_t i = 0; i < m_GodrayCount; i++)
-	{
-		//Godrays
-		m_pGodrayTop[i]->GetDrawable()->SetActive(false);
-	}
+	m_pGodrayButtom->GetDrawable()->SetActive(false);
 
 	m_pEntity->RemovePhysicEntity();
 
@@ -98,31 +93,11 @@ void CCheckpoint::Start()
 	pGodrayDrawable->m_RenderMode = triebWerk::CMeshDrawable::ERenderMode::Transparent;
 	pGodrayDrawable->m_pMesh = twResourceManager->GetMesh("ms_godray");
 	pGodrayDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardTransparentTexture"));
-	pGodrayDrawable->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_godray_cp_end"));
+	pGodrayDrawable->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("t_godrays"));
 	m_pGodrayButtom->SetDrawable(pGodrayDrawable);
 	
 	twActiveWorld->AddEntity(m_pGodrayButtom);
 
-	for (size_t i = 0; i < m_GodrayCount; i++)
-	{
-		//Godrays
-		m_pGodrayTop[i] = twActiveWorld->CreateEntity();
-		DirectX::XMVECTOR pos = m_pEntity->m_Transform.GetPosition();
-		pos.m128_f32[1] += (i * 2) + 5.5f;
-		m_pGodrayTop[i]->m_Transform.SetPosition(pos);
-		m_pGodrayTop[i]->m_Transform.SetParent(&m_pEntity->m_Transform);
-
-		triebWerk::CMeshDrawable* pGodrayTopDrawable = twRenderer->CreateMeshDrawable();
-		pGodrayTopDrawable->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
-		pGodrayTopDrawable->m_RenderMode = triebWerk::CMeshDrawable::ERenderMode::Transparent;
-		pGodrayTopDrawable->m_pMesh = twResourceManager->GetMesh("ms_godray");
-		pGodrayTopDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardTransparentTexture"));
-		pGodrayTopDrawable->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_godray_cp_middle"));
-		m_pGodrayTop[i]->SetDrawable(pGodrayTopDrawable);
-
-		twActiveWorld->AddEntity(m_pGodrayTop[i]);
-	}
-	
 }
 
 void CCheckpoint::Update()
@@ -139,12 +114,6 @@ void CCheckpoint::End()
 	twActiveWorld->RemoveEntity(m_pCheckpointPlaneMiddle);
 	twActiveWorld->RemoveEntity(m_pCheckpointPlaneTop);
 	twActiveWorld->RemoveEntity(m_pGodrayButtom);
-
-	for (size_t i = 0; i < m_GodrayCount; i++)
-	{
-		//Godrays
-		twActiveWorld->RemoveEntity(m_pGodrayTop[i]);
-	}
 
     if (!m_HasCollected)
 	{
