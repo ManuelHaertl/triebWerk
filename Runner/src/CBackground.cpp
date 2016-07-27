@@ -193,33 +193,63 @@ void CBackground::End()
 {
 }
 
+void CBackground::ResetBackground()
+{
+	//Multiplier
+	float circlePower1 = 1;
+	float circlePower2 = 0;
+	float circlePower3 = 0;
+	float circlePower4 = 0;
+	float circlePower5 = 0;
+
+	m_pLeftMaterial->m_ConstantBuffer.SetValueInBuffer(10, &circlePower1);
+	m_pLeftMaterial->m_ConstantBuffer.SetValueInBuffer(11, &circlePower2);
+	m_pLeftMaterial->m_ConstantBuffer.SetValueInBuffer(12, &circlePower3);
+	m_pLeftMaterial->m_ConstantBuffer.SetValueInBuffer(13, &circlePower4);
+	m_pLeftMaterial->m_ConstantBuffer.SetValueInBuffer(14, &circlePower5);
+	m_pRightMaterial->m_ConstantBuffer.SetValueInBuffer(10, &circlePower1);
+	m_pRightMaterial->m_ConstantBuffer.SetValueInBuffer(11, &circlePower2);
+	m_pRightMaterial->m_ConstantBuffer.SetValueInBuffer(12, &circlePower3);
+	m_pRightMaterial->m_ConstantBuffer.SetValueInBuffer(13, &circlePower4);
+	m_pRightMaterial->m_ConstantBuffer.SetValueInBuffer(14, &circlePower5);
+
+	//Circles
+	circlePower1 = 1.0f;
+	circlePower2 = 0.0f;
+	circlePower3 = 0.0f;
+	circlePower4 = 0.0f;
+	circlePower5 = 0.0f;
+
+	m_pLeftMaterial->m_ConstantBuffer.SetValueInBuffer(5, &circlePower1);
+	m_pLeftMaterial->m_ConstantBuffer.SetValueInBuffer(6, &circlePower2);
+	m_pLeftMaterial->m_ConstantBuffer.SetValueInBuffer(7, &circlePower3);
+	m_pLeftMaterial->m_ConstantBuffer.SetValueInBuffer(8, &circlePower4);
+	m_pLeftMaterial->m_ConstantBuffer.SetValueInBuffer(9, &circlePower5);
+	m_pRightMaterial->m_ConstantBuffer.SetValueInBuffer(5, &circlePower1);
+	m_pRightMaterial->m_ConstantBuffer.SetValueInBuffer(6, &circlePower2);
+	m_pRightMaterial->m_ConstantBuffer.SetValueInBuffer(7, &circlePower3);
+	m_pRightMaterial->m_ConstantBuffer.SetValueInBuffer(8, &circlePower4);
+	m_pRightMaterial->m_ConstantBuffer.SetValueInBuffer(9, &circlePower5);
+
+	//Colors
+	m_LerpColors = false;
+	m_LerpColorValue = 0.0f;
+	m_LerpColorToValue = 0.0f;
+	m_LerpToColor = DirectX::XMFLOAT4(0.0f, 0.0f, 0.f, 0.0f);
+
+	m_pLeftMaterial->m_ConstantBuffer.SetValueInBuffer(4, &m_StartColor);
+	m_pRightMaterial->m_ConstantBuffer.SetValueInBuffer(4, &m_StartColor);
+	m_pSnakeFeatherMaterial->m_ConstantBuffer.SetValueInBuffer(4, &m_StartColor);
+	m_pSnakeHeadMaterial->m_ConstantBuffer.SetValueInBuffer(4, &m_StartColor);
+
+}
+
 void CBackground::UpdateMultiplier()
 {
 	if (m_Multiplier != CGameInfo::Instance().m_Multiplier)
 	{
 
 		m_Multiplier = CGameInfo::Instance().m_Multiplier;
-		if (m_Multiplier == 1)
-		{
-
-			float circlePower1 = 1;
-			float circlePower2 = 0;
-			float circlePower3 = 0;
-			float circlePower4 = 0;
-			float circlePower5 = 0;
-
-			m_pLeftMaterial->m_ConstantBuffer.SetValueInBuffer(10, &circlePower1);
-			m_pLeftMaterial->m_ConstantBuffer.SetValueInBuffer(11, &circlePower2);
-			m_pLeftMaterial->m_ConstantBuffer.SetValueInBuffer(12, &circlePower3);
-			m_pLeftMaterial->m_ConstantBuffer.SetValueInBuffer(13, &circlePower4);
-			m_pLeftMaterial->m_ConstantBuffer.SetValueInBuffer(14, &circlePower5);
-			m_pRightMaterial->m_ConstantBuffer.SetValueInBuffer(10, &circlePower1);
-			m_pRightMaterial->m_ConstantBuffer.SetValueInBuffer(11, &circlePower2);
-			m_pRightMaterial->m_ConstantBuffer.SetValueInBuffer(12, &circlePower3);
-			m_pRightMaterial->m_ConstantBuffer.SetValueInBuffer(13, &circlePower4);
-			m_pRightMaterial->m_ConstantBuffer.SetValueInBuffer(14, &circlePower5);
-		}
-
 
 		m_ToMultiLerpIndex = (int)m_Multiplier + 9;
 		m_IsMultiLerping = true;
@@ -249,26 +279,6 @@ void CBackground::UpdateDifficultyCircles()
 		if (!m_IsLerping)
 		{
 			m_Difficulty = CGameInfo::Instance().m_Difficulty;
-
-			if (m_Difficulty == 1)
-			{
-				float circlePower1 = 1.0f;
-				float circlePower2 = 0.0f;
-				float circlePower3 = 0.0f;
-				float circlePower4 = 0.0f;
-				float circlePower5 = 0.0f;
-
-				m_pLeftMaterial->m_ConstantBuffer.SetValueInBuffer(5, &circlePower1);
-				m_pLeftMaterial->m_ConstantBuffer.SetValueInBuffer(6, &circlePower2);
-				m_pLeftMaterial->m_ConstantBuffer.SetValueInBuffer(7, &circlePower3);
-				m_pLeftMaterial->m_ConstantBuffer.SetValueInBuffer(8, &circlePower4);
-				m_pLeftMaterial->m_ConstantBuffer.SetValueInBuffer(9, &circlePower5);
-				m_pRightMaterial->m_ConstantBuffer.SetValueInBuffer(5, &circlePower1);
-				m_pRightMaterial->m_ConstantBuffer.SetValueInBuffer(6, &circlePower2);
-				m_pRightMaterial->m_ConstantBuffer.SetValueInBuffer(7, &circlePower3);
-				m_pRightMaterial->m_ConstantBuffer.SetValueInBuffer(8, &circlePower4);
-				m_pRightMaterial->m_ConstantBuffer.SetValueInBuffer(9, &circlePower5);
-			}
 
 			UpdateColor();
 
@@ -316,8 +326,6 @@ void CBackground::LerpColor()
 			temp.y = m_LerpToColor.y * m_LerpColorValue;
 			temp.z = m_LerpToColor.z * m_LerpColorValue;
 			temp.w = m_LerpToColor.w * m_LerpColorValue;
-
-			std::cout << m_LerpColorValue << std::endl;
 
 			m_pLeftMaterial->m_ConstantBuffer.SetValueInBuffer(4, &temp);
 			m_pRightMaterial->m_ConstantBuffer.SetValueInBuffer(4, &temp);

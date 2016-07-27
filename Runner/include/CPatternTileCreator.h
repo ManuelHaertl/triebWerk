@@ -13,6 +13,9 @@ private:
     static const size_t MaxObstacleTextures = 3;
     static const size_t MaxObstacleTextureBlendings = 3;
 
+	const float BuildRandomMax = 5.0f;
+	const float BuildRandomMin = -5.0f;
+
 	DirectX::XMFLOAT3 LineColor = DirectX::XMFLOAT3(1, 1, 1);
 	DirectX::XMFLOAT3 FaceColor = DirectX::XMFLOAT3(0, 0, 0);
 
@@ -96,4 +99,6 @@ private:
     void CreateShadow30(const bool a_Rotated);
     void CreateMoving05x05(); //
     void CreateMoving05x10(const bool a_Rotated);//
+
+	float GetRandomSign();
 };

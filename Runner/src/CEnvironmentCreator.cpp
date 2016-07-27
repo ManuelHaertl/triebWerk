@@ -126,6 +126,8 @@ void CEnvironmentCreator::Reset()
 
     CreateRoad();
     CreateGrid();
+	CBackground* pBackground = reinterpret_cast<CBackground*>(m_pBGPlane->GetBehaviour());
+	pBackground->ResetBackground();
 }
 
 void CEnvironmentCreator::SpawnFeathers()

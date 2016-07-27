@@ -12,6 +12,7 @@ private:
     const float RotateSpeedZ = 130.0f;
     const float MinRotateSpeed = 15.0f;
     const float MaxRotateSpeed = 130.0f;
+	const size_t PointCountWithGodray = 1;
 
     const size_t m_AmountID;
 
@@ -20,7 +21,10 @@ private:
     float m_RotateSpeedZ;
 
     triebWerk::CEntity* m_pSphere;
-    triebWerk::CConstantBuffer* m_pSphereBuffer;
+	triebWerk::CEntity* m_pGodray;
+	
+	triebWerk::CConstantBuffer* m_pSphereBuffer;
+
 
 public:
     CPoints(const size_t a_AmountID);
@@ -35,4 +39,5 @@ public:
 
 private:
     void CreateSphere();
+	void CreateGodray();
 };

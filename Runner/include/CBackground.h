@@ -45,6 +45,8 @@ public:
 	void Update();
 	void End();
 
+	void ResetBackground();
+
 private:
 	void UpdateMultiplier();
 	void UpdateDifficultyCircles();

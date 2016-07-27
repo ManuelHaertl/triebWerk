@@ -105,7 +105,7 @@ void CCheckpoint::Update()
 	DirectX::XMVECTOR leftPos = m_pEntity->m_Transform.GetPosition();
 	leftPos.m128_f32[1] = (std::sin(twTime->GetTimeSinceStartup() * 15)* 0.5f + 0.8f);
 	m_pEntity->m_Transform.SetPosition(leftPos);
-	m_pEntity->m_Transform.RotateDegrees(0.0f, 50 * twTime->GetTimeSinceStartup(), 0.0f);
+	m_pEntity->m_Transform.RotateDegrees(0.0f, 190 * twTime->GetDeltaTime(), 0.0f);
 }
 
 void CCheckpoint::End()
