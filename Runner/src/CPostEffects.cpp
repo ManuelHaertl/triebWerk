@@ -12,6 +12,9 @@ CPostEffects::CPostEffects()
     , m_CurrentDodgeTime(0.0f)
 	, m_ProcessCheckpointEffectCollected(false)
 	, m_ProcessCheckpointEffectPassedCoolDown(false)
+	, m_ProcessCheckpointEffectPassed(false)
+	, m_CurrentEffectCheckpointValueCollected(0.0f)
+	, m_CurrentEffectCheckpointValuePassed(0.0f)
 {
 }
 
@@ -81,8 +84,10 @@ void CPostEffects::AddGrain()
 void CPostEffects::AddShockwave()
 {
 	m_pShockwave = m_pPostEffect->AddMaterial(twResourceManager->GetMaterial("CheckpointEffect"));
-	float is = 1.0f;
-	m_pShockwave->m_ConstantBuffer.SetValueInBuffer(5, &is);
+	float temp = 100.0f;
+	m_pShockwave->m_ConstantBuffer.SetValueInBuffer(4, &temp);
+	temp = 0.0f;
+	m_pShockwave->m_ConstantBuffer.SetValueInBuffer(5, &temp);
 }
 
 void CPostEffects::AddBlur()
@@ -138,24 +143,21 @@ void CPostEffects::UpdateShockwave()
 	{
 		m_ProcessCheckpointEffectCollected = true;
 		CGameInfo::Instance().m_EffectCheckpointCollected = false;
-		m_CurrentEffectCheckpointTime = 0.0f;
-
-		float collected = 1.0f;
-		m_pShockwave->m_ConstantBuffer.SetValueInBuffer(5, &collected);
+		m_CurrentEffectCheckpointValueCollected = 0.0f;
 	}
 
 	if (m_ProcessCheckpointEffectCollected)
 	{
-		m_CurrentEffectCheckpointTime += twTime->GetDeltaTime() / 2;
-		m_pShockwave->m_ConstantBuffer.SetValueInBuffer(4, &m_CurrentEffectCheckpointTime);
+		m_CurrentEffectCheckpointValueCollected += twTime->GetDeltaTime() / 2;
+		m_pShockwave->m_ConstantBuffer.SetValueInBuffer(4, &m_CurrentEffectCheckpointValueCollected);
 
-		if (m_CurrentEffectCheckpointTime > CheckpointEffectLength)
+		if (m_CurrentEffectCheckpointValueCollected > CheckpointEffectCollectedLength)
 		{
 			m_ProcessCheckpointEffectCollected = false;
 
 			float restValue = 100.0f; //some high value so the scene has no distortion
 			m_pShockwave->m_ConstantBuffer.SetValueInBuffer(4, &restValue);
-			m_CurrentEffectCheckpointTime = 0.0f;
+			m_CurrentEffectCheckpointValueCollected = 0.0f;
 		}
 	}
 
@@ -164,32 +166,29 @@ void CPostEffects::UpdateShockwave()
 	{
 		m_ProcessCheckpointEffectPassed = true;
 		CGameInfo::Instance().m_EffectCheckpointPassed = false;
-		m_CurrentEffectCheckpointTime = 0.0f;
-
-		float collected = 0.0f;
-		m_pShockwave->m_ConstantBuffer.SetValueInBuffer(5, &collected);
+		m_CurrentEffectCheckpointValuePassed = 0.0f;
 	}
 
 	if (m_ProcessCheckpointEffectPassed)
 	{
 		if(!m_ProcessCheckpointEffectPassedCoolDown)
-			m_CurrentEffectCheckpointTime += twTime->GetDeltaTime();
+			m_CurrentEffectCheckpointValuePassed += twTime->GetDeltaTime();
 		else
-			m_CurrentEffectCheckpointTime -= twTime->GetDeltaTime();
+			m_CurrentEffectCheckpointValuePassed -= twTime->GetDeltaTime();
 
 		//float t = m_CurrentEffectCheckpointTime * pow(2, m_CurrentEffectCheckpointTime);
-		m_pShockwave->m_ConstantBuffer.SetValueInBuffer(4, &m_CurrentEffectCheckpointTime);
+		m_pShockwave->m_ConstantBuffer.SetValueInBuffer(5, &m_CurrentEffectCheckpointValuePassed);
 
-		if (m_CurrentEffectCheckpointTime > CheckpointEffectLength / 1.2f)
+		if (m_CurrentEffectCheckpointValuePassed > CheckpointEffectPassedLength / 1.2f)
 			m_ProcessCheckpointEffectPassedCoolDown = true;
 
-		if (m_CurrentEffectCheckpointTime < 0.0f)
+		if (m_CurrentEffectCheckpointValuePassed < 0.0f)
 		{
 			m_ProcessCheckpointEffectPassed = false;
 
 			float restValue = 0.0f;
-			m_pShockwave->m_ConstantBuffer.SetValueInBuffer(4, &restValue);
-			m_CurrentEffectCheckpointTime = 0.0f;
+			m_pShockwave->m_ConstantBuffer.SetValueInBuffer(5, &restValue);
+			m_CurrentEffectCheckpointValuePassed = 0.0f;
 			m_ProcessCheckpointEffectPassedCoolDown = false;
 		}
 

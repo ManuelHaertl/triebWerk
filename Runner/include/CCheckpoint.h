@@ -8,6 +8,7 @@ public:
     static float HighestMultiplier;
 
 	bool m_HasCollected;
+	bool m_Deleted;
 	float m_RotationModifier;
 	float m_Counter = 1.0f;
 	triebWerk::CMaterial* m_pMaterial;

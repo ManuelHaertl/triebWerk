@@ -226,6 +226,9 @@ triebWerk::CRenderTarget * triebWerk::CRenderer::GetRenderTarget(unsigned int a_
 
 void triebWerk::CRenderer::ResizeRenderer(unsigned int a_ScreenWidth, unsigned int a_ScreenHeight)
 {
+	if (a_ScreenWidth == 0 || a_ScreenHeight == 0)
+		return;
+
 	for (size_t i = 0; i < m_CameraBuffer.size(); i++)
 	{
 		m_CameraBuffer[i]->Resize(a_ScreenWidth, a_ScreenHeight);

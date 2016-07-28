@@ -146,6 +146,7 @@ void triebWerk::CRenderTarget::SetClearColor(const float a_R, const float a_G, c
 
 void triebWerk::CRenderTarget::Resize(unsigned int a_ScreenWidth, unsigned int a_ScreenHeight)
 {
+
 	for (size_t i = 0; i < 2; i++)
 	{
 

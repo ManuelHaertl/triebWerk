@@ -70,7 +70,7 @@ void CPoints::Collected()
     auto mesh = twRenderer->CreateMeshDrawable();
     mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_pointsEffect");
     mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("PointExplosion"));
-    mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
+    mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
     mesh->m_Material.m_pGeometryShader.SetTexture(0, twResourceManager->GetTexture2D("t_noise"));
 	mesh->m_D3DStates.m_pRasterizerState = twEngine.m_pGraphics->CreateRasterizerState(D3D11_CULL_NONE, D3D11_FILL_WIREFRAME);
 
@@ -119,7 +119,7 @@ void CPoints::CreateGodray()
 	m_pGodray->m_Transform.SetParent(&m_pEntity->m_Transform);
 
 	triebWerk::CMeshDrawable* pGodrayDrawable = twRenderer->CreateMeshDrawable();
-	pGodrayDrawable->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
+	pGodrayDrawable->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
 	pGodrayDrawable->m_RenderMode = triebWerk::CMeshDrawable::ERenderMode::Transparent;
 	pGodrayDrawable->m_pMesh = twResourceManager->GetMesh("ms_godray");
 	pGodrayDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardTransparentTexture"));

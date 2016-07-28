@@ -39,6 +39,7 @@ private:
     bool m_InShieldMode;
 
     triebWerk::CEntity* m_pTrail;
+	triebWerk::CEntity* m_pDangerHitbox;
     triebWerk::CMeshDrawable* m_pTrailMesh;
     triebWerk::CCamera* m_pMainCamera;
     SPlayerInput m_PlayerInput;
@@ -67,6 +68,7 @@ public:
 private:
     void CreateTrail();
 	void CreateFloorEffect();
+	void CreatePlayerDangerHitbox();
     void CheckInput();
     void CheckResource();
     void SetSpeed();

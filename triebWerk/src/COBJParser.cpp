@@ -6,6 +6,9 @@ triebWerk::COBJParser::COBJParser() :
 	m_pVertices(nullptr),
 	m_VertexCount(0),
 	m_IndexCount(0),
+	m_UVCount(0),
+	m_NormalCount(0),
+	m_VertexPointCount(0),
 	m_pIndices(nullptr)
 {
 
@@ -18,7 +21,12 @@ triebWerk::COBJParser::~COBJParser()
 
 bool triebWerk::COBJParser::LoadOBJ(const char * a_pPath)
 {
+
+	std::cout << a_pPath << std::endl;
 	m_Vertices = new CMesh::SVertex[m_MAX_VERTICES];
+	m_VertexPoint = new DirectX::XMFLOAT3[m_MAX_VERTICES];
+	m_UV = new DirectX::XMFLOAT2[m_MAX_VERTICES];
+	m_Normal = new DirectX::XMFLOAT3[m_MAX_VERTICES];
 
 	//Let the FileReader preload the data
 	bool success = ReadData(a_pPath);
@@ -56,28 +64,32 @@ bool triebWerk::COBJParser::LoadOBJ(const char * a_pPath)
 
 	} while (ReachedEndOfFile() != true);
 
-	if (m_VertexCount > 0 && m_Indices.size() > 0)
+	if (m_VertexCount > 0 )
 	{
 		m_pVertices = m_Vertices;
-		m_pIndices = &m_Indices[0];
+		//m_pIndices = &m_Indices[0];
 	}
 	else
 	{
 		return false;
 	}
 
-	m_IndexCount = m_Indices.size();
+	m_IndexCount = m_VertexCount;
+
+	delete[] m_UV;
+	delete[] m_Normal;
+	delete[] m_VertexPoint;
 
 	return true;
 }
 
 void triebWerk::COBJParser::AddVertexPoint(const char* a_pLine)
 {
-	DirectX::XMFLOAT3 vertex;
-	
-	GetCoordinatesFromLine(a_pLine, &vertex);
+	GetCoordinatesFromLine(a_pLine, &m_VertexPoint[m_VertexPointCount]);
 
-	vertex.z *= -1.0f; // LH
+	m_VertexPoint[m_VertexPointCount].z *= -1.0f; // LH
+
+	m_VertexPointCount++;
 
 	//size_t pos1 = a_Text.find_first_of(' ', 0) +1;
 	//size_t pos2 = a_Text.find(' ', pos1+1);
@@ -87,19 +99,20 @@ void triebWerk::COBJParser::AddVertexPoint(const char* a_pLine)
 	//vertex.y = std::stof(a_Text.substr(pos2, pos3-pos2));
 	//vertex.z = std::stof(a_Text.substr(pos3, a_Text.size()-pos3)) * -1.0f; //transfer to lh
 	
-	m_VertexPoint.push_back(vertex);
+	//m_VertexPoint.push_back(vertex);
 }
 
 void triebWerk::COBJParser::AddUV(const char* a_pLine)
 {
-	DirectX::XMFLOAT2 uv;
 	DirectX::XMFLOAT3 uvw;
 
 	GetCoordinatesFromLine(a_pLine, &uvw);
 
-	uv.x = uvw.x;
-	uv.y = 1.0f - uvw.y; // LH
+	m_UV[m_UVCount].x = uvw.x;
+	m_UV[m_UVCount].y = 1.0f - uvw.y; // LH
+	m_UVCount++;
 
+	m_ContainsUVs = true;
 /*
 	int counter = 0;
 	double multi = 1.0f;
@@ -161,18 +174,15 @@ void triebWerk::COBJParser::AddUV(const char* a_pLine)
 	//uv.x = std::stof(a_Text.substr(pos1, pos2 - pos1));
 	//uv.y = 1.0f - std::stof(a_Text.substr(pos2, a_Text.size() - pos2)); //transfer to lh
 
-	m_UV.push_back(uv);
-	m_ContainsUVs = true;
+	//m_UV.push_back(uv);
 }
 
 void triebWerk::COBJParser::AddNormal(const char* a_pLine)
 {
-	DirectX::XMFLOAT3 normal;
+	GetCoordinatesFromLine(a_pLine, &m_Normal[m_NormalCount]);
 
-	GetCoordinatesFromLine(a_pLine, &normal);
-
-	normal.z *= -1.0f; //LH
-
+	m_Normal[m_NormalCount].z *= -1.0f; //LH
+	m_NormalCount++;
 	//size_t pos1 = a_Text.find_first_of(' ', 0);
 	//size_t pos2 = a_Text.find(' ', pos1 + 1);
 	//size_t pos3 = a_Text.find(' ', pos2 + 1);
@@ -181,7 +191,6 @@ void triebWerk::COBJParser::AddNormal(const char* a_pLine)
 	//normal.y = std::stof(a_Text.substr(pos2, pos3 - pos2));
 	//normal.z = std::stof(a_Text.substr(pos3, a_Text.size() - pos3)) * -1.0f; //transfer to lh
 
-	m_Normal.push_back(normal);
 	m_ContainsNormals = true;
 }
 
@@ -278,6 +287,8 @@ void triebWerk::COBJParser::AddVertex(const char* a_pText)
 		vertex.position = m_VertexPoint[v - 1];
 		vertex.normal = DirectX::XMFLOAT3(0, 0, 0);
 		vertex.uv = DirectX::XMFLOAT2(0, 0);
+
+		std::cout << "Nothing" << std::endl;
 	}
 
 	if (m_ContainsNormals && !m_ContainsUVs)
@@ -291,6 +302,8 @@ void triebWerk::COBJParser::AddVertex(const char* a_pText)
 		vertex.position = m_VertexPoint[v - 1];
 		vertex.normal = m_Normal[vn-1];
 		vertex.uv = DirectX::XMFLOAT2(0, 0);
+
+		std::cout << "No UV but Normal" << std::endl;
 	}
 
 	if (m_ContainsUVs && !m_ContainsNormals)
@@ -304,6 +317,8 @@ void triebWerk::COBJParser::AddVertex(const char* a_pText)
 		vertex.position = m_VertexPoint[v - 1];
 		vertex.normal = DirectX::XMFLOAT3(0, 0, 0);
 		vertex.uv = m_UV[vt - 1];
+
+		std::cout << "UV but no Normals" << std::endl;
 	}
 	
 	if (m_ContainsUVs && m_ContainsNormals)
@@ -348,7 +363,7 @@ void triebWerk::COBJParser::AddVertex(const char* a_pText)
 		vertex.normal = m_Normal[elements[2] - 1];
 	}
 
-	m_Indices.push_back(CreateVertex(vertex));
+	CreateVertex(vertex);
 }
 
 bool triebWerk::COBJParser::BeginLineWith(const char* a_pLine, const char * a_pStart)

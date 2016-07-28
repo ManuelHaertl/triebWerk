@@ -7,7 +7,6 @@ class CPatternManager
 {
 public:
     static float SpawnDistance;
-    static float DeleteDistance;
     static float StartFreeDistance;
     static float StartTextureBlendDistance;
     static float EndTextureBlendDistance;
@@ -17,6 +16,7 @@ public:
 	static float BuildStrength;
 
 private:
+	const float DeleteDistance = 50.0f;
     std::list<triebWerk::CEntity*> m_Entities;
     std::vector<CPattern*> m_Pattern[CPattern::MaxDifficulty];
     CPatternTileCreator m_PatternTileCreator;

@@ -249,7 +249,7 @@ void CEnvironmentCreator::CreateGrid()
 
         triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
         mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_grid");
-        mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
+        mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
         mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("WireframeGrid"));
         mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(1.0f, 0.0f, 1.0f));
         mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
@@ -359,7 +359,7 @@ void CEnvironmentCreator::CreateFog()
     fog1->m_Transform.SetRotationDegrees(270.0f, 0.0f, 0.0f);
 
     auto fog1Mesh = twRenderer->CreateMeshDrawable();
-    fog1Mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
+    fog1Mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
     fog1Mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_plane");
     fog1Mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("Fog"));
     fog1Mesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("t_fog_01"));
@@ -379,7 +379,7 @@ void CEnvironmentCreator::CreateRoadBorder()
 	m_pRoadBorder->m_Transform.SetScale(20.0f, 20.0f, 20.0f);
 
 	auto borderMesh = twRenderer->CreateMeshDrawable();
-	borderMesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
+	borderMesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
 	borderMesh->m_RenderMode = triebWerk::CMeshDrawable::ERenderMode::Transparent;
 	borderMesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_plane");
 	borderMesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("Background1Texture"));

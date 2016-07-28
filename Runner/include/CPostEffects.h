@@ -6,8 +6,8 @@ class CPostEffects : public triebWerk::IBehaviour
 public:
     static float ChromaticAberrationStrength;
 
-    static float CheckpointEffectLength;
-    static float CheckpointEffectStrength;
+    static float CheckpointEffectCollectedLength;
+    static float CheckpointEffectPassedLength;
 
     static float FullControlEffectStrengthMin;
     static float FullControlEffectStrengthMax;
@@ -27,9 +27,9 @@ private:
     float m_CurrentChromaticAberrationStrength;
     float m_CurrentDodgeTime;
 
-	float m_CurrentEffectCheckpointTime;
+	float m_CurrentEffectCheckpointValueCollected;
+	float m_CurrentEffectCheckpointValuePassed;
 	bool m_ProcessCheckpointEffectCollected;
-
 	bool m_ProcessCheckpointEffectPassed;
 	bool m_ProcessCheckpointEffectPassedCoolDown;
 

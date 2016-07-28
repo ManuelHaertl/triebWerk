@@ -113,7 +113,7 @@ void CDebugScene::CreatePlayground()
 	{
 		auto entity = m_pWorld->CreateEntity();
 		entity->m_Transform.SetPosition(0, 0, 0);
-		entity->m_Transform.SetScale(500, 500, 500);
+		entity->m_Transform.SetScale(5, 5, 5);
 
 		triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
 		mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_cube");
@@ -135,7 +135,7 @@ void CDebugScene::CreatePlayground()
 
 	//entity->SetDrawable(drawable);
 	//twActiveUIWorld->AddUIEntity(entity);
-	auto entity = m_pWorld->CreateEntity();
+	/*auto entity = m_pWorld->CreateEntity();
 	triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
 	mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_obs_05x30x12_deko_01");
 	mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("Wall"));
@@ -165,26 +165,26 @@ void CDebugScene::CreatePlayground()
 	
 	entity->SetDrawable(mesh);
 	
-	m_pWorld->AddEntity(entity);
+	m_pWorld->AddEntity(entity);*/
 }
 
 void CDebugScene::CreateDebugFont()
 {
-	auto font = twFontManager->LoadFont(twResourceManager->GetFontFace("Rubik-Regular"), 40);
-	auto text = twFontManager->CreateText();
-	text->Set(font, "Font", 1.0f);
+	//auto font = twFontManager->LoadFont(twResourceManager->GetFontFace("Rubik-Regular"), 40);
+	//auto text = twFontManager->CreateText();
+	//text->Set(font, "Font", 1.0f);
 
-	auto entity = m_pWorld->CreateEntity();
-	entity->m_Transform.SetPosition(400.0f, 300.0f, 0.0f);
+	//auto entity = m_pWorld->CreateEntity();
+	//entity->m_Transform.SetPosition(400.0f, 300.0f, 0.0f);
 
-	auto fontDraw = twRenderer->CreateFontDrawable();
-	fontDraw->m_pText = text;
-	fontDraw->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardFont"));
-	DirectX::XMFLOAT3 t = DirectX::XMFLOAT3(0.0f, 0.0f, 0.8f);
-	fontDraw->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &t);
+	//auto fontDraw = twRenderer->CreateFontDrawable();
+	//fontDraw->m_pText = text;
+	//fontDraw->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardFont"));
+	//DirectX::XMFLOAT3 t = DirectX::XMFLOAT3(0.0f, 0.0f, 0.8f);
+	//fontDraw->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &t);
 
-	entity->SetDrawable(fontDraw);
-	m_pWorld->AddEntity(entity);
+	//entity->SetDrawable(fontDraw);
+	//m_pWorld->AddEntity(entity);
 }
 
 void CDebugScene::CreateMultipleObjects()

@@ -111,6 +111,9 @@
     <ClCompile Include="src\CRoadBorder.cpp">
       <Filter>Quelldateien\Game</Filter>
     </ClCompile>
+    <ClCompile Include="src\CPlayerDangerHitbox.cpp">
+      <Filter>Quelldateien\Game\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\CGameScene.h">
@@ -181,6 +184,9 @@
     </ClInclude>
     <ClInclude Include="include\CRoadBorder.h">
       <Filter>Headerdateien\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CPlayerDangerHitbox.h">
+      <Filter>Headerdateien\Game\Player</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

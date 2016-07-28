@@ -4,7 +4,8 @@
 
 CCheckpoint::CCheckpoint() :
     m_HasCollected(false),
-	m_RotationModifier(0.0f)
+	m_RotationModifier(0.0f),
+	m_Deleted(false)
 {
 }
 
@@ -44,7 +45,7 @@ void CCheckpoint::Start()
 	m_pCheckpointPlaneButtom->m_Transform.SetParent(&m_pEntity->m_Transform);
 
 	triebWerk::CMeshDrawable* pMeshDrawableButtom = twRenderer->CreateMeshDrawable();
-	pMeshDrawableButtom->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
+	pMeshDrawableButtom->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
 	pMeshDrawableButtom->m_pMesh = twResourceManager->GetMesh("ms_checkpoint_plane3");
 	pMeshDrawableButtom->m_Material.SetMaterial(twResourceManager->GetMaterial("Wireframe"));
 	pMeshDrawableButtom->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &lineColor);
@@ -58,7 +59,7 @@ void CCheckpoint::Start()
 	m_pCheckpointPlaneMiddle->m_Transform.SetParent(&m_pEntity->m_Transform);
 
 	triebWerk::CMeshDrawable* pMeshDrawableMiddle = twRenderer->CreateMeshDrawable();
-	pMeshDrawableMiddle->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
+	pMeshDrawableMiddle->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
 	pMeshDrawableMiddle->m_pMesh = twResourceManager->GetMesh("ms_checkpoint_plane2");
 	pMeshDrawableMiddle->m_Material.SetMaterial(twResourceManager->GetMaterial("Wireframe"));
 	pMeshDrawableMiddle->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &lineColor);
@@ -72,7 +73,7 @@ void CCheckpoint::Start()
 	m_pCheckpointPlaneTop->m_Transform.SetParent(&m_pEntity->m_Transform);
 
 	triebWerk::CMeshDrawable* pMeshDrawableTop = twRenderer->CreateMeshDrawable();
-	pMeshDrawableTop->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
+	pMeshDrawableTop->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
 	pMeshDrawableTop->m_pMesh = twResourceManager->GetMesh("ms_checkpoint_plane1");
 	pMeshDrawableTop->m_Material.SetMaterial(twResourceManager->GetMaterial("Wireframe"));
 	pMeshDrawableTop->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &lineColor);
@@ -89,7 +90,7 @@ void CCheckpoint::Start()
 	m_pGodrayButtom->m_Transform.SetParent(&m_pEntity->m_Transform);
 	
 	triebWerk::CMeshDrawable* pGodrayDrawable = twRenderer->CreateMeshDrawable();
-	pGodrayDrawable->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
+	pGodrayDrawable->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
 	pGodrayDrawable->m_RenderMode = triebWerk::CMeshDrawable::ERenderMode::Transparent;
 	pGodrayDrawable->m_pMesh = twResourceManager->GetMesh("ms_godray");
 	pGodrayDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardTransparentTexture"));
@@ -106,6 +107,25 @@ void CCheckpoint::Update()
 	leftPos.m128_f32[1] = (std::sin(twTime->GetTimeSinceStartup() * 15)* 0.5f + 0.8f);
 	m_pEntity->m_Transform.SetPosition(leftPos);
 	m_pEntity->m_Transform.RotateDegrees(0.0f, 190 * twTime->GetDeltaTime(), 0.0f);
+
+	float distance = m_pEntity->m_Transform.GetPosition().m128_f32[2] - CGameInfo::Instance().m_PlayerPosition;
+
+	if (distance < -2.0f && !m_Deleted)
+	{
+		m_Deleted = true;
+
+		if (!m_HasCollected)
+		{
+			CGameInfo& gameInfo = CGameInfo::Instance();
+			gameInfo.m_Multiplier += AddedMultiplier;
+			gameInfo.m_EffectCheckpointPassed = true;
+
+			if (gameInfo.m_Multiplier > HighestMultiplier)
+				gameInfo.m_Multiplier = HighestMultiplier;
+		}
+	}
+
+
 }
 
 void CCheckpoint::End()
@@ -114,15 +134,4 @@ void CCheckpoint::End()
 	twActiveWorld->RemoveEntity(m_pCheckpointPlaneMiddle);
 	twActiveWorld->RemoveEntity(m_pCheckpointPlaneTop);
 	twActiveWorld->RemoveEntity(m_pGodrayButtom);
-
-    if (!m_HasCollected)
-	{
-        CGameInfo& gameInfo = CGameInfo::Instance();
-        gameInfo.m_Multiplier += AddedMultiplier;
-		gameInfo.m_EffectCheckpointPassed = true;
-
-
-        if (gameInfo.m_Multiplier > HighestMultiplier)
-            gameInfo.m_Multiplier = HighestMultiplier;
-    }
 }

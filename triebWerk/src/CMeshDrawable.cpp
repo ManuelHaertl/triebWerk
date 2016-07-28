@@ -3,7 +3,7 @@
 
 triebWerk::CMeshDrawable::CMeshDrawable() :
 	m_pMesh(nullptr),
-	m_DrawType(CMeshDrawable::EDrawType::DrawIndexedInstanced),
+	m_DrawType(CMeshDrawable::EDrawType::Draw),
 	m_RenderMode(CMeshDrawable::ERenderMode::Opaque),
 	m_Topology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST),
 	m_Stride(sizeof(CMesh::SVertex))

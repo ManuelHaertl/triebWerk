@@ -19,7 +19,7 @@ void CRoadBorder::Start()
 
 
 	auto borderMesh = twRenderer->CreateMeshDrawable();
-	borderMesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
+	borderMesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
 	borderMesh->m_RenderMode = triebWerk::CMeshDrawable::ERenderMode::Transparent;
 	borderMesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_plane");
 	borderMesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("Background1Texture"));
