@@ -30,7 +30,7 @@ void CPoints::Start()
     CreateSphere();
 	
 	//only set a godray if the point is rare
-	if(m_AmountID >= PointCountWithGodray)
+	if(m_AmountID == PointCountWithGodray)
 		CreateGodray();
 
 }

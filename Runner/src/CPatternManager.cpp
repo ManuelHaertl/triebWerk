@@ -236,8 +236,6 @@ void CPatternManager::UpdateTextureBlending()
             drawable->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &blend2);
             drawable->m_Material.m_ConstantBuffer.SetValueInBuffer(6, &blend3);
 
-			float buildValue;
-
 			if (distance < EndBuildDistance)
 			{
 				float buildDistance = 0.0f;

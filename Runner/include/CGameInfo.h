@@ -14,9 +14,11 @@ public:
 
     // Player Information
     float m_PlayerPosition;
+	float m_PlayerPositionX;
 
     // Effect Information
-    bool m_EffectCheckpoint;
+    bool m_EffectCheckpointCollected;
+	bool m_EffectCheckpointPassed;
     bool m_EffectFullControl;
     float m_EffectFullControlStrength;
 	bool m_EffectShield;

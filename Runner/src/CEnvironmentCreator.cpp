@@ -1,6 +1,7 @@
 #include <CEnvironmentCreator.h>
 #include <CGameInfo.h>
 #include <CBackground.h>
+#include <CRoadBorder.h>
 
 CEnvironmentCreator::CEnvironmentCreator()
     : m_RoadAllLength(0.0f)
@@ -43,6 +44,7 @@ void CEnvironmentCreator::Start()
     CreateBackground();
     CreateGrid();
     CreateSnakeLoops();
+	CreateRoadBorder();
     //CreateFog();
 }
 
@@ -366,6 +368,28 @@ void CEnvironmentCreator::CreateFog()
 
     twActiveWorld->AddEntity(fog1);
     m_Fogs.Add(fog1Mesh);
+}
+
+void CEnvironmentCreator::CreateRoadBorder()
+{
+	m_pRoadBorder = twActiveWorld->CreateEntity();
+	m_pBGPlane->m_Transform.AddChild(&m_pRoadBorder->m_Transform);
+	m_pRoadBorder->m_Transform.SetPosition(-24.9f, 5.0f, 2.0f);
+	m_pRoadBorder->m_Transform.SetRotationDegrees(90.0f, 00.0f, -90.0f);
+	m_pRoadBorder->m_Transform.SetScale(20.0f, 20.0f, 20.0f);
+
+	auto borderMesh = twRenderer->CreateMeshDrawable();
+	borderMesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
+	borderMesh->m_RenderMode = triebWerk::CMeshDrawable::ERenderMode::Transparent;
+	borderMesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_plane");
+	borderMesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("Background1Texture"));
+	borderMesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_floor_emissve_grid"));
+
+	m_pRoadBorder->SetDrawable(borderMesh);
+
+	m_pRoadBorder->SetBehaviour(new CRoadBorder());
+
+	twActiveWorld->AddEntity(m_pRoadBorder);
 }
 
 void CEnvironmentCreator::MoveRoad(const float a_MetersFlewn)

@@ -1,17 +1,18 @@
 #include <CGameInfo.h>
 
 CGameInfo::CGameInfo()
-    : m_FlyStandardSpeed(60.0f)
-    , m_FlyDifficultySpeed(0.0f)
-    , m_FlyBoostSpeed(0.0f)
-    , m_Difficulty(1)
-    , m_TotalPoints(0.0f)
-    , m_CurrentPoints(0.0f)
-    , m_Multiplier(1.0f)
-    , m_PlayerPosition(0.0f)
-    , m_EffectCheckpoint(false)
-    , m_EffectFullControl(false)
-    , m_EffectFullControlStrength(1.0f)
+	: m_FlyStandardSpeed(60.0f)
+	, m_FlyDifficultySpeed(0.0f)
+	, m_FlyBoostSpeed(0.0f)
+	, m_Difficulty(1)
+	, m_TotalPoints(0.0f)
+	, m_CurrentPoints(0.0f)
+	, m_Multiplier(1.0f)
+	, m_PlayerPosition(0.0f)
+	, m_EffectCheckpointCollected(false)
+	, m_EffectCheckpointPassed(false)
+	, m_EffectFullControl(false)
+	, m_EffectFullControlStrength(1.0f)
 	, m_EffectShield(false)
 {
     
@@ -35,7 +36,8 @@ void CGameInfo::Reset()
     m_TotalPoints = 0;
     m_CurrentPoints = 0;
     m_Multiplier = 1.0f;
-    m_EffectCheckpoint = false;
+    m_EffectCheckpointCollected = false;
+	m_EffectCheckpointPassed = false;
     m_EffectFullControl = false;
     m_EffectFullControlStrength = 1.0f;
 }

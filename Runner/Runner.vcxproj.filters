@@ -108,6 +108,9 @@
     <ClCompile Include="src\CBackground.cpp">
       <Filter>Quelldateien\Game</Filter>
     </ClCompile>
+    <ClCompile Include="src\CRoadBorder.cpp">
+      <Filter>Quelldateien\Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\CGameScene.h">
@@ -175,6 +178,9 @@
     </ClInclude>
     <ClInclude Include="include\CMovingObstacle.h">
       <Filter>Headerdateien\Game\Tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CRoadBorder.h">
+      <Filter>Headerdateien\Game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

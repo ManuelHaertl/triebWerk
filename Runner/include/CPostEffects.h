@@ -22,9 +22,16 @@ private:
 	triebWerk::CMaterial* m_pGrain;
     triebWerk::CMaterial* m_pShield;
     triebWerk::CMaterial* m_pBlur;
+	triebWerk::CMaterial* m_pShockwave;
 
     float m_CurrentChromaticAberrationStrength;
     float m_CurrentDodgeTime;
+
+	float m_CurrentEffectCheckpointTime;
+	bool m_ProcessCheckpointEffectCollected;
+
+	bool m_ProcessCheckpointEffectPassed;
+	bool m_ProcessCheckpointEffectPassedCoolDown;
 
 public:
     CPostEffects();
@@ -40,9 +47,12 @@ private:
     void AddScanLines();
 	void AddShieldEffect();
 	void AddGrain();
+	void AddShockwave();
 
     void UpdateFullControlEffect();
 	void UpdateShieldEffect();
 	void UpdateGrainEffect();
     void UpdateBlur();
+	void UpdateShockwave();
+	void UpdateChromaticAberration();
 };

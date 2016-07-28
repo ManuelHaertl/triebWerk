@@ -47,6 +47,7 @@ void CPlayer::LateUpdate()
     m_pTrail->m_Transform.SetRotation(m_pEntity->m_Transform.GetRotation());
 
     CGameInfo::Instance().m_PlayerPosition = m_pEntity->m_Transform.GetPosition().m128_f32[2];
+	CGameInfo::Instance().m_PlayerPositionX = m_pEntity->m_Transform.GetPosition().m128_f32[0];
 
     if (!twDebug->IsInDebug())
     {
@@ -145,7 +146,7 @@ void CPlayer::CreateFloorEffect()
 	mesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_floor_emissve_grid"));
 	mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
 	mesh->m_RenderMode = triebWerk::CMeshDrawable::ERenderMode::Transparent;
-	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT4(0, 1, 1,1));
+	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
 	entity->SetDrawable(mesh);
 
 	twActiveWorld->AddEntity(entity);

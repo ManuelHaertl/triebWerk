@@ -27,7 +27,7 @@ void CCheckpoint::Collected()
 	gameInfo.m_TotalPoints += gameInfo.m_CurrentPoints * gameInfo.m_Multiplier;
 	gameInfo.m_CurrentPoints = 0;
 	gameInfo.m_Multiplier = 1.0f;
-	gameInfo.m_EffectCheckpoint = true;
+	gameInfo.m_EffectCheckpointCollected = true;
 
 	m_HasCollected = true;
 }
@@ -119,6 +119,8 @@ void CCheckpoint::End()
 	{
         CGameInfo& gameInfo = CGameInfo::Instance();
         gameInfo.m_Multiplier += AddedMultiplier;
+		gameInfo.m_EffectCheckpointPassed = true;
+
 
         if (gameInfo.m_Multiplier > HighestMultiplier)
             gameInfo.m_Multiplier = HighestMultiplier;

@@ -12,7 +12,7 @@ private:
     const float RotateSpeedZ = 130.0f;
     const float MinRotateSpeed = 15.0f;
     const float MaxRotateSpeed = 130.0f;
-	const size_t PointCountWithGodray = 1;
+	const size_t PointCountWithGodray = 2;
 
     const size_t m_AmountID;
 
