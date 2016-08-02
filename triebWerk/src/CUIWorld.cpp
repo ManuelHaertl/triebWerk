@@ -131,7 +131,7 @@ void triebWerk::CUIWorld::AddUIEntity(CUIEntity * a_pUIEntity)
 
 void triebWerk::CUIWorld::RemoveUIEntity(CUIEntity * a_pUIEntity)
 {
-    if (m_RemoveEntities.Contains(a_pUIEntity) == false)
+    if (a_pUIEntity != nullptr && m_RemoveEntities.Contains(a_pUIEntity) == false)
     {
         IBehaviour* behaviour = a_pUIEntity->GetBehaviour();
         if (behaviour != nullptr)
@@ -181,8 +181,8 @@ void triebWerk::CUIWorld::UpdateScreenInformation()
     else
         CUITransform::ReferenceScale = m_ScreenResolution.y / m_ReferenceResolutionY;
 
-    CUITransform::ReferenceWidth = m_ReferenceResolutionX;
-    CUITransform::ReferenceHeight = m_ReferenceResolutionY;
+    CUITransform::ResolutionWidth = m_ScreenResolution.x;
+    CUITransform::ResolutionHeight = m_ScreenResolution.y;
 
     // tell all entities to update their transformation
     size_t size = m_Entities.GetSize();

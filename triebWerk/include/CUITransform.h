@@ -7,8 +7,8 @@ namespace triebWerk
     class CUITransform
     {
     public:
-        static float ReferenceWidth;
-        static float ReferenceHeight;
+        static float ResolutionWidth;
+        static float ResolutionHeight;
         static float ReferenceScale;
 
     private:
@@ -17,7 +17,7 @@ namespace triebWerk
         DirectX::XMFLOAT2 m_AnchorPoint;
         DirectX::XMVECTOR m_PositionOffset;
         DirectX::XMVECTOR m_Scale;
-        float m_Rotation;
+        DirectX::XMVECTOR m_Rotation;
 
         DirectX::XMVECTOR m_Pivot;
         DirectX::XMMATRIX m_Transformation;

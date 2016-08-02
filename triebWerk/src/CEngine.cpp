@@ -140,6 +140,11 @@ void triebWerk::CEngine::Shutdown()
 	delete m_pSoundEngine;
 }
 
+void triebWerk::CEngine::Stop()
+{
+    m_IsRunning = false;
+}
+
 void triebWerk::CEngine::ProcessWindowMessages()
 {
     size_t messageCount = m_pWindow->GetWindowEventCount();

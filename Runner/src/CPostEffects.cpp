@@ -2,6 +2,9 @@
 
 #include <CGameInfo.h>
 
+float CPostEffects::m_CurrentGameStartTime = 0.0f;
+float CPostEffects::m_CurrentGameStartEffectStrength = 0.0f;
+
 CPostEffects::CPostEffects()
     : m_pPostEffect(nullptr)
     , m_pChromaticAberration(nullptr)
@@ -11,6 +14,7 @@ CPostEffects::CPostEffects()
     , m_CurrentChromaticAberrationStrength(0.0f)
     , m_CurrentDodgeTime(0.0f)
 {
+    
 }
 
 CPostEffects::~CPostEffects()
@@ -20,28 +24,24 @@ CPostEffects::~CPostEffects()
 void CPostEffects::Start()
 {
     m_pPostEffect = twRenderer->CreatePostEffecthDrawable();
-
+    
     AddChromaticAberration();
 	AddBlur();
     AddRipple();
     AddScanLines();
-	AddShieldEffect();
+	AddLensDistortion();
 	AddGrain();
-
+    
     m_pEntity->SetDrawable(m_pPostEffect);
 }
 
 void CPostEffects::Update()
 {
-    UpdateFullControlEffect();
-	UpdateShieldEffect();
+    UpdateGoingIntoGameEffect();
+    UpdateChromaticAberration();
+	UpdateLensDistortion();
 	UpdateGrainEffect();
     UpdateBlur();
-
-    float time = twTime->GetTimeSinceStartup();
-
-    m_pChromaticAberration->m_ConstantBuffer.SetValueInBuffer(4, &time);
-    m_pChromaticAberration->m_ConstantBuffer.SetValueInBuffer(5, &m_CurrentChromaticAberrationStrength);
 }
 
 void CPostEffects::AddChromaticAberration()
@@ -67,7 +67,7 @@ void CPostEffects::AddScanLines()
     m_pRipple = m_pPostEffect->m_Materials[2];
 }
 
-void CPostEffects::AddShieldEffect()
+void CPostEffects::AddLensDistortion()
 {
 	m_pShield = m_pPostEffect->AddMaterial(twResourceManager->GetMaterial("LensDistortion"));
 	float lensStrenght = 0.0f;
@@ -84,29 +84,69 @@ void CPostEffects::AddGrain()
 void CPostEffects::AddBlur()
 {
     m_pBlur = m_pPostEffect->AddMaterial(twResourceManager->GetMaterial("RadialBlur"));
-    float strength = 00.0f;
+    float strength = 0.0f;
     m_pBlur->m_ConstantBuffer.SetValueInBuffer(4, &strength);
 }
 
-void CPostEffects::UpdateFullControlEffect()
+void CPostEffects::UpdateGoingIntoGameEffect()
 {
     CGameInfo& gameInfo = CGameInfo::Instance();
-    if (gameInfo.m_EffectFullControl)
+    if (gameInfo.m_EffectGoingIntoGame)
     {
-        m_CurrentChromaticAberrationStrength = (FullControlEffectStrengthMax - FullControlEffectStrengthMin) * gameInfo.m_EffectFullControlStrength + FullControlEffectStrengthMin;
+        gameInfo.m_EffectGoingIntoGame = false;
+        m_CurrentGameStartTime = GameStartTime;
     }
-    else
+
+    if (m_CurrentGameStartTime > 0.0f)
     {
-        m_CurrentChromaticAberrationStrength = ChromaticAberrationStrength;
+        m_CurrentGameStartTime -= twTime->GetDeltaTime();
+
+        float half = GameStartTime / 2.0f;
+        if (m_CurrentGameStartTime > half)
+        {
+            float currentHalf = m_CurrentGameStartTime - half;
+            m_CurrentGameStartEffectStrength = (half - currentHalf) / half;
+        }
+        else
+        {
+            m_CurrentGameStartEffectStrength = ((m_CurrentGameStartTime * 2) / GameStartTime);
+        }
     }
 }
 
-void CPostEffects::UpdateShieldEffect()
+void CPostEffects::UpdateChromaticAberration()
+{
+    float value = 0.0f;
+    CGameInfo& gameInfo = CGameInfo::Instance();
+
+    if (m_CurrentGameStartTime > 0.0f)
+        value = GameStartCAEffectStrength * m_CurrentGameStartEffectStrength;
+
+    else if (gameInfo.m_EffectFullControl)
+        value = (FullControlEffectStrengthMax - FullControlEffectStrengthMin) * gameInfo.m_EffectFullControlStrength + FullControlEffectStrengthMin;
+
+    else
+        value = ChromaticAberrationStrength;
+
+    float time = twTime->GetTimeSinceStartup();
+
+    m_pChromaticAberration->m_ConstantBuffer.SetValueInBuffer(4, &time);
+    m_pChromaticAberration->m_ConstantBuffer.SetValueInBuffer(5, &value);
+}
+
+void CPostEffects::UpdateLensDistortion()
 {
     float value = 0.0f;
 
-    if (CGameInfo::Instance().m_EffectShield)
-        value = ShieldEffectStrength;
+    if (m_CurrentGameStartTime > 0.0f)
+    {
+        value = GameStartLDEffectStrength * m_CurrentGameStartEffectStrength;
+    }
+    else
+    {
+        if (CGameInfo::Instance().m_EffectShield)
+            value = ShieldEffectStrength;
+    }
 
     m_pShield->m_ConstantBuffer.SetValueInBuffer(4, &value);
 }
@@ -125,4 +165,8 @@ void CPostEffects::UpdateBlur()
         strength = BoostEffectStrength;
 
     m_pBlur->m_ConstantBuffer.SetValueInBuffer(4, &strength);
+}
+
+void CPostEffects::UpdateGameStartEffect()
+{
 }

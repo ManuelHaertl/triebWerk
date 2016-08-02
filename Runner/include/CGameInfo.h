@@ -21,6 +21,7 @@ public:
     float m_EffectFullControlStrength;
 	bool m_EffectShield;
     bool m_EffectBoost;
+    bool m_EffectGoingIntoGame;
 
 private:
     CGameInfo();

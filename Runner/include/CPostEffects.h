@@ -14,6 +14,10 @@ public:
     static float BoostEffectStrength;
 	static float ShieldEffectStrength;
 
+    static float GameStartTime;
+    static float GameStartLDEffectStrength;
+    static float GameStartCAEffectStrength;
+
 private:
     triebWerk::CPostEffectDrawable* m_pPostEffect;
     triebWerk::CMaterial* m_pChromaticAberration;
@@ -23,6 +27,8 @@ private:
     triebWerk::CMaterial* m_pShield;
     triebWerk::CMaterial* m_pBlur;
 
+    static float m_CurrentGameStartTime;
+    static float m_CurrentGameStartEffectStrength;
     float m_CurrentChromaticAberrationStrength;
     float m_CurrentDodgeTime;
 
@@ -38,11 +44,13 @@ private:
 	void AddBlur();
     void AddRipple();
     void AddScanLines();
-	void AddShieldEffect();
+	void AddLensDistortion();
 	void AddGrain();
 
-    void UpdateFullControlEffect();
-	void UpdateShieldEffect();
+    void UpdateGoingIntoGameEffect();
+    void UpdateChromaticAberration();
+	void UpdateLensDistortion();
 	void UpdateGrainEffect();
     void UpdateBlur();
+    void UpdateGameStartEffect();
 };

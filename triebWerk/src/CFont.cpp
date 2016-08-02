@@ -47,7 +47,7 @@ void triebWerk::CFont::CreateLetterMap()
 
     // get the bounding box of all letter
     FT_BBox textureBBox = GetTextureBBox();
-    m_Width = std::abs(textureBBox.xMin) + std::abs(textureBBox.xMax);
+    m_Width = std::abs(textureBBox.xMin) + std::abs(textureBBox.xMax) + LETTER_COUNT * 2;
     m_Height = std::abs(textureBBox.yMin) + std::abs(textureBBox.yMax);
 
     // create a buffer (depending on the bounding box) to draw in all letter
@@ -178,6 +178,7 @@ void triebWerk::CFont::DrawAllLetterInBuffer(int a_PenX, int a_PenY)
     FT_GlyphSlot glyph = face->glyph;
 
     float fWidth = (float)m_Width;
+    float fHeight = (float)m_Height;
 
     for (size_t i = 0; i < LETTER_COUNT; ++i)
     {
@@ -187,38 +188,35 @@ void triebWerk::CFont::DrawAllLetterInBuffer(int a_PenX, int a_PenY)
 
         std::cout << m_AllLetter[i];
         SLetterCoordinate& letterCoordinate = m_LetterCoordinates[i];
-        letterCoordinate.uBegin = (float)a_PenX / fWidth;
-        letterCoordinate.vBegin = 0.0f;
+        std::cout << " " << (glyph->metrics.horiBearingX >> 6) << std::endl;
+        letterCoordinate.uBegin = (float)(a_PenX + (glyph->metrics.horiBearingX >> 6)) / fWidth;
+        letterCoordinate.uEnd = (float)(a_PenX + (glyph->metrics.horiBearingX >> 6) + (glyph->metrics.width >> 6)) / fWidth;
+        letterCoordinate.vBegin = 1.0f / fHeight;
+        letterCoordinate.vEnd = (fHeight - 1) / fHeight;
 
-        int width;
         DrawSingleLetter(
             &glyph->bitmap,
             a_PenX + glyph->bitmap_left,
-            a_PenY - glyph->bitmap_top,
-            width);
+            a_PenY - glyph->bitmap_top);
 
-        width = glyph->advance.x >> 6;
+        int width = glyph->advance.x >> 6;
         a_PenX += width;
 
-        std::cout << " " << width << std::endl;
-
+        if (m_AllLetter[i] == ' ')
+            letterCoordinate.width = (float)width;
+        else
+            letterCoordinate.width = ((float)(a_PenX + (glyph->metrics.horiBearingX >> 6) + (glyph->metrics.width >> 6))) - ((float)(a_PenX + (glyph->metrics.horiBearingX >> 6)));
         letterCoordinate.width = (float)width;
         letterCoordinate.height = (float)m_Height;
-        letterCoordinate.uEnd = (float)a_PenX / fWidth;
-        letterCoordinate.vEnd = 1.0f;
+        a_PenX += 2;
     }
 }
 
-void triebWerk::CFont::DrawSingleLetter(FT_Bitmap* a_pBitmap, FT_Int a_X, FT_Int a_Y, int& a_rWidth)
+void triebWerk::CFont::DrawSingleLetter(FT_Bitmap* a_pBitmap, FT_Int a_X, FT_Int a_Y)
 {
     FT_Int  i, j, p, q;
     FT_Int  x_max = a_X + a_pBitmap->width;
     FT_Int  y_max = a_Y + a_pBitmap->rows;
-
-    bool left = false;
-    bool right = false;
-    int leftX = 0;
-    int rightX = 0;
 
     for (i = a_X, p = 0; i < x_max; i++, p++)
     {
@@ -227,33 +225,10 @@ void triebWerk::CFont::DrawSingleLetter(FT_Bitmap* a_pBitmap, FT_Int a_X, FT_Int
             if (i < 0 || j < 0 || i >= m_Width || j >= m_Height)
                 continue;
 
-            if (left == false)
-            {
-                left = true;
-                leftX = i;
-            }
-            else if (i < leftX)
-            {
-                leftX = i;
-            }
-
-            if (right == false)
-            {
-                right = true;
-                rightX = i;
-            }
-            else if (i > rightX)
-            {
-                rightX = i;
-            }
-
             size_t cur = j * m_Width + i;
             m_pBuffer[cur] |= a_pBitmap->buffer[q * a_pBitmap->width + p];
         }
     }
-
-    a_rWidth = rightX - leftX;
-    std::cout << " " << a_rWidth;
 }
 
 void triebWerk::CFont::CreateTexture()

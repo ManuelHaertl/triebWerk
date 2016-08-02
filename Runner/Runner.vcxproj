@@ -165,6 +165,9 @@
     <ClCompile Include="src\CEnvironmentCreator.cpp" />
     <ClCompile Include="src\CGameInfo.cpp" />
     <ClCompile Include="src\CGameScene.cpp" />
+    <ClCompile Include="src\CMainMenu.cpp" />
+    <ClCompile Include="src\CMenuBackgroundScene.cpp" />
+    <ClCompile Include="src\CMenuScene.cpp" />
     <ClCompile Include="src\CMovingObstacle.cpp" />
     <ClCompile Include="src\CPattern.cpp" />
     <ClCompile Include="src\CPatternLoader.cpp" />
@@ -173,8 +176,8 @@
     <ClCompile Include="src\CPlayer.cpp" />
     <ClCompile Include="src\CPoints.cpp" />
     <ClCompile Include="src\CPostEffects.cpp" />
-    <ClCompile Include="src\CUI.cpp" />
     <ClCompile Include="src\CValueUpdater.cpp" />
+    <ClCompile Include="src\IMenu.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -186,6 +189,9 @@
     <ClInclude Include="include\CEnvironmentCreator.h" />
     <ClInclude Include="include\CGameInfo.h" />
     <ClInclude Include="include\CGameScene.h" />
+    <ClInclude Include="include\CMainMenu.h" />
+    <ClInclude Include="include\CMenuBackgroundScene.h" />
+    <ClInclude Include="include\CMenuScene.h" />
     <ClInclude Include="include\CMovingObstacle.h" />
     <ClInclude Include="include\CPattern.h" />
     <ClInclude Include="include\CPatternLoader.h" />
@@ -194,12 +200,13 @@
     <ClInclude Include="include\CPlayer.h" />
     <ClInclude Include="include\CPoints.h" />
     <ClInclude Include="include\CPostEffects.h" />
-    <ClInclude Include="include\CUI.h" />
     <ClInclude Include="include\CValueUpdater.h" />
     <ClInclude Include="include\EPatternCategories.h" />
     <ClInclude Include="include\ETileType.h" />
+    <ClInclude Include="include\IMenu.h" />
     <ClInclude Include="include\SPatternTile.h" />
     <ClInclude Include="include\SPlayerInput.h" />
+    <ClInclude Include="include\SUIInput.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

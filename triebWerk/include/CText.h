@@ -19,6 +19,19 @@ namespace triebWerk
         { }
     };
 
+    enum class ETextAlign
+    {
+        TopLeft,
+        TopCenter,
+        TopRight,
+        MiddleLeft,
+        MiddleCenter,
+        MiddleRight,
+        BottomLeft,
+        BottomCenter,
+        BottomRight
+    };
+
     class CText
     {
 	public:
@@ -30,6 +43,7 @@ namespace triebWerk
         std::string m_Text;
         float m_LineSpacing;
         float m_Width, m_Height;
+        ETextAlign m_TextAlign;
 
     public:
         CText();

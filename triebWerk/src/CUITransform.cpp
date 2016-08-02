@@ -1,15 +1,15 @@
 #include <CUITransform.h>
 
-float triebWerk::CUITransform::ReferenceWidth = 800.0f;
-float triebWerk::CUITransform::ReferenceHeight = 600.0f;
+float triebWerk::CUITransform::ResolutionWidth = 800.0f;
+float triebWerk::CUITransform::ResolutionHeight = 600.0f;
 float triebWerk::CUITransform::ReferenceScale = 1.0f;
 
 triebWerk::CUITransform::CUITransform()
-    : m_Modified(false)
+    : m_Modified(true)
     , m_AnchorPoint(DirectX::XMFLOAT2(0.f, 0.0f))
     , m_PositionOffset(DirectX::XMVectorZero())
     , m_Scale(DirectX::XMVectorSet(1.0f, 1.0f, 0.0f, 0.0f))
-    , m_Rotation(0.0f)
+    , m_Rotation(DirectX::XMVectorZero())
     , m_Pivot(DirectX::XMVectorZero())
     , m_Transformation(DirectX::XMMatrixIdentity())
 {
@@ -36,7 +36,7 @@ DirectX::XMVECTOR triebWerk::CUITransform::GetScale() const
 
 float triebWerk::CUITransform::GetRotation() const
 {
-    return m_Rotation;
+    return m_Rotation.m128_f32[2];
 }
 
 DirectX::XMVECTOR triebWerk::CUITransform::GetPivot() const
@@ -48,13 +48,13 @@ DirectX::XMMATRIX& triebWerk::CUITransform::GetTransformation()
 {
     if (m_Modified)
     {
-        float x = ((ReferenceWidth / 2.0f * m_AnchorPoint.x) + m_PositionOffset.m128_f32[0]) * ReferenceScale;
-        float y = ((ReferenceHeight / 2.0f * m_AnchorPoint.y) + m_PositionOffset.m128_f32[1]) * ReferenceScale;
+        float x = (ResolutionWidth / 2.0f * m_AnchorPoint.x) + (m_PositionOffset.m128_f32[0] * ReferenceScale);
+        float y = (ResolutionHeight / 2.0f * m_AnchorPoint.y) + (m_PositionOffset.m128_f32[1] * ReferenceScale);
 
         DirectX::XMVECTOR realPosition = DirectX::XMVectorSet(x, y, m_PositionOffset.m128_f32[2], 0.0f);
         DirectX::XMVECTOR realScale = DirectX::XMVectorScale(m_Scale, ReferenceScale);
 
-        m_Transformation = DirectX::XMMatrixTransformation2D(m_Pivot, 0.0f, realScale, m_Pivot, m_Rotation, realPosition);
+        m_Transformation = DirectX::XMMatrixTransformation(m_Pivot, DirectX::XMQuaternionIdentity(), realScale, m_Pivot, m_Rotation, realPosition);
         m_Modified = false;
     }
 
@@ -100,19 +100,27 @@ void triebWerk::CUITransform::SetScale(const DirectX::XMVECTOR a_Scale)
 
 void triebWerk::CUITransform::SetRotationDegrees(const float a_Rotation)
 {
-    m_Rotation = DirectX::XMConvertToRadians(a_Rotation);
+    m_Rotation = DirectX::XMQuaternionRotationRollPitchYaw(
+        DirectX::XMConvertToRadians(0.0f),
+        DirectX::XMConvertToRadians(0.0f),
+        DirectX::XMConvertToRadians(a_Rotation));
     Modified();
 }
 
 void triebWerk::CUITransform::SetRotationRadians(const float a_Rotation)
 {
-    m_Rotation = a_Rotation;
+    m_Rotation = DirectX::XMQuaternionRotationRollPitchYaw(0.0f, 0.0f, a_Rotation);
     Modified();
 }
 
 void triebWerk::CUITransform::RotateDegrees(const float a_Degrees)
 {
-    m_Rotation *= DirectX::XMConvertToRadians(a_Degrees);
+    DirectX::XMVECTOR rotation = DirectX::XMQuaternionRotationRollPitchYaw(
+        DirectX::XMConvertToRadians(0.0f),
+        DirectX::XMConvertToRadians(0.0f),
+        DirectX::XMConvertToRadians(a_Degrees));
+
+    m_Rotation = DirectX::XMQuaternionMultiply(m_Rotation, rotation);
     Modified();
 }
 

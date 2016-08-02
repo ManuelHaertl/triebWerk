@@ -50,6 +50,7 @@ namespace triebWerk
         bool Run();
         void Shutdown();
 
+        void Stop();
 	private:
 		void ProcessWindowMessages();
     };

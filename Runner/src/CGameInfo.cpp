@@ -13,6 +13,7 @@ CGameInfo::CGameInfo()
     , m_EffectFullControl(false)
     , m_EffectFullControlStrength(1.0f)
 	, m_EffectShield(false)
+    , m_EffectGoingIntoGame(false)
 {
     
 }

@@ -24,16 +24,13 @@ void CGameScene::Start()
     CreatePlayer();
     CreatePostEffects();
 
-    m_ValueUpdater.Start();
     m_DifficultyChanger.Start();
     m_EnvironmentCreator.Start();
     m_PatternManager.Start();
-	m_UI.Start();
 }
 
 void CGameScene::Update()
 {
-    m_ValueUpdater.Update();
     m_DifficultyChanger.Update();
 
     if (m_pPlayerScript->HasDied())
@@ -44,32 +41,10 @@ void CGameScene::Update()
         CGameInfo::Instance().Reset();
     }
 
-
-	if (twGamepad.IsState(triebWerk::EGamepadButton::Start, triebWerk::EButtonState::Down, 0))
-	{
-		twWindow->ChangeWindowSettings(true, 1920, 1080);
-	}
-
 	if (twGamepad.IsState(triebWerk::EGamepadButton::Back, triebWerk::EButtonState::Down, 0))
 	{
-		loud = !loud;
-		twAudio->m_pDevice->setSoundVolume(static_cast<float>(loud));
+        twSceneManager->SetActiveScene("Menu");
 	}
-
-    //std::string points =
-    //    "Total: " +
-    //    std::to_string(CGameInfo::Instance().m_TotalPoints) +
-    //    "\nCurrent: " +
-    //    std::to_string(CGameInfo::Instance().m_CurrentPoints) +
-    //    "\nMultiplier: " +
-    //    std::to_string(CGameInfo::Instance().m_Multiplier) +
-    //    "\nDifficulty: " + 
-    //    std::to_string(CGameInfo::Instance().m_Difficulty);
-    //
-    //m_pPoints->Update(points, nullptr, 0);
-
-
-    //m_pPoints->SetText(std::to_string(CGameInfo::Instance().m_CurrentPoints));
 
     if (twKeyboard.IsState(triebWerk::EKey::F3, triebWerk::EButtonState::Down))
     {
@@ -84,20 +59,20 @@ void CGameScene::Update()
 
     m_EnvironmentCreator.Update(metersFlewn);
     m_PatternManager.Update(metersFlewn);
-	m_UI.Update();
 }
 
 void CGameScene::End()
 {
     m_EnvironmentCreator.End();
     m_PatternManager.End();
-    m_ValueUpdater.End();
-	m_UI.End();
 }
 
 void CGameScene::Resume()
 {
-    twDebug->Disable();
+    m_pPlayerScript->Reset();
+    m_PatternManager.Reset();
+    m_EnvironmentCreator.Reset();
+    CGameInfo::Instance().Reset();
 }
 
 void CGameScene::CreatePlayer()

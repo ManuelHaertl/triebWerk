@@ -59,7 +59,7 @@ namespace triebWerk
         void CreateLetterMap();
         FT_BBox GetTextureBBox();
         void DrawAllLetterInBuffer(int a_PenX, int a_PenY);
-        void DrawSingleLetter(FT_Bitmap* a_pBitmap, FT_Int a_X, FT_Int a_Y, int& a_rWidth);
+        void DrawSingleLetter(FT_Bitmap* a_pBitmap, FT_Int a_X, FT_Int a_Y);
         void CreateTexture();
     };
 }

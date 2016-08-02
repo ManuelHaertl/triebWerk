@@ -9,6 +9,7 @@ triebWerk::CText::CText()
     , m_LetterCount(0)
     , m_Width(0)
     , m_Height(0)
+    , m_TextAlign(ETextAlign::MiddleCenter)
 {
 
 }
@@ -86,6 +87,38 @@ void triebWerk::CText::CreateLetterInfo()
     float currentWidth = 0.0f;
     float currentHeight = 0.0f;
 
+    switch (m_TextAlign)
+    {
+    case ETextAlign::TopCenter:
+        currentWidth -= m_Width / 2.0f;
+        break;
+    case ETextAlign::TopRight:
+        currentWidth -= m_Width;
+        break;
+    case ETextAlign::MiddleLeft:
+        currentHeight += m_Height / 2.0f;
+        break;
+    case ETextAlign::MiddleCenter:
+        currentWidth -= m_Width / 2.0f;
+        currentHeight += m_Height / 2.0f;
+        break;
+    case ETextAlign::MiddleRight:
+        currentWidth -= m_Width;
+        currentHeight += m_Height / 2.0f;
+        break;
+    case ETextAlign::BottomLeft:
+        currentHeight += m_Height;
+        break;
+    case ETextAlign::BottomCenter:
+        currentWidth -= m_Width / 2.0f;
+        currentHeight += m_Height;
+        break;
+    case ETextAlign::BottomRight:
+        currentWidth -= m_Width;
+        currentHeight += m_Height;
+        break;
+    }
+
     for (size_t i = 0; i < m_LetterCount; ++i)
     {
         SLetterCoordinate letter = m_pFont->m_LetterCoordinates[m_Text[i]];
@@ -105,7 +138,7 @@ void triebWerk::CText::CreateLetterInfo()
 void triebWerk::CText::CalculateWidthAndHeight()
 {
     m_Width = 0.0f;
-    m_Height = m_pFont->m_LetterCoordinates[m_Text[0]].height;
+    m_Height = 0.0f;
 
     for (size_t i = 0; i < m_LetterCount; ++i)
     {

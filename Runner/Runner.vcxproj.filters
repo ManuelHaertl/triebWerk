@@ -49,6 +49,12 @@
     <Filter Include="Quelldateien\Game\Player">
       <UniqueIdentifier>{157fabc6-5081-45f6-9594-08e86ebf23e3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headerdateien\Menu">
+      <UniqueIdentifier>{3beeb15a-6086-4420-8320-5732bf8c1a39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Menu">
+      <UniqueIdentifier>{cf90a7da-b52d-4fec-b13e-4d96920f0eca}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -99,14 +105,23 @@
     <ClCompile Include="src\CPlayer.cpp">
       <Filter>Quelldateien\Game\Player</Filter>
     </ClCompile>
-    <ClCompile Include="src\CUI.cpp">
-      <Filter>Quelldateien\Game</Filter>
-    </ClCompile>
     <ClCompile Include="src\CMovingObstacle.cpp">
       <Filter>Quelldateien\Game\Tiles</Filter>
     </ClCompile>
     <ClCompile Include="src\CBackground.cpp">
       <Filter>Quelldateien\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMenuScene.cpp">
+      <Filter>Quelldateien\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMainMenu.cpp">
+      <Filter>Quelldateien\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IMenu.cpp">
+      <Filter>Quelldateien\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMenuBackgroundScene.cpp">
+      <Filter>Quelldateien\Menu</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -167,14 +182,26 @@
     <ClInclude Include="include\CPlayer.h">
       <Filter>Headerdateien\Game\Player</Filter>
     </ClInclude>
-    <ClInclude Include="include\CUI.h">
-      <Filter>Headerdateien\Game</Filter>
-    </ClInclude>
     <ClInclude Include="include\CBackground.h">
       <Filter>Headerdateien\Game</Filter>
     </ClInclude>
     <ClInclude Include="include\CMovingObstacle.h">
       <Filter>Headerdateien\Game\Tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CMenuScene.h">
+      <Filter>Headerdateien\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CMainMenu.h">
+      <Filter>Headerdateien\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="include\IMenu.h">
+      <Filter>Headerdateien\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SUIInput.h">
+      <Filter>Headerdateien\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CMenuBackgroundScene.h">
+      <Filter>Headerdateien\Menu</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

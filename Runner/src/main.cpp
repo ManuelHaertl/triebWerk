@@ -1,6 +1,9 @@
 #include <CEngine.h>
 #include <CGameScene.h>
 #include <CDebugScene.h>
+#include <CMenuScene.h>
+#include <CValueUpdater.h>
+
 
 int main()
 {
@@ -9,8 +12,8 @@ int main()
     // Initialize the engine
     triebWerk::SEngineConfiguration config;
     config.m_Name = "AZ-TecRunner";
-    config.m_Width = 1200;
-    config.m_Height = 800;
+    config.m_Width = 1600;
+    config.m_Height = 1000;
     config.m_Fullscreen = false;
     config.m_VSync = false;
     config.m_TargetFPS = 6000;
@@ -23,16 +26,19 @@ int main()
     }
 
     twResourceManager->LoadAllFilesInFolder("data");
-
+    CValueUpdater valueUpdater;
+    valueUpdater.Start();
     twSceneManager->AddScene(new CGameScene(), "Game");
+    twSceneManager->AddScene(new CMenuScene(), "Menu");
     twSceneManager->AddScene(new CDebugScene(), "Debug");
 
-    twSceneManager->SetActiveScene("Game");
+    twSceneManager->SetActiveScene("Menu");
 
     // main loop, update game & engine
     bool run = true;
     while (run == true)
     {
+        valueUpdater.Update();
         run = twEngine.Run();
 
         if (twKeyboard.IsState(triebWerk::EKey::D1, triebWerk::EButtonState::Down))
@@ -45,6 +51,7 @@ int main()
         }
     }
 
+    valueUpdater.End();
     twEngine.Shutdown();
 
     _CrtDumpMemoryLeaks();
