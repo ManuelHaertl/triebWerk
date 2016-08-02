@@ -242,6 +242,17 @@ triebWerk::CSound * triebWerk::CResourceManager::GetSound(const char * a_pSoundN
 	}
 }
 
+void triebWerk::CResourceManager::UpdateDefaultSoundVolumes(const float a_SFXVolume, const float a_BGMVolume)
+{
+	for (auto sound : m_SoundBuffer)
+	{
+		if (sound.second->m_SoundType == CSound::ESoundType::BGM)
+			sound.second->m_pSoundSource->setDefaultVolume(a_BGMVolume);
+		else
+			sound.second->m_pSoundSource->setDefaultVolume(a_SFXVolume);
+	}
+}
+
 void triebWerk::CResourceManager::LoadFile(const SFile& a_File)
 {
 	if(static_cast<int>(a_File.FileType) < 13) //is a supported filetype
@@ -352,7 +363,9 @@ void triebWerk::CResourceManager::LoadAudio(const SFile& a_File)
 
 	CSound* sound = new CSound;
 	
-	sound->m_SoundType = CSound::ESoundType::SFX;
+
+
+
 	sound->m_pSoundSource = this->m_pSoundEngineHandle->m_pDevice->addSoundSourceFromFile(a_File.FilePath.c_str());
 	if (sound->m_pSoundSource == nullptr)
 	{
@@ -361,9 +374,19 @@ void triebWerk::CResourceManager::LoadAudio(const SFile& a_File)
 		return;
 	}
 
-	//sound->m_pSoundSource->setDefaultVolume(CConfigManager::Instance().m_Config.m_SFXVolume);
+	if (a_File.FilePath.find("SFX") != std::string::npos)
+	{
+		sound->m_SoundType = CSound::ESoundType::SFX;
+		sound->m_pSoundSource->setDefaultVolume(m_pSoundEngineHandle->GetSFXVolume());
+	}
+	else if (a_File.FilePath.find("BGM") != std::string::npos)
+	{
+		sound->m_SoundType = CSound::ESoundType::BGM;
+		sound->m_pSoundSource->setDefaultVolume(m_pSoundEngineHandle->GetBGMVolume());
+	}
 
 	sound->m_SoundID.SetName(a_File.FileName);
+
 
 	m_SoundBuffer.insert(CSoundPair(hash, sound));
 }

@@ -74,7 +74,11 @@ bool triebWerk::CWindow::Initialize(const bool a_Fullscreen, const unsigned shor
 		this);
 
 	if (m_WindowHandle == NULL)
+	{
+		CDebugLogfile::Instance().LogfText(CDebugLogfile::ELogType::Error, false, "Error: Could not initialize a window instance");
 		return false;
+	}
+
 
 	ShowWindow(m_WindowHandle, SW_SHOWDEFAULT);
 	m_ShowCursor = true;

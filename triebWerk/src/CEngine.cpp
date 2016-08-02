@@ -38,34 +38,54 @@ bool triebWerk::CEngine::Initialize()
     config.m_VSync = true;
     config.m_TargetFPS = 0;
     config.m_PhysicTimeStamp = 0.15f;
+	config.m_MasterVolume = 1.0f;
+	config.m_BGMVolume = 1.0f;
+	config.m_SFXVolume = 1.0f;
 
     return Initialize(config);
 }
 
-bool triebWerk::CEngine::Initialize(SEngineConfiguration a_Config)
+bool triebWerk::CEngine::Initialize(const SEngineConfiguration& a_Config)
 {
+	bool result = false;
+
     m_pTime = new CTime();
     m_pInput = new CInput();
-    m_pWindow = new CWindow();
-    m_pResourceManager = new CResourceManager();
-    m_pGraphics = new CGraphics();
-    m_pRenderer = new CRenderer();
-    m_pSceneManager = new CSceneManager();
-    m_pFontManager = new CFontManager();
     m_pDebug = new CDebug();
-	m_pSoundEngine = new CSoundEngine();
 
-    m_pWindow->Initialize(a_Config.m_Fullscreen, a_Config.m_Width, a_Config.m_Height, a_Config.m_Name);
-    m_pGraphics->Initialize(m_pWindow->GetWindowHandle(), a_Config.m_Width, a_Config.m_Height, a_Config.m_Fullscreen, a_Config.m_VSync);
-    
+	m_pWindow = new CWindow();
+    result = m_pWindow->Initialize(a_Config.m_Fullscreen, a_Config.m_Width, a_Config.m_Height, a_Config.m_Name);
+	if (!result)
+		return false;
+
+	m_pGraphics = new CGraphics();
+	result = m_pGraphics->Initialize(m_pWindow->GetWindowHandle(), a_Config.m_Width, a_Config.m_Height, a_Config.m_Fullscreen, a_Config.m_VSync);
+	if (!result)
+		return false;
+
+	m_pFontManager = new CFontManager();
     unsigned int dpiX, dpiY;
     m_pWindow->GetDPIFromDisplay(&dpiX, &dpiY);
-    m_pFontManager->Initialize(m_pGraphics, dpiX, dpiY);
+    result = m_pFontManager->Initialize(m_pGraphics, dpiX, dpiY);
+	if (!result)
+		return false;
 
-    m_pResourceManager->Initialize(m_pGraphics, m_pFontManager->GetLibrary(), m_pSoundEngine);
-	m_pSoundEngine->Initialize();
-    m_pRenderer->Initialize(m_pGraphics, a_Config.m_Width, a_Config.m_Height);
-    m_pSceneManager->Initialize(m_pRenderer, a_Config.m_PhysicTimeStamp);;
+	m_pSoundEngine = new CSoundEngine();
+	m_pResourceManager = new CResourceManager();
+	result = m_pResourceManager->Initialize(m_pGraphics, m_pFontManager->GetLibrary(), m_pSoundEngine);
+	if (!result)
+		return false;
+
+	result = m_pSoundEngine->Initialize(m_pResourceManager, a_Config.m_MasterVolume, a_Config.m_BGMVolume, a_Config.m_SFXVolume);
+	if (!result)
+		return false;
+
+	m_pRenderer = new CRenderer();
+	m_pRenderer->Initialize(m_pGraphics, a_Config.m_Width, a_Config.m_Height);
+
+	m_pSceneManager = new CSceneManager();
+    m_pSceneManager->Initialize(m_pRenderer, a_Config.m_PhysicTimeStamp);
+
 
     if (a_Config.m_TargetFPS == 0)
         m_TimePerFrame = 0;
@@ -121,23 +141,39 @@ bool triebWerk::CEngine::Run()
 
 void triebWerk::CEngine::Shutdown()
 {
-    m_pSceneManager->Shutdown();
-	m_pResourceManager->CleanUp();
-    m_pFontManager->Shutdown();
-	m_pGraphics->Shutdown();
-	m_pRenderer->Shutdown();
-	m_pSoundEngine->CleanUp();
+	if(m_pSceneManager != nullptr)
+		m_pSceneManager->Shutdown();
+	if (m_pResourceManager != nullptr)
+		m_pResourceManager->CleanUp();
+	if (m_pFontManager != nullptr)
+		m_pFontManager->Shutdown();
+	if (m_pGraphics != nullptr)
+		m_pGraphics->Shutdown();
+	if (m_pRenderer != nullptr)
+		m_pRenderer->Shutdown();
+	if (m_pSoundEngine != nullptr)
+		m_pSoundEngine->CleanUp();
 
-    delete m_pFontManager;
-    delete m_pSceneManager;
-	delete m_pDebug;
-    delete m_pInput;
-    delete m_pTime;
-	delete m_pWindow;
-	delete m_pResourceManager;
-	delete m_pGraphics;
-	delete m_pRenderer;
-	delete m_pSoundEngine;
+	if(m_pFontManager != nullptr)
+	 delete m_pFontManager;
+	if (m_pSceneManager != nullptr)
+		delete m_pSceneManager;
+	if (m_pDebug != nullptr)
+		delete m_pDebug;
+	if (m_pInput != nullptr)
+		delete m_pInput;
+	if (m_pTime != nullptr)
+		delete m_pTime;
+	if (m_pWindow != nullptr)
+		delete m_pWindow;
+	if (m_pResourceManager != nullptr)
+		delete m_pResourceManager;
+	if (m_pGraphics != nullptr)
+		delete m_pGraphics;
+	if (m_pRenderer != nullptr)
+		delete m_pRenderer;
+	if (m_pSoundEngine != nullptr)
+		delete m_pSoundEngine;
 }
 
 void triebWerk::CEngine::Stop()

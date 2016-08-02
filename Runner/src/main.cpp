@@ -18,6 +18,9 @@ int main()
     config.m_VSync = false;
     config.m_TargetFPS = 6000;
     config.m_PhysicTimeStamp = 0.01f;
+	config.m_MasterVolume = 1.0f;
+	config.m_BGMVolume = 1.0f;
+	config.m_SFXVolume = 1.0f;
 
     if (twEngine.Initialize(config) == false)
     {
