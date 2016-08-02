@@ -20,15 +20,18 @@ namespace triebWerk
 		size_t m_IndexCount;
 
 	private:
-		std::vector<DirectX::XMFLOAT3> m_VertexPoint;
-		std::vector<DirectX::XMFLOAT2> m_UV;
-		std::vector<DirectX::XMFLOAT3> m_Normal;
+		DirectX::XMFLOAT3* m_VertexPoint;
+		DirectX::XMFLOAT2* m_UV;
+		DirectX::XMFLOAT3* m_Normal;
 
 		CMesh::SVertex* m_Vertices;
-		std::vector<unsigned int> m_Indices;
 
 		bool m_ContainsNormals;
 		bool m_ContainsUVs;
+
+		size_t m_VertexPointCount = 0;
+		size_t m_NormalCount = 0;
+		size_t m_UVCount = 0;
 
 	public:
 		COBJParser();

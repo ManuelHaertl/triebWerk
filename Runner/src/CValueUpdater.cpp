@@ -41,8 +41,7 @@ int CPlayer::GodMode = 0;
 int CEnvironmentCreator::FeatherSpawnProbability = 40;
 
 float CPatternManager::SpawnDistance = 300.0f;
-float CPatternManager::DeleteDistance = 10.0f;
-float CPatternManager::StartFreeDistance = 200.0f;
+float CPatternManager::StartFreeDistance = 100.0f;
 float CPatternManager::StartTextureBlendDistance = 150.0f;
 float CPatternManager::EndTextureBlendDistance = 15.0f;
 float CPatternManager::StartBuildDistance = 200.0f;
@@ -63,8 +62,8 @@ float CDifficultyChanger::MaxSpeed = 85.0f;
 int CPoints::Points[3] = { 10, 20, 50 };
 
 float CPostEffects::ChromaticAberrationStrength = 0.8f;
-float CPostEffects::CheckpointEffectLength = 0.2f;
-float CPostEffects::CheckpointEffectStrength = 1.5f;
+float CPostEffects::CheckpointEffectCollectedLength = 1.5f;
+float CPostEffects::CheckpointEffectPassedLength = 1.5f;
 float CPostEffects::FullControlEffectStrengthMin = 2.0f;
 float CPostEffects::FullControlEffectStrengthMax = 5.0f;
 float CPostEffects::BoostEffectStrength = 2.0f;
@@ -223,13 +222,13 @@ void CValueUpdater::UpdateValues()
         {
             CCheckpoint::HighestMultiplier = std::stof(value.second);
         }
-        else if (value.first == "cp_EffectLength")
+        else if (value.first == "cp_EffectCollectedLength")
         {
-            CPostEffects::CheckpointEffectLength = std::stof(value.second);
+            CPostEffects::CheckpointEffectCollectedLength = std::stof(value.second);
         }
-        else if (value.first == "cp_EffectStrength")
+        else if (value.first == "cp_EffectPassedLength")
         {
-            CPostEffects::CheckpointEffectStrength = std::stof(value.second);
+            CPostEffects::CheckpointEffectPassedLength = std::stof(value.second);
         }
 
         // Difficulty Changer

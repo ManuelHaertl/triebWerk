@@ -662,55 +662,55 @@ triebWerk::EFileType triebWerk::CResourceManager::GetFileType(const std::string&
 
 	std::string fileType = a_FileName.substr(fileExtensionPosition, a_FileName.size() - fileExtensionPosition);
 
-	if (fileType == ".twf")
+	if (fileType == ".twf" || fileType == ".TWF")
 	{
 		return EFileType::TWF;
 	}
-	else if(fileType == ".hlsl")
+	else if(fileType == ".hlsl" || fileType == ".HLSL")
 	{
 		return EFileType::HLSL;
 	}
-	else if (fileType == ".mp3")
+	else if (fileType == ".mp3" || fileType == ".MP3")
 	{
 		return EFileType::MP3;
 	}
-	else if (fileType == ".wav")
+	else if (fileType == ".wav" || fileType == ".WAV")
 	{
 		return EFileType::WAV;
 	}
-	else if (fileType == ".ogg")
+	else if (fileType == ".ogg" || fileType == ".OGG")
 	{
 		return EFileType::OGG;
 	}
-	else if (fileType == ".flac")
+	else if (fileType == ".flac" || fileType == ".FLAC")
 	{
 		return EFileType::FLAC;
 	}
-	else if (fileType == ".mod")
+	else if (fileType == ".mod" || fileType == ".MOD")
 	{
 		return EFileType::MOD;
 	}
-	else if (fileType == ".xm")
+	else if (fileType == ".xm" || fileType == ".XM")
 	{
 		return EFileType::XM;
 	}
-	else if (fileType == ".obj")
+	else if (fileType == ".obj" || fileType == ".OBJ")
 	{
 		return EFileType::OBJ;
 	}
-	else if (fileType == ".png")
+	else if (fileType == ".png" || fileType == ".PNG")
 	{
 		return EFileType::PNG;
 	}
-	else if (fileType == ".tmx")
+	else if (fileType == ".tmx" || fileType == ".TMX")
 	{
 		return EFileType::TMX;
 	}
-	else if (fileType == ".ttf")
+	else if (fileType == ".ttf" || fileType == ".TTF")
 	{
 		return EFileType::TTF;
 	}
-	else if (fileType == ".dds")
+	else if (fileType == ".dds" || fileType == ".DDS")
 	{
 		return EFileType::DDS;
 	}

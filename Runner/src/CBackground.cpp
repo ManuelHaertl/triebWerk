@@ -24,6 +24,108 @@ CBackground::~CBackground()
 
 void CBackground::Start()
 {
+	
+	CreateSnakeHead();
+	CreateWings();
+	CreateEyes();
+}
+
+void CBackground::Update()
+{
+	UpdateMultiplier();
+
+	UpdateDifficultyCircles();
+
+	LerpColor();
+
+	DirectX::XMVECTOR backgroundPos = m_pBGSnake->m_Transform.GetPosition();
+	backgroundPos.m128_f32[1] = (std::sin(twTime->GetTimeSinceStartup() ) * 0.5f + 0.5f) * 40;
+	backgroundPos.m128_f32[1] += 120.0f;
+	m_pBGSnake->m_Transform.SetPosition(backgroundPos);
+	backgroundPos.m128_f32[2] += 1.0f;
+	m_pSnakeFeather->m_Transform.SetPosition(backgroundPos);
+	DirectX::XMVECTOR eyePosLeft = backgroundPos;
+	eyePosLeft.m128_f32[0] -= 88;
+	eyePosLeft.m128_f32[1] += 24;
+	DirectX::XMVECTOR eyePosRight = backgroundPos;
+	eyePosRight.m128_f32[0] += 88;
+	eyePosRight.m128_f32[1] += 24;
+	m_pEyeLeft->m_Transform.SetPosition(eyePosLeft);
+	m_pEyeRight->m_Transform.SetPosition(eyePosRight);
+	
+	float time = twTime->GetTimeSinceStartup();
+	m_pSnakeFeatherMaterial->m_ConstantBuffer.SetValueInBuffer(5, &time);
+	m_pEyeLeftMaterial->m_ConstantBuffer.SetValueInBuffer(4, &time);
+	m_pEyeRightMaterial->m_ConstantBuffer.SetValueInBuffer(4, &time);
+
+	DirectX::XMVECTOR leftPos = m_pBGBassLeft->m_Transform.GetPosition();
+	leftPos.m128_f32[1] = (std::sin(twTime->GetTimeSinceStartup() * 0.7f)) * 20;
+	leftPos.m128_f32[1] += 250.0f;
+	m_pBGBassLeft->m_Transform.SetPosition(leftPos);
+
+	DirectX::XMVECTOR rightPos = m_pBGBassRight->m_Transform.GetPosition();
+	rightPos.m128_f32[1] = (std::sin(twTime->GetTimeSinceStartup() * 0.7f )) * 20;
+	rightPos.m128_f32[1] += 250.0f;
+	m_pBGBassRight->m_Transform.SetPosition(rightPos);
+}
+
+void CBackground::End()
+{
+}
+
+void CBackground::ResetBackground()
+{
+	//Multiplier
+	float circlePower1 = 1;
+	float circlePower2 = 0;
+	float circlePower3 = 0;
+	float circlePower4 = 0;
+	float circlePower5 = 0;
+
+	m_pLeftMaterial->m_ConstantBuffer.SetValueInBuffer(10, &circlePower1);
+	m_pLeftMaterial->m_ConstantBuffer.SetValueInBuffer(11, &circlePower2);
+	m_pLeftMaterial->m_ConstantBuffer.SetValueInBuffer(12, &circlePower3);
+	m_pLeftMaterial->m_ConstantBuffer.SetValueInBuffer(13, &circlePower4);
+	m_pLeftMaterial->m_ConstantBuffer.SetValueInBuffer(14, &circlePower5);
+	m_pRightMaterial->m_ConstantBuffer.SetValueInBuffer(10, &circlePower1);
+	m_pRightMaterial->m_ConstantBuffer.SetValueInBuffer(11, &circlePower2);
+	m_pRightMaterial->m_ConstantBuffer.SetValueInBuffer(12, &circlePower3);
+	m_pRightMaterial->m_ConstantBuffer.SetValueInBuffer(13, &circlePower4);
+	m_pRightMaterial->m_ConstantBuffer.SetValueInBuffer(14, &circlePower5);
+
+	//Circles
+	circlePower1 = 1.0f;
+	circlePower2 = 0.0f;
+	circlePower3 = 0.0f;
+	circlePower4 = 0.0f;
+	circlePower5 = 0.0f;
+
+	m_pLeftMaterial->m_ConstantBuffer.SetValueInBuffer(5, &circlePower1);
+	m_pLeftMaterial->m_ConstantBuffer.SetValueInBuffer(6, &circlePower2);
+	m_pLeftMaterial->m_ConstantBuffer.SetValueInBuffer(7, &circlePower3);
+	m_pLeftMaterial->m_ConstantBuffer.SetValueInBuffer(8, &circlePower4);
+	m_pLeftMaterial->m_ConstantBuffer.SetValueInBuffer(9, &circlePower5);
+	m_pRightMaterial->m_ConstantBuffer.SetValueInBuffer(5, &circlePower1);
+	m_pRightMaterial->m_ConstantBuffer.SetValueInBuffer(6, &circlePower2);
+	m_pRightMaterial->m_ConstantBuffer.SetValueInBuffer(7, &circlePower3);
+	m_pRightMaterial->m_ConstantBuffer.SetValueInBuffer(8, &circlePower4);
+	m_pRightMaterial->m_ConstantBuffer.SetValueInBuffer(9, &circlePower5);
+
+	//Colors
+	m_LerpColors = false;
+	m_LerpColorValue = 0.0f;
+	m_LerpColorToValue = 0.0f;
+	m_LerpToColor = DirectX::XMFLOAT4(0.0f, 0.0f, 0.f, 0.0f);
+
+	m_pLeftMaterial->m_ConstantBuffer.SetValueInBuffer(4, &m_StartColor);
+	m_pRightMaterial->m_ConstantBuffer.SetValueInBuffer(4, &m_StartColor);
+	m_pSnakeFeatherMaterial->m_ConstantBuffer.SetValueInBuffer(4, &m_StartColor);
+	m_pSnakeHeadMaterial->m_ConstantBuffer.SetValueInBuffer(4, &m_StartColor);
+
+}
+
+void CBackground::CreateSnakeHead()
+{
 	// Snake Head
 	const float snakeWidth = 650.0f;
 	const float snakeApectRatio = 1.0f;
@@ -37,7 +139,7 @@ void CBackground::Start()
 	m_pSnakeFeather->m_Transform.SetRotationDegrees(270.0f, 0.0f, 0.0f);
 
 	auto snakeFeatherMesh = twRenderer->CreateMeshDrawable();
-	snakeFeatherMesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
+	snakeFeatherMesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
 	snakeFeatherMesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_plane");
 	snakeFeatherMesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("Background1TextureCutOut"));
 	snakeFeatherMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &m_StartColor);
@@ -57,7 +159,7 @@ void CBackground::Start()
 	m_pBGSnake->m_Transform.SetRotationDegrees(270.0f, 0.0f, 0.0f);
 
 	auto snakeMesh = twRenderer->CreateMeshDrawable();
-	snakeMesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
+	snakeMesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
 	snakeMesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_plane");
 	snakeMesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("Background1Texture"));
 	snakeMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &m_StartColor);
@@ -66,7 +168,10 @@ void CBackground::Start()
 	m_pBGSnake->SetDrawable(snakeMesh);
 
 	twActiveWorld->AddEntity(m_pBGSnake);
+}
 
+void CBackground::CreateWings()
+{
 	// Bass Left
 	const float bassWidth = 350.0f;
 	const float bassApectRatio = 1.0f;
@@ -78,7 +183,7 @@ void CBackground::Start()
 	m_pBGBassLeft->m_Transform.SetRotationDegrees(270.0f, 0.0f, 0.0f);
 
 	auto bassLeftMesh = twRenderer->CreateMeshDrawable();
-	bassLeftMesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
+	bassLeftMesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
 	bassLeftMesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_plane");
 	bassLeftMesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("Background5Textures"));
 	bassLeftMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &m_StartColor);
@@ -93,7 +198,7 @@ void CBackground::Start()
 	bassLeftMesh->m_Material.m_pPixelShader.SetTexture(7, twResourceManager->GetTexture2D("t_bass_emissive_m_03"));
 	bassLeftMesh->m_Material.m_pPixelShader.SetTexture(8, twResourceManager->GetTexture2D("t_bass_emissive_m_04"));
 	bassLeftMesh->m_Material.m_pPixelShader.SetTexture(9, twResourceManager->GetTexture2D("t_bass_emissive_m_05"));
-	
+
 	float circlePower1 = 1.0f;
 	float circlePower2 = 0.0f;
 	float circlePower3 = 0.0f;
@@ -126,8 +231,8 @@ void CBackground::Start()
 	m_pBGBassRight->m_Transform.SetRotationDegrees(270.0f, 180.0f, 0.0f);
 
 	auto bassRightMesh = twRenderer->CreateMeshDrawable();
-	bassRightMesh->m_D3DStates.m_pRasterizerState = twGraphic->CreateRasterizerState(D3D11_CULL_NONE, D3D11_FILL_SOLID);
-	bassRightMesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
+	bassRightMesh->m_D3DStates.m_pRasterizerState = twGraphic->GetDefaultCullNoneRasterizerState();
+	bassRightMesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
 	bassRightMesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_plane");
 	bassRightMesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("Background5Textures"));
 	bassRightMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &m_StartColor);
@@ -160,48 +265,56 @@ void CBackground::Start()
 	twActiveWorld->AddEntity(m_pBGBassRight);
 }
 
-void CBackground::Update()
+void CBackground::CreateEyes()
 {
-	UpdateMultiplier();
+	m_pEyeLeft = twActiveWorld->CreateEntity();
+	m_pEntity->m_Transform.AddChild(&m_pEyeLeft->m_Transform);
+	// Transform
+	m_pEyeLeft->m_Transform.SetPosition(-70.0f, 150.0f, 475.0f);
+	m_pEyeLeft->m_Transform.SetScale(5.0f, 5.0f, 5.0f);
 
-	UpdateDifficultyCircles();
+	// Rendering
+	auto eyeLeftMesh = twRenderer->CreateMeshDrawable();
+	eyeLeftMesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
+	eyeLeftMesh->m_pMesh = twResourceManager->GetMesh("ms_sphere");
+	eyeLeftMesh->m_Material.SetMaterial(twResourceManager->GetMaterial("Eyes"));
+	eyeLeftMesh->m_Material.m_pVertexShader.SetTexture(0, twResourceManager->GetTexture2D("t_whitenoise"));
+	eyeLeftMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &m_StartColor);
+	m_pEyeLeft->SetDrawable(eyeLeftMesh);
 
-	LerpColor();
+	m_pEyeLeftMaterial = &eyeLeftMesh->m_Material;
 
-	DirectX::XMVECTOR backgroundPos = m_pBGSnake->m_Transform.GetPosition();
-	backgroundPos.m128_f32[1] = (std::sin(twTime->GetTimeSinceStartup() ) * 0.5f + 0.5f) * 40;
-	backgroundPos.m128_f32[1] += 120.0f;
-	m_pBGSnake->m_Transform.SetPosition(backgroundPos);
-	backgroundPos.m128_f32[2] += 1.0f;
-	m_pSnakeFeather->m_Transform.SetPosition(backgroundPos);
+	twActiveWorld->AddEntity(m_pEyeLeft);
+
+	m_pEyeRight = twActiveWorld->CreateEntity();
+	m_pEntity->m_Transform.AddChild(&m_pEyeRight->m_Transform);
 	
-	float time = twTime->GetTimeSinceStartup();
-	m_pSnakeFeatherMaterial->m_ConstantBuffer.SetValueInBuffer(5, &time);
+	// Transform
+	m_pEyeRight->m_Transform.SetPosition(70.0f, 150.0f, 475.0f);
+	m_pEyeRight->m_Transform.SetScale(5.0f, 5.0f, 5.0f);
 
-	DirectX::XMVECTOR leftPos = m_pBGBassLeft->m_Transform.GetPosition();
-	leftPos.m128_f32[1] = (std::sin(twTime->GetTimeSinceStartup() * 0.7f)) * 20;
-	leftPos.m128_f32[1] += 250.0f;
-	m_pBGBassLeft->m_Transform.SetPosition(leftPos);
+	// Rendering
+	auto eyeRightMesh = twRenderer->CreateMeshDrawable();
+	eyeRightMesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
+	eyeRightMesh->m_pMesh = twResourceManager->GetMesh("ms_sphere");
+	eyeRightMesh->m_Material.SetMaterial(twResourceManager->GetMaterial("Eyes"));
+	eyeRightMesh->m_Material.m_pVertexShader.SetTexture(0, twResourceManager->GetTexture2D("t_whitenoise"));
+	eyeRightMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &m_StartColor);
+	m_pEyeRight->SetDrawable(eyeRightMesh);
 
-	DirectX::XMVECTOR rightPos = m_pBGBassRight->m_Transform.GetPosition();
-	rightPos.m128_f32[1] = (std::sin(twTime->GetTimeSinceStartup() * 0.7f )) * 20;
-	rightPos.m128_f32[1] += 250.0f;
-	m_pBGBassRight->m_Transform.SetPosition(rightPos);
-}
+	m_pEyeRightMaterial = &eyeRightMesh->m_Material;
 
-void CBackground::End()
-{
+	twActiveWorld->AddEntity(m_pEyeRight);
 }
 
 void CBackground::UpdateMultiplier()
 {
 	if (m_Multiplier != CGameInfo::Instance().m_Multiplier)
 	{
-
 		m_Multiplier = CGameInfo::Instance().m_Multiplier;
+
 		if (m_Multiplier == 1)
 		{
-
 			float circlePower1 = 1;
 			float circlePower2 = 0;
 			float circlePower3 = 0;
@@ -220,11 +333,8 @@ void CBackground::UpdateMultiplier()
 			m_pRightMaterial->m_ConstantBuffer.SetValueInBuffer(14, &circlePower5);
 		}
 
-
 		m_ToMultiLerpIndex = (int)m_Multiplier + 9;
 		m_IsMultiLerping = true;
-
-
 	}
 
 	if (m_IsMultiLerping)
@@ -249,26 +359,6 @@ void CBackground::UpdateDifficultyCircles()
 		if (!m_IsLerping)
 		{
 			m_Difficulty = CGameInfo::Instance().m_Difficulty;
-
-			if (m_Difficulty == 1)
-			{
-				float circlePower1 = 1.0f;
-				float circlePower2 = 0.0f;
-				float circlePower3 = 0.0f;
-				float circlePower4 = 0.0f;
-				float circlePower5 = 0.0f;
-
-				m_pLeftMaterial->m_ConstantBuffer.SetValueInBuffer(5, &circlePower1);
-				m_pLeftMaterial->m_ConstantBuffer.SetValueInBuffer(6, &circlePower2);
-				m_pLeftMaterial->m_ConstantBuffer.SetValueInBuffer(7, &circlePower3);
-				m_pLeftMaterial->m_ConstantBuffer.SetValueInBuffer(8, &circlePower4);
-				m_pLeftMaterial->m_ConstantBuffer.SetValueInBuffer(9, &circlePower5);
-				m_pRightMaterial->m_ConstantBuffer.SetValueInBuffer(5, &circlePower1);
-				m_pRightMaterial->m_ConstantBuffer.SetValueInBuffer(6, &circlePower2);
-				m_pRightMaterial->m_ConstantBuffer.SetValueInBuffer(7, &circlePower3);
-				m_pRightMaterial->m_ConstantBuffer.SetValueInBuffer(8, &circlePower4);
-				m_pRightMaterial->m_ConstantBuffer.SetValueInBuffer(9, &circlePower5);
-			}
 
 			UpdateColor();
 
@@ -317,12 +407,12 @@ void CBackground::LerpColor()
 			temp.z = m_LerpToColor.z * m_LerpColorValue;
 			temp.w = m_LerpToColor.w * m_LerpColorValue;
 
-			std::cout << m_LerpColorValue << std::endl;
-
 			m_pLeftMaterial->m_ConstantBuffer.SetValueInBuffer(4, &temp);
 			m_pRightMaterial->m_ConstantBuffer.SetValueInBuffer(4, &temp);
 			m_pSnakeFeatherMaterial->m_ConstantBuffer.SetValueInBuffer(4, &temp);
 			m_pSnakeHeadMaterial->m_ConstantBuffer.SetValueInBuffer(4, &temp);
+			m_pEyeLeftMaterial->m_ConstantBuffer.SetValueInBuffer(5, &temp);
+			m_pEyeRightMaterial->m_ConstantBuffer.SetValueInBuffer(5, &temp);
 		}
 		else
 		{

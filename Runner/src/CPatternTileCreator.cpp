@@ -79,6 +79,7 @@ CPatternTileCreator::CPatternTileCreator()
 	m_pTextureEmissive[0] = twResourceManager->GetTexture2D("t_obs_all_emissive_blend1");
 	m_pTextureEmissive[1] = twResourceManager->GetTexture2D("t_obs_all_emissive_blend2");
 	m_pTextureEmissive[2] = twResourceManager->GetTexture2D("t_obs_all_emissive_blend3");
+	m_pTextureEmissiveMoveable = twResourceManager->GetTexture2D("t_obs_movable_emissive");
 	m_pTextureNoise = twResourceManager->GetTexture2D("t_noise");
 	m_pTextureColorNoise = twResourceManager->GetTexture2D("t_noisecolor");
 
@@ -180,8 +181,8 @@ void CPatternTileCreator::CreateCheckpoint()
     // Rendering
     auto mesh = twRenderer->CreateMeshDrawable();
     mesh->m_pMesh = m_pCheckPoint;
-    mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
-	mesh->m_D3DStates.m_pRasterizerState = twGraphic->CreateRasterizerState(D3D11_CULL_NONE, D3D11_FILL_SOLID);
+    mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
+	mesh->m_D3DStates.m_pRasterizerState = twGraphic->GetDefaultCullNoneRasterizerState();
     mesh->m_Material.SetMaterial(m_pMaterialWireframe);
     mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(0.0f, 1.0f, 1.0f));
     mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
@@ -216,8 +217,8 @@ void CPatternTileCreator::CreatePoints(const size_t a_Amount)
     // Rendering
     auto mesh = twRenderer->CreateMeshDrawable();
     mesh->m_pMesh = m_pPoints;
-    mesh->m_D3DStates.m_pRasterizerState = twGraphic->CreateRasterizerState(D3D11_CULL_BACK, D3D11_FILL_WIREFRAME);
-    mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
+	mesh->m_D3DStates.m_pRasterizerState = twGraphic->GetDefaultWireframeRasterizerState();
+    mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
     mesh->m_Material.SetMaterial(m_pMaterialStandardColor);
     entity->SetDrawable(mesh);
 
@@ -317,6 +318,7 @@ void CPatternTileCreator::CreateModel05x05(const bool a_Rotated)
 
 	float startBuild = (startDistanceBuildValue - CPatternManager::EndBuildDistance) / CPatternManager::BuildStrength;
 
+	float rand =GetRandomSign();;
 
 	float textureValueFull = 1.0f, textureValueNone = 0.0f;
 
@@ -344,6 +346,7 @@ void CPatternTileCreator::CreateModel05x05(const bool a_Rotated)
 	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(7, &LineColor);
 	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(8, &FaceColor);
 	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(9, &startBuild);
+	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(10, &rand);
     mesh->m_Material.m_pPixelShader.SetTexture(0, m_pTextureObstacle[texture][0]);
     mesh->m_Material.m_pPixelShader.SetTexture(1, m_pTextureObstacle[texture][1]);
     mesh->m_Material.m_pPixelShader.SetTexture(2, m_pTextureObstacle[texture][2]);
@@ -390,6 +393,7 @@ void CPatternTileCreator::CreateModel05x05(const bool a_Rotated)
 	dekoMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(7, &LineColor);
 	dekoMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(8, &FaceColor);
 	dekoMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(9, &startBuild);
+	dekoMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(10, &rand);
 	dekoMesh->m_Material.m_pPixelShader.SetTexture(0, m_pTextureObstacle[texture][0]);
 	dekoMesh->m_Material.m_pPixelShader.SetTexture(1, m_pTextureObstacle[texture][1]);
 	dekoMesh->m_Material.m_pPixelShader.SetTexture(2, m_pTextureObstacle[texture][2]);
@@ -421,6 +425,8 @@ void CPatternTileCreator::CreateModel05x10(const bool a_Rotated)
 
 	float startBuild = (startDistanceBuildValue - CPatternManager::EndBuildDistance) / CPatternManager::BuildStrength;
 
+	float rand =GetRandomSign();;
+
     auto entity1 = twActiveWorld->CreateEntity();
     m_Entities.push_back(entity1);
 
@@ -445,6 +451,7 @@ void CPatternTileCreator::CreateModel05x10(const bool a_Rotated)
 	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(7, &LineColor);
 	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(8, &FaceColor);
 	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(9, &startBuild);
+	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(10, &rand);
 	mesh->m_Material.m_pPixelShader.SetTexture(0, m_pTextureObstacle[texture][0]);
 	mesh->m_Material.m_pPixelShader.SetTexture(1, m_pTextureObstacle[texture][1]);
 	mesh->m_Material.m_pPixelShader.SetTexture(2, m_pTextureObstacle[texture][2]);
@@ -491,6 +498,7 @@ void CPatternTileCreator::CreateModel05x10(const bool a_Rotated)
 	dekoMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(7, &LineColor);
 	dekoMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(8, &FaceColor);
 	dekoMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(9, &startBuild);
+	dekoMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(10, &rand);
 	dekoMesh->m_Material.m_pPixelShader.SetTexture(0, m_pTextureObstacle[texture][0]);
 	dekoMesh->m_Material.m_pPixelShader.SetTexture(1, m_pTextureObstacle[texture][1]);
 	dekoMesh->m_Material.m_pPixelShader.SetTexture(2, m_pTextureObstacle[texture][2]);
@@ -525,6 +533,8 @@ void CPatternTileCreator::CreateModel05x20(const bool a_Rotated)
     auto entity1 = twActiveWorld->CreateEntity();
     m_Entities.push_back(entity1);
 
+	float rand =GetRandomSign();;
+
     // ID
     entity1->m_Tag.AddTag("Death");
     entity1->m_Tag.AddTag("WallEffect");
@@ -546,6 +556,7 @@ void CPatternTileCreator::CreateModel05x20(const bool a_Rotated)
 	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(7, &LineColor);
 	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(8, &FaceColor);
 	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(9, &startBuild);
+	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(10, &rand);
 	mesh->m_Material.m_pPixelShader.SetTexture(0, m_pTextureObstacle[texture][0]);
 	mesh->m_Material.m_pPixelShader.SetTexture(1, m_pTextureObstacle[texture][1]);
 	mesh->m_Material.m_pPixelShader.SetTexture(2, m_pTextureObstacle[texture][2]);
@@ -592,6 +603,7 @@ void CPatternTileCreator::CreateModel05x20(const bool a_Rotated)
 	dekoMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(7, &LineColor);
 	dekoMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(8, &FaceColor);
 	dekoMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(9, &startBuild);
+	dekoMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(10, &rand);
 	dekoMesh->m_Material.m_pPixelShader.SetTexture(0, m_pTextureObstacle[texture][0]);
 	dekoMesh->m_Material.m_pPixelShader.SetTexture(1, m_pTextureObstacle[texture][1]);
 	dekoMesh->m_Material.m_pPixelShader.SetTexture(2, m_pTextureObstacle[texture][2]);
@@ -623,6 +635,8 @@ void CPatternTileCreator::CreateModel05x30(const bool a_Rotated)
 
 	float startBuild = (startDistanceBuildValue - CPatternManager::EndBuildDistance) / CPatternManager::BuildStrength;
 
+	float rand =GetRandomSign();;
+
     auto entity1 = twActiveWorld->CreateEntity();
     m_Entities.push_back(entity1);
 
@@ -647,6 +661,7 @@ void CPatternTileCreator::CreateModel05x30(const bool a_Rotated)
 	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(7, &LineColor);
 	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(8, &FaceColor);
 	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(9, &startBuild);
+	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(10, &rand);
 	mesh->m_Material.m_pPixelShader.SetTexture(0, m_pTextureObstacle[texture][0]);
 	mesh->m_Material.m_pPixelShader.SetTexture(1, m_pTextureObstacle[texture][1]);
 	mesh->m_Material.m_pPixelShader.SetTexture(2, m_pTextureObstacle[texture][2]);
@@ -693,6 +708,7 @@ void CPatternTileCreator::CreateModel05x30(const bool a_Rotated)
 	dekoMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(7, &LineColor);
 	dekoMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(8, &FaceColor);
 	dekoMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(9, &startBuild);
+	dekoMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(10, &rand);
 	dekoMesh->m_Material.m_pPixelShader.SetTexture(0, m_pTextureObstacle[texture][0]);
 	dekoMesh->m_Material.m_pPixelShader.SetTexture(1, m_pTextureObstacle[texture][1]);
 	dekoMesh->m_Material.m_pPixelShader.SetTexture(2, m_pTextureObstacle[texture][2]);
@@ -795,6 +811,8 @@ void CPatternTileCreator::CreateMoving05x05()
     const size_t texture = twRandom::GetNumber(0, MaxObstacleTextures - 1);
     float textureValueFull = 1.0f, textureValueNone = 0.0f;
 
+	float rand =GetRandomSign();;
+
 	//Building effect 
 	float distanceToPlayer = (m_PatternSpawnBegin + m_Tile.m_Y) - CGameInfo::Instance().m_PlayerPosition;
 	float startDistanceBuildValue = 0.0f;
@@ -844,12 +862,13 @@ void CPatternTileCreator::CreateMoving05x05()
 	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(7, &LineColor);
 	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(8, &FaceColor);
 	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(9, &startBuild);
+	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(10, &rand);
 	mesh->m_Material.m_pPixelShader.SetTexture(0, m_pTextureObstacle[texture][0]);
 	mesh->m_Material.m_pPixelShader.SetTexture(1, m_pTextureObstacle[texture][1]);
 	mesh->m_Material.m_pPixelShader.SetTexture(2, m_pTextureObstacle[texture][2]);
-	mesh->m_Material.m_pPixelShader.SetTexture(3, m_pTextureEmissive[0]);
-	mesh->m_Material.m_pPixelShader.SetTexture(4, m_pTextureEmissive[1]);
-	mesh->m_Material.m_pPixelShader.SetTexture(5, m_pTextureEmissive[2]);
+	mesh->m_Material.m_pPixelShader.SetTexture(3, m_pTextureEmissiveMoveable);
+	mesh->m_Material.m_pPixelShader.SetTexture(4, m_pTextureEmissiveMoveable);
+	mesh->m_Material.m_pPixelShader.SetTexture(5, m_pTextureEmissiveMoveable);
     entity->SetDrawable(mesh);
 
     // Physic
@@ -887,6 +906,8 @@ void CPatternTileCreator::CreateMoving05x10(const bool a_Rotated)
 		startDistanceBuildValue = CPatternManager::StartBuildDistance;
 
 	float startBuild = (startDistanceBuildValue - CPatternManager::EndBuildDistance) / CPatternManager::BuildStrength;
+
+	float rand =GetRandomSign();;
 
     auto entity = twActiveWorld->CreateEntity();
     m_Entities.push_back(entity);
@@ -926,12 +947,13 @@ void CPatternTileCreator::CreateMoving05x10(const bool a_Rotated)
 	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(7, &LineColor);
 	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(8, &FaceColor);
 	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(9, &startBuild);
+	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(10, &rand);
 	mesh->m_Material.m_pPixelShader.SetTexture(0, m_pTextureObstacle[texture][0]);
 	mesh->m_Material.m_pPixelShader.SetTexture(1, m_pTextureObstacle[texture][1]);
 	mesh->m_Material.m_pPixelShader.SetTexture(2, m_pTextureObstacle[texture][2]);
-	mesh->m_Material.m_pPixelShader.SetTexture(3, m_pTextureEmissive[0]);
-	mesh->m_Material.m_pPixelShader.SetTexture(4, m_pTextureEmissive[1]);
-	mesh->m_Material.m_pPixelShader.SetTexture(5, m_pTextureEmissive[2]);
+	mesh->m_Material.m_pPixelShader.SetTexture(3, m_pTextureEmissiveMoveable);
+	mesh->m_Material.m_pPixelShader.SetTexture(4, m_pTextureEmissiveMoveable);
+	mesh->m_Material.m_pPixelShader.SetTexture(5, m_pTextureEmissiveMoveable);
     entity->SetDrawable(mesh);
 
     // Physic
@@ -961,4 +983,16 @@ void CPatternTileCreator::CreateMoving05x10(const bool a_Rotated)
     entity->SetBehaviour(new CMovingObstacle(start, end, m_Tile.m_Time, m_Tile.m_Distance, m_Entities[1]));
 
     twActiveWorld->AddEntity(entity);
+}
+
+float CPatternTileCreator::GetRandomSign()
+{
+	float t = twRandom::GetNumber(-1.0f, 1.0f);
+
+	if (t >= 0)
+		return 1.0f;
+	else
+	{
+		return -1.0f;
+	}
 }

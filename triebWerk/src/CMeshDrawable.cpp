@@ -3,7 +3,7 @@
 
 triebWerk::CMeshDrawable::CMeshDrawable() :
 	m_pMesh(nullptr),
-	m_DrawType(CMeshDrawable::EDrawType::DrawIndexedInstanced),
+	m_DrawType(CMeshDrawable::EDrawType::Draw),
 	m_RenderMode(CMeshDrawable::ERenderMode::Opaque),
 	m_Topology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST),
 	m_Stride(sizeof(CMesh::SVertex))
@@ -13,10 +13,10 @@ triebWerk::CMeshDrawable::CMeshDrawable() :
 
 triebWerk::CMeshDrawable::~CMeshDrawable()
 {
-	if (m_D3DStates.m_pRasterizerState != nullptr)
-		m_D3DStates.m_pRasterizerState->Release();
-	if (m_D3DStates.m_pBlendState != nullptr)
-		m_D3DStates.m_pBlendState->Release();
+	//if (m_D3DStates.m_pRasterizerState != nullptr)
+	//	m_D3DStates.m_pRasterizerState->Release();
+	//if (m_D3DStates.m_pBlendState != nullptr)
+	//	m_D3DStates.m_pBlendState->Release();
 }
 
 bool triebWerk::CMeshDrawable::IsDrawableValid()

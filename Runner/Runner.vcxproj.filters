@@ -111,6 +111,15 @@
     <ClCompile Include="src\CBackground.cpp">
       <Filter>Quelldateien\Game</Filter>
     </ClCompile>
+    <ClCompile Include="src\CRoadBorder.cpp">
+      <Filter>Quelldateien\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CPlayerDangerHitbox.cpp">
+      <Filter>Quelldateien\Game\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CParticleSpawner.cpp">
+      <Filter>Quelldateien\Game</Filter>
+    </ClCompile>
     <ClCompile Include="src\CMenuScene.cpp">
       <Filter>Quelldateien\Scenes</Filter>
     </ClCompile>
@@ -202,6 +211,15 @@
     </ClInclude>
     <ClInclude Include="include\CMenuBackgroundScene.h">
       <Filter>Headerdateien\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CRoadBorder.h">
+      <Filter>Headerdateien\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CPlayerDangerHitbox.h">
+      <Filter>Headerdateien\Game\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CParticleSpawner.h">
+      <Filter>Headerdateien\Game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

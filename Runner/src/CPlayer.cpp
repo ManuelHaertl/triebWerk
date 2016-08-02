@@ -5,6 +5,7 @@
 #include <CGameInfo.h>
 #include <CMeshDrawable.h>
 #include <CPoints.h>
+#include <CPlayerDangerHitbox.h>
 
 CPlayer::CPlayer()
     : m_CurrentResource(MaxResource)
@@ -30,6 +31,7 @@ void CPlayer::Start()
 
     CreateTrail();
 	CreateFloorEffect();
+	CreatePlayerDangerHitbox();
 }
 
 void CPlayer::Update()
@@ -47,6 +49,7 @@ void CPlayer::LateUpdate()
     m_pTrail->m_Transform.SetRotation(m_pEntity->m_Transform.GetRotation());
 
     CGameInfo::Instance().m_PlayerPosition = m_pEntity->m_Transform.GetPosition().m128_f32[2];
+	CGameInfo::Instance().m_PlayerPositionX = m_pEntity->m_Transform.GetPosition().m128_f32[0];
 
     if (!twDebug->IsInDebug())
     {
@@ -143,12 +146,37 @@ void CPlayer::CreateFloorEffect()
 	mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_plane");
 	mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("Background1Texture"));
 	mesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_floor_emissve_grid"));
-	mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
+	mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
 	mesh->m_RenderMode = triebWerk::CMeshDrawable::ERenderMode::Transparent;
-	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT4(0, 1, 1,1));
+	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
 	entity->SetDrawable(mesh);
 
 	twActiveWorld->AddEntity(entity);
+}
+
+void CPlayer::CreatePlayerDangerHitbox()
+{
+	m_pDangerHitbox = twActiveWorld->CreateEntity();
+	m_pDangerHitbox->m_Transform.SetPosition(0.0f, 0.0f, 0.0f);
+	m_pEntity->m_Transform.AddChild(&m_pDangerHitbox->m_Transform);
+
+	auto hitBoxBehavior = new CPlayerDangerHitbox();
+	m_pDangerHitbox->SetBehaviour(hitBoxBehavior);
+
+	auto physicEntity = twActiveWorld->m_pPhysicWorld->CreatePhysicEntity();
+
+	auto collbox = twActiveWorld->m_pPhysicWorld->CreateAABBCollider();
+	collbox->SetSize(0.93f * 2.0f, 0.34f * 2.0f, 40.0f);
+	collbox->m_CheckCollision = true;
+	physicEntity->AddCollider(collbox);
+
+	auto body = twActiveWorld->m_pPhysicWorld->CreateBody();
+	body->m_GravityFactor = 0.0f;
+	physicEntity->SetBody(body);
+
+	m_pDangerHitbox->SetPhysicEntity(physicEntity);
+
+	twActiveWorld->AddEntity(m_pDangerHitbox);
 }
 
 void CPlayer::CheckInput()

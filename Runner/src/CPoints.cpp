@@ -11,6 +11,7 @@ CPoints::CPoints(const size_t a_AmountID)
     , m_RotateSpeedZ(0.0f)
     , m_pSphere(nullptr)
     , m_pSphereBuffer(nullptr)
+	, m_pGodray(nullptr)
 {
 }
 
@@ -27,6 +28,11 @@ void CPoints::Start()
     m_RotateSpeedZ = twRandom::GetNumber(MinRotateSpeed, MaxRotateSpeed);
 
     CreateSphere();
+	
+	//only set a godray if the point is rare
+	if(m_AmountID == PointCountWithGodray)
+		CreateGodray();
+
 }
 
 void CPoints::Update()
@@ -43,6 +49,8 @@ void CPoints::Update()
 void CPoints::End()
 {
     twActiveWorld->RemoveEntity(m_pSphere);
+	if(m_pGodray != nullptr)
+		twActiveWorld->RemoveEntity(m_pGodray);
 }
 
 void CPoints::Collected()
@@ -50,7 +58,11 @@ void CPoints::Collected()
     // disable current entity
     m_pEntity->GetDrawable()->SetActive(false);
     m_pSphere->GetDrawable()->SetActive(false);
-    m_pEntity->RemovePhysicEntity();
+	m_pEntity->RemovePhysicEntity();
+
+	if(m_pGodray != nullptr)
+		m_pGodray->GetDrawable()->SetActive(false);
+
 
     // create a new one
     auto entity = twActiveWorld->CreateEntity();
@@ -58,9 +70,9 @@ void CPoints::Collected()
     auto mesh = twRenderer->CreateMeshDrawable();
     mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_pointsEffect");
     mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("PointExplosion"));
-    mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::DrawIndexed;
+    mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
     mesh->m_Material.m_pGeometryShader.SetTexture(0, twResourceManager->GetTexture2D("t_noise"));
-	mesh->m_D3DStates.m_pRasterizerState = twEngine.m_pGraphics->CreateRasterizerState(D3D11_CULL_NONE, D3D11_FILL_WIREFRAME);
+	mesh->m_D3DStates.m_pRasterizerState = twGraphic->GetDefaultWireframeRasterizerState();
 
     int speed = 0;
     mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &(Color[m_AmountID]));
@@ -96,4 +108,23 @@ void CPoints::CreateSphere()
     m_pSphereBuffer = &mesh->m_Material.m_ConstantBuffer;
 
     twActiveWorld->AddEntity(m_pSphere);
+}
+
+void CPoints::CreateGodray()
+{
+	m_pGodray = twActiveWorld->CreateEntity();
+	DirectX::XMVECTOR positionGodBegin = m_pEntity->m_Transform.GetPosition();
+	m_pGodray->m_Transform.SetPosition(positionGodBegin.m128_f32[0], 4.0f, positionGodBegin.m128_f32[2]);
+
+	m_pGodray->m_Transform.SetParent(&m_pEntity->m_Transform);
+
+	triebWerk::CMeshDrawable* pGodrayDrawable = twRenderer->CreateMeshDrawable();
+	pGodrayDrawable->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
+	pGodrayDrawable->m_RenderMode = triebWerk::CMeshDrawable::ERenderMode::Transparent;
+	pGodrayDrawable->m_pMesh = twResourceManager->GetMesh("ms_godray");
+	pGodrayDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardTransparentTexture"));
+	pGodrayDrawable->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("t_godray_points"));
+	m_pGodray->SetDrawable(pGodrayDrawable);
+
+	twActiveWorld->AddEntity(m_pGodray);
 }

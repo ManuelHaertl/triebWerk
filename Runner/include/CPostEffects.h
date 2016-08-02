@@ -6,8 +6,8 @@ class CPostEffects : public triebWerk::IBehaviour
 public:
     static float ChromaticAberrationStrength;
 
-    static float CheckpointEffectLength;
-    static float CheckpointEffectStrength;
+    static float CheckpointEffectCollectedLength;
+    static float CheckpointEffectPassedLength;
 
     static float FullControlEffectStrengthMin;
     static float FullControlEffectStrengthMax;
@@ -26,11 +26,18 @@ private:
 	triebWerk::CMaterial* m_pGrain;
     triebWerk::CMaterial* m_pShield;
     triebWerk::CMaterial* m_pBlur;
+	triebWerk::CMaterial* m_pShockwave;
 
     static float m_CurrentGameStartTime;
     static float m_CurrentGameStartEffectStrength;
     float m_CurrentChromaticAberrationStrength;
     float m_CurrentDodgeTime;
+
+	float m_CurrentEffectCheckpointValueCollected;
+	float m_CurrentEffectCheckpointValuePassed;
+	bool m_ProcessCheckpointEffectCollected;
+	bool m_ProcessCheckpointEffectPassed;
+	bool m_ProcessCheckpointEffectPassedCoolDown;
 
 public:
     CPostEffects();
@@ -46,6 +53,7 @@ private:
     void AddScanLines();
 	void AddLensDistortion();
 	void AddGrain();
+	void AddShockwave();
 
     void UpdateGoingIntoGameEffect();
     void UpdateChromaticAberration();
@@ -53,4 +61,5 @@ private:
 	void UpdateGrainEffect();
     void UpdateBlur();
     void UpdateGameStartEffect();
+	void UpdateShockwave();
 };
