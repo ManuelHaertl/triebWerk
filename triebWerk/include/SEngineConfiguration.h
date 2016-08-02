@@ -10,5 +10,8 @@ namespace triebWerk
         bool m_VSync;
         unsigned short m_TargetFPS;
         float m_PhysicTimeStamp;
+		float m_MasterVolume;
+		float m_SFXVolume;
+		float m_BGMVolume;
     };
 }

@@ -549,7 +549,7 @@ void triebWerk::CRenderer::RenderInstancedMeshBatch(size_t a_Index)
 void triebWerk::CRenderer::InsertTransparent(CMeshDrawable * a_pDrawable)
 {	
 	//Get the distance between object and camera
-	a_pDrawable->DEBUG_Distance = DirectX::XMVector4LengthEst(DirectX::XMVectorSubtract(a_pDrawable->m_Transformation.r[3], m_pCurrentCamera->m_Transform.GetPosition())).m128_f32[0];
+	a_pDrawable->DEBUG_Distance = DirectX::XMVector4Length(DirectX::XMVectorSubtract(a_pDrawable->m_Transformation.r[3], m_pCurrentCamera->m_Transform.GetPosition())).m128_f32[0];
 
 	m_pRenderTargetList[m_ActiveRenderTargetSlot].m_RenderBatch.m_pTransparentMeshBuffer[m_pRenderTargetList[m_ActiveRenderTargetSlot].m_RenderBatch.m_TransparentMeshCounter] = a_pDrawable;
 }

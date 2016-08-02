@@ -115,6 +115,9 @@ namespace triebWerk
 		template<typename T>
 		void GetAll(const char* a_pPath, std::vector<T*>* a_pOutData);
 
+		//UpdateSounds
+		void UpdateDefaultSoundVolumes(const float a_SFXVolume, const float a_BGMVolume);
+
 	private:
 		//Load actual data
 		void LoadFile(const SFile& a_File);
