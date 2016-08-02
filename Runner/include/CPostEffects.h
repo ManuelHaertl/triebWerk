@@ -17,6 +17,8 @@ public:
     static float GameStartTime;
     static float GameStartLDEffectStrength;
     static float GameStartCAEffectStrength;
+    static float GameStartRIBeginEffectStrength;
+    static float GameStartRIEndEffectStrength;
 
 private:
     triebWerk::CPostEffectDrawable* m_pPostEffect;
@@ -60,6 +62,6 @@ private:
 	void UpdateLensDistortion();
 	void UpdateGrainEffect();
     void UpdateBlur();
-    void UpdateGameStartEffect();
+    void UpdateRipple();
 	void UpdateShockwave();
 };

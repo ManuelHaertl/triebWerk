@@ -225,7 +225,6 @@ void CMainMenu::Update(const SUIInput& a_rInput)
         m_CurrentTime += twTime->GetDeltaTime();
 
         float value = m_CurrentTime / half;
-        std::cout << value << std::endl;
         ((triebWerk::CUIDrawable*)(m_pBackground->GetDrawable()))->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &value);
 
         if (m_CurrentTime >= half)

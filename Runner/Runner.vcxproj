@@ -179,7 +179,6 @@
     <ClCompile Include="src\CPoints.cpp" />
     <ClCompile Include="src\CPostEffects.cpp" />
     <ClCompile Include="src\CRoadBorder.cpp" />
-    <ClCompile Include="src\CUI.cpp" />
     <ClCompile Include="src\CValueUpdater.cpp" />
     <ClCompile Include="src\IMenu.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -207,7 +206,6 @@
     <ClInclude Include="include\CPoints.h" />
     <ClInclude Include="include\CPostEffects.h" />
     <ClInclude Include="include\CRoadBorder.h" />
-    <ClInclude Include="include\CUI.h" />
     <ClInclude Include="include\CValueUpdater.h" />
     <ClInclude Include="include\EPatternCategories.h" />
     <ClInclude Include="include\ETileType.h" />

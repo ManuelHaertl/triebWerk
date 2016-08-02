@@ -41,8 +41,8 @@ int CPlayer::GodMode = 0;
 int CEnvironmentCreator::FeatherSpawnProbability = 40;
 
 float CPatternManager::SpawnDistance = 300.0f;
-float CPatternManager::StartFreeDistance = 100.0f;
-float CPatternManager::StartTextureBlendDistance = 150.0f;
+float CPatternManager::StartFreeDistance = 150.0f;
+float CPatternManager::StartTextureBlendDistance = 200.0f;
 float CPatternManager::EndTextureBlendDistance = 15.0f;
 float CPatternManager::StartBuildDistance = 200.0f;
 float CPatternManager::EndBuildDistance = 100.0f;
@@ -71,6 +71,8 @@ float CPostEffects::ShieldEffectStrength = 1.5f;
 float CPostEffects::GameStartTime = 2.0f;
 float CPostEffects::GameStartLDEffectStrength = 15.0f;
 float CPostEffects::GameStartCAEffectStrength = 15.0f;
+float CPostEffects::GameStartRIBeginEffectStrength = 500.0f;
+float CPostEffects::GameStartRIEndEffectStrength = 3.0f;
 
 CValueUpdater::CValueUpdater() :
     m_pValues(nullptr)
@@ -205,6 +207,14 @@ void CValueUpdater::UpdateValues()
         else if (value.first == "me_GameStartCAEffectStrength")
         {
             CPostEffects::GameStartCAEffectStrength = std::stof(value.second);
+        }
+        else if (value.first == "me_GameStartRIBeginEffectStrength")
+        {
+            CPostEffects::GameStartRIBeginEffectStrength = std::stof(value.second);
+        }
+        else if (value.first == "me_GameStartRIEEndffectStrength")
+        {
+            CPostEffects::GameStartRIEndEffectStrength = std::stof(value.second);
         }
 
         // PostEffects

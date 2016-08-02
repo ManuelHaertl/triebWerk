@@ -48,6 +48,7 @@ void CPostEffects::Update()
 	UpdateLensDistortion();
 	UpdateGrainEffect();
     UpdateBlur();
+    UpdateRipple();
 	UpdateShockwave();
 }
 
@@ -62,8 +63,9 @@ void CPostEffects::AddChromaticAberration()
 
 void CPostEffects::AddRipple()
 {
+    float value = 3.0f;
 	m_pRipple = m_pPostEffect->AddMaterial(twResourceManager->GetMaterial("Ripple"));
-
+    m_pRipple->m_ConstantBuffer.SetValueInBuffer(5, &value);
 }
 
 void CPostEffects::AddScanLines()
@@ -178,6 +180,22 @@ void CPostEffects::UpdateBlur()
         strength = BoostEffectStrength;
 
     m_pBlur->m_ConstantBuffer.SetValueInBuffer(4, &strength);
+}
+
+void CPostEffects::UpdateRipple()
+{
+    float time = twTime->GetTimeSinceStartup();
+    float strength = 5000.0f;
+
+    if (m_CurrentGameStartTime > 0.0f)
+    {
+        float value = 1.0f - m_CurrentGameStartEffectStrength;
+        strength = (GameStartRIBeginEffectStrength - GameStartRIEndEffectStrength) * value + GameStartRIEndEffectStrength;
+        std::cout << strength << std::endl;
+    }
+
+    m_pRipple->m_ConstantBuffer.SetValueInBuffer(4, &time);
+    m_pRipple->m_ConstantBuffer.SetValueInBuffer(5, &strength);
 }
 
 void CPostEffects::UpdateShockwave()

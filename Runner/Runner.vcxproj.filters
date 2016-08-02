@@ -111,15 +111,6 @@
     <ClCompile Include="src\CBackground.cpp">
       <Filter>Quelldateien\Game</Filter>
     </ClCompile>
-    <ClCompile Include="src\CRoadBorder.cpp">
-      <Filter>Quelldateien\Game</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CPlayerDangerHitbox.cpp">
-      <Filter>Quelldateien\Game\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CParticleSpawner.cpp">
-      <Filter>Quelldateien\Game</Filter>
-    </ClCompile>
     <ClCompile Include="src\CMenuScene.cpp">
       <Filter>Quelldateien\Scenes</Filter>
     </ClCompile>
@@ -131,6 +122,15 @@
     </ClCompile>
     <ClCompile Include="src\CMenuBackgroundScene.cpp">
       <Filter>Quelldateien\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CParticleSpawner.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CPlayerDangerHitbox.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CRoadBorder.cpp">
+      <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -212,14 +212,14 @@
     <ClInclude Include="include\CMenuBackgroundScene.h">
       <Filter>Headerdateien\Menu</Filter>
     </ClInclude>
-    <ClInclude Include="include\CRoadBorder.h">
-      <Filter>Headerdateien\Game</Filter>
+    <ClInclude Include="include\CParticleSpawner.h">
+      <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="include\CPlayerDangerHitbox.h">
-      <Filter>Headerdateien\Game\Player</Filter>
+      <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="include\CParticleSpawner.h">
-      <Filter>Headerdateien\Game</Filter>
+    <ClInclude Include="include\CRoadBorder.h">
+      <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
