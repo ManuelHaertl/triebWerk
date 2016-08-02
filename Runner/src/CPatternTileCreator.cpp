@@ -182,7 +182,7 @@ void CPatternTileCreator::CreateCheckpoint()
     auto mesh = twRenderer->CreateMeshDrawable();
     mesh->m_pMesh = m_pCheckPoint;
     mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
-	mesh->m_D3DStates.m_pRasterizerState = twGraphic->CreateRasterizerState(D3D11_CULL_NONE, D3D11_FILL_SOLID);
+	mesh->m_D3DStates.m_pRasterizerState = twGraphic->GetDefaultCullNoneRasterizerState();
     mesh->m_Material.SetMaterial(m_pMaterialWireframe);
     mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(0.0f, 1.0f, 1.0f));
     mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
@@ -217,7 +217,7 @@ void CPatternTileCreator::CreatePoints(const size_t a_Amount)
     // Rendering
     auto mesh = twRenderer->CreateMeshDrawable();
     mesh->m_pMesh = m_pPoints;
-    mesh->m_D3DStates.m_pRasterizerState = twGraphic->CreateRasterizerState(D3D11_CULL_BACK, D3D11_FILL_WIREFRAME);
+	mesh->m_D3DStates.m_pRasterizerState = twGraphic->GetDefaultWireframeRasterizerState();
     mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
     mesh->m_Material.SetMaterial(m_pMaterialStandardColor);
     entity->SetDrawable(mesh);

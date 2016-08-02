@@ -72,7 +72,7 @@ void CPoints::Collected()
     mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("PointExplosion"));
     mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
     mesh->m_Material.m_pGeometryShader.SetTexture(0, twResourceManager->GetTexture2D("t_noise"));
-	mesh->m_D3DStates.m_pRasterizerState = twEngine.m_pGraphics->CreateRasterizerState(D3D11_CULL_NONE, D3D11_FILL_WIREFRAME);
+	mesh->m_D3DStates.m_pRasterizerState = twGraphic->GetDefaultWireframeRasterizerState();
 
     int speed = 0;
     mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &(Color[m_AmountID]));

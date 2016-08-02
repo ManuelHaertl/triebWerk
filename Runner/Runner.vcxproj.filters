@@ -114,6 +114,9 @@
     <ClCompile Include="src\CPlayerDangerHitbox.cpp">
       <Filter>Quelldateien\Game\Player</Filter>
     </ClCompile>
+    <ClCompile Include="src\CParticleSpawner.cpp">
+      <Filter>Quelldateien\Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\CGameScene.h">
@@ -187,6 +190,9 @@
     </ClInclude>
     <ClInclude Include="include\CPlayerDangerHitbox.h">
       <Filter>Headerdateien\Game\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CParticleSpawner.h">
+      <Filter>Headerdateien\Game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

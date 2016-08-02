@@ -2,6 +2,7 @@
 #include <CGameInfo.h>
 #include <CBackground.h>
 #include <CRoadBorder.h>
+#include <CParticleSpawner.h>
 
 CEnvironmentCreator::CEnvironmentCreator()
     : m_RoadAllLength(0.0f)
@@ -45,6 +46,7 @@ void CEnvironmentCreator::Start()
     CreateGrid();
     CreateSnakeLoops();
 	CreateRoadBorder();
+	CreateParticleSpawner();
     //CreateFog();
 }
 
@@ -390,6 +392,17 @@ void CEnvironmentCreator::CreateRoadBorder()
 	m_pRoadBorder->SetBehaviour(new CRoadBorder());
 
 	twActiveWorld->AddEntity(m_pRoadBorder);
+}
+
+void CEnvironmentCreator::CreateParticleSpawner()
+{
+	m_pParticleSpawner = twActiveWorld->CreateEntity();
+	m_pBGPlane->m_Transform.AddChild(&m_pParticleSpawner->m_Transform);
+	m_pParticleSpawner->m_Transform.SetPosition(0.0f, 25.0f, 400.0f);
+
+	m_pParticleSpawner->SetBehaviour(new CParticleSpawner());
+
+	twActiveWorld->AddEntity(m_pParticleSpawner);
 }
 
 void CEnvironmentCreator::MoveRoad(const float a_MetersFlewn)

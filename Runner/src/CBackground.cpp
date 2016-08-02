@@ -231,7 +231,7 @@ void CBackground::CreateWings()
 	m_pBGBassRight->m_Transform.SetRotationDegrees(270.0f, 180.0f, 0.0f);
 
 	auto bassRightMesh = twRenderer->CreateMeshDrawable();
-	bassRightMesh->m_D3DStates.m_pRasterizerState = twGraphic->CreateRasterizerState(D3D11_CULL_NONE, D3D11_FILL_SOLID);
+	bassRightMesh->m_D3DStates.m_pRasterizerState = twGraphic->GetDefaultCullNoneRasterizerState();
 	bassRightMesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
 	bassRightMesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_plane");
 	bassRightMesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("Background5Textures"));

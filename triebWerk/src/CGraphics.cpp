@@ -696,32 +696,32 @@ triebWerk::CRenderQuad* triebWerk::CGraphics::CreateCRenderQuad() const
 	return pQuad;
 }
 
-ID3D11RasterizerState * triebWerk::CGraphics::CreateRasterizerState(const D3D11_CULL_MODE a_CullMode, const D3D11_FILL_MODE a_FillMode) const
-{
-	ID3D11RasterizerState* rasterState = nullptr;
-	D3D11_RASTERIZER_DESC rasterDesc;
-	ZeroMemory(&rasterDesc, sizeof(D3D11_RASTERIZER_DESC));
-	// Setup the raster state
-	rasterDesc.AntialiasedLineEnable = true;
-	rasterDesc.CullMode = a_CullMode;
-	rasterDesc.DepthBias = 0;
-	rasterDesc.DepthBiasClamp = 0.0f;
-	rasterDesc.DepthClipEnable = true;
-	rasterDesc.FillMode = a_FillMode;
-	rasterDesc.FrontCounterClockwise = true;
-	rasterDesc.MultisampleEnable = true;
-	rasterDesc.ScissorEnable = false;
-	rasterDesc.SlopeScaledDepthBias = 0.0f;
-
-	HRESULT hResult = m_pDevice->CreateRasterizerState(&rasterDesc, &rasterState);
-	if (FAILED(hResult))
-	{
-		DebugLogfile.LogfText(CDebugLogfile::ELogType::Warning, false, "Warning: Could not create ID3D11RasterizerState!");
-		return nullptr;
-	}
-
-	return rasterState;
-}
+//ID3D11RasterizerState * triebWerk::CGraphics::CreateRasterizerState(const D3D11_CULL_MODE a_CullMode, const D3D11_FILL_MODE a_FillMode) const
+//{
+//	ID3D11RasterizerState* rasterState = nullptr;
+//	D3D11_RASTERIZER_DESC rasterDesc;
+//	ZeroMemory(&rasterDesc, sizeof(D3D11_RASTERIZER_DESC));
+//	// Setup the raster state
+//	rasterDesc.AntialiasedLineEnable = true;
+//	rasterDesc.CullMode = a_CullMode;
+//	rasterDesc.DepthBias = 0;
+//	rasterDesc.DepthBiasClamp = 0.0f;
+//	rasterDesc.DepthClipEnable = true;
+//	rasterDesc.FillMode = a_FillMode;
+//	rasterDesc.FrontCounterClockwise = true;
+//	rasterDesc.MultisampleEnable = true;
+//	rasterDesc.ScissorEnable = false;
+//	rasterDesc.SlopeScaledDepthBias = 0.0f;
+//
+//	HRESULT hResult = m_pDevice->CreateRasterizerState(&rasterDesc, &rasterState);
+//	if (FAILED(hResult))
+//	{
+//		DebugLogfile.LogfText(CDebugLogfile::ELogType::Warning, false, "Warning: Could not create ID3D11RasterizerState!");
+//		return nullptr;
+//	}
+//
+//	return rasterState;
+//}
 
 void triebWerk::CGraphics::SetDisplayProperties()
 {

@@ -13,10 +13,10 @@ triebWerk::CMeshDrawable::CMeshDrawable() :
 
 triebWerk::CMeshDrawable::~CMeshDrawable()
 {
-	if (m_D3DStates.m_pRasterizerState != nullptr)
-		m_D3DStates.m_pRasterizerState->Release();
-	if (m_D3DStates.m_pBlendState != nullptr)
-		m_D3DStates.m_pBlendState->Release();
+	//if (m_D3DStates.m_pRasterizerState != nullptr)
+	//	m_D3DStates.m_pRasterizerState->Release();
+	//if (m_D3DStates.m_pBlendState != nullptr)
+	//	m_D3DStates.m_pBlendState->Release();
 }
 
 bool triebWerk::CMeshDrawable::IsDrawableValid()

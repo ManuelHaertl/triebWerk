@@ -13,7 +13,6 @@
 //#else
 //#define TW_CREATE_DEVICE_FLAG 0
 //#endif
-
 #define TW_CREATE_DEVICE_FLAG 0
 
 namespace triebWerk
@@ -107,7 +106,7 @@ namespace triebWerk
 		ID3D11Buffer* CreateIndexBuffer(const void* a_pIndexData, const size_t a_ByteWidth) const;
 		ID3D11Buffer* CreateDefaultQuad(UINT* a_pOutStride, UINT* a_pOutVertexCount) const;
 		CRenderQuad* CreateCRenderQuad() const;
-		ID3D11RasterizerState* CreateRasterizerState(const D3D11_CULL_MODE a_CullMode, const D3D11_FILL_MODE a_FillMode) const;
+		//ID3D11RasterizerState* CreateRasterizerState(const D3D11_CULL_MODE a_CullMode, const D3D11_FILL_MODE a_FillMode) const;
 
 		void RemapTextureBuffer(const void * a_pData, const size_t a_DataSize, ID3D11Texture2D * a_pTextureToRemap) const;
 

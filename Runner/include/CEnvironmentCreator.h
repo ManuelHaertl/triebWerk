@@ -53,6 +53,7 @@ private:
     triebWerk::CEntity* m_pSnake2;
     triebWerk::CEntity* m_pSnake3;
 	triebWerk::CEntity* m_pRoadBorder;
+	triebWerk::CEntity* m_pParticleSpawner;
 
     // Fog
     triebWerk::CElementContainer<triebWerk::CMeshDrawable*> m_Fogs;
@@ -78,6 +79,7 @@ private:
     void CreateSnakeLoops();
     void CreateFog();
 	void CreateRoadBorder();
+	void CreateParticleSpawner();
     void MoveRoad(const float a_MetersFlewn);
     void MoveGrid(const float a_MetersFlewn);
     void UpdateFog();
