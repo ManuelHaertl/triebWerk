@@ -21,9 +21,11 @@ public:
 	bool m_EffectCheckpointPassed;
     bool m_EffectFullControl;
     float m_EffectFullControlStrength;
-	bool m_EffectShield;
     bool m_EffectBoost;
     bool m_EffectGoingIntoGame;
+
+    // UI Information
+    bool m_IsGamePaused;
 
 private:
     CGameInfo();

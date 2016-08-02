@@ -157,11 +157,6 @@ void CPostEffects::UpdateLensDistortion()
     {
         value = GameStartLDEffectStrength * m_CurrentGameStartEffectStrength;
     }
-    else
-    {
-        if (CGameInfo::Instance().m_EffectShield)
-            value = ShieldEffectStrength;
-    }
 
     m_pShield->m_ConstantBuffer.SetValueInBuffer(4, &value);
 }
@@ -191,7 +186,6 @@ void CPostEffects::UpdateRipple()
     {
         float value = 1.0f - m_CurrentGameStartEffectStrength;
         strength = (GameStartRIBeginEffectStrength - GameStartRIEndEffectStrength) * value + GameStartRIEndEffectStrength;
-        std::cout << strength << std::endl;
     }
 
     m_pRipple->m_ConstantBuffer.SetValueInBuffer(4, &time);

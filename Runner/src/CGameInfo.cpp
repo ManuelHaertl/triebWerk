@@ -13,8 +13,8 @@ CGameInfo::CGameInfo()
 	, m_EffectCheckpointPassed(false)
 	, m_EffectFullControl(false)
 	, m_EffectFullControlStrength(1.0f)
-	, m_EffectShield(false)
     , m_EffectGoingIntoGame(false)
+    , m_IsGamePaused(false)
 {
     
 }
@@ -41,4 +41,5 @@ void CGameInfo::Reset()
 	m_EffectCheckpointPassed = false;
     m_EffectFullControl = false;
     m_EffectFullControlStrength = 1.0f;
+    m_IsGamePaused = false;
 }

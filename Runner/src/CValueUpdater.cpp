@@ -25,8 +25,6 @@ float CPlayer::FullControlCost = 2.0f;
 float CPlayer::BoostSpeed = 15.0f;
 float CPlayer::BoostCost = 2.0f;
 
-float CPlayer::ShieldCost = 4.0f;
-
 float CPlayer::MaxRotation = 25.0f;
 float CPlayer::RotationCameraFactor = 0.03f;
 
@@ -39,6 +37,9 @@ float CPlayer::CameraMinusPosZ = 10.0f;
 int CPlayer::GodMode = 0;
 
 int CEnvironmentCreator::FeatherSpawnProbability = 40;
+float CEnvironmentCreator::SnakeRotateSpeed1 = -3.0f;
+float CEnvironmentCreator::SnakeRotateSpeed2 = -2.0f;
+float CEnvironmentCreator::SnakeRotateSpeed3 = -1.0f;
 
 float CPatternManager::SpawnDistance = 300.0f;
 float CPatternManager::StartFreeDistance = 150.0f;
@@ -67,7 +68,6 @@ float CPostEffects::CheckpointEffectPassedLength = 1.5f;
 float CPostEffects::FullControlEffectStrengthMin = 2.0f;
 float CPostEffects::FullControlEffectStrengthMax = 5.0f;
 float CPostEffects::BoostEffectStrength = 2.0f;
-float CPostEffects::ShieldEffectStrength = 1.5f;
 float CPostEffects::GameStartTime = 2.0f;
 float CPostEffects::GameStartLDEffectStrength = 15.0f;
 float CPostEffects::GameStartCAEffectStrength = 15.0f;
@@ -170,14 +170,6 @@ void CValueUpdater::UpdateValues()
         {
             CPostEffects::BoostEffectStrength = std::stof(value.second);
         }
-        else if (value.first == "pl_ShieldCost")
-        {
-            CPlayer::ShieldCost = std::stof(value.second);
-        }
-		else if (value.first == "pl_ShieldEffectStrength")
-		{
-			CPostEffects::ShieldEffectStrength = std::stof(value.second);
-		}
         else if (value.first == "pl_MaxRotation")
         {
             CPlayer::MaxRotation = std::stof(value.second);
@@ -241,6 +233,20 @@ void CValueUpdater::UpdateValues()
             CPostEffects::CheckpointEffectPassedLength = std::stof(value.second);
         }
 
+        // Points
+        else if (value.first == "po_Amount1")
+        {
+            CPoints::Points[0] = std::stoi(value.second);
+        }
+        else if (value.first == "po_Amount2")
+        {
+            CPoints::Points[1] = std::stof(value.second);
+        }
+        else if (value.first == "po_Amount3")
+        {
+            CPoints::Points[2] = std::stof(value.second);
+        }
+
         // Difficulty Changer
         else if (value.first == "dc_ScoreDifficulty2")
         {
@@ -301,6 +307,18 @@ void CValueUpdater::UpdateValues()
         else if (value.first == "en_FeatherProbability")
         {
             CEnvironmentCreator::FeatherSpawnProbability = std::stoi(value.second);
+        }
+        else if (value.first == "en_SnakeRotateSpeed1")
+        {
+            CEnvironmentCreator::SnakeRotateSpeed1 = std::stoi(value.second);
+        }
+        else if (value.first == "en_SnakeRotateSpeed2")
+        {
+            CEnvironmentCreator::SnakeRotateSpeed2 = std::stoi(value.second);
+        }
+        else if (value.first == "en_SnakeRotateSpeed3")
+        {
+            CEnvironmentCreator::SnakeRotateSpeed3 = std::stoi(value.second);
         }
 
         // Pattern Manager

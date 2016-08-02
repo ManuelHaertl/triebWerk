@@ -27,6 +27,7 @@ void CGameScene::Start()
     m_DifficultyChanger.Start();
     m_EnvironmentCreator.Start();
     m_PatternManager.Start();
+    m_IngameUI.Start();
 }
 
 void CGameScene::Update()
@@ -59,12 +60,14 @@ void CGameScene::Update()
 
     m_EnvironmentCreator.Update(metersFlewn);
     m_PatternManager.Update(metersFlewn);
+    m_IngameUI.Update();
 }
 
 void CGameScene::End()
 {
     m_EnvironmentCreator.End();
     m_PatternManager.End();
+    m_IngameUI.End();
 }
 
 void CGameScene::Resume()

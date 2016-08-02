@@ -47,11 +47,15 @@ void CEnvironmentCreator::Start()
     CreateSnakeLoops();
 	CreateRoadBorder();
 	CreateParticleSpawner();
-    //CreateFog();
+    CreateFog();
+
+    m_ObjectUpdater.Start(m_pSnake1, m_pSnake2, m_pSnake3);
 }
 
 void CEnvironmentCreator::Update(const float a_MetersFlewn)
 {
+    m_ObjectUpdater.Update();
+
     m_FeathersSpawnTo += a_MetersFlewn;
     m_FeathersDeleteZone += a_MetersFlewn;
 
@@ -68,7 +72,7 @@ void CEnvironmentCreator::Update(const float a_MetersFlewn)
     MoveRoad(a_MetersFlewn);
     MoveGrid(a_MetersFlewn);
     UpdateFog();
-    RotateSnakes();
+    //RotateSnakes();
 }
 
 void CEnvironmentCreator::End()
@@ -309,7 +313,7 @@ void CEnvironmentCreator::CreateSnakeLoops()
     mesh1->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_snakeloop_01");
     mesh1->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardTexture"));
     mesh1->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_snakeloop_diff"));
-    m_pSnake1->SetDrawable(mesh1);    
+    m_pSnake1->SetDrawable(mesh1);
 
     twActiveWorld->AddEntity(m_pSnake1);
 
@@ -353,23 +357,27 @@ void CEnvironmentCreator::CreateSnakeLoops()
 void CEnvironmentCreator::CreateFog()
 {
     const float size = 25.0f;
+    
+    for (size_t i = 0; i < FogCount; ++i)
+    {
+        auto fog = twActiveWorld->CreateEntity();
+        m_pBGPlane->m_Transform.AddChild(&fog->m_Transform);
+        fog->m_Transform.SetPosition(-50.0f, 0.0f, 50.0f);
+        fog->m_Transform.SetScale(size, 1.0f, size);
+        fog->m_Transform.SetRotationDegrees(270.0f, 0.0f, 0.0f);
 
-    auto fog1 = twActiveWorld->CreateEntity();
-    m_pBGPlane->m_Transform.AddChild(&fog1->m_Transform);
-    fog1->m_Transform.SetPosition(-50.0f, 0.0f, 50.0f);
-    fog1->m_Transform.SetScale(size, 1.0f, size);
-    fog1->m_Transform.SetRotationDegrees(270.0f, 0.0f, 0.0f);
+        auto fogMesh = twRenderer->CreateMeshDrawable();
+        fogMesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_plane");
+        fogMesh->m_RenderMode = triebWerk::CMeshDrawable::ERenderMode::Transparent;
+        fogMesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("Fog"));
+        fogMesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("t_fog_01"));
+        fogMesh->m_Material.m_pPixelShader.SetTexture(1, twResourceManager->GetTexture2D("t_noise"));
+        fog->SetDrawable(fogMesh);
 
-    auto fog1Mesh = twRenderer->CreateMeshDrawable();
-    fog1Mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
-    fog1Mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_plane");
-    fog1Mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("Fog"));
-    fog1Mesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("t_fog_01"));
-    fog1Mesh->m_Material.m_pPixelShader.SetTexture(1, twResourceManager->GetTexture2D("t_noise"));
-    fog1->SetDrawable(fog1Mesh);
-
-    twActiveWorld->AddEntity(fog1);
-    m_Fogs.Add(fog1Mesh);
+        twActiveWorld->AddEntity(fog);
+        m_Fogs.Add(fog);
+        m_ObjectUpdater.m_Fog.Add(fog);
+    }
 }
 
 void CEnvironmentCreator::CreateRoadBorder()
@@ -446,7 +454,7 @@ void CEnvironmentCreator::UpdateFog()
     size_t size = m_Fogs.GetSize();
     for (size_t i = 0; i < size; ++i)
     {
-        m_Fogs[i]->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &time);
+        ((triebWerk::CMeshDrawable*)(m_Fogs[i]->GetDrawable()))->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &time);
     }
 }
 

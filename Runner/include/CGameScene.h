@@ -3,6 +3,7 @@
 #include <CEnvironmentCreator.h>
 #include <CPatternManager.h>
 #include <CPlayer.h>
+#include <CInGameUI.h>
 
 class CGameScene : public triebWerk::IScene
 {
@@ -13,6 +14,7 @@ private:
     CDifficultyChanger m_DifficultyChanger;
     CEnvironmentCreator m_EnvironmentCreator;
     CPatternManager m_PatternManager;
+    CInGameUI m_IngameUI;
 	CPlayer* m_pPlayerScript;
     float m_LastPlayerPos;
 

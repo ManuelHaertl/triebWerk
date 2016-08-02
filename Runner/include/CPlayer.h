@@ -18,8 +18,6 @@ public:
     static float BoostSpeed;
     static float BoostCost;
 
-    static float ShieldCost;
-
     static float MaxRotation;
     static float RotationCameraFactor;
 
@@ -36,7 +34,6 @@ private:
 
     bool m_InFullControlMode;
     bool m_InBoostMode;
-    bool m_InShieldMode;
 
     triebWerk::CEntity* m_pTrail;
 	triebWerk::CEntity* m_pDangerHitbox;

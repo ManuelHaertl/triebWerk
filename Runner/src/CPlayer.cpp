@@ -11,7 +11,6 @@ CPlayer::CPlayer()
     : m_CurrentResource(MaxResource)
     , m_InFullControlMode(false)
     , m_InBoostMode(false)
-    , m_InShieldMode(false)
     , m_pTrailMesh(nullptr)
     , m_pMainCamera(nullptr)
     , m_IsDead(false)
@@ -77,7 +76,7 @@ void CPlayer::CollisionEnter(triebWerk::CCollisionEvent a_Collision)
     }
     else if (entity->m_Tag.HasTag("Death"))
     {
-        if (m_InShieldMode == false && GodMode == false)
+        if (!GodMode)
         {
             if (m_IsDead == false)
                 triebWerk::CDebugLogfile::Instance().LogfText(triebWerk::CDebugLogfile::ELogType::Text, false, entity->m_ID.GetDescribtion().c_str());
@@ -195,8 +194,6 @@ void CPlayer::CheckInput()
             twGamepad.IsState(triebWerk::EGamepadButton::RT, triebWerk::EButtonState::Pressed, 0) ||
             twGamepad.IsState(triebWerk::EGamepadButton::RB, triebWerk::EButtonState::Pressed, 0);
 
-        m_PlayerInput.m_Shield = twGamepad.IsState(triebWerk::EGamepadButton::A, triebWerk::EButtonState::Pressed, 0);
-
         float xValue = static_cast<float>(twGamepad.GetLeftAnalogX(0));
 
         float deadZone = static_cast<float>(triebWerk::CXboxController::DEADZONE_LEFT_ANALOG);
@@ -226,8 +223,6 @@ void CPlayer::CheckInput()
 
         m_PlayerInput.m_FullControl = twKeyboard.IsState(triebWerk::EKey::Q, triebWerk::EButtonState::Down);
         m_PlayerInput.m_Boost = twKeyboard.IsState(triebWerk::EKey::E, triebWerk::EButtonState::Down);
-        
-        m_PlayerInput.m_Shield = twKeyboard.IsState(triebWerk::EKey::S, triebWerk::EButtonState::Down);
 
         if (m_PlayerInput.m_Left)
             m_PlayerInput.m_MoveKeyDistance = -1.0f;
@@ -290,27 +285,6 @@ void CPlayer::CheckResource()
         gameInfo.m_FlyBoostSpeed = 0.0f;
     }
 
-    // Shield
-    if (m_PlayerInput.m_Shield)
-    {
-        gainResource = false;
-
-        if (m_CurrentResource > 0.0f)
-            shieldEffect = true;
-    }
-
-    if (shieldEffect)
-    {
-        m_CurrentResource -= ShieldCost * twTime->GetDeltaTime();
-        m_InShieldMode = true;
-        gameInfo.m_EffectShield = true;
-    }
-    else
-    {
-        m_InShieldMode = false;
-        gameInfo.m_EffectShield = false;
-    }
-
     // Resource
     if (gainResource)
     {
@@ -319,8 +293,6 @@ void CPlayer::CheckResource()
         if (m_CurrentResource > MaxResource)
             m_CurrentResource = MaxResource;
     }
-
-    //std::cout << "Resource: " << m_CurrentResource << std::endl;
 }
 
 void CPlayer::SetSpeed()
