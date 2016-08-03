@@ -193,7 +193,8 @@ void CPatternLoader::SetTile(const ETileType::Type a_Type, const triebWerk::CLay
 
 void CPatternLoader::InsertPatternTile(const SPatternTile& a_rPatternTile, CPattern* a_pPattern)
 {
-    for (int i = a_pPattern->m_Tiles.size() - 1; i >= 0; --i)
+    int i = static_cast<int>(a_pPattern->m_Tiles.size() - 1);
+    for (i; i >= 0; --i)
     {
         if (a_pPattern->m_Tiles[i].m_Y <= a_rPatternTile.m_Y)
         {

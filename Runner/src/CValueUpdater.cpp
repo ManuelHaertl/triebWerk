@@ -240,11 +240,11 @@ void CValueUpdater::UpdateValues()
         }
         else if (value.first == "po_Amount2")
         {
-            CPoints::Points[1] = std::stof(value.second);
+            CPoints::Points[1] = std::stoi(value.second);
         }
         else if (value.first == "po_Amount3")
         {
-            CPoints::Points[2] = std::stof(value.second);
+            CPoints::Points[2] = std::stoi(value.second);
         }
 
         // Difficulty Changer
@@ -310,15 +310,15 @@ void CValueUpdater::UpdateValues()
         }
         else if (value.first == "en_SnakeRotateSpeed1")
         {
-            CEnvironmentCreator::SnakeRotateSpeed1 = std::stoi(value.second);
+            CEnvironmentCreator::SnakeRotateSpeed1 = std::stof(value.second);
         }
         else if (value.first == "en_SnakeRotateSpeed2")
         {
-            CEnvironmentCreator::SnakeRotateSpeed2 = std::stoi(value.second);
+            CEnvironmentCreator::SnakeRotateSpeed2 = std::stof(value.second);
         }
         else if (value.first == "en_SnakeRotateSpeed3")
         {
-            CEnvironmentCreator::SnakeRotateSpeed3 = std::stoi(value.second);
+            CEnvironmentCreator::SnakeRotateSpeed3 = std::stof(value.second);
         }
 
         // Pattern Manager

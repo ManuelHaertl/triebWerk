@@ -168,6 +168,11 @@ FT_BBox triebWerk::CFont::GetTextureBBox()
         textureBBox.yMax = 0;
     }
 
+    for (size_t i = 0; i < LETTER_COUNT; ++i)
+    {
+        FT_Done_Glyph(glyphs[i]);
+    }
+
     return textureBBox;
 }
 

@@ -70,7 +70,7 @@ triebWerk::CFont* triebWerk::CFontManager::LoadFont(CFontFace* a_pFontFace, cons
             return font;
         }
     }
-
+    
     CFont* font = new CFont(m_pGraphics, m_DPIX, m_DPIY, a_pFontFace, a_PointSize);
     m_Fonts.push_back(font);
     return font;

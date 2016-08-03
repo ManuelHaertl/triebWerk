@@ -137,7 +137,7 @@ void CPatternManager::SetNextPattern()
         allPriorities += m_pCurrentPattern->m_Priorities[difficulty][i];
     }
 
-    size_t randomNumber = twRandom::GetNumber(0, allPriorities);
+    size_t randomNumber = static_cast<size_t>(twRandom::GetNumber(0, static_cast<int>(allPriorities)));
 
     for (size_t i = 0; i < m_pCurrentPattern->m_Priorities[difficulty].size(); ++i)
     {
@@ -156,12 +156,12 @@ void CPatternManager::SetNextPattern()
 
     // pick a random pattern based on the diffulty and priority
     size_t patternCount = m_pCurrentPattern->m_ConnectedPattern[difficulty][priority].size() - 1;
-    int randomPatternNumber = twRandom::GetNumber(0, patternCount);
+    int randomPatternNumber = twRandom::GetNumber(0, static_cast<int>(patternCount));
 
     m_pCurrentPattern = m_pCurrentPattern->m_ConnectedPattern[difficulty][priority][randomPatternNumber];
 
     auto color = triebWerk::CDebugLogfile::ELogType::Text;
-    int prio = CPattern::MaxPriorities + 1 - m_pCurrentPattern->m_Priority;
+    size_t prio = CPattern::MaxPriorities + 1 - m_pCurrentPattern->m_Priority;
     std::string log =
         "Name: " + m_pCurrentPattern->m_Name +
         " Difficulty: " + std::to_string(m_pCurrentPattern->m_Difficulty) +
@@ -191,7 +191,7 @@ void CPatternManager::DeleteEntities()
 void CPatternManager::SetRandomPattern(size_t a_Difficulty)
 {
     size_t max = m_Pattern[a_Difficulty].size();
-    int random = twRandom::GetNumber(0, max - 1);
+    int random = twRandom::GetNumber(0, static_cast<int>(max - 1));
 
     m_pCurrentPattern = m_Pattern[a_Difficulty][random];
 }

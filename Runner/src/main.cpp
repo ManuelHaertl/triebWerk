@@ -7,7 +7,7 @@
 
 int main()
 {
-    //_crtBreakAlloc = 268;
+    //_crtBreakAlloc = 179147;
 
     // Initialize the engine
     triebWerk::SEngineConfiguration config;
@@ -34,7 +34,7 @@ int main()
     twSceneManager->AddScene(new CGameScene(), "Game");
     twSceneManager->AddScene(new CMenuScene(), "Menu");
     twSceneManager->AddScene(new CDebugScene(), "Debug");
-
+    
     twSceneManager->SetActiveScene("Game");
     twSceneManager->SetActiveScene("Menu");
 
