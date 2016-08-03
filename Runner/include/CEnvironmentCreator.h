@@ -1,13 +1,19 @@
 #pragma once
 #include <list>
 #include <CEngine.h>
+#include <CObjectUpdater.h>
 
 class CEnvironmentCreator
 {
 public:
     static int FeatherSpawnProbability;
+    static float SnakeRotateSpeed1;
+    static float SnakeRotateSpeed2;
+    static float SnakeRotateSpeed3;
 
 private:
+    CObjectUpdater m_ObjectUpdater;
+
     const float SpawnDistance = 300.0f;
 
     // Road
@@ -43,9 +49,6 @@ private:
     triebWerk::CEntity* m_pBGPlane;
 
     // Snake Loop
-    const float SnakeRotateSpeed1 = -3.0f;
-    const float SnakeRotateSpeed2 = -2.0f;
-    const float SnakeRotateSpeed3 = -1.0f;
     DirectX::XMVECTOR m_SnakeRotation1;
     DirectX::XMVECTOR m_SnakeRotation2;
     DirectX::XMVECTOR m_SnakeRotation3;
@@ -56,7 +59,7 @@ private:
 	triebWerk::CEntity* m_pParticleSpawner;
 
     // Fog
-    triebWerk::CElementContainer<triebWerk::CMeshDrawable*> m_Fogs;
+    triebWerk::CElementContainer<triebWerk::CEntity*> m_Fogs;
 
 public:
     CEnvironmentCreator();

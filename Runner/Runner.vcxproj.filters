@@ -132,6 +132,15 @@
     <ClCompile Include="src\CRoadBorder.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="src\CObjectUpdater.cpp">
+      <Filter>Quelldateien\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CPauseMenu.cpp">
+      <Filter>Quelldateien\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CIngameUI.cpp">
+      <Filter>Quelldateien\Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\CGameScene.h">
@@ -220,6 +229,15 @@
     </ClInclude>
     <ClInclude Include="include\CRoadBorder.h">
       <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CObjectUpdater.h">
+      <Filter>Headerdateien\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CPauseMenu.h">
+      <Filter>Headerdateien\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CIngameUI.h">
+      <Filter>Headerdateien\Game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

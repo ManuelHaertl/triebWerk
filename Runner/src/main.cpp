@@ -35,6 +35,7 @@ int main()
     twSceneManager->AddScene(new CMenuScene(), "Menu");
     twSceneManager->AddScene(new CDebugScene(), "Debug");
 
+    twSceneManager->SetActiveScene("Game");
     twSceneManager->SetActiveScene("Menu");
 
     // main loop, update game & engine

@@ -12,7 +12,6 @@ public:
     static float FullControlEffectStrengthMin;
     static float FullControlEffectStrengthMax;
     static float BoostEffectStrength;
-	static float ShieldEffectStrength;
 
     static float GameStartTime;
     static float GameStartLDEffectStrength;

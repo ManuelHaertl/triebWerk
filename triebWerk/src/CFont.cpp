@@ -186,9 +186,7 @@ void triebWerk::CFont::DrawAllLetterInBuffer(int a_PenX, int a_PenY)
         if (error)
             continue;
 
-        std::cout << m_AllLetter[i];
         SLetterCoordinate& letterCoordinate = m_LetterCoordinates[i];
-        std::cout << " " << (glyph->metrics.horiBearingX >> 6) << std::endl;
         letterCoordinate.uBegin = (float)(a_PenX + (glyph->metrics.horiBearingX >> 6)) / fWidth;
         letterCoordinate.uEnd = (float)(a_PenX + (glyph->metrics.horiBearingX >> 6) + (glyph->metrics.width >> 6)) / fWidth;
         letterCoordinate.vBegin = 1.0f / fHeight;
