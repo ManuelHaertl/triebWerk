@@ -72,8 +72,6 @@ void triebWerk::CHLSLParser::CreatePixelShader(CGraphics* a_pGraphicHandle, CPix
 {
 	HRESULT hResult;
 
-	SetInputLayout(m_pPSByteCode, a_pGraphicHandle, a_pShaderOut);
-
 	SetBoundResources(m_pPSByteCode, a_pShaderOut);
 
 	a_pShaderOut->InitializeTextureBuffer();
@@ -89,8 +87,6 @@ void triebWerk::CHLSLParser::CreatePixelShader(CGraphics* a_pGraphicHandle, CPix
 void triebWerk::CHLSLParser::CreateGeometryShader(CGraphics * a_pGraphicHandle, CGeometryShader * a_pShaderOut)
 {
 	HRESULT hResult;
-
-	SetInputLayout(m_pGSByteCode, a_pGraphicHandle, a_pShaderOut);
 
 	SetBoundResources(m_pGSByteCode, a_pShaderOut);
 

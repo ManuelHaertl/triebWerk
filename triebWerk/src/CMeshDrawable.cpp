@@ -13,15 +13,11 @@ triebWerk::CMeshDrawable::CMeshDrawable() :
 
 triebWerk::CMeshDrawable::~CMeshDrawable()
 {
-	//if (m_D3DStates.m_pRasterizerState != nullptr)
-	//	m_D3DStates.m_pRasterizerState->Release();
-	//if (m_D3DStates.m_pBlendState != nullptr)
-	//	m_D3DStates.m_pBlendState->Release();
 }
 
 bool triebWerk::CMeshDrawable::IsDrawableValid()
 {
-	if (m_pMesh == nullptr || m_Material.m_ID.GetHash() == 0 || IsActive() == false )
+	if (m_pMesh == nullptr || m_Material.m_ID.GetHash() == 0 )
 		return false;
 	else
 		return true;

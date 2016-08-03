@@ -66,73 +66,71 @@ void triebWerk::CText::SetLineSpacing(const float a_LineSpacing)
 
 void triebWerk::CText::CreateLetterInfo()
 {
-    m_LetterCount = m_Text.size();
+	m_LetterCount = m_Text.size();
 
-    // delete the old letter buffer
-    if (m_pLetterInfo != nullptr)
-    {
-        delete[] m_pLetterInfo;
-        m_pLetterInfo = nullptr;
-    }
+	// delete the old letter buffer
+	if (m_pLetterInfo != nullptr)
+	{
+		delete[] m_pLetterInfo;
+		m_pLetterInfo = nullptr;
+	}
 
-    // check that there is at least 1 char
-    if (m_LetterCount == 0)
-        return;
+	// check that there is at least 1 char
+	if (m_LetterCount == 0)
+		return;
 
-    // create a new buffer
-    m_pLetterInfo = new SLetterInfo[m_LetterCount];
+	// create a new buffer
+	m_pLetterInfo = new SLetterInfo[m_LetterCount];
 
-    CalculateWidthAndHeight();
+	CalculateWidthAndHeight();
 
-    float currentWidth = 0.0f;
-    float currentHeight = 0.0f;
+	float currentWidth = 0.0f;
+	float currentHeight = 0.0f;
 
-    switch (m_TextAlign)
-    {
-    case ETextAlign::TopCenter:
-        currentWidth -= m_Width / 2.0f;
-        break;
-    case ETextAlign::TopRight:
-        currentWidth -= m_Width;
-        break;
-    case ETextAlign::MiddleLeft:
-        currentHeight += m_Height / 2.0f;
-        break;
-    case ETextAlign::MiddleCenter:
-        currentWidth -= m_Width / 2.0f;
-        currentHeight += m_Height / 2.0f;
-        break;
-    case ETextAlign::MiddleRight:
-        currentWidth -= m_Width;
-        currentHeight += m_Height / 2.0f;
-        break;
-    case ETextAlign::BottomLeft:
-        currentHeight += m_Height;
-        break;
-    case ETextAlign::BottomCenter:
-        currentWidth -= m_Width / 2.0f;
-        currentHeight += m_Height;
-        break;
-    case ETextAlign::BottomRight:
-        currentWidth -= m_Width;
-        currentHeight += m_Height;
-        break;
-    }
+	switch (m_TextAlign)
+	{
+	case ETextAlign::TopCenter:
+		currentWidth -= m_Width / 2.0f;
+		break;
+	case ETextAlign::TopRight:
+		currentWidth -= m_Width;
+		break;
+	case ETextAlign::MiddleLeft:
+		currentHeight += m_Height / 2.0f;
+		break;
+	case ETextAlign::MiddleCenter:
+		currentWidth -= m_Width / 2.0f;
+		currentHeight += m_Height / 2.0f;
+		break;
+	case ETextAlign::MiddleRight:
+		currentWidth -= m_Width;
+		currentHeight += m_Height / 2.0f;
+		break;
+	case ETextAlign::BottomLeft:
+		currentHeight += m_Height;
+		break;
+	case ETextAlign::BottomCenter:
+		currentWidth -= m_Width / 2.0f;
+		currentHeight += m_Height;
+		break;
+	case ETextAlign::BottomRight:
+		currentWidth -= m_Width;
+		currentHeight += m_Height;
+		break;
+	}
 
-    for (size_t i = 0; i < m_LetterCount; ++i)
-    {
-        SLetterCoordinate letter = m_pFont->m_LetterCoordinates[m_Text[i]];
+	for (size_t i = 0; i < m_LetterCount; ++i)
+	{
+		SLetterCoordinate letter = m_pFont->m_LetterCoordinates[m_Text[i]];
 
-        m_pLetterInfo[i].letterCoordinate = letter;
-        m_pLetterInfo[i].offsetX = currentWidth;
-        m_pLetterInfo[i].offsetY = currentHeight;
+		m_pLetterInfo[i].letterCoordinate = letter;
+		m_pLetterInfo[i].offsetX = currentWidth;
+		m_pLetterInfo[i].offsetY = currentHeight;
 
-        currentWidth += m_pFont->m_LetterCoordinates[m_Text[i]].width / 2;
-        if (i + 1 < m_LetterCount)
-            currentWidth += m_pFont->m_LetterCoordinates[m_Text[i + 1]].width / 2;
-    }
-
-    int bla = 5;
+		currentWidth += m_pFont->m_LetterCoordinates[m_Text[i]].width / 2;
+		if (i + 1 < m_LetterCount)
+			currentWidth += m_pFont->m_LetterCoordinates[m_Text[i + 1]].width / 2;
+	}
 }
 
 void triebWerk::CText::CalculateWidthAndHeight()

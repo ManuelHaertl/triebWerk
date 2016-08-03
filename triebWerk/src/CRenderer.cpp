@@ -76,8 +76,8 @@ void triebWerk::CRenderer::Shutdown()
 
 void triebWerk::CRenderer::AddRenderCommand(IDrawable* a_pRenderCommand)
 {
-	//Check if drawable could be drawen if not stop function
-	if (a_pRenderCommand->IsDrawableValid() == false)
+	//Check the command and discard it if it shouldnt be drawn
+	if (a_pRenderCommand == nullptr || a_pRenderCommand->IsDrawableValid() == false || a_pRenderCommand->IsActive() == false)
 		return;
 
 	int renderSlot = a_pRenderCommand->GetRenderTargetSlot();
@@ -435,7 +435,6 @@ void triebWerk::CRenderer::DrawMesh(const CMeshDrawable * a_pDrawable)
 	{
 		UINT offset = 0;
 		pDeviceContext->IASetVertexBuffers(0, 1, &a_pDrawable->m_pMesh->m_pVertexBuffer, &a_pDrawable->m_Stride, &offset);
-		pDeviceContext->IASetIndexBuffer(a_pDrawable->m_pMesh->m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
 		pDeviceContext->IASetPrimitiveTopology(a_pDrawable->m_Topology);
 		pDeviceContext->DrawIndexed(static_cast<UINT>(a_pDrawable->m_pMesh->m_IndexCount), 0, 0);
@@ -535,7 +534,7 @@ void triebWerk::CRenderer::RenderInstancedMeshBatch(size_t a_Index)
 	pMeshBatch->SetBuffers();
 
 	//Draw Buffer
-	pDeviceContext->DrawIndexedInstanced(static_cast<UINT>(pMeshBatch->m_Identifier.m_pMeshDeterminer->m_IndexCount), static_cast<UINT>(pMeshBatch->m_InstanceCount), 0, 0, 0);
+	pDeviceContext->DrawInstanced(static_cast<UINT>(pMeshBatch->m_Identifier.m_pMeshDeterminer->m_IndexCount), static_cast<UINT>(pMeshBatch->m_InstanceCount), 0, 0);
 
 	//Reset the MeshBatch
 	pMeshBatch->Reset();

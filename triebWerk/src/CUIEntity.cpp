@@ -69,3 +69,13 @@ void triebWerk::CUIEntity::SetInWorldState(const bool a_State)
 {
     m_IsInWorld = a_State;
 }
+
+void * triebWerk::CUIEntity::operator new(size_t a_Size)
+{
+	return _aligned_malloc(a_Size, 16);
+}
+
+void triebWerk::CUIEntity::operator delete(void * a_pObject)
+{
+	_aligned_free(a_pObject);
+}
