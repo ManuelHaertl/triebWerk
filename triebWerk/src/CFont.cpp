@@ -136,7 +136,8 @@ FT_BBox triebWerk::CFont::GetTextureBBox()
 
     /* for each glyph image, compute its bounding box, */
     /* translate it, and grow the string bbox          */
-    for (n = 0; n < num_glyphs; n++)
+    int numGlyphs = static_cast<int>(num_glyphs);
+    for (n = 0; n < numGlyphs; n++)
     {
         FT_Glyph_Get_CBox(glyphs[n], ft_glyph_bbox_pixels,
             &glyph_bbox);
