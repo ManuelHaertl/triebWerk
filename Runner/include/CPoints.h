@@ -23,7 +23,7 @@ private:
     triebWerk::CEntity* m_pSphere;
 	triebWerk::CEntity* m_pGodray;
 	
-	triebWerk::CConstantBuffer* m_pSphereBuffer;
+	triebWerk::CMaterial* m_pSphereMaterial;
 
 
 public:

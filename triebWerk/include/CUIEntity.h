@@ -6,7 +6,7 @@
 
 namespace triebWerk
 {
-    class CUIEntity
+	class CUIEntity
     {
     public:
         CUITransform m_Transform;

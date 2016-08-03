@@ -29,7 +29,6 @@ namespace triebWerk
 	public:
 		CMesh::SVertex* m_pVertices;
 		ID3D11Buffer* m_pVertexBuffer;
-		ID3D11Buffer* m_pIndexBuffer;
 		size_t m_VertexCount;
 		size_t m_IndexCount;
 

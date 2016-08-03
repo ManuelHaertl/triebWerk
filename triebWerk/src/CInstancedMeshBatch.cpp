@@ -129,7 +129,6 @@ void triebWerk::CInstancedMeshBatch::SetBuffers()
 	bufferPointers[1] = m_pInstanceBuffer;
 
 	pDeviceContext->IASetVertexBuffers(0, 2, bufferPointers, strides, offsets);
-	pDeviceContext->IASetIndexBuffer(m_Identifier.m_pMeshDeterminer->m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 }
 
 void triebWerk::CInstancedMeshBatch::AddDrawable(CMeshDrawable * a_pDrawable)

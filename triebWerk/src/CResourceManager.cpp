@@ -350,7 +350,6 @@ void triebWerk::CResourceManager::LoadOBJ(const SFile& a_File)
 
 	mesh->m_IndexCount = objParser.m_IndexCount;
 	mesh->m_pVertexBuffer = m_pGraphicsHandle->CreateVertexBuffer(mesh->m_pVertices, mesh->m_VertexCount);
-	mesh->m_pIndexBuffer = m_pGraphicsHandle->CreateIndexBuffer(objParser.m_pIndices, sizeof(unsigned int) * objParser.m_IndexCount);
 
 	m_MeshBuffer.insert(CMeshPair(hash, mesh));
 }
@@ -811,11 +810,9 @@ void triebWerk::CResourceManager::UpdateResourceChanges()
 					if (objParser.LoadOBJ(fileToLoad.FilePath.c_str()))
 					{
 						//Release the old Mesh
-						meshIn->m_pIndexBuffer->Release();
 						meshIn->m_pVertexBuffer->Release();
 						delete meshIn->m_pVertices;
 						meshIn->m_pVertices = nullptr;
-						meshIn->m_pIndexBuffer = nullptr;
 						meshIn->m_pVertexBuffer = nullptr;
 
 						//Create the new Mesh
@@ -825,7 +822,6 @@ void triebWerk::CResourceManager::UpdateResourceChanges()
 						memcpy(meshIn->m_pVertices, objParser.m_pVertices, sizeof(CMesh::SVertex) * objParser.m_VertexCount);
 
 						meshIn->m_pVertexBuffer = m_pGraphicsHandle->CreateVertexBuffer(meshIn->m_pVertices, meshIn->m_VertexCount);
-						meshIn->m_pIndexBuffer = m_pGraphicsHandle->CreateIndexBuffer(objParser.m_pIndices, sizeof(unsigned int) * objParser.m_IndexCount);
 					}
 				}
 			}
