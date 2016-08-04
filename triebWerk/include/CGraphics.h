@@ -44,6 +44,7 @@ namespace triebWerk
 		ID3D11RasterizerState* m_pDefaultRasterizerState;
 
 		ID3D11DepthStencilState* m_pDepthStencilState;
+		ID3D11DepthStencilState* m_pDepthStencilStateTransparency;
 
 		ID3D11BlendState* m_pBlendState;
 
@@ -90,6 +91,9 @@ namespace triebWerk
 		ID3D11Device* GetDevice();
 		ID3D11DeviceContext* GetDeviceContext();
 		ID3D11DepthStencilView* GetDepthStencilView();
+
+		ID3D11DepthStencilState* GetDepthStencilStateOpaque();
+		ID3D11DepthStencilState* GetDepthStencilStateTransparency();
 
 		//Get the amount of videomemory from the system
 		unsigned int GetVideoCardMemory();

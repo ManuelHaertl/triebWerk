@@ -24,7 +24,7 @@ void triebWerk::CRenderer::Initialize(CGraphics * a_pGraphicsHandle, unsigned in
 	m_pRenderTargetList = new CRenderTarget[m_MaxRenderTargetCount];
 	m_pPostEffectBuffer = new CPostEffectDrawable*[m_MaxPostEffects];
 
-	for (size_t i = 0; i < m_MaxRenderTargetCount; i++)
+	for (unsigned int i = 0; i < m_MaxRenderTargetCount; i++)
 	{
 		m_pRenderTargetList[i].Initialize(a_pGraphicsHandle, a_ScreenWidth, a_ScreenHeight, i, true);
 	}
@@ -173,7 +173,7 @@ void triebWerk::CRenderer::DrawScene()
 {
 	m_pCurrentCamera->Update();
 
-	for (size_t i = 0; i < m_MaxRenderTargetCount; i++)
+	for (unsigned int i = 0; i < m_MaxRenderTargetCount; i++)
 	{
 		if (m_pRenderTargetList[i].m_pPostEffect != nullptr) // Should this rendertarget be drawn
 		{
@@ -250,6 +250,9 @@ void triebWerk::CRenderer::RenderMeshDrawables()
 	//Sort transparent object from far to near
 	SortTransparentObjects();
 
+	//Set opaque depth state
+	m_pGraphicsHandle->GetDeviceContext()->OMSetDepthStencilState(m_pGraphicsHandle->GetDepthStencilStateOpaque(), 1);
+
 	for (size_t i = 0; i < m_pRenderTargetList[m_ActiveRenderTargetSlot].m_RenderBatch.m_InstancedMeshBatchCount; i++)
 	{
 		//if(m_pInstancedMeshBuffer[i].m_InstanceCount > 10)
@@ -262,11 +265,17 @@ void triebWerk::CRenderer::RenderMeshDrawables()
 		RenderMesh(m_pRenderTargetList[m_ActiveRenderTargetSlot].m_RenderBatch.m_pOpaqueMeshBuffer[i]);
 	}
 
+	//Set transparency depth state
+	m_pGraphicsHandle->GetDeviceContext()->OMSetDepthStencilState(m_pGraphicsHandle->GetDepthStencilStateTransparency(), 1);
+
 	//Second draw now the sorted transparent objects
 	for (size_t i = 0; i < m_pRenderTargetList[m_ActiveRenderTargetSlot].m_RenderBatch.m_TransparentMeshCounter; i++)
 	{
 		RenderMesh(m_pRenderTargetList[m_ActiveRenderTargetSlot].m_RenderBatch.m_pTransparentMeshBuffer[i]);
 	}
+
+	//Set opaque depth state
+	m_pGraphicsHandle->GetDeviceContext()->OMSetDepthStencilState(m_pGraphicsHandle->GetDepthStencilStateOpaque(), 1);
 }
 
 void triebWerk::CRenderer::RenderFontDrawables()
@@ -428,7 +437,7 @@ void triebWerk::CRenderer::DrawMesh(const CMeshDrawable * a_pDrawable)
 		pDeviceContext->IASetVertexBuffers(0, 1, &a_pDrawable->m_pMesh->m_pVertexBuffer, &a_pDrawable->m_Stride, &offset);
 
 		pDeviceContext->IASetPrimitiveTopology(a_pDrawable->m_Topology);
-		pDeviceContext->Draw(a_pDrawable->m_pMesh->m_VertexCount, 0);
+		pDeviceContext->Draw((UINT)a_pDrawable->m_pMesh->m_VertexCount, 0);
 	}break;
 
 	case CMeshDrawable::EDrawType::DrawIndexed:
