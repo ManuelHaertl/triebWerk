@@ -18,6 +18,10 @@ private:
 	CPlayer* m_pPlayerScript;
     float m_LastPlayerPos;
 
+	//Audio
+	std::vector<triebWerk::CSound*> m_Music;
+	int m_LastAudioIndex;
+
 public:
     CGameScene();
     ~CGameScene();
@@ -30,4 +34,5 @@ public:
 private:
     void CreatePlayer();
     void CreatePostEffects();
+	void PlayRandomSong();
 };

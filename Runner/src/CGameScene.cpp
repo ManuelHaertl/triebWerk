@@ -3,11 +3,10 @@
 #include <CGameInfo.h>
 #include <CPostEffects.h>
 
-bool loud = false;
-
 CGameScene::CGameScene()
     : m_pPlayerScript(nullptr)
     , m_LastPlayerPos(0.0f)
+	, m_LastAudioIndex(-1)
 {
 }
 
@@ -19,10 +18,10 @@ void CGameScene::Start()
 {
     twDebug->Disable();
 
-	twAudio->PlayBGM(twResourceManager->GetSound("Vermair - Rendez Vous"), true, true);
-	twAudio->m_pDevice->setSoundVolume(static_cast<float>(loud));
     CreatePlayer();
     CreatePostEffects();
+
+	twResourceManager->GetAll("data\\Audio\\BGM\\game", &m_Music);
 
     m_DifficultyChanger.Start();
     m_EnvironmentCreator.Start();
@@ -33,6 +32,12 @@ void CGameScene::Start()
 void CGameScene::Update()
 {
     m_DifficultyChanger.Update();
+
+	if (twInput->m_Gamepad.IsState(triebWerk::EGamepadButton::Y, triebWerk::EButtonState::Down, 0))
+	{
+		twAudio->PlayBGM(twResourceManager->GetSound("og"), true, true);
+		//twAudio->PlayBGM(twResourceManager->GetSound("fahrstuhl"));
+	}
 
     if (m_pPlayerScript->HasDied())
     {
@@ -76,6 +81,8 @@ void CGameScene::Resume()
     m_PatternManager.Reset();
     m_EnvironmentCreator.Reset();
     CGameInfo::Instance().Reset();
+
+	PlayRandomSong();
 }
 
 void CGameScene::CreatePlayer()
@@ -123,4 +130,21 @@ void CGameScene::CreatePostEffects()
     auto entity = twActiveWorld->CreateEntity();
     entity->SetBehaviour(new CPostEffects());
     twActiveWorld->AddEntity(entity);
+}
+
+void CGameScene::PlayRandomSong()
+{
+	if (m_Music.size() == 0)
+		return;
+
+	std::vector<int>musicIndices;
+	for (size_t i = 0; i < m_Music.size(); i++)
+	{
+		if(i != m_LastAudioIndex)
+			musicIndices.push_back(i);
+	}
+
+	int index = twRandom::GetNumber(0, musicIndices.size() - 1);
+	twAudio->PlayBGM(m_Music[musicIndices[index]], true, false);
+	m_LastAudioIndex = musicIndices[index];
 }

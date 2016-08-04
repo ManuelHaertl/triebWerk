@@ -46,6 +46,11 @@ private:
 
     float m_MetersFlewn;
     float m_LastZ;
+	float m_LastX;
+
+	DirectX::XMVECTOR m_FloorEffectLastPosition;
+	float m_FloorEffectCounterRight;
+	float m_FloorEffectCounterLeft;
 
 public:
     CPlayer();

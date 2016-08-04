@@ -414,7 +414,9 @@ void CEnvironmentCreator::CreateRoadBorder()
 	borderMesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("TransparentScrolling"));
 	borderMesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_border_emissve_grid"));
 	borderMesh->m_Material.m_pPixelShader.SetTexture(1, twResourceManager->GetTexture2D("T_grid_cutout_circle"));
-	borderMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &DirectX::XMFLOAT2(-1.0f, 0.0f));
+	float defaultValue = 0.0f;
+	borderMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &defaultValue);
+	borderMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(6, &defaultValue);
 	m_pRoadBorder->SetDrawable(borderMesh);
 
 	m_pRoadBorder->SetBehaviour(new CRoadBorder());

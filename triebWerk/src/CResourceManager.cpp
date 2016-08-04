@@ -362,9 +362,6 @@ void triebWerk::CResourceManager::LoadAudio(const SFile& a_File)
 
 	CSound* sound = new CSound;
 	
-
-
-
 	sound->m_pSoundSource = this->m_pSoundEngineHandle->m_pDevice->addSoundSourceFromFile(a_File.FilePath.c_str());
 	if (sound->m_pSoundSource == nullptr)
 	{

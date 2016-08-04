@@ -27,6 +27,7 @@ void CPlayer::Start()
 {
     m_pMainCamera = twEngine.m_pRenderer->GetCurrentActiveCamera();
     m_LastZ = m_pEntity->m_Transform.GetPosition().m128_f32[2];
+	m_LastX = m_pEntity->m_Transform.GetPosition().m128_f32[0];
 
     CreateTrail();
 	CreateFloorEffect();
@@ -99,6 +100,7 @@ void CPlayer::Reset()
     m_IsDead = false;
     m_MetersFlewn = 0.0f;
     m_LastZ = 0.0f;
+	m_LastX = 0.0f;
 
     m_pEntity->m_Transform.SetPosition(0.0f, 1.0f, 0.0f);
     CGameInfo::Instance().m_PlayerPosition = 0.0f;
@@ -150,7 +152,10 @@ void CPlayer::CreateFloorEffect()
 	mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
 	mesh->m_RenderMode = triebWerk::CMeshDrawable::ERenderMode::Transparent;
 	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
-	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &DirectX::XMFLOAT2(0.0f, -1.0f));
+	float defaultValue = 0;
+	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &defaultValue);
+	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(6, &defaultValue);
+
 	m_pFloorEffectMaterial = &mesh->m_Material;
 	entity->SetDrawable(mesh);
 
@@ -374,8 +379,32 @@ void CPlayer::UpdateTrail()
 
 void CPlayer::UpdateFloorEffect()
 {
-	float time = twTime->GetTimeSinceStartup();
+	float currentX = m_pEntity->m_Transform.GetPosition().m128_f32[0];
+	float distance = currentX - m_LastX;
+	m_LastX = currentX;
+
+	float time = twTime->GetTimeSinceStartup() * -1.0f;
 	m_pFloorEffectMaterial->m_ConstantBuffer.SetValueInBuffer(6, &time);
+
+	if (distance == 0)
+	{
+		return;
+	}
+
+	float o = 20;
+
+	if (distance < 0)
+	{
+		m_FloorEffectCounterLeft += distance / o;
+		m_FloorEffectCounterRight = 0;
+		m_pFloorEffectMaterial->m_ConstantBuffer.SetValueInBuffer(5, &m_FloorEffectCounterLeft);
+	}
+	else if (distance > 0)
+	{
+		m_FloorEffectCounterLeft = 0;
+		m_FloorEffectCounterRight += distance / o;
+		m_pFloorEffectMaterial->m_ConstantBuffer.SetValueInBuffer(5, &m_FloorEffectCounterRight);
+	}
 }
 
 void CPlayer::SetCamera()

@@ -215,6 +215,12 @@ void CMainMenu::Start()
 
     m_pTextQuit->SetDrawable(quitTextDrawable);
     twActiveUIWorld->AddUIEntity(m_pTextQuit);
+
+	// Audio
+
+	m_pBackgroundMusic = twResourceManager->GetSound("A_BGM_nightland");
+
+	twAudio->PlayBGM(m_pBackgroundMusic, true, true);
 }
 
 void CMainMenu::Update(const SUIInput& a_rInput)
@@ -290,6 +296,8 @@ void CMainMenu::Resume()
 {
     float value = 0.0f;
     ((triebWerk::CUIDrawable*)(m_pBackground->GetDrawable()))->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &value);
+
+	twAudio->PlayBGM(m_pBackgroundMusic, true, true);
 }
 
 void CMainMenu::UpdateGraphics()

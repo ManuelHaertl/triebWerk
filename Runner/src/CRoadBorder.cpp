@@ -26,12 +26,13 @@ void CRoadBorder::Start()
 	borderMesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_border_emissve_grid"));
 	borderMesh->m_Material.m_pPixelShader.SetTexture(1, twResourceManager->GetTexture2D("T_grid_cutout_circle"));
 	borderMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &m_Color);
-	borderMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &DirectX::XMFLOAT2(1.0f, 0.0f));
+	float defaultValue = 0;
+	borderMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &defaultValue);
+	borderMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(6, &defaultValue);
 	m_pMaterialRight = &borderMesh->m_Material;
 	m_pRightBorder->SetDrawable(borderMesh);
 
 	twActiveWorld->AddEntity(m_pRightBorder);
-
 
 	m_pMaterialLeft = &reinterpret_cast<triebWerk::CMeshDrawable*>(m_pEntity->GetDrawable())->m_Material;
 
@@ -66,8 +67,9 @@ void CRoadBorder::Update()
 	}
 
 	float time = twTime->GetTimeSinceStartup();
-	m_pMaterialRight->m_ConstantBuffer.SetValueInBuffer(6, &time);
-	m_pMaterialLeft->m_ConstantBuffer.SetValueInBuffer(6, &time);
+	float time2 = time * -1;
+	m_pMaterialRight->m_ConstantBuffer.SetValueInBuffer(5, &time);
+	m_pMaterialLeft->m_ConstantBuffer.SetValueInBuffer(5, &time2);
 }
 
 void CRoadBorder::End()
