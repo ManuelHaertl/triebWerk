@@ -334,6 +334,7 @@ void CBackground::UpdateMultiplier()
 		}
 
 		m_ToMultiLerpIndex = (int)m_Multiplier + 9;
+		std::cout << m_ToMultiLerpIndex << std::endl;
 		m_IsMultiLerping = true;
 	}
 

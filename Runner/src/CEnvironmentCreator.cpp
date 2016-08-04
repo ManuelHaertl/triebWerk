@@ -48,6 +48,7 @@ void CEnvironmentCreator::Start()
 	CreateRoadBorder();
 	CreateParticleSpawner();
     CreateFog();
+	CreateBlackGround();
 
     m_ObjectUpdater.Start(m_pSnake1, m_pSnake2, m_pSnake3);
 }
@@ -246,12 +247,13 @@ void CEnvironmentCreator::CreateGrid()
     for (size_t i = 0; i < m_GridCount; ++i)
     {
         auto entity = twActiveWorld->CreateEntity();
-        entity->m_Transform.SetPosition(0.0f, -5.0f, position);
+        entity->m_Transform.SetPosition(0.0f, -10.0f, position);
         entity->m_Transform.SetScale(50.0f, 1.0f, 50.0f);
 
         triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
         mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_grid");
         mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
+		mesh->m_RenderMode = triebWerk::CMeshDrawable::ERenderMode::Transparent;
         mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("WireframeGrid"));
         mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(1.0f, 0.0f, 1.0f));
         mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
@@ -262,6 +264,23 @@ void CEnvironmentCreator::CreateGrid()
 
         position += GridLength;
     }
+}
+
+void CEnvironmentCreator::CreateBlackGround()
+{
+	m_pBlackGround = twActiveWorld->CreateEntity();
+	m_pBGPlane->m_Transform.AddChild(&m_pBlackGround->m_Transform);
+	m_pBlackGround->m_Transform.SetPosition(0.0f, -20.0f, 0.0f);
+	m_pBlackGround->m_Transform.SetScale(1800.0f, 1800.0f, 1800.0f);
+	
+	
+	auto planeMesh = twRenderer->CreateMeshDrawable();
+	planeMesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_plane");
+	planeMesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardColor"));
+	planeMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+	m_pBlackGround->SetDrawable(planeMesh);
+	
+	twActiveWorld->AddEntity(m_pBlackGround);
 }
 
 void CEnvironmentCreator::CreateBackground()
@@ -380,17 +399,20 @@ void CEnvironmentCreator::CreateRoadBorder()
 {
 	m_pRoadBorder = twActiveWorld->CreateEntity();
 	m_pBGPlane->m_Transform.AddChild(&m_pRoadBorder->m_Transform);
-	m_pRoadBorder->m_Transform.SetPosition(-24.9f, 5.0f, 2.0f);
+	m_pRoadBorder->m_Transform.SetPosition(-24.9f, 5.0f, 0.0f);
 	m_pRoadBorder->m_Transform.SetRotationDegrees(90.0f, 00.0f, -90.0f);
-	m_pRoadBorder->m_Transform.SetScale(20.0f, 20.0f, 20.0f);
+	m_pRoadBorder->m_Transform.SetScale(10.0f, 10.0f, 10.0f);
 
 	auto borderMesh = twRenderer->CreateMeshDrawable();
 	borderMesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
 	borderMesh->m_RenderMode = triebWerk::CMeshDrawable::ERenderMode::Transparent;
 	borderMesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_plane");
-	borderMesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("Background1Texture"));
-	borderMesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_floor_emissve_grid"));
-
+	borderMesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("TransparentScrolling"));
+	borderMesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_border_emissve_grid"));
+	borderMesh->m_Material.m_pPixelShader.SetTexture(1, twResourceManager->GetTexture2D("T_grid_cutout_circle"));
+	float defaultValue = 0.0f;
+	borderMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &defaultValue);
+	borderMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(6, &defaultValue);
 	m_pRoadBorder->SetDrawable(borderMesh);
 
 	m_pRoadBorder->SetBehaviour(new CRoadBorder());

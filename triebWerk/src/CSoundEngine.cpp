@@ -41,7 +41,7 @@ bool triebWerk::CSoundEngine::Initialize(CResourceManager* a_pResourceManager, c
 
 void triebWerk::CSoundEngine::UpdateSoundVolumes()
 {
-	m_pResourceManagerHandle->UpdateDefaultSoundVolumes(m_SFXVolume, m_BGMVolume);
+	//m_pResourceManagerHandle->UpdateDefaultSoundVolumes(m_SFXVolume, m_BGMVolume);
 }
 
 void triebWerk::CSoundEngine::PlayBGM(CSound * a_pBGM, bool a_OverrideSameBGM, bool a_ShouldLoop)
@@ -52,7 +52,7 @@ void triebWerk::CSoundEngine::PlayBGM(CSound * a_pBGM, bool a_OverrideSameBGM, b
 		DebugLogfile.LogfText(CDebugLogfile::ELogType::Warning, false, "Warning: Tried to play a nullptr music resource!");
 		return;
 	}
-	else
+	else if(m_CurrentBackgroundMusic == nullptr)
 	{
 		this->m_CurrentBackgroundMusic = this->m_pDevice->play2D(a_pBGM->m_pSoundSource, a_ShouldLoop, false, true);
 	}

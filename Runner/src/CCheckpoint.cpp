@@ -46,6 +46,7 @@ void CCheckpoint::Start()
 
 	triebWerk::CMeshDrawable* pMeshDrawableButtom = twRenderer->CreateMeshDrawable();
 	pMeshDrawableButtom->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
+	pMeshDrawableButtom->m_RenderMode = triebWerk::CMeshDrawable::ERenderMode::Transparent;
 	pMeshDrawableButtom->m_pMesh = twResourceManager->GetMesh("ms_checkpoint_plane3");
 	pMeshDrawableButtom->m_Material.SetMaterial(twResourceManager->GetMaterial("Wireframe"));
 	pMeshDrawableButtom->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &lineColor);
@@ -60,11 +61,13 @@ void CCheckpoint::Start()
 
 	triebWerk::CMeshDrawable* pMeshDrawableMiddle = twRenderer->CreateMeshDrawable();
 	pMeshDrawableMiddle->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
+	pMeshDrawableMiddle->m_RenderMode = triebWerk::CMeshDrawable::ERenderMode::Transparent;
 	pMeshDrawableMiddle->m_pMesh = twResourceManager->GetMesh("ms_checkpoint_plane2");
 	pMeshDrawableMiddle->m_Material.SetMaterial(twResourceManager->GetMaterial("Wireframe"));
 	pMeshDrawableMiddle->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &lineColor);
 	pMeshDrawableMiddle->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &faceColor);
 	m_pCheckpointPlaneMiddle->SetDrawable(pMeshDrawableMiddle);
+
 
 	twActiveWorld->AddEntity(m_pCheckpointPlaneMiddle);
 	
@@ -74,6 +77,7 @@ void CCheckpoint::Start()
 
 	triebWerk::CMeshDrawable* pMeshDrawableTop = twRenderer->CreateMeshDrawable();
 	pMeshDrawableTop->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
+	pMeshDrawableTop->m_RenderMode = triebWerk::CMeshDrawable::ERenderMode::Transparent;
 	pMeshDrawableTop->m_pMesh = twResourceManager->GetMesh("ms_checkpoint_plane1");
 	pMeshDrawableTop->m_Material.SetMaterial(twResourceManager->GetMaterial("Wireframe"));
 	pMeshDrawableTop->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &lineColor);
@@ -104,7 +108,7 @@ void CCheckpoint::Start()
 void CCheckpoint::Update()
 {
 	DirectX::XMVECTOR leftPos = m_pEntity->m_Transform.GetPosition();
-	leftPos.m128_f32[1] = (std::sin(twTime->GetTimeSinceStartup() * 15)* 0.5f + 0.8f);
+	leftPos.m128_f32[1] = (std::sin(twTime->GetTimeSinceStartup()* 2.5f) + 2.0f);
 	m_pEntity->m_Transform.SetPosition(leftPos);
 	m_pEntity->m_Transform.RotateDegrees(0.0f, 190 * twTime->GetDeltaTime(), 0.0f);
 

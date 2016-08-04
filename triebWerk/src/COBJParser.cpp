@@ -368,7 +368,7 @@ void triebWerk::COBJParser::AddVertex(const char* a_pText)
 
 bool triebWerk::COBJParser::BeginLineWith(const char* a_pLine, const char * a_pStart)
 {
-	int wordLength = strlen(a_pStart);
+	int wordLength = (int)strlen(a_pStart);
 	int charCounter = 0;
 	char wordBuffer[32] = { 0 };
 	const char* ptr = a_pLine;
@@ -472,7 +472,7 @@ void triebWerk::COBJParser::GetCoordinatesFromLine(const char * a_pLine, DirectX
 				}
 				else
 				{
-					float number = *ptr - '0';
+					float number = (float)*ptr - '0';
 					//shift the number to the correct decimal place
 					decimalPlaceMultiplier *= 10.0f;
 					val += number / decimalPlaceMultiplier;

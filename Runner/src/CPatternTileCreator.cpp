@@ -189,6 +189,7 @@ void CPatternTileCreator::CreateCheckpoint()
     auto mesh = twRenderer->CreateMeshDrawable();
     mesh->m_pMesh = m_pCheckPoint;
     mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
+	mesh->m_RenderMode = triebWerk::CMeshDrawable::ERenderMode::Transparent;
 	mesh->m_D3DStates.m_pRasterizerState = twGraphic->GetDefaultCullNoneRasterizerState();
     mesh->m_Material.SetMaterial(m_pMaterialWireframe);
     mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(0.0f, 1.0f, 1.0f));
@@ -199,6 +200,12 @@ void CPatternTileCreator::CreateCheckpoint()
     auto physicEntity = twActivePhysic->CreatePhysicEntity();
     auto collider = twActivePhysic->CreateAABBCollider();
     collider->CreateFromVertices(mesh->m_pMesh->m_pVertices, mesh->m_pMesh->m_VertexCount);
+	auto t = collider->GetMax();
+	auto e = collider->GetMin();
+	t.m128_f32[1] = 5.0f;
+	e.m128_f32[1] = -5.0f;
+	collider->SetMax(t);
+	collider->SetMin(e);
     collider->m_CheckCollision = false;
     physicEntity->AddCollider(collider);
     entity->SetPhysicEntity(physicEntity);
@@ -876,7 +883,7 @@ void CPatternTileCreator::CreateMoving05x05()
 	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &textureValueNone);
 	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(6, &textureValueNone);
 	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(7, &LineColor);
-	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(8, &FaceColor);
+	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(8, &FaceEmissiveColor);
 	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(9, &startBuild);
 	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(10, &rand);
 	mesh->m_Material.m_pPixelShader.SetTexture(0, m_pTextureObstacle[texture][0]);
@@ -911,6 +918,7 @@ void CPatternTileCreator::CreateMoving05x10(const bool a_Rotated)
 {
     const size_t texture = twRandom::GetNumber(0, MaxObstacleTextures - 1);
     float textureValueFull = 1.0f, textureValueNone = 0.0f;
+
 
 	//Building effect 
 	float distanceToPlayer = (m_PatternSpawnBegin + m_Tile.m_Y) - CGameInfo::Instance().m_PlayerPositionZ;
@@ -970,7 +978,7 @@ void CPatternTileCreator::CreateMoving05x10(const bool a_Rotated)
 	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &textureValueNone);
 	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(6, &textureValueNone);
 	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(7, &LineColor);
-	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(8, &FaceColor);
+	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(8, &FaceEmissiveColor);
 	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(9, &startBuild);
 	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(10, &rand);
 	mesh->m_Material.m_pPixelShader.SetTexture(0, m_pTextureObstacle[texture][0]);

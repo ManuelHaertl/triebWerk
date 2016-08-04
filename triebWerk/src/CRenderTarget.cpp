@@ -7,9 +7,9 @@ triebWerk::CRenderTarget::CRenderTarget() :
 	m_pPostEffect(nullptr),
 	m_Slot(0)
 {
-	m_ClearColor[0] = 1.0f;
-	m_ClearColor[1] = 0.4f;
-	m_ClearColor[2] = 0.7f;
+	m_ClearColor[0] = 0.0f;
+	m_ClearColor[1] = 0.0f;
+	m_ClearColor[2] = 0.0f;
 	m_ClearColor[3] = 1.0f;
 }
 

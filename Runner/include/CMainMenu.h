@@ -38,6 +38,10 @@ private:
     triebWerk::CMaterial* m_pMaterialStandardUI;
     triebWerk::CMaterial* m_pMaterialStandardFont;
 
+	// Sounds ----------------------------------------------------
+
+	triebWerk::CSound* m_pBackgroundMusic;
+
     // Font -------------------------------------------------------
 
     triebWerk::CFont* m_pFontButton;

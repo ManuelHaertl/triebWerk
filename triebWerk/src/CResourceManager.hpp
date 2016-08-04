@@ -29,6 +29,20 @@ T* typeVar;
 				}
 			}
 		}break;
+		case triebWerk::EFileType::OGG:
+		case triebWerk::EFileType::MP3:
+		case triebWerk::EFileType::WAV:
+		{
+			CSound* sound = GetSound(files[i].FileName.c_str());
+
+			if (sound != nullptr)
+			{
+				if (std::is_same<decltype(sound), decltype(typeVar)>::value)
+				{
+					a_pOutData->push_back((T*)sound);
+				}
+			}
+		}break;
 		case triebWerk::EFileType::OBJ:
 		{
 			CMesh* mesh = GetMesh(files[i].FileName.c_str());
@@ -40,10 +54,6 @@ T* typeVar;
 					a_pOutData->push_back((T*)mesh);
 				}
 			}
-		}break;
-		case triebWerk::EFileType::MP3:
-		{
-			//a_pOutData->push_back(GetMesh(files[i].FileName));
 		}break;
 		case triebWerk::EFileType::TMX:
 		{

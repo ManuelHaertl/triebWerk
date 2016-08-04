@@ -215,11 +215,11 @@ bool triebWerk::CWindow::IsWindowFullscreen()
 
 void triebWerk::CWindow::UpdateWindow()
 {
-    bool newMessage = false;
+    BOOL newMessage = FALSE;
     do
     {
         MSG msg = { 0 };
-        newMessage = (bool)PeekMessage(&msg, NULL, 0, 0, PM_REMOVE);
+        newMessage = PeekMessage(&msg, NULL, 0, 0, PM_REMOVE);
         if (newMessage)
         {
             TranslateMessage(&msg);
@@ -227,7 +227,7 @@ void triebWerk::CWindow::UpdateWindow()
 
             DispatchMessage(&msg);
         }
-    }while (newMessage == true);
+    }while (newMessage == TRUE);
 }
 
 void triebWerk::CWindow::GetDPIFromDisplay(unsigned int* a_OutDPIX, unsigned int* a_OutDPIY)

@@ -197,6 +197,28 @@ bool triebWerk::CGraphics::CreateDepthBuffer(const unsigned int a_ScreenWidth, c
 	if (FAILED(result))
 		return false;
 
+	D3D11_DEPTH_STENCIL_DESC depthStencilTransperentDesc;
+	// Initialize the description of the stencil state.
+	ZeroMemory(&depthStencilTransperentDesc, sizeof(D3D11_DEPTH_STENCIL_DESC));
+	depthStencilTransperentDesc.DepthEnable = true;
+	depthStencilTransperentDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+	depthStencilTransperentDesc.DepthFunc = D3D11_COMPARISON_LESS;
+	depthStencilTransperentDesc.StencilEnable = true;
+	depthStencilTransperentDesc.StencilReadMask = 0xFF;
+	depthStencilTransperentDesc.StencilWriteMask = 0xFF;
+	depthStencilTransperentDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	depthStencilTransperentDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
+	depthStencilTransperentDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	depthStencilTransperentDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+	depthStencilTransperentDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	depthStencilTransperentDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
+	depthStencilTransperentDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	depthStencilTransperentDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+	result = m_pDevice->CreateDepthStencilState(&depthStencilTransperentDesc, &m_pDepthStencilStateTransparency);
+	if (FAILED(result))
+		return false;
+
 	m_pDeviceContext->OMSetDepthStencilState(m_pDepthStencilState, 1);
 
 	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
@@ -321,6 +343,8 @@ bool triebWerk::CGraphics::CreateDefaultSamplerStates()
 	result = m_pDevice->CreateSamplerState(&samplerStateDesc, &m_pSamplerState);
 	if (FAILED(result))
 		return false;
+	else
+		return true;
 }
 
 void triebWerk::CGraphics::SetViewport(const unsigned int a_ScreenWidth, const unsigned int a_ScreenHeight)
@@ -352,6 +376,7 @@ void triebWerk::CGraphics::Shutdown()
 	SafeDirectXRelease(&m_pDepthStencilState);
 	SafeDirectXRelease(&m_pBlendState);
 	SafeDirectXRelease(&m_pSamplerState);
+	SafeDirectXRelease(&m_pDepthStencilStateTransparency);
 }	
 
 void triebWerk::CGraphics::SetBackBufferRenderTarget()
@@ -412,6 +437,16 @@ ID3D11DeviceContext * triebWerk::CGraphics::GetDeviceContext()
 ID3D11DepthStencilView * triebWerk::CGraphics::GetDepthStencilView()
 {
 	return m_pDepthStencilView;
+}
+
+ID3D11DepthStencilState * triebWerk::CGraphics::GetDepthStencilStateOpaque()
+{
+	return m_pDepthStencilState;
+}
+
+ID3D11DepthStencilState * triebWerk::CGraphics::GetDepthStencilStateTransparency()
+{
+	return m_pDepthStencilStateTransparency;
 }
 
 unsigned int triebWerk::CGraphics::GetVideoCardMemory()
@@ -924,5 +959,5 @@ int triebWerk::CGraphics::SizeOfFormatElement(DXGI_FORMAT a_Format)
 
 void triebWerk::CGraphics::RemapTextureBuffer(const void * a_pData, const size_t a_DataSize, ID3D11Texture2D * a_pTextureToRemap) const
 {
-    m_pDeviceContext->UpdateSubresource(a_pTextureToRemap, 0, nullptr, a_pData, a_DataSize, 0);
+    m_pDeviceContext->UpdateSubresource(a_pTextureToRemap, 0, nullptr, a_pData, (UINT)a_DataSize, 0);
 }

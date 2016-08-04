@@ -27,6 +27,7 @@ void CPlayer::Start()
 {
     m_pMainCamera = twEngine.m_pRenderer->GetCurrentActiveCamera();
     m_LastZ = m_pEntity->m_Transform.GetPosition().m128_f32[2];
+	m_LastX = m_pEntity->m_Transform.GetPosition().m128_f32[0];
 
     CreateTrail();
 	CreateFloorEffect();
@@ -49,6 +50,7 @@ void CPlayer::Update()
 
     CalculateDistanceFlewn();
     UpdateTrail();
+	UpdateFloorEffect();
 }
 
 void CPlayer::LateUpdate()
@@ -107,6 +109,7 @@ void CPlayer::Reset()
     m_IsDead = false;
     m_MetersFlewn = 0.0f;
     m_LastZ = 0.0f;
+	m_LastX = 0.0f;
 
     m_pEntity->m_Transform.SetPosition(0.0f, 1.0f, 0.0f);
     CGameInfo::Instance().m_PlayerPositionZ = 0.0f;
@@ -152,11 +155,17 @@ void CPlayer::CreateFloorEffect()
 
 	triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
 	mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_plane");
-	mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("Background1Texture"));
+	mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("TransparentScrolling"));
 	mesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_floor_emissve_grid"));
+	mesh->m_Material.m_pPixelShader.SetTexture(1, twResourceManager->GetTexture2D("T_grid_cutout_circle"));
 	mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
 	mesh->m_RenderMode = triebWerk::CMeshDrawable::ERenderMode::Transparent;
 	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
+	float defaultValue = 0;
+	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &defaultValue);
+	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(6, &defaultValue);
+
+	m_pFloorEffectMaterial = &mesh->m_Material;
 	entity->SetDrawable(mesh);
 
 	twActiveWorld->AddEntity(entity);
@@ -375,6 +384,36 @@ void CPlayer::UpdateTrail()
     float curvature = m_PlayerInput.m_MoveKeyDistance;
     m_pTrailMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &dt);
     m_pTrailMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &curvature);
+}
+
+void CPlayer::UpdateFloorEffect()
+{
+	float currentX = m_pEntity->m_Transform.GetPosition().m128_f32[0];
+	float distance = currentX - m_LastX;
+	m_LastX = currentX;
+
+	float time = twTime->GetTimeSinceStartup() * -1.0f;
+	m_pFloorEffectMaterial->m_ConstantBuffer.SetValueInBuffer(6, &time);
+
+	if (distance == 0)
+	{
+		return;
+	}
+
+	float o = 20;
+
+	if (distance < 0)
+	{
+		m_FloorEffectCounterLeft += distance / o;
+		m_FloorEffectCounterRight = 0;
+		m_pFloorEffectMaterial->m_ConstantBuffer.SetValueInBuffer(5, &m_FloorEffectCounterLeft);
+	}
+	else if (distance > 0)
+	{
+		m_FloorEffectCounterLeft = 0;
+		m_FloorEffectCounterRight += distance / o;
+		m_pFloorEffectMaterial->m_ConstantBuffer.SetValueInBuffer(5, &m_FloorEffectCounterRight);
+	}
 }
 
 void CPlayer::SetCamera()

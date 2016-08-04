@@ -130,6 +130,7 @@ bool triebWerk::CEngine::Run()
         m_pDebug->Update();
         m_pWindow->UpdateWindow();
         m_pSceneManager->Update(true, physicUpdate);
+		m_pSoundEngine->Update();
     }
     else if (physicUpdate)
     {

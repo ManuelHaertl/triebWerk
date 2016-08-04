@@ -58,6 +58,7 @@ private:
     triebWerk::CEntity* m_pSnake3;
 	triebWerk::CEntity* m_pRoadBorder;
 	triebWerk::CEntity* m_pParticleSpawner;
+	triebWerk::CEntity* m_pBlackGround;
 
     // Fog
     triebWerk::CElementContainer<triebWerk::CEntity*> m_Fogs;
@@ -79,6 +80,7 @@ private:
     void CreateRoad();
     void CreateCollisionSideWalls();
     void CreateGrid();
+	void CreateBlackGround();
     void CreateBackground();
     void CreateSnakeLoops();
     void CreateFog();

@@ -17,12 +17,11 @@ void triebWerk::CSceneHolder::Initialize(CRenderer* a_pRenderer, const float a_P
     m_World.Initialize(a_pRenderer, a_PhysicTimeStamp);
     m_pScene->Start();
     m_IsInitialized = true;
+	m_HasBeenActive = true;
 }
 
 void triebWerk::CSceneHolder::Update(const bool a_FrameUpdate, const bool a_PhysicUpdate)
 {
-    m_HasBeenActive = true;
-
     if (a_FrameUpdate)
         m_pScene->Update();
 

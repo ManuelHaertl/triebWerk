@@ -39,12 +39,18 @@ private:
 	triebWerk::CEntity* m_pDangerHitbox;
     triebWerk::CMeshDrawable* m_pTrailMesh;
     triebWerk::CCamera* m_pMainCamera;
+	triebWerk::CMaterial* m_pFloorEffectMaterial;
     SPlayerInput m_PlayerInput;
 
     bool m_IsDead;
 
     float m_MetersFlewn;
     float m_LastZ;
+	float m_LastX;
+
+	DirectX::XMVECTOR m_FloorEffectLastPosition;
+	float m_FloorEffectCounterRight;
+	float m_FloorEffectCounterLeft;
 
 public:
     CPlayer();
@@ -71,6 +77,7 @@ private:
     void SetSpeed();
     void CalculateDistanceFlewn();
     void UpdateTrail();
+	void UpdateFloorEffect();
     void SetCamera();
     void SetRotation();
     void CheckSideWall(triebWerk::CCollisionEvent a_Collision);
