@@ -1,4 +1,6 @@
 #pragma once
+#include <EMenus.h>
+
 class CGameInfo
 {
 public:
@@ -13,8 +15,8 @@ public:
     float m_Multiplier;
 
     // Player Information
-    float m_PlayerPosition;
 	float m_PlayerPositionX;
+    float m_PlayerPositionZ;
 
     // Effect Information
     bool m_EffectCheckpointCollected;
@@ -26,6 +28,8 @@ public:
 
     // UI Information
     bool m_IsGamePaused;
+    bool m_ChangeMenu;
+    EMenus m_Menu;
 
 private:
     CGameInfo();

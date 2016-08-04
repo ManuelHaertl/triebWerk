@@ -141,6 +141,15 @@
     <ClCompile Include="src\CIngameUI.cpp">
       <Filter>Quelldateien\Game</Filter>
     </ClCompile>
+    <ClCompile Include="src\CManualMenu.cpp">
+      <Filter>Quelldateien\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CCreditsMenu.cpp">
+      <Filter>Quelldateien\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="src\COptionsMenu.cpp">
+      <Filter>Quelldateien\Menu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\CGameScene.h">
@@ -238,6 +247,18 @@
     </ClInclude>
     <ClInclude Include="include\CIngameUI.h">
       <Filter>Headerdateien\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CManualMenu.h">
+      <Filter>Headerdateien\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EMenus.h">
+      <Filter>Headerdateien\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CCreditsMenu.h">
+      <Filter>Headerdateien\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="include\COptionsMenu.h">
+      <Filter>Headerdateien\Menu</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

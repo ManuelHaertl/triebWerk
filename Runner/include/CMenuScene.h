@@ -8,7 +8,8 @@ class CMenuScene : public triebWerk::IScene
 private:
     CMenuBackgroundScene m_MenuBackgroundScene;
     SUIInput m_UIInput;
-    IMenu* m_pCurrentMenu;
+    IMenu* m_pMainMenu;
+    IMenu* m_pSecondMenu;
 
 public:
     CMenuScene();
@@ -22,5 +23,6 @@ public:
 private:
     void CheckInput();
     void SetCurrentMenu(IMenu* a_pMenu);
+    void RemoveSecondMenu();
     void CreatePostEffects();
 };

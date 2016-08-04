@@ -2,6 +2,8 @@
 
 float triebWerk::CUITransform::ResolutionWidth = 800.0f;
 float triebWerk::CUITransform::ResolutionHeight = 600.0f;
+float triebWerk::CUITransform::ReferenceWidth = 800.0f;
+float triebWerk::CUITransform::ReferenceHeight = 600.0f;
 float triebWerk::CUITransform::ReferenceScale = 1.0f;
 
 triebWerk::CUITransform::CUITransform()
@@ -48,8 +50,8 @@ DirectX::XMMATRIX& triebWerk::CUITransform::GetTransformation()
 {
     if (m_Modified)
     {
-        float x = (ResolutionWidth / 2.0f * m_AnchorPoint.x) + (m_PositionOffset.m128_f32[0] * ReferenceScale);
-        float y = (ResolutionHeight / 2.0f * m_AnchorPoint.y) + (m_PositionOffset.m128_f32[1] * ReferenceScale);
+        float x = ((ReferenceWidth / 2.0f * m_AnchorPoint.x) + m_PositionOffset.m128_f32[0]) * ReferenceScale;
+        float y = ((ReferenceHeight / 2.0f * m_AnchorPoint.y) + m_PositionOffset.m128_f32[1]) * ReferenceScale;
 
         DirectX::XMVECTOR realPosition = DirectX::XMVectorSet(x, y, m_PositionOffset.m128_f32[2], 0.0f);
         DirectX::XMVECTOR realScale = DirectX::XMVectorScale(m_Scale, ReferenceScale);

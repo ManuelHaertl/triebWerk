@@ -9,6 +9,8 @@ namespace triebWerk
     public:
         static float ResolutionWidth;
         static float ResolutionHeight;
+        static float ReferenceWidth;
+        static float ReferenceHeight;
         static float ReferenceScale;
 
     private:

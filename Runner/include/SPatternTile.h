@@ -9,7 +9,10 @@ struct SPatternTile
         Up = 1,
         Down = 2,
         Left = 3,
-        Right = 4
+        Right = 4,
+        Air = 5,
+        To = 6,
+        Back = 7
     };
 
     ETileType::Type m_Type;

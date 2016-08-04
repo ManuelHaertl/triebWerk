@@ -4,10 +4,17 @@
 #include <CPostEffects.h>
 
 CMainMenu::CMainMenu()
-    : m_SelectedButton(0)
+    : m_UpdateGraphics(false)
+    , m_IsOnMainButtons(true)
+    , m_IsOnExtrasButtons(false)
+    , m_SelectedButton(0)
+    , m_SelectedExtrasButton(0)
     , m_HoldValue(0)
     , m_GoingIntoGame(false)
     , m_CurrentTime(0.0f)
+    , m_LerpToExtras(false)
+    , m_LerpFromExtras(false)
+    , m_CurrentLerpTime(0.0f)
 {
 }
 
@@ -215,6 +222,68 @@ void CMainMenu::Start()
 
     m_pTextQuit->SetDrawable(quitTextDrawable);
     twActiveUIWorld->AddUIEntity(m_pTextQuit);
+
+    // Button Manual ----------------------------------------
+
+    m_pButtonManual = twActiveUIWorld->CreateUIEntity();
+    m_pButtonManual->m_Transform.SetAnchorPoint(0.35f, -0.8f);
+    m_pButtonManual->m_Transform.SetPositionOffset(0.0f, 0.0f, 0.7f);
+
+    auto buttonManualDrawable = twRenderer->CreateUIDrawable();
+    buttonManualDrawable->m_Material.SetMaterial(m_pMaterialStandardUI);
+    buttonManualDrawable->m_Material.m_pPixelShader.SetTexture(0, m_pTextureRegularButton[0]);
+
+    m_pButtonManual->SetDrawable(buttonManualDrawable);
+
+    twActiveUIWorld->AddUIEntity(m_pButtonManual);
+
+    // Font Manual -------------------------------------------
+
+    m_pTextManual = twActiveUIWorld->CreateUIEntity();
+    m_pTextManual->m_Transform.SetAnchorPoint(0.35f, -0.8f);
+    m_pTextManual->m_Transform.SetPositionOffset(10.0f, -15.0f, 0.6f);
+
+    auto manualText = twFontManager->CreateText();
+    manualText->Set(m_pFontButton, "Manual", 1.0f);
+
+    auto manualTextDrawable = twRenderer->CreateFontDrawable();
+    manualTextDrawable->m_Material.SetMaterial(m_pMaterialStandardFont);
+    manualTextDrawable->m_pText = manualText;
+    manualTextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(0.5f, 1.0f, 1.0f));
+
+    m_pTextManual->SetDrawable(manualTextDrawable);
+    twActiveUIWorld->AddUIEntity(m_pTextManual);
+
+    // Button Credits ----------------------------------------
+
+    m_pButtonCredits = twActiveUIWorld->CreateUIEntity();
+    m_pButtonCredits->m_Transform.SetAnchorPoint(0.35f, -0.8f);
+    m_pButtonCredits->m_Transform.SetPositionOffset(0.0f, 0.0f, 0.9f);
+
+    auto buttonCreditsDrawable = twRenderer->CreateUIDrawable();
+    buttonCreditsDrawable->m_Material.SetMaterial(m_pMaterialStandardUI);
+    buttonCreditsDrawable->m_Material.m_pPixelShader.SetTexture(0, m_pTextureRegularButton[0]);
+
+    m_pButtonCredits->SetDrawable(buttonCreditsDrawable);
+
+    twActiveUIWorld->AddUIEntity(m_pButtonCredits);
+
+    // Font Credits -------------------------------------------
+
+    m_pTextCredits = twActiveUIWorld->CreateUIEntity();
+    m_pTextCredits->m_Transform.SetAnchorPoint(0.35f, -0.8f);
+    m_pTextCredits->m_Transform.SetPositionOffset(10.0f, -15.0f, 0.8f);
+
+    auto creditsText = twFontManager->CreateText();
+    creditsText->Set(m_pFontButton, "Credits", 1.0f);
+
+    auto creditsTextDrawable = twRenderer->CreateFontDrawable();
+    creditsTextDrawable->m_Material.SetMaterial(m_pMaterialStandardFont);
+    creditsTextDrawable->m_pText = creditsText;
+    creditsTextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(0.5f, 1.0f, 1.0f));
+
+    m_pTextCredits->SetDrawable(creditsTextDrawable);
+    twActiveUIWorld->AddUIEntity(m_pTextCredits);
 }
 
 void CMainMenu::Update(const SUIInput& a_rInput)
@@ -237,48 +306,13 @@ void CMainMenu::Update(const SUIInput& a_rInput)
         return;
     }
 
-    bool updateGraphics = true;
+    else if (m_LerpToExtras) LerpToExtras();
+    else if (m_LerpFromExtras) LerpFromExtras();
 
-    a_rInput.m_ButtonHold ? m_HoldValue = 1 : m_HoldValue = 0;
+    if (CGameInfo::Instance().m_Menu == EMenus::Main)
+        CheckInput(a_rInput);
 
-    if (a_rInput.m_Right)
-    {
-        m_SelectedButton++;
-        if (m_SelectedButton == ButtonCount)
-            m_SelectedButton = 0;
-
-        updateGraphics = true;
-    }
-    else if (a_rInput.m_Left)
-    {
-        m_SelectedButton--;
-        if (m_SelectedButton < 0)
-            m_SelectedButton = ButtonCount - 1;
-
-        updateGraphics = true;
-    }
-
-    if (a_rInput.m_Select)
-    {
-        switch (m_SelectedButton)
-        {
-        case 0:
-            CGameInfo::Instance().m_EffectGoingIntoGame = true;
-            m_GoingIntoGame = true;
-            break;
-        case 1:
-            break;
-        case 2:
-            break;
-        case 3:
-            break;
-        case 4:
-            twEngine.Stop();
-            break;
-        }
-    }
-
-    if (updateGraphics) UpdateGraphics();
+    UpdateGraphics();
 }
 
 void CMainMenu::End()
@@ -292,25 +326,192 @@ void CMainMenu::Resume()
     ((triebWerk::CUIDrawable*)(m_pBackground->GetDrawable()))->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &value);
 }
 
+void CMainMenu::CheckInput(const SUIInput& a_rInput)
+{
+    m_UpdateGraphics = true;
+
+    a_rInput.m_ButtonHold ? m_HoldValue = 1 : m_HoldValue = 0;
+
+    // Main buttons
+    if (m_IsOnMainButtons)
+    {
+        if (a_rInput.m_Right)
+        {
+            m_SelectedButton++;
+            if (m_SelectedButton == ButtonCount)
+                m_SelectedButton = 0;
+
+            m_UpdateGraphics = true;
+        }
+        else if (a_rInput.m_Left)
+        {
+            m_SelectedButton--;
+            if (m_SelectedButton < 0)
+                m_SelectedButton = ButtonCount - 1;
+
+            m_UpdateGraphics = true;
+        }
+
+        if (a_rInput.m_Select)
+        {
+            switch (m_SelectedButton)
+            {
+            case 0:
+                CGameInfo::Instance().m_EffectGoingIntoGame = true;
+                m_GoingIntoGame = true;
+                break;
+            case 1:
+                CGameInfo::Instance().m_Menu = EMenus::Highscore;
+                CGameInfo::Instance().m_ChangeMenu = true;
+                break;
+            case 2:
+                CGameInfo::Instance().m_Menu = EMenus::Options;
+                CGameInfo::Instance().m_ChangeMenu = true;
+                break;
+            case 3:
+                OpenExtras();
+                break;
+            case 4:
+                twEngine.Stop();
+                break;
+            }
+        }
+
+        else if (a_rInput.m_Up && m_SelectedButton == 3)
+            OpenExtras();
+    }
+
+    // extra buttons
+    else if (m_IsOnExtrasButtons)
+    {
+        if (a_rInput.m_Select)
+        {
+            switch (m_SelectedExtrasButton)
+            {
+            case 0:
+                CGameInfo::Instance().m_Menu = EMenus::Manual;
+                CGameInfo::Instance().m_ChangeMenu = true;
+                CloseExtras();
+                break;
+            case 1:
+                CGameInfo::Instance().m_Menu = EMenus::Credits;
+                CGameInfo::Instance().m_ChangeMenu = true;
+                CloseExtras();
+                break;
+            }
+        }
+        else if (a_rInput.m_Back)
+        {
+            CloseExtras();
+        }
+
+        if (a_rInput.m_Up)
+            m_SelectedExtrasButton = 1;
+        else if (a_rInput.m_Down)
+        {
+            m_SelectedExtrasButton--;
+            if (m_SelectedExtrasButton < 0)
+                CloseExtras();
+        }
+    }
+}
+
 void CMainMenu::UpdateGraphics()
 {
-    (m_SelectedButton == 0) ?
-        ((triebWerk::CUIDrawable*)m_pButtonStart->GetDrawable())->m_Material.m_pPixelShader.SetTexture(0, m_pTextureUnderlinedButton[1 + m_HoldValue]) :
-        ((triebWerk::CUIDrawable*)m_pButtonStart->GetDrawable())->m_Material.m_pPixelShader.SetTexture(0, m_pTextureUnderlinedButton[0]);
+    if (!m_UpdateGraphics)
+        return;
 
-    (m_SelectedButton == 1) ?
-        ((triebWerk::CUIDrawable*)m_pButtonHighscore->GetDrawable())->m_Material.m_pPixelShader.SetTexture(0, m_pTextureUnderlinedButton[1 + m_HoldValue]) :
-        ((triebWerk::CUIDrawable*)m_pButtonHighscore->GetDrawable())->m_Material.m_pPixelShader.SetTexture(0, m_pTextureUnderlinedButton[0]);
+    // Main buttons
+    size_t index[5] = { 0,0,0,0,0 };
+    if (m_IsOnMainButtons)
+    {
+        index[m_SelectedButton]++;
+        index[m_SelectedButton] += m_HoldValue;
+    }
 
-    (m_SelectedButton == 2) ?
-        ((triebWerk::CUIDrawable*)m_pButtonOptions->GetDrawable())->m_Material.m_pPixelShader.SetTexture(0, m_pTextureUnderlinedButton[1 + m_HoldValue]) :
-        ((triebWerk::CUIDrawable*)m_pButtonOptions->GetDrawable())->m_Material.m_pPixelShader.SetTexture(0, m_pTextureUnderlinedButton[0]);
+    ((triebWerk::CUIDrawable*)m_pButtonStart->GetDrawable())->m_Material.m_pPixelShader.SetTexture(0, m_pTextureUnderlinedButton[index[0]]);
+    ((triebWerk::CUIDrawable*)m_pButtonHighscore->GetDrawable())->m_Material.m_pPixelShader.SetTexture(0, m_pTextureUnderlinedButton[index[1]]);
+    ((triebWerk::CUIDrawable*)m_pButtonOptions->GetDrawable())->m_Material.m_pPixelShader.SetTexture(0, m_pTextureUnderlinedButton[index[2]]);
+    ((triebWerk::CUIDrawable*)m_pButtonExtras->GetDrawable())->m_Material.m_pPixelShader.SetTexture(0, m_pTextureUnderlinedButton[index[3]]);
+    ((triebWerk::CUIDrawable*)m_pButtonQuit->GetDrawable())->m_Material.m_pPixelShader.SetTexture(0, m_pTextureUnderlinedButton[index[4]]);
 
-    (m_SelectedButton == 3) ?
-        ((triebWerk::CUIDrawable*)m_pButtonExtras->GetDrawable())->m_Material.m_pPixelShader.SetTexture(0, m_pTextureUnderlinedButton[1 + m_HoldValue]) :
-        ((triebWerk::CUIDrawable*)m_pButtonExtras->GetDrawable())->m_Material.m_pPixelShader.SetTexture(0, m_pTextureUnderlinedButton[0]);
+    // Extra buttons
+    size_t extraIndex[2] = { 0,0 };
+    if (m_IsOnExtrasButtons)
+    {
+        index[m_SelectedExtrasButton]++;
+        index[m_SelectedExtrasButton] += m_HoldValue;
+    }
 
-    (m_SelectedButton == 4) ?
-        ((triebWerk::CUIDrawable*)m_pButtonQuit->GetDrawable())->m_Material.m_pPixelShader.SetTexture(0, m_pTextureUnderlinedButton[1 + m_HoldValue]) :
-        ((triebWerk::CUIDrawable*)m_pButtonQuit->GetDrawable())->m_Material.m_pPixelShader.SetTexture(0, m_pTextureUnderlinedButton[0]);
+    ((triebWerk::CUIDrawable*)m_pButtonManual->GetDrawable())->m_Material.m_pPixelShader.SetTexture(0, m_pTextureRegularButton[index[0]]);
+    ((triebWerk::CUIDrawable*)m_pButtonCredits->GetDrawable())->m_Material.m_pPixelShader.SetTexture(0, m_pTextureRegularButton[index[1]]);
+}
+
+void CMainMenu::OpenExtras()
+{
+    m_LerpToExtras = true;
+    m_LerpFromExtras = false;
+
+    m_CurrentLerpTime = 0.0f;
+    m_SelectedExtrasButton = 0;
+
+    m_IsOnMainButtons = false;
+    m_IsOnExtrasButtons = true;
+}
+
+void CMainMenu::CloseExtras()
+{
+    m_LerpFromExtras = true;
+    m_LerpToExtras = false;
+
+    m_CurrentLerpTime = 0.0f;
+
+    m_IsOnMainButtons = true;
+    m_IsOnExtrasButtons = false;
+}
+
+void CMainMenu::LerpToExtras()
+{
+    const float StartPos = -0.8F;
+    const float ManualEndPos = -0.53f;
+    const float CreditsEndPos = -0.29f;
+
+    m_CurrentLerpTime += twTime->GetDeltaTime();
+
+    if (m_CurrentLerpTime >= LerpTime)
+    {
+        m_CurrentLerpTime = LerpTime;
+        m_LerpToExtras = false;
+    }
+
+    float manualPos = StartPos + ((m_CurrentLerpTime / LerpTime) * (StartPos - ManualEndPos)) * -1;
+    float creditsPos = StartPos + ((m_CurrentLerpTime / LerpTime) * (StartPos - CreditsEndPos)) * -1;
+
+    m_pButtonManual->m_Transform.SetAnchorPoint(0.35f, manualPos);
+    m_pTextManual->m_Transform.SetAnchorPoint(0.35f, manualPos);
+    m_pButtonCredits->m_Transform.SetAnchorPoint(0.35f, creditsPos);
+    m_pTextCredits->m_Transform.SetAnchorPoint(0.35f, creditsPos);
+}
+
+void CMainMenu::LerpFromExtras()
+{
+    const float ManualStartPos = -0.53f;
+    const float CreditsStartPos = -0.29f;
+    const float EndPos = -0.8F;
+
+    m_CurrentLerpTime += twTime->GetDeltaTime();
+
+    if (m_CurrentLerpTime >= LerpTime)
+    {
+        m_CurrentLerpTime = LerpTime;
+        m_LerpFromExtras = false;
+    }
+
+    float manualPos = ManualStartPos + ((m_CurrentLerpTime / LerpTime) * (EndPos - ManualStartPos));
+    float creditsPos = CreditsStartPos + ((m_CurrentLerpTime / LerpTime) * (EndPos - CreditsStartPos));
+
+    m_pButtonManual->m_Transform.SetAnchorPoint(0.35f, manualPos);
+    m_pTextManual->m_Transform.SetAnchorPoint(0.35f, manualPos);
+    m_pButtonCredits->m_Transform.SetAnchorPoint(0.35f, creditsPos);
+    m_pTextCredits->m_Transform.SetAnchorPoint(0.35f, creditsPos);
 }

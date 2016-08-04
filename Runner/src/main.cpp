@@ -34,7 +34,7 @@ int main()
     twSceneManager->AddScene(new CGameScene(), "Game");
     twSceneManager->AddScene(new CMenuScene(), "Menu");
     twSceneManager->AddScene(new CDebugScene(), "Debug");
-    
+
     twSceneManager->SetActiveScene("Game");
     twSceneManager->SetActiveScene("Menu");
 

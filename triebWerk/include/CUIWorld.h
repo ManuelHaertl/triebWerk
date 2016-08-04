@@ -38,6 +38,7 @@ namespace triebWerk
         void Initialize(CRenderer* a_pRenderer);
         void Update();
         void Shutdown();
+        void RemoveDeleteEntities();
 
         void SetScreenResolution(const int m_Width, const int m_Height);
         void SetReferenceResolution(const float m_Width, const float m_Height, const EScreenMatchState m_MatchState);

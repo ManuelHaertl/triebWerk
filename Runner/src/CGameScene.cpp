@@ -42,11 +42,6 @@ void CGameScene::Update()
         CGameInfo::Instance().Reset();
     }
 
-	if (twGamepad.IsState(triebWerk::EGamepadButton::Back, triebWerk::EButtonState::Down, 0))
-	{
-        twSceneManager->SetActiveScene("Menu");
-	}
-
     if (twKeyboard.IsState(triebWerk::EKey::F3, triebWerk::EButtonState::Down))
     {
         if (!twDebug->IsInDebug())

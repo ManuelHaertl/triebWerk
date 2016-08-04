@@ -40,7 +40,7 @@ void CMovingObstacle::Update()
     else
     {
         // check when the player is in range to move the object
-        float dist = m_pEntity->m_Transform.GetPosition().m128_f32[2] - CGameInfo::Instance().m_PlayerPosition;
+        float dist = m_pEntity->m_Transform.GetPosition().m128_f32[2] - CGameInfo::Instance().m_PlayerPositionZ;
         if (dist < Distance)
             m_IsMoving = true;
     }

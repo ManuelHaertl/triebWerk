@@ -150,6 +150,12 @@ void CPatternLoader::SetTile(const ETileType::Type a_Type, const triebWerk::CLay
                 patternTile.m_Moving = SPatternTile::EMovingDirection::Left;
             else if (prop.second == "Right")
                 patternTile.m_Moving = SPatternTile::EMovingDirection::Right;
+            else if (prop.second == "None")
+                patternTile.m_Moving = SPatternTile::EMovingDirection::Air;
+            else if (prop.second == "To")
+                patternTile.m_Moving = SPatternTile::EMovingDirection::To;
+            else if (prop.second == "Back")
+                patternTile.m_Moving = SPatternTile::EMovingDirection::Back;
         }
         else if (prop.first == StringDistance)
             patternTile.m_Distance = std::stof(prop.second);

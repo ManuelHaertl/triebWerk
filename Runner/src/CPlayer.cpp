@@ -35,9 +35,18 @@ void CPlayer::Start()
 
 void CPlayer::Update()
 {
-    CheckInput();
-    CheckResource();
-    SetSpeed();
+    if (!CGameInfo::Instance().m_IsGamePaused)
+    {
+        CheckInput();
+        CheckResource();
+        SetSpeed();
+    }
+    else
+    {
+        m_pEntity->GetPhysicEntity()->GetBody()->m_Velocity.m128_f32[0] = 0.0f;
+        m_pEntity->GetPhysicEntity()->GetBody()->m_Velocity.m128_f32[2] = 0.0f;
+    }
+
     CalculateDistanceFlewn();
     UpdateTrail();
 }
@@ -47,10 +56,10 @@ void CPlayer::LateUpdate()
     m_pTrail->m_Transform.SetPosition(m_pEntity->m_Transform.GetPosition());
     m_pTrail->m_Transform.SetRotation(m_pEntity->m_Transform.GetRotation());
 
-    CGameInfo::Instance().m_PlayerPosition = m_pEntity->m_Transform.GetPosition().m128_f32[2];
 	CGameInfo::Instance().m_PlayerPositionX = m_pEntity->m_Transform.GetPosition().m128_f32[0];
+    CGameInfo::Instance().m_PlayerPositionZ = m_pEntity->m_Transform.GetPosition().m128_f32[2];
 
-    if (!twDebug->IsInDebug())
+    if (!twDebug->IsInDebug() && !CGameInfo::Instance().m_IsGamePaused)
     {
         SetCamera();
         SetRotation();
@@ -100,7 +109,7 @@ void CPlayer::Reset()
     m_LastZ = 0.0f;
 
     m_pEntity->m_Transform.SetPosition(0.0f, 1.0f, 0.0f);
-    CGameInfo::Instance().m_PlayerPosition = 0.0f;
+    CGameInfo::Instance().m_PlayerPositionZ = 0.0f;
 }
 
 float CPlayer::GetMetersFlewn() const

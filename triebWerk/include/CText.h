@@ -55,6 +55,7 @@ namespace triebWerk
         void SetText(const char* a_pText);
         void SetText(const std::string a_Text);
         void SetLineSpacing(const float a_LineSpacing);
+        void SetTextAlign(const ETextAlign a_TextAlign);
 
     private:
         void CreateLetterInfo();

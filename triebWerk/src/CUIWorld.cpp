@@ -80,6 +80,20 @@ void triebWerk::CUIWorld::Shutdown()
     m_Entities.Clear();
 }
 
+void triebWerk::CUIWorld::RemoveDeleteEntities()
+{
+    size_t removeSize = m_RemoveEntities.GetSize();
+    for (size_t i = 0; i < removeSize; ++i)
+    {
+        CUIEntity* removeEntity = m_RemoveEntities[i];
+
+        m_Entities.Remove(removeEntity);
+        DeleteEntity(removeEntity);
+    }
+
+    m_RemoveEntities.Reset();
+}
+
 void triebWerk::CUIWorld::SetScreenResolution(const int m_Width, const int m_Height)
 {
     m_ScreenResolution.x = static_cast<float>(m_Width);
@@ -183,6 +197,8 @@ void triebWerk::CUIWorld::UpdateScreenInformation()
 
     CUITransform::ResolutionWidth = m_ScreenResolution.x;
     CUITransform::ResolutionHeight = m_ScreenResolution.y;
+    CUITransform::ReferenceWidth = m_ReferenceResolutionX;
+    CUITransform::ReferenceHeight = m_ReferenceResolutionY;
 
     // tell all entities to update their transformation
     size_t size = m_Entities.GetSize();

@@ -46,6 +46,7 @@ private:
     std::list<triebWerk::CEntity*> m_GridEntities;
 
     // Background
+    const float BGPlaneDistanceZ = 500.0f;
     triebWerk::CEntity* m_pBGPlane;
 
     // Snake Loop
@@ -83,6 +84,7 @@ private:
     void CreateFog();
 	void CreateRoadBorder();
 	void CreateParticleSpawner();
+    void MoveBackground();
     void MoveRoad(const float a_MetersFlewn);
     void MoveGrid(const float a_MetersFlewn);
     void UpdateFog();

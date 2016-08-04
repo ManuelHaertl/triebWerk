@@ -64,6 +64,12 @@ void triebWerk::CText::SetLineSpacing(const float a_LineSpacing)
     CreateLetterInfo();
 }
 
+void triebWerk::CText::SetTextAlign(const ETextAlign a_TextAlign)
+{
+    m_TextAlign = a_TextAlign;
+    CreateLetterInfo();
+}
+
 void triebWerk::CText::CreateLetterInfo()
 {
 	m_LetterCount = m_Text.size();

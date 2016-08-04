@@ -2,12 +2,16 @@
 
 #include <CGameInfo.h>
 #include <CMainMenu.h>
+#include <CManualMenu.h>
+#include <CCreditsMenu.h>
+#include <COptionsMenu.h>
 #include <CPostEffects.h>
 
 CMenuScene::CMenuScene()
     : m_MenuBackgroundScene()
     , m_UIInput()
-    , m_pCurrentMenu(nullptr)
+    , m_pMainMenu(nullptr)
+    , m_pSecondMenu(nullptr)
 {
 }
 
@@ -17,11 +21,12 @@ CMenuScene::~CMenuScene()
 
 void CMenuScene::Start()
 {
-    twActiveUIWorld->SetReferenceResolution(1920, 1080.0f, triebWerk::CUIWorld::EScreenMatchState::Width);
-    twFontManager->LoadFont(twResourceManager->GetFontFace("AGENCYB"), 30);
+    twActiveUIWorld->SetReferenceResolution(1920, 1080.0f, triebWerk::CUIWorld::EScreenMatchState::Height);
+    CGameInfo::Instance().m_Menu = EMenus::Main;
 
     CreatePostEffects();
-    SetCurrentMenu(new CMainMenu());
+    m_pMainMenu = new CMainMenu();
+    m_pMainMenu->Start();
 
     m_MenuBackgroundScene.Start();
 }
@@ -38,19 +43,50 @@ void CMenuScene::Update()
 
     CheckInput();
 
-    if (m_pCurrentMenu != nullptr)
-        m_pCurrentMenu->Update(m_UIInput);
+    m_pMainMenu->Update(m_UIInput);
+    if (m_pSecondMenu != nullptr)
+        m_pSecondMenu->Update(m_UIInput);
+
+    if (CGameInfo::Instance().m_ChangeMenu)
+    {
+        CGameInfo::Instance().m_ChangeMenu = false;
+
+        switch (CGameInfo::Instance().m_Menu)
+        {
+        case EMenus::Main:
+            RemoveSecondMenu();
+            break;
+        case EMenus::Highscore:
+            break;
+        case EMenus::Options:
+            SetCurrentMenu(new COptionsMenu());
+            break;
+        case EMenus::Credits:
+            SetCurrentMenu(new CCreditsMenu());
+            break;
+        case EMenus::Manual:
+            SetCurrentMenu(new CManualMenu());
+            break;
+        }
+    }
 
     m_MenuBackgroundScene.Update();
 }
 
 void CMenuScene::End()
 {
-    if (m_pCurrentMenu != nullptr)
+    if (m_pMainMenu != nullptr)
     {
-        m_pCurrentMenu->End();
-        delete m_pCurrentMenu;
-        m_pCurrentMenu = nullptr;
+        m_pMainMenu->End();
+        delete m_pMainMenu;
+        m_pMainMenu = nullptr;
+    }
+
+    if (m_pSecondMenu != nullptr)
+    {
+        m_pSecondMenu->End();
+        delete m_pSecondMenu;
+        m_pSecondMenu = nullptr;
     }
 
     m_MenuBackgroundScene.End();
@@ -58,9 +94,10 @@ void CMenuScene::End()
 
 void CMenuScene::Resume()
 {
-    if (m_pCurrentMenu != nullptr)
+    CGameInfo::Instance().m_Menu = EMenus::Main;
+    if (m_pMainMenu != nullptr)
     {
-        m_pCurrentMenu->Resume();
+        m_pMainMenu->Resume();
     }
 }
 
@@ -91,14 +128,24 @@ void CMenuScene::CheckInput()
 
 void CMenuScene::SetCurrentMenu(IMenu* a_pMenu)
 {
-    if (m_pCurrentMenu != nullptr)
+    if (m_pSecondMenu != nullptr)
     {
-        m_pCurrentMenu->End();
-        delete m_pCurrentMenu;
+        m_pSecondMenu->End();
+        delete m_pSecondMenu;
     }
 
-    m_pCurrentMenu = a_pMenu;
-    m_pCurrentMenu->Start();
+    m_pSecondMenu = a_pMenu;
+    m_pSecondMenu->Start();
+}
+
+void CMenuScene::RemoveSecondMenu()
+{
+    if (m_pSecondMenu != nullptr)
+    {
+        m_pSecondMenu->End();
+        delete m_pSecondMenu;
+        m_pSecondMenu = nullptr;
+    }
 }
 
 void CMenuScene::CreatePostEffects()

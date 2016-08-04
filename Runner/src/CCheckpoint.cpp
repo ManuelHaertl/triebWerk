@@ -108,7 +108,7 @@ void CCheckpoint::Update()
 	m_pEntity->m_Transform.SetPosition(leftPos);
 	m_pEntity->m_Transform.RotateDegrees(0.0f, 190 * twTime->GetDeltaTime(), 0.0f);
 
-	float distance = m_pEntity->m_Transform.GetPosition().m128_f32[2] - CGameInfo::Instance().m_PlayerPosition;
+	float distance = m_pEntity->m_Transform.GetPosition().m128_f32[2] - CGameInfo::Instance().m_PlayerPositionZ;
 
 	if (distance < -2.0f && !m_Deleted)
 	{

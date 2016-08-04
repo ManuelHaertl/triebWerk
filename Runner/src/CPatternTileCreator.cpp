@@ -61,10 +61,17 @@ CPatternTileCreator::CPatternTileCreator()
     m_pMoving05Down = twResourceManager->GetMesh("ms_obs_05x05x07_movable_down");
     m_pMoving05Left = twResourceManager->GetMesh("ms_obs_05x05x07_movable_left");
     m_pMoving05Right = twResourceManager->GetMesh("ms_obs_05x05x07_movable_right");
+    m_pMoving05None = twResourceManager->GetMesh("ms_obs_05x05x07_movable_air");
+    m_pMoving05To = twResourceManager->GetMesh("ms_obs_05x05x07_movable_air");
+    m_pMoving05Back = twResourceManager->GetMesh("ms_obs_05x05x07_movable_forward");
+
     m_pMoving10Up = twResourceManager->GetMesh("ms_obs_05x10x07_movable_up");
     m_pMoving10Down = twResourceManager->GetMesh("ms_obs_05x10x07_movable_down");
     m_pMoving10Left = twResourceManager->GetMesh("ms_obs_05x10x07_movable_left");
     m_pMoving10Right = twResourceManager->GetMesh("ms_obs_05x10x07_movable_right");
+    m_pMoving10None = twResourceManager->GetMesh("ms_obs_05x10x07_movable_air");
+    m_pMoving10To = twResourceManager->GetMesh("ms_obs_05x10x07_movable_air");
+    m_pMoving10Back = twResourceManager->GetMesh("ms_obs_05x10x07_movable_forward");
 
     m_pTextureObstacle[0][0] = twResourceManager->GetTexture2D("T_obs_01_blend1");
     m_pTextureObstacle[0][1] = twResourceManager->GetTexture2D("T_obs_01_blend2");
@@ -308,7 +315,7 @@ void CPatternTileCreator::CreateModel05x05(const bool a_Rotated)
     const size_t texture = twRandom::GetNumber(0, MaxObstacleTextures - 1);
 	
 	//Building effect 
-	float distanceToPlayer = (m_PatternSpawnBegin + m_Tile.m_Y) - CGameInfo::Instance().m_PlayerPosition;
+	float distanceToPlayer = (m_PatternSpawnBegin + m_Tile.m_Y) - CGameInfo::Instance().m_PlayerPositionZ;
 	float startDistanceBuildValue = 0.0f;
 	
 	if (distanceToPlayer < CPatternManager::StartBuildDistance)
@@ -415,7 +422,7 @@ void CPatternTileCreator::CreateModel05x10(const bool a_Rotated)
     float textureValueFull = 1.0f, textureValueNone = 0.0f;
 
 	//Building effect 
-	float distanceToPlayer = (m_PatternSpawnBegin + m_Tile.m_Y) - CGameInfo::Instance().m_PlayerPosition;
+	float distanceToPlayer = (m_PatternSpawnBegin + m_Tile.m_Y) - CGameInfo::Instance().m_PlayerPositionZ;
 	float startDistanceBuildValue = 0.0f;
 
 	if (distanceToPlayer < CPatternManager::StartBuildDistance)
@@ -520,7 +527,7 @@ void CPatternTileCreator::CreateModel05x20(const bool a_Rotated)
     float textureValueFull = 1.0f, textureValueNone = 0.0f;
 
 	//Building effect 
-	float distanceToPlayer = (m_PatternSpawnBegin + m_Tile.m_Y) - CGameInfo::Instance().m_PlayerPosition;
+	float distanceToPlayer = (m_PatternSpawnBegin + m_Tile.m_Y) - CGameInfo::Instance().m_PlayerPositionZ;
 	float startDistanceBuildValue = 0.0f;
 
 	if (distanceToPlayer < CPatternManager::StartBuildDistance)
@@ -625,7 +632,7 @@ void CPatternTileCreator::CreateModel05x30(const bool a_Rotated)
     float textureValueFull = 1.0f, textureValueNone = 0.0f;
 
 	//Building effect 
-	float distanceToPlayer = (m_PatternSpawnBegin + m_Tile.m_Y) - CGameInfo::Instance().m_PlayerPosition;
+	float distanceToPlayer = (m_PatternSpawnBegin + m_Tile.m_Y) - CGameInfo::Instance().m_PlayerPositionZ;
 	float startDistanceBuildValue = 0.0f;
 
 	if (distanceToPlayer < CPatternManager::StartBuildDistance)
@@ -814,7 +821,7 @@ void CPatternTileCreator::CreateMoving05x05()
 	float rand =GetRandomSign();;
 
 	//Building effect 
-	float distanceToPlayer = (m_PatternSpawnBegin + m_Tile.m_Y) - CGameInfo::Instance().m_PlayerPosition;
+	float distanceToPlayer = (m_PatternSpawnBegin + m_Tile.m_Y) - CGameInfo::Instance().m_PlayerPositionZ;
 	float startDistanceBuildValue = 0.0f;
 
 	if (distanceToPlayer < CPatternManager::StartBuildDistance)
@@ -851,6 +858,15 @@ void CPatternTileCreator::CreateMoving05x05()
         break;
     case SPatternTile::EMovingDirection::Right:
         mesh->m_pMesh = m_pMoving05Right;
+        break;
+    case SPatternTile::EMovingDirection::Air:
+        mesh->m_pMesh = m_pMoving05None;
+        break;
+    case SPatternTile::EMovingDirection::To:
+        mesh->m_pMesh = m_pMoving05To;
+        break;
+    case SPatternTile::EMovingDirection::Back:
+        mesh->m_pMesh = m_pMoving05Back;
         break;
     }
 	mesh->m_Material.SetMaterial(m_pMaterialObstacle);
@@ -897,7 +913,7 @@ void CPatternTileCreator::CreateMoving05x10(const bool a_Rotated)
     float textureValueFull = 1.0f, textureValueNone = 0.0f;
 
 	//Building effect 
-	float distanceToPlayer = (m_PatternSpawnBegin + m_Tile.m_Y) - CGameInfo::Instance().m_PlayerPosition;
+	float distanceToPlayer = (m_PatternSpawnBegin + m_Tile.m_Y) - CGameInfo::Instance().m_PlayerPositionZ;
 	float startDistanceBuildValue = 0.0f;
 
 	if (distanceToPlayer < CPatternManager::StartBuildDistance)
@@ -936,6 +952,15 @@ void CPatternTileCreator::CreateMoving05x10(const bool a_Rotated)
         break;
     case SPatternTile::EMovingDirection::Right:
         mesh->m_pMesh = m_pMoving10Right;
+        break;
+    case SPatternTile::EMovingDirection::Air:
+        mesh->m_pMesh = m_pMoving10None;
+        break;
+    case SPatternTile::EMovingDirection::To:
+        mesh->m_pMesh = m_pMoving10To;
+        break;
+    case SPatternTile::EMovingDirection::Back:
+        mesh->m_pMesh = m_pMoving10Back;
         break;
     }
 	mesh->m_Material.SetMaterial(m_pMaterialObstacle);

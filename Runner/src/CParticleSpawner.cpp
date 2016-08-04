@@ -39,7 +39,7 @@ void CParticleSpawner::Update()
 		entity->m_Transform.RotateDegrees(0.0f, 0.0f, 90.f * twTime->GetDeltaTime());
 
 		float z = entity->m_Transform.GetPosition().m128_f32[2];
-		float playerZ = CGameInfo::Instance().m_PlayerPosition;
+		float playerZ = CGameInfo::Instance().m_PlayerPositionZ;
 
 		if (z < playerZ)
 		{

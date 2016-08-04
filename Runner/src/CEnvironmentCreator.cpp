@@ -59,16 +59,12 @@ void CEnvironmentCreator::Update(const float a_MetersFlewn)
     m_FeathersSpawnTo += a_MetersFlewn;
     m_FeathersDeleteZone += a_MetersFlewn;
 
-    float speed = CGameInfo::Instance().m_FlyStandardSpeed + CGameInfo::Instance().m_FlyDifficultySpeed + CGameInfo::Instance().m_FlyBoostSpeed;
-    m_pBGPlane->GetPhysicEntity()->GetBody()->m_Velocity.m128_f32[2] = speed;
 
     while (m_FeathersIsSpawnedTo < m_FeathersSpawnTo)
-    {
         SpawnFeathers();
-    }
-
     DeleteFeathers();
 
+    MoveBackground();
     MoveRoad(a_MetersFlewn);
     MoveGrid(a_MetersFlewn);
     UpdateFog();
@@ -275,7 +271,7 @@ void CEnvironmentCreator::CreateBackground()
 	const float planeApectRatio = 0.519916f;
 
 	m_pBGPlane = twActiveWorld->CreateEntity();
-	m_pBGPlane->m_Transform.SetPosition(0.0f, 200.0f, 500.0f);
+	m_pBGPlane->m_Transform.SetPosition(0.0f, 200.0f, BGPlaneDistanceZ);
 	m_pBGPlane->m_Transform.SetScale(planeWidth, 0.0f, planeWidth * planeApectRatio);
 	m_pBGPlane->m_Transform.SetRotationDegrees(270.0f, 0.0f, 0.0f);
 
@@ -285,12 +281,12 @@ void CEnvironmentCreator::CreateBackground()
 	planeMesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("t_background"));
 	m_pBGPlane->SetDrawable(planeMesh);
 
-	auto physicEntity = twActivePhysic->CreatePhysicEntity();
-	auto body = twActivePhysic->CreateBody();
-	body->m_GravityFactor = 0.0f;
-	body->m_Velocity.m128_f32[2] = CGameInfo::Instance().m_FlyBoostSpeed + CGameInfo::Instance().m_FlyDifficultySpeed + CGameInfo::Instance().m_FlyStandardSpeed;
-	physicEntity->SetBody(body);
-	m_pBGPlane->SetPhysicEntity(physicEntity);
+	//auto physicEntity = twActivePhysic->CreatePhysicEntity();
+	//auto body = twActivePhysic->CreateBody();
+	//body->m_GravityFactor = 0.0f;
+	//body->m_Velocity.m128_f32[2] = CGameInfo::Instance().m_FlyBoostSpeed + CGameInfo::Instance().m_FlyDifficultySpeed + CGameInfo::Instance().m_FlyStandardSpeed;
+	//physicEntity->SetBody(body);
+	//m_pBGPlane->SetPhysicEntity(physicEntity);
 
 	m_pBGPlane->SetBehaviour(new CBackground);
 
@@ -411,6 +407,13 @@ void CEnvironmentCreator::CreateParticleSpawner()
 	m_pParticleSpawner->SetBehaviour(new CParticleSpawner());
 
 	twActiveWorld->AddEntity(m_pParticleSpawner);
+}
+
+void CEnvironmentCreator::MoveBackground()
+{
+    auto position = m_pBGPlane->m_Transform.GetPosition();
+    position.m128_f32[2] = CGameInfo::Instance().m_PlayerPositionZ + BGPlaneDistanceZ;
+    m_pBGPlane->m_Transform.SetPosition(position);
 }
 
 void CEnvironmentCreator::MoveRoad(const float a_MetersFlewn)

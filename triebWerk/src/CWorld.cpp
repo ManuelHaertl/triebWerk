@@ -46,6 +46,7 @@ void triebWerk::CWorld::Update(const bool a_Render, const bool a_UpdatePhysic)
         m_pUIWorld->Update();
         m_pRenderingHandle->DrawScene();
 
+        m_pUIWorld->RemoveDeleteEntities();
         DeleteRemoveEntities();
 
         m_UpdateEntities.Reset();
@@ -61,6 +62,7 @@ void triebWerk::CWorld::Update(const bool a_Render, const bool a_UpdatePhysic)
         m_pUIWorld->Update();
         m_pRenderingHandle->DrawScene();
 
+        m_pUIWorld->RemoveDeleteEntities();
         DeleteRemoveEntities();
 
         m_UpdateEntities.Reset();

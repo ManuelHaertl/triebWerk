@@ -205,7 +205,7 @@ void CPatternManager::UpdateTextureBlending()
             float blend1 = 1.0f, blend2 = 0.0f, blend3 = 0.0f;
             auto drawable = static_cast<triebWerk::CMeshDrawable*>(entity->GetDrawable());
 
-            float distance = entity->m_Transform.GetPosition().m128_f32[2] - CGameInfo::Instance().m_PlayerPosition;
+            float distance = entity->m_Transform.GetPosition().m128_f32[2] - CGameInfo::Instance().m_PlayerPositionZ;
 
             if (distance < EndTextureBlendDistance)
             {

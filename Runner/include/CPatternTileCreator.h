@@ -50,10 +50,16 @@ private:
     triebWerk::CMesh* m_pMoving05Down;
     triebWerk::CMesh* m_pMoving05Left;
     triebWerk::CMesh* m_pMoving05Right;
+    triebWerk::CMesh* m_pMoving05None;
+    triebWerk::CMesh* m_pMoving05To;
+    triebWerk::CMesh* m_pMoving05Back;
     triebWerk::CMesh* m_pMoving10Up;
     triebWerk::CMesh* m_pMoving10Down;
     triebWerk::CMesh* m_pMoving10Left;
     triebWerk::CMesh* m_pMoving10Right;
+    triebWerk::CMesh* m_pMoving10None;
+    triebWerk::CMesh* m_pMoving10To;
+    triebWerk::CMesh* m_pMoving10Back;
 
     // Textures ----------------------------------------------
 
@@ -80,7 +86,6 @@ public:
     CPatternTileCreator();
     ~CPatternTileCreator();
 
-    void Start();
     void CreateEntity(const SPatternTile& a_rTile, const float a_PatternSpawnBegin);
 
 private:
