@@ -13,6 +13,7 @@ CPlayer::CPlayer()
     , m_InBoostMode(false)
     , m_pTrailMesh(nullptr)
     , m_pMainCamera(nullptr)
+    , m_pBackground(nullptr)
     , m_IsDead(false)
     , m_MetersFlewn(0.0f)
     , m_LastZ(0.0f)
@@ -113,6 +114,11 @@ void CPlayer::Reset()
 
     m_pEntity->m_Transform.SetPosition(0.0f, 1.0f, 0.0f);
     CGameInfo::Instance().m_PlayerPositionZ = 0.0f;
+}
+
+void CPlayer::SetBackground(triebWerk::CTransform * a_pBackground)
+{
+    m_pBackground = a_pBackground;
 }
 
 float CPlayer::GetMetersFlewn() const
@@ -418,6 +424,7 @@ void CPlayer::UpdateFloorEffect()
 
 void CPlayer::SetCamera()
 {
+    // Camera
     DirectX::XMVECTOR camPos = m_pMainCamera->m_Transform.GetPosition();
     DirectX::XMVECTOR pos = m_pEntity->m_Transform.GetPosition();
 
@@ -425,6 +432,11 @@ void CPlayer::SetCamera()
     camPos.m128_f32[1] = CameraPosY;
     camPos.m128_f32[2] = pos.m128_f32[2] - CameraMinusPosZ;
     m_pMainCamera->m_Transform.SetPosition(camPos);
+
+    // Background
+    auto position = m_pBackground->GetPosition();
+    position.m128_f32[2] = pos.m128_f32[2] + 500.0f;
+    m_pBackground->SetPosition(position);
 }
 
 void CPlayer::SetRotation()

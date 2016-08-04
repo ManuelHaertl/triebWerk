@@ -39,6 +39,7 @@ private:
 	triebWerk::CEntity* m_pDangerHitbox;
     triebWerk::CMeshDrawable* m_pTrailMesh;
     triebWerk::CCamera* m_pMainCamera;
+    triebWerk::CTransform* m_pBackground;
 	triebWerk::CMaterial* m_pFloorEffectMaterial;
     SPlayerInput m_PlayerInput;
 
@@ -64,6 +65,7 @@ public:
     void CollisionStay(triebWerk::CCollisionEvent a_Collision) final;
 
     void Reset();
+    void SetBackground(triebWerk::CTransform* a_pBackground);
 
     float GetMetersFlewn() const;
     bool HasDied() const;

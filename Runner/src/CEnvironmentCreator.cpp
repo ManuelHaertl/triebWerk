@@ -65,7 +65,7 @@ void CEnvironmentCreator::Update(const float a_MetersFlewn)
         SpawnFeathers();
     DeleteFeathers();
 
-    MoveBackground();
+    //MoveBackground();
     MoveRoad(a_MetersFlewn);
     MoveGrid(a_MetersFlewn);
     UpdateFog();
@@ -133,6 +133,11 @@ void CEnvironmentCreator::Reset()
     CreateGrid();
 	CBackground* pBackground = reinterpret_cast<CBackground*>(m_pBGPlane->GetBehaviour());
 	pBackground->ResetBackground();
+}
+
+triebWerk::CTransform* CEnvironmentCreator::GetBackground()
+{
+    return &m_pBGPlane->m_Transform;
 }
 
 void CEnvironmentCreator::SpawnFeathers()

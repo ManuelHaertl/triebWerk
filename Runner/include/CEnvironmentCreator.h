@@ -73,6 +73,7 @@ public:
     void End();
 
     void Reset();
+    triebWerk::CTransform* GetBackground();
 
 private:
     void SpawnFeathers();

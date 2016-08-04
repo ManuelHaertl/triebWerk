@@ -27,6 +27,8 @@ void CGameScene::Start()
     m_EnvironmentCreator.Start();
     m_PatternManager.Start();
     m_IngameUI.Start();
+
+    m_pPlayerScript->SetBackground(m_EnvironmentCreator.GetBackground());
 }
 
 void CGameScene::Update()
