@@ -324,8 +324,6 @@ void CMainMenu::Resume()
 {
     float value = 0.0f;
     ((triebWerk::CUIDrawable*)(m_pBackground->GetDrawable()))->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &value);
-
-    twAudio->PlayBGM(m_pBackgroundMusic, true, true);
 }
 
 void CMainMenu::CheckInput(const SUIInput& a_rInput)

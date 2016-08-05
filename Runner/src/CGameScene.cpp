@@ -35,12 +35,6 @@ void CGameScene::Update()
 {
     m_DifficultyChanger.Update();
 
-	if (twInput->m_Gamepad.IsState(triebWerk::EGamepadButton::Y, triebWerk::EButtonState::Down, 0))
-	{
-		twAudio->PlayBGM(twResourceManager->GetSound("og"), true, true);
-		//twAudio->PlayBGM(twResourceManager->GetSound("fahrstuhl"));
-	}
-
     if (m_pPlayerScript->HasDied())
     {
         m_pPlayerScript->Reset();
@@ -63,6 +57,9 @@ void CGameScene::Update()
     m_EnvironmentCreator.Update(metersFlewn);
     m_PatternManager.Update(metersFlewn);
     m_IngameUI.Update();
+
+	if (twAudio->IsBGMFinished() == true)
+		PlayRandomSong();
 }
 
 void CGameScene::End()

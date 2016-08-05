@@ -26,9 +26,9 @@ void CDebugScene::Start()
 	twActiveUIWorld->SetReferenceResolution(1200.0f, 800.0f, triebWerk::CUIWorld::EScreenMatchState::Width);
 
     ResetCamera();
-	CreatePlayground();
-	//CreateMultipleObjects();
-	CreateDebugFont();
+	//CreatePlayground();
+	////CreateMultipleObjects();
+	//CreateDebugFont();
 }
 
 void CDebugScene::Update()

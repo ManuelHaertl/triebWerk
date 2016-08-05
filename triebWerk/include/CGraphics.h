@@ -8,12 +8,8 @@
 #include <CDebugLogfile.h>
 #include <CRenderQuad.h>
 
-//#ifdef _DEBUG
-//#define TW_CREATE_DEVICE_FLAG D3D11_CREATE_DEVICE_DEBUG
-//#else
-//#define TW_CREATE_DEVICE_FLAG 0
-//#endif
 #define TW_CREATE_DEVICE_FLAG 0
+
 
 namespace triebWerk
 {

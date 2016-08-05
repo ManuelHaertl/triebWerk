@@ -10,6 +10,7 @@ private:
     SUIInput m_UIInput;
     IMenu* m_pMainMenu;
     IMenu* m_pSecondMenu;
+	triebWerk::CSound* m_pBackgroundMusic;
 
 public:
     CMenuScene();

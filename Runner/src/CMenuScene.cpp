@@ -29,6 +29,15 @@ void CMenuScene::Start()
     m_pMainMenu->Start();
 
     m_MenuBackgroundScene.Start();
+
+
+	std::vector<triebWerk::CSound*> music;
+
+	twResourceManager->GetAll("data//Audio//BGM//menu", &music);
+	if (music.size() > 0)
+		m_pBackgroundMusic = music[0];
+
+	twAudio->PlayBGM(m_pBackgroundMusic, true, true);
 }
 
 void CMenuScene::Update()
@@ -99,6 +108,7 @@ void CMenuScene::Resume()
     {
         m_pMainMenu->Resume();
     }
+	twAudio->PlayBGM(m_pBackgroundMusic, true, true);
 }
 
 void CMenuScene::CheckInput()
