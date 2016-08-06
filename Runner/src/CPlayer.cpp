@@ -15,8 +15,10 @@ CPlayer::CPlayer()
     , m_pMainCamera(nullptr)
     , m_pBackground(nullptr)
     , m_IsDead(false)
+	, m_FullResourcePlayed(true)
     , m_MetersFlewn(0.0f)
     , m_LastZ(0.0f)
+	, m_TrailBlend(0.0f)
 {
 }
 
@@ -93,6 +95,7 @@ void CPlayer::CollisionEnter(triebWerk::CCollisionEvent a_Collision)
             if (m_IsDead == false)
                 triebWerk::CDebugLogfile::Instance().LogfText(triebWerk::CDebugLogfile::ELogType::Text, false, entity->m_ID.GetDescribtion().c_str());
             m_IsDead = true;
+			twAudio->PlaySFX(twResourceManager->GetSound("SFX_PlayerDeath"));
         }
     }
 }
@@ -108,6 +111,7 @@ void CPlayer::Reset()
     m_InFullControlMode = false;
     m_InBoostMode = false;
     m_IsDead = false;
+	m_FullResourcePlayed = true;
     m_MetersFlewn = 0.0f;
     m_LastZ = 0.0f;
 	m_LastX = 0.0f;
@@ -259,6 +263,9 @@ void CPlayer::CheckInput()
 
 void CPlayer::CheckResource()
 {
+
+	std::cout << m_CurrentResource << std::endl;
+
     CGameInfo& gameInfo = CGameInfo::Instance();
     bool gainResource = true;
     bool fullControlEffect = false;
@@ -266,13 +273,34 @@ void CPlayer::CheckResource()
     bool shieldEffect = false;
 
     // Full Control
-    if (m_PlayerInput.m_FullControl)
-    {
-        gainResource = false;
+	if (m_PlayerInput.m_FullControl)
+	{
+		if (!m_FullControlActivated)
+		{
+			twAudio->PlaySFX(twResourceManager->GetSound("SFX_FullControl"));
+			m_FullControlActivated = true;
+			m_NoResourcePlayed = false;
+		}
 
-        if (m_CurrentResource > 0.0f)
-            fullControlEffect = true;
-    }
+
+		gainResource = false;
+
+		if (m_CurrentResource > 0.0f)
+		{
+			fullControlEffect = true;
+		}
+		else
+		{
+			if (!m_NoResourcePlayed)
+			{
+				twAudio->PlaySFX(twResourceManager->GetSound("SFX_NoResource"));
+				m_NoResourcePlayed = true;
+			}
+		}
+
+	}
+	else
+		m_FullControlActivated = false;
 
     if (fullControlEffect)
     {
@@ -287,13 +315,33 @@ void CPlayer::CheckResource()
     }
 
     // Boost
-    if (m_PlayerInput.m_Boost)
-    {
-        gainResource = false;
+	if (m_PlayerInput.m_Boost)
+	{
+		if (!m_BoostActivated)
+		{
+			twAudio->PlaySFX(twResourceManager->GetSound("SFX_Boost"));
+			m_BoostActivated = true;
+		}
 
-        if (m_CurrentResource > 0.0f)
-            boostEffect = true;
-    }
+		gainResource = false;
+
+		if (m_CurrentResource > 0.0f)
+		{
+			boostEffect = true;
+			m_NoResourcePlayed = false;
+		}
+		else
+		{
+			if(!m_NoResourcePlayed)
+			{
+				twAudio->PlaySFX(twResourceManager->GetSound("SFX_NoResource"));
+				m_NoResourcePlayed = true;
+			}
+		}
+
+	}
+	else
+		m_BoostActivated = false;
 
     if (boostEffect)
     {
@@ -314,8 +362,22 @@ void CPlayer::CheckResource()
     {
         m_CurrentResource += ResourcePerSecond * twTime->GetDeltaTime();
 
-        if (m_CurrentResource > MaxResource)
-            m_CurrentResource = MaxResource;
+
+
+		if (m_CurrentResource > MaxResource)
+		{
+			m_CurrentResource = MaxResource;
+			if (!m_FullResourcePlayed)
+			{
+				twAudio->PlaySFX(twResourceManager->GetSound("SFX_FullResource"));
+				m_FullResourcePlayed = true;
+			}
+		}
+		else
+		{
+			m_FullResourcePlayed = false;
+		}
+
     }
 }
 
@@ -386,8 +448,21 @@ void CPlayer::CalculateDistanceFlewn()
 
 void CPlayer::UpdateTrail()
 {
+	if (m_PlayerInput.m_Boost && m_CurrentResource > 0.0f)
+	{
+		if(m_TrailBlend < 1.0f) // 1.0f for full blend
+			m_TrailBlend += twTime->GetDeltaTime();
+		m_pTrailMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(6, &m_TrailBlend);
+	}
+	else
+	{
+		if(m_TrailBlend > 0) // 0.0f for no blend
+			m_TrailBlend -= twTime->GetDeltaTime();
+		m_pTrailMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(6, &m_TrailBlend);
+	}
+
     float dt = twTime->GetTimeSinceStartup();
-    float curvature = m_PlayerInput.m_MoveKeyDistance;
+    float curvature = 0;
     m_pTrailMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &dt);
     m_pTrailMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &curvature);
 }

@@ -49,8 +49,6 @@ void triebWerk::CResourceManager::CleanUp()
 
 	for (auto texture : m_TextureBuffer)
 	{
-		texture.second->GetD3D11Texture()->Release();
-		texture.second->GetShaderResourceView()->Release();
 		delete texture.second;
 	}
 
@@ -60,6 +58,7 @@ void triebWerk::CResourceManager::CleanUp()
 		material.second->m_pPixelShader.m_pD3DPixelShader->Release();
 		if (material.second->m_pGeometryShader.m_pD3DGeometryShader != nullptr)
 			material.second->m_pGeometryShader.m_pD3DGeometryShader->Release();
+
 
 		delete material.second;
 	}

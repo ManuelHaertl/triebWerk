@@ -6,6 +6,14 @@ triebWerk::CTexture2D::CTexture2D()
 
 triebWerk::CTexture2D::~CTexture2D()
 {
+	if (m_pTexture != nullptr)
+	{
+		m_pTexture->Release();
+	}
+	if (m_pShaderResourceView != nullptr)
+	{
+		m_pShaderResourceView->Release();
+	}
 }
 
 void triebWerk::CTexture2D::SetTexture(unsigned int a_Width, unsigned int a_Height, ID3D11Texture2D * a_Texture, ID3D11ShaderResourceView * a_ShaderView)

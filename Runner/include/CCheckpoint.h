@@ -18,6 +18,10 @@ public:
 	triebWerk::CEntity* m_pCheckpointPlaneTop;
 	triebWerk::CEntity* m_pGodrayButtom;
 
+	triebWerk::CSound* m_pCollectSound;
+	triebWerk::CSound* m_pPassSound;
+	triebWerk::CSound* m_pFullMultiplierSound;
+
 public:
     CCheckpoint();
     ~CCheckpoint();

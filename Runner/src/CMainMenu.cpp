@@ -359,6 +359,8 @@ void CMainMenu::CheckInput(const SUIInput& a_rInput)
             case 0:
                 CGameInfo::Instance().m_EffectGoingIntoGame = true;
                 m_GoingIntoGame = true;
+				twAudio->PlaySFX(twResourceManager->GetSound("SFX_StartGame"));
+				twAudio->FadeOutBGM(1, false);
                 break;
             case 1:
                 CGameInfo::Instance().m_Menu = EMenus::Highscore;

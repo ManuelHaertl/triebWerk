@@ -263,6 +263,11 @@ void CPauseMenu::Update(const SUIInput& a_rInput)
 
     if (m_IsPaused != CGameInfo::Instance().m_IsGamePaused)
     {
+		if (CGameInfo::Instance().m_IsGamePaused)
+			twAudio->PauseBGM();
+		else if (!CGameInfo::Instance().m_IsGamePaused)
+			twAudio->ContinueBGM();
+
         m_IsPaused = CGameInfo::Instance().m_IsGamePaused;
         m_IsOnButtons = true;
         m_FieldIndex = 0;

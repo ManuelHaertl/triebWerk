@@ -219,7 +219,6 @@
     <ClCompile Include="src\IShader.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CSoundEngine.h" />
     <ClInclude Include="extern\include\loadPNG\lodepng.h" />
     <ClInclude Include="include\CAABBCollider.h" />
     <ClInclude Include="include\CCamera.h" />
@@ -235,6 +234,7 @@
     <ClInclude Include="include\CGeometryShader.h" />
     <ClInclude Include="include\CInstancedFontBatch.h" />
     <ClInclude Include="include\CRenderQuad.h" />
+    <ClInclude Include="include\CSoundEngine.h" />
     <ClInclude Include="include\CTag.h" />
     <ClInclude Include="include\SafeDeletes.h" />
     <ClInclude Include="include\CPostEffectDrawable.h" />

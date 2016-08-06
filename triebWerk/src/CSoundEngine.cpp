@@ -1,12 +1,14 @@
 #include <CSoundEngine.h>
 #include <CDebugLogfile.h>
 #include <CResourceManager.h>
+#include <CEngine.h>
 
 triebWerk::CSoundEngine::CSoundEngine() 
 	: m_CurrentBackgroundMusic(nullptr)
 	, m_BGMVolume(0.0f)
 	, m_MasterVolume(0.0f)
 	, m_SFXVolume(0.0f)
+	, m_IsFading(false)
 {
 }
 
@@ -17,6 +19,27 @@ triebWerk::CSoundEngine::~CSoundEngine()
 void triebWerk::CSoundEngine::Update()
 {
 	m_pDevice->update();
+
+	if (m_IsFading)
+	{
+		float volume = m_CurrentBackgroundMusic->getVolume();
+
+		if (volume > 0.0f || volume < 1.0f)
+		{
+			volume += m_FadingSpeed * CEngine::Instance().m_pTime->GetDeltaTime();
+			m_CurrentBackgroundMusic->setVolume(volume);
+		}
+		else if(volume <= 0.0f)
+		{
+			m_IsFading = false;
+			m_CurrentBackgroundMusic->setVolume(0.0f);
+		}
+		else if(volume >= 1.0f)
+		{
+			m_IsFading = false;
+			m_CurrentBackgroundMusic->setVolume(1.0f);
+		}
+	}
 }
 
 bool triebWerk::CSoundEngine::Initialize(CResourceManager* a_pResourceManager, const float a_MasterVolume, const float a_BGMVolume, const float a_SFXVolume)
@@ -41,7 +64,7 @@ bool triebWerk::CSoundEngine::Initialize(CResourceManager* a_pResourceManager, c
 
 void triebWerk::CSoundEngine::UpdateSoundVolumes()
 {
-	//m_pResourceManagerHandle->UpdateDefaultSoundVolumes(m_SFXVolume, m_BGMVolume);
+	m_pResourceManagerHandle->UpdateDefaultSoundVolumes(m_SFXVolume, m_BGMVolume);
 }
 
 void triebWerk::CSoundEngine::PlayBGM(CSound * a_pBGM, bool a_OverrideSameBGM, bool a_ShouldLoop)
@@ -75,7 +98,18 @@ void triebWerk::CSoundEngine::PlayBGM(CSound * a_pBGM, bool a_OverrideSameBGM, b
 
 void triebWerk::CSoundEngine::PlaySFX(CSound * a_pSFX)
 {
+	if (a_pSFX == nullptr)
+	{
+		DebugLogfile.LogfText(CDebugLogfile::ELogType::Warning, false, "Warning: Tried to play a nullptr music resource!");
+		return;
+	}
+
 	m_pDevice->play2D(a_pSFX->m_pSoundSource);
+}
+
+void triebWerk::CSoundEngine::PlaySFX(CSound * a_pSFX, bool a_Looping)
+{
+	auto sound = m_pDevice->play2D(a_pSFX->m_pSoundSource);
 }
 
 void triebWerk::CSoundEngine::StopAllSounds()
@@ -83,10 +117,40 @@ void triebWerk::CSoundEngine::StopAllSounds()
 	m_pDevice->stopAllSounds();
 }
 
+void triebWerk::CSoundEngine::PauseBGM()
+{
+	m_CurrentBackgroundMusic->setIsPaused(true);
+}
+
+void triebWerk::CSoundEngine::ContinueBGM()
+{
+	m_CurrentBackgroundMusic->setIsPaused(false);
+}
+
+
 bool triebWerk::CSoundEngine::IsBGMFinished()
 {
 	return m_CurrentBackgroundMusic->isFinished();
 }
+
+void triebWerk::CSoundEngine::FadeOutBGM(float a_Speed, bool a_StartFromHighest)
+{
+	if (a_StartFromHighest)
+		m_CurrentBackgroundMusic->setVolume(1.0f);
+
+	m_FadingSpeed = a_Speed * -1.0f; //Invert the speed so it will fade out
+	m_IsFading = true;
+}
+
+void triebWerk::CSoundEngine::FadeInBGM(float a_Speed, bool a_StartFromZero)
+{
+	if (a_StartFromZero)
+		m_CurrentBackgroundMusic->setVolume(0.0f);
+
+	m_FadingSpeed = a_Speed * 1.0f; //Invert the speed so it will fade out
+	m_IsFading = true;
+}
+
 
 float triebWerk::CSoundEngine::GetMasterVolume()
 {

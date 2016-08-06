@@ -719,9 +719,6 @@
     <ClInclude Include="include\CInstancedFontBatch.h">
       <Filter>Headerdateien\Rendering\Batches</Filter>
     </ClInclude>
-    <ClInclude Include="CSoundEngine.h">
-      <Filter>Headerdateien\Audio</Filter>
-    </ClInclude>
     <ClInclude Include="include\CSound.h">
       <Filter>Headerdateien\Resource\Resources\Audio</Filter>
     </ClInclude>
@@ -751,6 +748,9 @@
     </ClInclude>
     <ClInclude Include="include\CRenderQuad.h">
       <Filter>Headerdateien\Rendering\Batches</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CSoundEngine.h">
+      <Filter>Headerdateien\Audio</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

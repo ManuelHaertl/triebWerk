@@ -1,6 +1,6 @@
 #pragma once
 #include <CEngine.h>
-#define FogCount 40
+#define FogCount 65
 
 class CObjectUpdater
 {

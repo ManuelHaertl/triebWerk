@@ -24,6 +24,7 @@ private:
 	triebWerk::CEntity* m_pGodray;
 	
 	triebWerk::CMaterial* m_pSphereMaterial;
+	triebWerk::CSound* m_pCollectSound;
 
 
 public:

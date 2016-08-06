@@ -34,5 +34,5 @@ public:
 private:
     void CreatePlayer();
     void CreatePostEffects();
-	void PlayRandomSong();
+	void PlayRandomSong(bool a_FadeIn);
 };

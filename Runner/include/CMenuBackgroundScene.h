@@ -17,6 +17,8 @@ private:
     triebWerk::CEntity* m_pSnake2;
     triebWerk::CEntity* m_pSnake3;
 
+	std::list<triebWerk::CConstantBuffer*> m_FeathersBuffers;
+
 public:
     CMenuBackgroundScene();
     ~CMenuBackgroundScene();
