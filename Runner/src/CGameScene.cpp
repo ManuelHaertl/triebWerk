@@ -59,7 +59,7 @@ void CGameScene::Update()
     m_IngameUI.Update();
 
 	if (twAudio->IsBGMFinished() == true)
-		PlayRandomSong();
+		PlayRandomSong(false);
 }
 
 void CGameScene::End()
@@ -76,7 +76,8 @@ void CGameScene::Resume()
     m_EnvironmentCreator.Reset();
     CGameInfo::Instance().Reset();
 
-	PlayRandomSong();
+	PlayRandomSong(true);
+
 }
 
 void CGameScene::CreatePlayer()
@@ -126,7 +127,7 @@ void CGameScene::CreatePostEffects()
     twActiveWorld->AddEntity(entity);
 }
 
-void CGameScene::PlayRandomSong()
+void CGameScene::PlayRandomSong(bool a_FadeIn)
 {
 	if (m_Music.size() == 0)
 		return;
@@ -141,4 +142,10 @@ void CGameScene::PlayRandomSong()
 	int index = twRandom::GetNumber(0, musicIndices.size() - 1);
 	twAudio->PlayBGM(m_Music[musicIndices[index]], true, false);
 	m_LastAudioIndex = musicIndices[index];
+
+	if (a_FadeIn)
+	{
+		twAudio->FadeInBGM(0.05f, true);
+	}
+
 }

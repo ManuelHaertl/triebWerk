@@ -21,7 +21,22 @@ CPoints::~CPoints()
 
 void CPoints::Start()
 {
+
+
     static_cast<triebWerk::CMeshDrawable*>(m_pEntity->GetDrawable())->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &(Color[m_AmountID]));
+
+	switch (m_AmountID)
+	{
+	case 0:
+		m_pCollectSound = twResourceManager->GetSound("SFX_CollectPoint1");
+		break;
+	case 1:
+		m_pCollectSound = twResourceManager->GetSound("SFX_CollectPoint2");
+		break;
+	case 2:
+		m_pCollectSound = twResourceManager->GetSound("SFX_CollectPoint3");
+		break;
+	}
 
     m_RotateSpeedX = twRandom::GetNumber(MinRotateSpeed, MaxRotateSpeed);
     m_RotateSpeedY = twRandom::GetNumber(MinRotateSpeed, MaxRotateSpeed);
@@ -81,6 +96,8 @@ void CPoints::Collected()
     entity->SetDrawable(mesh);
     entity->SetBehaviour(new CCollectedPoint());
     twActiveWorld->AddEntity(entity);
+
+	twAudio->PlaySFX(m_pCollectSound);
 }
 
 int CPoints::GetPointAmount() const

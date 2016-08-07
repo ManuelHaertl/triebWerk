@@ -31,6 +31,9 @@ void CCheckpoint::Collected()
 	gameInfo.m_EffectCheckpointCollected = true;
 
 	m_HasCollected = true;
+
+	twAudio->PlaySFX(m_pCollectSound);
+	
 }
 
 void CCheckpoint::Start()
@@ -103,6 +106,9 @@ void CCheckpoint::Start()
 	
 	twActiveWorld->AddEntity(m_pGodrayButtom);
 
+	m_pCollectSound = twResourceManager->GetSound("SFX_CollectCheckpoint");
+	m_pPassSound = twResourceManager->GetSound("SFX_GainMultiplier");
+	m_pFullMultiplierSound = twResourceManager->GetSound("SFX_FullMultiplier");
 }
 
 void CCheckpoint::Update()
@@ -125,7 +131,15 @@ void CCheckpoint::Update()
 			gameInfo.m_EffectCheckpointPassed = true;
 
 			if (gameInfo.m_Multiplier > HighestMultiplier)
+			{
 				gameInfo.m_Multiplier = HighestMultiplier;
+				twAudio->PlaySFX(m_pFullMultiplierSound);
+			}
+			else
+			{
+				twAudio->PlaySFX(m_pPassSound);
+			}
+
 		}
 	}
 

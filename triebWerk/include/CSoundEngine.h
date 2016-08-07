@@ -1,19 +1,25 @@
 #pragma once
 #include <irrKlang\irrKlang.h>
 #include <CSound.h>
+#include <list>
 
 
 namespace triebWerk
 {
 	class CResourceManager;
 
+
 	class CSoundEngine
 	{
+	private:
+
 	private:
 		irrklang::ISound* m_CurrentBackgroundMusic;
 		float m_MasterVolume;
 		float m_BGMVolume;
 		float m_SFXVolume;
+		bool m_IsFading;
+		float m_FadingSpeed;
 
 	public:
 		irrklang::ISoundEngine* m_pDevice;
@@ -30,8 +36,13 @@ namespace triebWerk
 		bool Initialize(CResourceManager* a_pResourceManager, const float a_MasterVolume, const float a_BGMVolume, const float a_SFXVolume);
 		void PlayBGM(CSound* a_pBGM, bool a_OverrideSameBGM, bool a_ShouldLoop);
 		void PlaySFX(CSound* a_pSFX);
+		void PlaySFX(CSound* a_pSFX, bool a_Looping);
 		void StopAllSounds();
+		void PauseBGM();
+		void ContinueBGM();
 		bool IsBGMFinished();
+		void FadeOutBGM(float a_Speed, bool a_StartFromHighest);
+		void FadeInBGM(float a_Speed, bool a_StartFromZero);
 
 		float GetMasterVolume();
 		float GetBGMVolume();

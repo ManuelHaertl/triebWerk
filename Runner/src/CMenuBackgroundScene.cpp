@@ -34,6 +34,12 @@ void CMenuBackgroundScene::Update()
     m_pSnake1->m_Transform.SetRotationDegrees(m_SnakeRotation1);
     m_pSnake2->m_Transform.SetRotationDegrees(m_SnakeRotation2);
     m_pSnake3->m_Transform.SetRotationDegrees(m_SnakeRotation3);
+
+	float timer = twTime->GetTimeSinceStartup();
+	for (auto buffer : m_FeathersBuffers)
+	{
+		buffer->SetValueInBuffer(4, &timer);
+	}
 }
 
 void CMenuBackgroundScene::End()
@@ -166,11 +172,16 @@ void CMenuBackgroundScene::CreateFeathers()
 
             triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
             mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_feathers_01");
-            mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardTexture"));
+            mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("Feathers"));
             mesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("feather_diff_01"));
+
+			float randomStart = twRandom::GetNumber(0.0f, 40.0f);
+			mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &randomStart);
             entity->SetDrawable(mesh);
 
             twActiveWorld->AddEntity(entity);
+
+			m_FeathersBuffers.push_back(&mesh->m_Material.m_ConstantBuffer);
         }
 
         isSpawnedTo += 50;

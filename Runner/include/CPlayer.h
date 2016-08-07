@@ -35,7 +35,15 @@ private:
     bool m_InFullControlMode;
     bool m_InBoostMode;
 
+	//Sound bools
+	bool m_FullControlActivated;
+	bool m_BoostActivated;
+	bool m_FullResourcePlayed;
+	bool m_NoResourcePlayed;
+
     triebWerk::CEntity* m_pTrail;
+	float m_TrailBlend;
+
 	triebWerk::CEntity* m_pDangerHitbox;
     triebWerk::CMeshDrawable* m_pTrailMesh;
     triebWerk::CCamera* m_pMainCamera;
