@@ -31,13 +31,12 @@ int main()
     twResourceManager->LoadAllFilesInFolder("data");
     CValueUpdater valueUpdater;
     valueUpdater.Start();
-   // twSceneManager->AddScene(new CGameScene(), "Game");
-   // twSceneManager->AddScene(new CMenuScene(), "Menu");
+    twSceneManager->AddScene(new CGameScene(), "Game");
+    twSceneManager->AddScene(new CMenuScene(), "Menu");
     twSceneManager->AddScene(new CDebugScene(), "Debug");
 
-   // twSceneManager->SetActiveScene("Game");
-   // twSceneManager->SetActiveScene("Menu");
-	twSceneManager->SetActiveScene("Debug");
+    twSceneManager->SetActiveScene("Game");
+    twSceneManager->SetActiveScene("Menu");
 
     // main loop, update game & engine
     bool run = true;

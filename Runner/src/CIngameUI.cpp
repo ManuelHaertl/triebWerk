@@ -2,6 +2,9 @@
 
 #include <CPauseMenu.h>
 #include <CEngine.h>
+#include <CGameInfo.h>
+#include <sstream>
+#include <iomanip>
 
 CInGameUI::CInGameUI()
     : m_UIInput()
@@ -15,16 +18,19 @@ CInGameUI::~CInGameUI()
 
 void CInGameUI::Start()
 {
-    twActiveUIWorld->SetReferenceResolution(1920, 1080.0f, triebWerk::CUIWorld::EScreenMatchState::Width);
+    twActiveUIWorld->SetReferenceResolution(1920, 1080.0f, triebWerk::CUIWorld::EScreenMatchState::Height);
     twFontManager->LoadFont(twResourceManager->GetFontFace("AGENCYB"), 30);
 
     m_pPauseMenu = new CPauseMenu();
     m_pPauseMenu->Start();
+
+    CreateIngameUI();
 }
 
 void CInGameUI::Update()
 {
     CheckInput();
+    UpdateIngameUI();
     m_pPauseMenu->Update(m_UIInput);
 }
 
@@ -33,6 +39,172 @@ void CInGameUI::End()
     m_pPauseMenu->End();
     delete m_pPauseMenu;
     m_pPauseMenu = nullptr;
+}
+
+void CInGameUI::CreateIngameUI()
+{
+    auto font16 = twFontManager->LoadFont(twResourceManager->GetFontFace("AGENCYB"), 16);
+    auto font24 = twFontManager->LoadFont(twResourceManager->GetFontFace("AGENCYB"), 24);
+
+    // Counter Back -----------------------------------------------
+
+    auto counterBack = twActiveUIWorld->CreateUIEntity();
+    counterBack->m_Transform.SetAnchorPoint(0.0f, 1.0f);
+    counterBack->m_Transform.SetPositionOffset(0.0f, -62.0f, 10.0f);
+
+    auto counterBackDrawable = twRenderer->CreateUIDrawable();
+    counterBackDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardUI"));
+    counterBackDrawable->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_ui_ingame_counter_mid_v2"));
+
+    counterBack->SetDrawable(counterBackDrawable);
+
+    twActiveUIWorld->AddUIEntity(counterBack);
+
+    // Bar Left -----------------------------------------------
+
+    auto barLeftBack = twActiveUIWorld->CreateUIEntity();
+    barLeftBack->m_Transform.SetAnchorPoint(0.0f, 1.0f);
+    barLeftBack->m_Transform.SetPositionOffset(-275.0f, -19.0f, 10.0f);
+
+    auto barLeftBackDrawable = twRenderer->CreateUIDrawable();
+    barLeftBackDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardUI"));
+    barLeftBackDrawable->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_ui_ingame_bar_left"));
+
+    barLeftBack->SetDrawable(barLeftBackDrawable);
+
+    twActiveUIWorld->AddUIEntity(barLeftBack);
+
+    // Bar Left Fill -----------------------------------------------
+
+    auto barLeftFillBack = twActiveUIWorld->CreateUIEntity();
+    barLeftFillBack->m_Transform.SetAnchorPoint(0.0f, 1.0f);
+    barLeftFillBack->m_Transform.SetPositionOffset(-272.0f, -19.0f, 9.0f);
+    barLeftFillBack->m_Transform.SetRotationDegrees(180.0f);
+
+    m_pBarLeft = twRenderer->CreateUIDrawable();
+    m_pBarLeft->m_Material.SetMaterial(twResourceManager->GetMaterial("UIFill"));
+    float value = 1.0f;
+    m_pBarLeft->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &value);
+    m_pBarLeft->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_ui_ingame_bar_fill"));
+
+    barLeftFillBack->SetDrawable(m_pBarLeft);
+
+    twActiveUIWorld->AddUIEntity(barLeftFillBack);
+
+    // Bar Right -----------------------------------------------
+
+    auto barRightBack = twActiveUIWorld->CreateUIEntity();
+    barRightBack->m_Transform.SetAnchorPoint(0.0f, 1.0f);
+    barRightBack->m_Transform.SetPositionOffset(275.0f, -19.0f, 10.0f);
+
+    auto barRightBackDrawable = twRenderer->CreateUIDrawable();
+    barRightBackDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardUI"));
+    barRightBackDrawable->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_ui_ingame_bar_right"));
+
+    barRightBack->SetDrawable(barRightBackDrawable);
+
+    twActiveUIWorld->AddUIEntity(barRightBack);
+
+    // Bar Right Fill -----------------------------------------------
+
+    auto barRightFillBack = twActiveUIWorld->CreateUIEntity();
+    barRightFillBack->m_Transform.SetAnchorPoint(0.0f, 1.0f);
+    barRightFillBack->m_Transform.SetPositionOffset(275.0f, -19.0f, 9.0f);
+
+    m_pBarRight = twRenderer->CreateUIDrawable();
+    m_pBarRight->m_Material.SetMaterial(twResourceManager->GetMaterial("UIFill"));
+    m_pBarRight->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &value);
+    m_pBarRight->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_ui_ingame_bar_fill"));
+
+    barRightFillBack->SetDrawable(m_pBarRight);
+
+    twActiveUIWorld->AddUIEntity(barRightFillBack);
+
+    // Font Current -------------------------------------------------------------
+
+    auto fontCurrent = twActiveUIWorld->CreateUIEntity();
+    fontCurrent->m_Transform.SetAnchorPoint(0.0f, 1.0f);
+    fontCurrent->m_Transform.SetPositionOffset(-90.0f, -35.0f, 5.0f);
+
+    auto currentText = twFontManager->CreateText();
+    currentText->Set(font16, "Current", 1.0f);
+
+    auto currentTextDrawable = twRenderer->CreateFontDrawable();
+    currentTextDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardFont"));
+    currentTextDrawable->m_pText = currentText;
+    currentTextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+
+    fontCurrent->SetDrawable(currentTextDrawable);
+    twActiveUIWorld->AddUIEntity(fontCurrent);
+
+    // Font Current Points -------------------------------------------------------------
+
+    auto fontCurrentPoints = twActiveUIWorld->CreateUIEntity();
+    fontCurrentPoints->m_Transform.SetAnchorPoint(0.0f, 1.0f);
+    fontCurrentPoints->m_Transform.SetPositionOffset(9.0f, -35.0f, 5.0f);
+
+    m_pCurrentPoints = twFontManager->CreateText();
+    m_pCurrentPoints->Set(font16, "0 x1,00", 1.0f);
+
+    auto currentPointsTextDrawable = twRenderer->CreateFontDrawable();
+    currentPointsTextDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardFont"));
+    currentPointsTextDrawable->m_pText = m_pCurrentPoints;
+    currentPointsTextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+
+    fontCurrentPoints->SetDrawable(currentPointsTextDrawable);
+    twActiveUIWorld->AddUIEntity(fontCurrentPoints);
+
+    // Font Total -------------------------------------------------------------
+
+    auto fontTotal = twActiveUIWorld->CreateUIEntity();
+    fontTotal->m_Transform.SetAnchorPoint(0.0f, 1.0f);
+    fontTotal->m_Transform.SetPositionOffset(6.0f, -75.0f, 5.0f);
+
+    auto totalText = twFontManager->CreateText();
+    totalText->Set(font16, "Total", 1.0f);
+
+    auto totalTextDrawable = twRenderer->CreateFontDrawable();
+    totalTextDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardFont"));
+    totalTextDrawable->m_pText = totalText;
+    totalTextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+
+    fontTotal->SetDrawable(totalTextDrawable);
+    twActiveUIWorld->AddUIEntity(fontTotal);
+
+    // Font Total Points -------------------------------------------------------------
+
+    auto fontTotalPoints = twActiveUIWorld->CreateUIEntity();
+    fontTotalPoints->m_Transform.SetAnchorPoint(0.0f, 1.0f);
+    fontTotalPoints->m_Transform.SetPositionOffset(9.0f, -115.0f, 5.0f);
+
+    m_pTotalPoints = twFontManager->CreateText();
+    m_pTotalPoints->Set(font24, "0", 1.0f);
+
+    auto totalPointsTextDrawable = twRenderer->CreateFontDrawable();
+    totalPointsTextDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardFont"));
+    totalPointsTextDrawable->m_pText = m_pTotalPoints;
+    totalPointsTextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+
+    fontTotalPoints->SetDrawable(totalPointsTextDrawable);
+    twActiveUIWorld->AddUIEntity(fontTotalPoints);
+}
+
+void CInGameUI::UpdateIngameUI()
+{
+    // Current Points
+    std::stringstream currentPoints;
+    currentPoints << (size_t)CGameInfo::Instance().m_CurrentPoints << " x";
+    currentPoints << std::fixed << std::setprecision(2) << CGameInfo::Instance().m_Multiplier;
+    m_pCurrentPoints->SetText(currentPoints.str());
+
+    // Total Points
+    std::string totalPoints = std::to_string((size_t)CGameInfo::Instance().m_TotalPoints);
+    m_pTotalPoints->SetText(totalPoints);
+
+    // Resource bars
+    float resource = CGameInfo::Instance().m_PlayerResourcePercentage;
+    m_pBarLeft->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &resource);
+    m_pBarRight->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &resource);
 }
 
 void CInGameUI::CheckInput()

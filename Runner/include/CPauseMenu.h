@@ -9,6 +9,7 @@ private:
 
     triebWerk::CUIEntity* m_pBackground;
     triebWerk::CUIEntity* m_pFieldBG;
+    triebWerk::CUIEntity* m_pFieldBGHover;
     triebWerk::CUIEntity* m_pButtonMainMenu;
     triebWerk::CUIEntity* m_pButtonResume;
     triebWerk::CUIEntity* m_pButtonOptions;

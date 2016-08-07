@@ -58,6 +58,20 @@ void CPauseMenu::Start()
 
     twActiveUIWorld->AddUIEntity(m_pFieldBG);
 
+    // Field BG Hover --------------------------------------------
+
+    m_pFieldBGHover = twActiveUIWorld->CreateUIEntity();
+    m_pFieldBGHover->m_Transform.SetAnchorPoint(0.0f, 0.1f);
+
+    auto fieldBGHoverDrawable = twRenderer->CreateUIDrawable();
+    fieldBGHoverDrawable->SetActive(false);
+    fieldBGHoverDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardUI"));
+    fieldBGHoverDrawable->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_ui_bg_hover"));
+
+    m_pFieldBGHover->SetDrawable(fieldBGHoverDrawable);
+
+    twActiveUIWorld->AddUIEntity(m_pFieldBGHover);
+
     // Button Main Menu --------------------------------------------
 
     m_pButtonMainMenu = twActiveUIWorld->CreateUIEntity();
@@ -356,6 +370,7 @@ void CPauseMenu::UpdateGraphics()
 
     m_pBackground->GetDrawable()->SetActive(active);
     m_pFieldBG->GetDrawable()->SetActive(active);
+    m_pFieldBGHover->GetDrawable()->SetActive(active);
     m_pButtonMainMenu->GetDrawable()->SetActive(active);
     m_pButtonOptions->GetDrawable()->SetActive(active);
     m_pButtonResume->GetDrawable()->SetActive(active);
@@ -394,6 +409,11 @@ void CPauseMenu::UpdateGraphics()
     // Current selected field
     if (active)
     {
+        if (!m_IsOnButtons)
+            m_pFieldBGHover->GetDrawable()->SetActive(true);
+        else
+            m_pFieldBGHover->GetDrawable()->SetActive(false);
+
         if (m_FieldIndex == 0)
         {
             m_pObjective->GetDrawable()->SetActive(true);

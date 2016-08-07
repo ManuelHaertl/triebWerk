@@ -62,10 +62,12 @@ void CPlayer::LateUpdate()
 	CGameInfo::Instance().m_PlayerPositionX = m_pEntity->m_Transform.GetPosition().m128_f32[0];
     CGameInfo::Instance().m_PlayerPositionZ = m_pEntity->m_Transform.GetPosition().m128_f32[2];
 
-    if (!twDebug->IsInDebug() && !CGameInfo::Instance().m_IsGamePaused)
+    if (!twDebug->IsInDebug())
     {
         SetCamera();
-        SetRotation();
+
+        if (!CGameInfo::Instance().m_IsGamePaused)
+            SetRotation();
     }
 }
 
@@ -317,6 +319,8 @@ void CPlayer::CheckResource()
         if (m_CurrentResource > MaxResource)
             m_CurrentResource = MaxResource;
     }
+
+    CGameInfo::Instance().m_PlayerResourcePercentage = m_CurrentResource / MaxResource;
 }
 
 void CPlayer::SetSpeed()

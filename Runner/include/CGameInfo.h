@@ -17,6 +17,7 @@ public:
     // Player Information
 	float m_PlayerPositionX;
     float m_PlayerPositionZ;
+    float m_PlayerResourcePercentage;
 
     // Effect Information
     bool m_EffectCheckpointCollected;

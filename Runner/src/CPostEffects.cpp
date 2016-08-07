@@ -137,7 +137,7 @@ void CPostEffects::UpdateChromaticAberration()
     if (m_CurrentGameStartTime > 0.0f)
         value = GameStartCAEffectStrength * m_CurrentGameStartEffectStrength;
 
-    else if (gameInfo.m_EffectFullControl)
+    else if (gameInfo.m_EffectFullControl && !CGameInfo::Instance().m_IsGamePaused)
         value = (FullControlEffectStrengthMax - FullControlEffectStrengthMin) * gameInfo.m_EffectFullControlStrength + FullControlEffectStrengthMin;
 
     else
@@ -171,7 +171,7 @@ void CPostEffects::UpdateBlur()
 {
     float strength = 0.0f;
 
-    if (CGameInfo::Instance().m_EffectBoost)
+    if (CGameInfo::Instance().m_EffectBoost && !CGameInfo::Instance().m_IsGamePaused)
         strength = BoostEffectStrength;
 
     m_pBlur->m_ConstantBuffer.SetValueInBuffer(4, &strength);
