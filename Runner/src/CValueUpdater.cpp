@@ -73,6 +73,9 @@ float CPostEffects::GameStartLDEffectStrength = 15.0f;
 float CPostEffects::GameStartCAEffectStrength = 15.0f;
 float CPostEffects::GameStartRIBeginEffectStrength = 500.0f;
 float CPostEffects::GameStartRIEndEffectStrength = 3.0f;
+float CPostEffects::TryAgainTime = 1.0f;
+float CPostEffects::TryAgainRIBeginEffectStrength = 2000.0f;
+float CPostEffects::TryAgainRIEndEffectStrength = 3.0f;
 
 CValueUpdater::CValueUpdater() :
     m_pValues(nullptr)
@@ -207,6 +210,18 @@ void CValueUpdater::UpdateValues()
         else if (value.first == "me_GameStartRIEEndffectStrength")
         {
             CPostEffects::GameStartRIEndEffectStrength = std::stof(value.second);
+        }
+        else if (value.first == "me_TryAgainTime")
+        {
+            CPostEffects::TryAgainTime = std::stof(value.second);
+        }
+        else if (value.first == "me_TryAgainRIBeginEffectStrength")
+        {
+            CPostEffects::TryAgainRIBeginEffectStrength = std::stof(value.second);
+        }
+        else if (value.first == "me_TryAgainRIEndEffectStrength")
+        {
+            CPostEffects::TryAgainRIEndEffectStrength = std::stof(value.second);
         }
 
         // PostEffects

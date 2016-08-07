@@ -35,7 +35,7 @@ void CGameScene::Update()
 {
     m_DifficultyChanger.Update();
 
-    if (m_pPlayerScript->HasDied())
+    if (CGameInfo::Instance().m_RestartGame)
     {
         m_pPlayerScript->Reset();
         m_PatternManager.Reset();

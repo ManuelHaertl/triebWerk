@@ -7,6 +7,7 @@ class CInGameUI
 private:
     SUIInput m_UIInput;
     IMenu* m_pPauseMenu;
+    IMenu* m_pGameEndMenu;
 
     triebWerk::CText* m_pCurrentPoints;
     triebWerk::CText* m_pTotalPoints;

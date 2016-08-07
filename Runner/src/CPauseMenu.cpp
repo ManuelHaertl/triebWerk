@@ -87,7 +87,7 @@ void CPauseMenu::Start()
 
     twActiveUIWorld->AddUIEntity(m_pButtonMainMenu);
 
-    // Font Start ------------------------------------------- 
+    // Font Main Menu ------------------------------------------- 
 
     m_pFontMainMenu = twActiveUIWorld->CreateUIEntity();
     m_pFontMainMenu->m_Transform.SetAnchorPoint(-0.474f, -0.6f);
@@ -216,7 +216,7 @@ void CPauseMenu::Start()
 
     twActiveUIWorld->AddUIEntity(m_pObjective);
 
-    // Font Objectives 1 ------------------------------------------- 
+    // Font Objectives 1 -------------------------------------------
 
     m_pFontObjective1 = twActiveUIWorld->CreateUIEntity();
     m_pFontObjective1->m_Transform.SetAnchorPoint(0.0f, -0.23f);
@@ -270,6 +270,13 @@ void CPauseMenu::Start()
 
 void CPauseMenu::Update(const SUIInput& a_rInput)
 {
+    if (CGameInfo::Instance().m_IsPlayerDead)
+    {
+        CGameInfo::Instance().m_IsGamePaused = false;
+        UpdateGraphics();
+        return;
+    }
+
     bool changeGraphics = false;
 
     if (a_rInput.m_Pause)
@@ -371,7 +378,7 @@ void CPauseMenu::End()
 void CPauseMenu::UpdateGraphics()
 {
     // Hide / show all elemenets depenging on if the game is paused
-    bool active = CGameInfo::Instance().m_IsGamePaused;
+    bool active = CGameInfo::Instance().m_IsGamePaused && (!CGameInfo::Instance().m_IsPlayerDead);
 
     m_pBackground->GetDrawable()->SetActive(active);
     m_pFieldBG->GetDrawable()->SetActive(active);

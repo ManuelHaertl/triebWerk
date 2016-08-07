@@ -150,6 +150,9 @@
     <ClCompile Include="src\COptionsMenu.cpp">
       <Filter>Quelldateien\Menu</Filter>
     </ClCompile>
+    <ClCompile Include="src\CGameEndMenu.cpp">
+      <Filter>Quelldateien\Menu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\CGameScene.h">
@@ -258,6 +261,9 @@
       <Filter>Headerdateien\Menu</Filter>
     </ClInclude>
     <ClInclude Include="include\COptionsMenu.h">
+      <Filter>Headerdateien\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CGameEndMenu.h">
       <Filter>Headerdateien\Menu</Filter>
     </ClInclude>
   </ItemGroup>

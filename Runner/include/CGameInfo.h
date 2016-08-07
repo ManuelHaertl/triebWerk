@@ -18,6 +18,7 @@ public:
 	float m_PlayerPositionX;
     float m_PlayerPositionZ;
     float m_PlayerResourcePercentage;
+    bool m_IsPlayerDead;
 
     // Effect Information
     bool m_EffectCheckpointCollected;
@@ -26,11 +27,13 @@ public:
     float m_EffectFullControlStrength;
     bool m_EffectBoost;
     bool m_EffectGoingIntoGame;
+    bool m_EffectTryAgain;
 
     // UI Information
     bool m_IsGamePaused;
     bool m_ChangeMenu;
     EMenus m_Menu;
+    bool m_RestartGame;
 
 private:
     CGameInfo();

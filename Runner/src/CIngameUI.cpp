@@ -1,6 +1,7 @@
 #include <CIngameUI.h>
 
 #include <CPauseMenu.h>
+#include <CGameEndMenu.h>
 #include <CEngine.h>
 #include <CGameInfo.h>
 #include <sstream>
@@ -9,6 +10,11 @@
 CInGameUI::CInGameUI()
     : m_UIInput()
     , m_pPauseMenu(nullptr)
+    , m_pGameEndMenu(nullptr)
+    , m_pCurrentPoints(nullptr)
+    , m_pTotalPoints(nullptr)
+    , m_pBarLeft(nullptr)
+    , m_pBarRight(nullptr)
 {
 }
 
@@ -24,14 +30,19 @@ void CInGameUI::Start()
     m_pPauseMenu = new CPauseMenu();
     m_pPauseMenu->Start();
 
+    m_pGameEndMenu = new CGameEndMenu();
+    m_pGameEndMenu->Start();
+
     CreateIngameUI();
 }
 
 void CInGameUI::Update()
 {
     CheckInput();
+
     UpdateIngameUI();
     m_pPauseMenu->Update(m_UIInput);
+    m_pGameEndMenu->Update(m_UIInput);
 }
 
 void CInGameUI::End()
@@ -39,6 +50,10 @@ void CInGameUI::End()
     m_pPauseMenu->End();
     delete m_pPauseMenu;
     m_pPauseMenu = nullptr;
+
+    m_pGameEndMenu->End();
+    delete m_pGameEndMenu;
+    m_pGameEndMenu = nullptr;
 }
 
 void CInGameUI::CreateIngameUI()

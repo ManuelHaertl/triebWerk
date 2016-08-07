@@ -19,6 +19,10 @@ public:
     static float GameStartRIBeginEffectStrength;
     static float GameStartRIEndEffectStrength;
 
+    static float TryAgainTime;
+    static float TryAgainRIBeginEffectStrength;
+    static float TryAgainRIEndEffectStrength;
+
 private:
     triebWerk::CPostEffectDrawable* m_pPostEffect;
     triebWerk::CMaterial* m_pChromaticAberration;
@@ -31,6 +35,9 @@ private:
 
     static float m_CurrentGameStartTime;
     static float m_CurrentGameStartEffectStrength;
+    float m_CurrentTryAgainTime;
+    float m_CurrentTryAgainEffectStrength;
+
     float m_CurrentChromaticAberrationStrength;
     float m_CurrentDodgeTime;
 
@@ -57,6 +64,7 @@ private:
 	void AddShockwave();
 
     void UpdateGoingIntoGameEffect();
+    void UpdateTryAgainEffect();
     void UpdateChromaticAberration();
 	void UpdateLensDistortion();
 	void UpdateGrainEffect();
