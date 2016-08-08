@@ -100,7 +100,7 @@ namespace triebWerk
 		void LoadAllSpecificFilesInFolder(const EFileType a_FileType, const char* a_pPath);
 
 		//Loads only the one file specified in the path
-		void LoadSpecificFile(const char* a_pPath);
+		void LoadSpecificFile(const char* a_pPath, bool a_AbsolutPath);
 
 		//Get Interface
 		CTilesetMap* GetTileset(const char* a_pTilesetName);

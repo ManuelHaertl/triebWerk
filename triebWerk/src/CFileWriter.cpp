@@ -29,6 +29,7 @@ void triebWerk::CFileWriter::SetParams(const std::string & a_rKey, const std::st
 	std::string line = a_rKey;
 	line += " = ";
 	line += a_rValue;
+	line += "\r\n";
 
 	fwrite(line.c_str(), line.size(), 1, m_pFile);
 }

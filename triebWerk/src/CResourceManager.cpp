@@ -126,12 +126,22 @@ void triebWerk::CResourceManager::LoadAllSpecificFilesInFolder(const EFileType a
 	DebugLogfile.LogfText(CDebugLogfile::ELogType::Text, false, ":::::::::::::::::::::: Finish ::::::::::::::::::::::");
 }
 
-void triebWerk::CResourceManager::LoadSpecificFile(const char * a_pPath)
+void triebWerk::CResourceManager::LoadSpecificFile(const char * a_pPath, bool a_AbsolutPath)
 {
 	SFile fileToLoad;
 	fileToLoad.FileType = GetFileType(a_pPath);
-	fileToLoad.FilePath = m_ModulPath + a_pPath;
+
+	if (a_AbsolutPath == false)
+	{
+		fileToLoad.FilePath = m_ModulPath + a_pPath;
+	}
+	else
+	{
+		fileToLoad.FilePath = a_pPath;
+	}
+
 	fileToLoad.FileName = AbstractFileNameFromPath(a_pPath);
+
 
 	LoadFile(fileToLoad);
 }

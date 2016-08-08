@@ -20,11 +20,11 @@ CIntroScene::~CIntroScene()
 
 void CIntroScene::Start()
 {
-    twResourceManager->LoadSpecificFile("data\\Assets\\ui\\T_ui_ga_logo.png");
-    twResourceManager->LoadSpecificFile("data\\Assets\\ui\\T_ui_engine_logo.png");
-    twResourceManager->LoadSpecificFile("data\\Assets\\ui\\T_ui_black.png");
-    twResourceManager->LoadSpecificFile("data\\Shader\\StandardUI.hlsl");
-    twResourceManager->LoadSpecificFile("data\\Settings\\values.twf");
+    twResourceManager->LoadSpecificFile("data\\Assets\\ui\\T_ui_ga_logo.png", false);
+    twResourceManager->LoadSpecificFile("data\\Assets\\ui\\T_ui_engine_logo.png", false);
+    twResourceManager->LoadSpecificFile("data\\Assets\\ui\\T_ui_black.png", false);
+    twResourceManager->LoadSpecificFile("data\\Shader\\StandardUI.hlsl", false);
+    twResourceManager->LoadSpecificFile("data\\Settings\\values.twf", false);
 
     twActiveUIWorld->SetReferenceResolution(1920, 1080.0f, triebWerk::CUIWorld::EScreenMatchState::Height);
 
