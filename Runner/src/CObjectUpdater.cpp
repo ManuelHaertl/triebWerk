@@ -1,6 +1,7 @@
 #include <CObjectUpdater.h>
 
 #include <CEnvironmentCreator.h>
+#include <CGameInfo.h>
 
 CObjectUpdater::CObjectUpdater()
     : m_pValues(nullptr)
@@ -62,7 +63,7 @@ void CObjectUpdater::UpdateValues()
         // Snake 1
         if      (value.first == "s1_PositionX") snake1Position.m128_f32[0] = std::stof(value.second);
         else if (value.first == "s1_PositionY") snake1Position.m128_f32[1] = std::stof(value.second);
-        else if (value.first == "s1_PositionZ") snake1Position.m128_f32[2] = std::stof(value.second);
+        else if (value.first == "s1_PositionZ") snake1Position.m128_f32[2] = std::stof(value.second) + CGameInfo::Instance().m_PlayerPositionZ;
 
         else if (value.first == "s1_ScaleX") snake1Scale.m128_f32[0] = std::stof(value.second);
         else if (value.first == "s1_ScaleY") snake1Scale.m128_f32[1] = std::stof(value.second);
@@ -75,7 +76,7 @@ void CObjectUpdater::UpdateValues()
         // Snake 2
         else if (value.first == "s2_PositionX") snake2Position.m128_f32[0] = std::stof(value.second);
         else if (value.first == "s2_PositionY") snake2Position.m128_f32[1] = std::stof(value.second);
-        else if (value.first == "s2_PositionZ") snake2Position.m128_f32[2] = std::stof(value.second);
+        else if (value.first == "s2_PositionZ") snake2Position.m128_f32[2] = std::stof(value.second) + CGameInfo::Instance().m_PlayerPositionZ;
 
         else if (value.first == "s2_ScaleX") snake2Scale.m128_f32[0] = std::stof(value.second);
         else if (value.first == "s2_ScaleY") snake2Scale.m128_f32[1] = std::stof(value.second);
@@ -88,7 +89,7 @@ void CObjectUpdater::UpdateValues()
         // Snake 3
         else if (value.first == "s3_PositionX") snake3Position.m128_f32[0] = std::stof(value.second);
         else if (value.first == "s3_PositionY") snake3Position.m128_f32[1] = std::stof(value.second);
-        else if (value.first == "s3_PositionZ") snake3Position.m128_f32[2] = std::stof(value.second);
+        else if (value.first == "s3_PositionZ") snake3Position.m128_f32[2] = std::stof(value.second) + CGameInfo::Instance().m_PlayerPositionZ;
 
         else if (value.first == "s3_ScaleX") snake3Scale.m128_f32[0] = std::stof(value.second);
         else if (value.first == "s3_ScaleY") snake3Scale.m128_f32[1] = std::stof(value.second);
@@ -132,6 +133,7 @@ void CObjectUpdater::UpdateValues()
 
     for (size_t i = 0; i < FogCount; ++i)
     {
+        fogPosition[i].m128_f32[2] += CGameInfo::Instance().m_PlayerPositionZ;
         m_Fog[i]->m_Transform.SetPosition(fogPosition[i]);
         m_Fog[i]->m_Transform.SetScale(fogScale[i]);
         m_Fog[i]->m_Transform.SetRotationDegrees(fogRotation[i].m128_f32[0], fogRotation[i].m128_f32[1], fogRotation[i].m128_f32[2]);

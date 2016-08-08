@@ -11,6 +11,8 @@ CPostEffects::CPostEffects()
     , m_pRipple(nullptr)
     , m_pScanLines(nullptr)
 	, m_pGrain(nullptr)
+    , m_CurrentTryAgainTime(0.0f)
+    , m_CurrentTryAgainEffectStrength(0.0f)
     , m_CurrentChromaticAberrationStrength(0.0f)
     , m_CurrentDodgeTime(0.0f)
 	, m_ProcessCheckpointEffectCollected(false)
@@ -46,6 +48,7 @@ void CPostEffects::Start()
 void CPostEffects::Update()
 {
     UpdateGoingIntoGameEffect();
+    UpdateTryAgainEffect();
     UpdateChromaticAberration();
 	UpdateLensDistortion();
 	UpdateGrainEffect();
@@ -154,6 +157,32 @@ void CPostEffects::UpdateGoingIntoGameEffect()
     }
 }
 
+void CPostEffects::UpdateTryAgainEffect()
+{
+    CGameInfo& gameInfo = CGameInfo::Instance();
+    if (gameInfo.m_EffectTryAgain)
+    {
+        gameInfo.m_EffectTryAgain = false;
+        m_CurrentTryAgainTime = TryAgainTime;
+    }
+
+    if (m_CurrentTryAgainTime > 0.0f)
+    {
+        m_CurrentTryAgainTime -= twTime->GetDeltaTime();
+
+        float half = TryAgainTime / 2.0f;
+        if (m_CurrentTryAgainTime > half)
+        {
+            float currentHalf = m_CurrentTryAgainTime - half;
+            m_CurrentTryAgainEffectStrength = (half - currentHalf) / half;
+        }
+        else
+        {
+            m_CurrentTryAgainEffectStrength = ((m_CurrentTryAgainTime * 2) / TryAgainTime);
+        }
+    }
+}
+
 void CPostEffects::UpdateChromaticAberration()
 {
     float value = 0.0f;
@@ -162,7 +191,7 @@ void CPostEffects::UpdateChromaticAberration()
     if (m_CurrentGameStartTime > 0.0f)
         value = GameStartCAEffectStrength * m_CurrentGameStartEffectStrength;
 
-    else if (gameInfo.m_EffectFullControl)
+    else if (gameInfo.m_EffectFullControl && !CGameInfo::Instance().m_IsGamePaused && !CGameInfo::Instance().m_IsPlayerDead)
         value = (FullControlEffectStrengthMax - FullControlEffectStrengthMin) * gameInfo.m_EffectFullControlStrength + FullControlEffectStrengthMin;
 
     else
@@ -196,7 +225,7 @@ void CPostEffects::UpdateBlur()
 {
     float strength = 0.0f;
 
-    if (CGameInfo::Instance().m_EffectBoost)
+    if (CGameInfo::Instance().m_EffectBoost && !CGameInfo::Instance().m_IsGamePaused && !CGameInfo::Instance().m_IsPlayerDead)
         strength = BoostEffectStrength;
 
     m_pBlur->m_ConstantBuffer.SetValueInBuffer(4, &strength);
@@ -211,6 +240,11 @@ void CPostEffects::UpdateRipple()
     {
         float value = 1.0f - m_CurrentGameStartEffectStrength;
         strength = (GameStartRIBeginEffectStrength - GameStartRIEndEffectStrength) * value + GameStartRIEndEffectStrength;
+    }
+    else if (m_CurrentTryAgainTime > 0.0f)
+    {
+        float value = 1.0f - m_CurrentTryAgainEffectStrength;
+        strength = (TryAgainRIBeginEffectStrength - TryAgainRIEndEffectStrength) * value + TryAgainRIEndEffectStrength;
     }
 
     m_pRipple->m_ConstantBuffer.SetValueInBuffer(4, &time);

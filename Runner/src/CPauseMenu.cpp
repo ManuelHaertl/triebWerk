@@ -58,6 +58,20 @@ void CPauseMenu::Start()
 
     twActiveUIWorld->AddUIEntity(m_pFieldBG);
 
+    // Field BG Hover --------------------------------------------
+
+    m_pFieldBGHover = twActiveUIWorld->CreateUIEntity();
+    m_pFieldBGHover->m_Transform.SetAnchorPoint(0.0f, 0.1f);
+
+    auto fieldBGHoverDrawable = twRenderer->CreateUIDrawable();
+    fieldBGHoverDrawable->SetActive(false);
+    fieldBGHoverDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardUI"));
+    fieldBGHoverDrawable->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_ui_bg_hover"));
+
+    m_pFieldBGHover->SetDrawable(fieldBGHoverDrawable);
+
+    twActiveUIWorld->AddUIEntity(m_pFieldBGHover);
+
     // Button Main Menu --------------------------------------------
 
     m_pButtonMainMenu = twActiveUIWorld->CreateUIEntity();
@@ -73,7 +87,7 @@ void CPauseMenu::Start()
 
     twActiveUIWorld->AddUIEntity(m_pButtonMainMenu);
 
-    // Font Start ------------------------------------------- 
+    // Font Main Menu ------------------------------------------- 
 
     m_pFontMainMenu = twActiveUIWorld->CreateUIEntity();
     m_pFontMainMenu->m_Transform.SetAnchorPoint(-0.474f, -0.6f);
@@ -202,7 +216,7 @@ void CPauseMenu::Start()
 
     twActiveUIWorld->AddUIEntity(m_pObjective);
 
-    // Font Objectives 1 ------------------------------------------- 
+    // Font Objectives 1 -------------------------------------------
 
     m_pFontObjective1 = twActiveUIWorld->CreateUIEntity();
     m_pFontObjective1->m_Transform.SetAnchorPoint(0.0f, -0.23f);
@@ -256,6 +270,13 @@ void CPauseMenu::Start()
 
 void CPauseMenu::Update(const SUIInput& a_rInput)
 {
+    if (CGameInfo::Instance().m_IsPlayerDead)
+    {
+        CGameInfo::Instance().m_IsGamePaused = false;
+        UpdateGraphics();
+        return;
+    }
+
     bool changeGraphics = false;
 
     if (a_rInput.m_Pause)
@@ -357,10 +378,11 @@ void CPauseMenu::End()
 void CPauseMenu::UpdateGraphics()
 {
     // Hide / show all elemenets depenging on if the game is paused
-    bool active = CGameInfo::Instance().m_IsGamePaused;
+    bool active = CGameInfo::Instance().m_IsGamePaused && (!CGameInfo::Instance().m_IsPlayerDead);
 
     m_pBackground->GetDrawable()->SetActive(active);
     m_pFieldBG->GetDrawable()->SetActive(active);
+    m_pFieldBGHover->GetDrawable()->SetActive(active);
     m_pButtonMainMenu->GetDrawable()->SetActive(active);
     m_pButtonOptions->GetDrawable()->SetActive(active);
     m_pButtonResume->GetDrawable()->SetActive(active);
@@ -399,6 +421,11 @@ void CPauseMenu::UpdateGraphics()
     // Current selected field
     if (active)
     {
+        if (!m_IsOnButtons)
+            m_pFieldBGHover->GetDrawable()->SetActive(true);
+        else
+            m_pFieldBGHover->GetDrawable()->SetActive(false);
+
         if (m_FieldIndex == 0)
         {
             m_pObjective->GetDrawable()->SetActive(true);

@@ -14,7 +14,6 @@ CPlayer::CPlayer()
     , m_pTrailMesh(nullptr)
     , m_pMainCamera(nullptr)
     , m_pBackground(nullptr)
-    , m_IsDead(false)
 	, m_FullResourcePlayed(true)
     , m_MetersFlewn(0.0f)
     , m_LastZ(0.0f)
@@ -39,7 +38,7 @@ void CPlayer::Start()
 
 void CPlayer::Update()
 {
-    if (!CGameInfo::Instance().m_IsGamePaused)
+    if (!CGameInfo::Instance().m_IsGamePaused && !CGameInfo::Instance().m_IsPlayerDead)
     {
         CheckInput();
         CheckResource();
@@ -64,10 +63,12 @@ void CPlayer::LateUpdate()
 	CGameInfo::Instance().m_PlayerPositionX = m_pEntity->m_Transform.GetPosition().m128_f32[0];
     CGameInfo::Instance().m_PlayerPositionZ = m_pEntity->m_Transform.GetPosition().m128_f32[2];
 
-    if (!twDebug->IsInDebug() && !CGameInfo::Instance().m_IsGamePaused)
+    if (!twDebug->IsInDebug())
     {
         SetCamera();
-        SetRotation();
+
+        if (!CGameInfo::Instance().m_IsGamePaused)
+            SetRotation();
     }
 }
 
@@ -92,9 +93,9 @@ void CPlayer::CollisionEnter(triebWerk::CCollisionEvent a_Collision)
     {
         if (!GodMode)
         {
-            if (m_IsDead == false)
+            if (!CGameInfo::Instance().m_IsPlayerDead)
                 triebWerk::CDebugLogfile::Instance().LogfText(triebWerk::CDebugLogfile::ELogType::Text, false, entity->m_ID.GetDescribtion().c_str());
-            m_IsDead = true;
+            CGameInfo::Instance().m_IsPlayerDead = true;
 			twAudio->PlaySFX(twResourceManager->GetSound("SFX_PlayerDeath"));
         }
     }
@@ -110,7 +111,6 @@ void CPlayer::Reset()
     m_CurrentResource = MaxResource;
     m_InFullControlMode = false;
     m_InBoostMode = false;
-    m_IsDead = false;
 	m_FullResourcePlayed = true;
     m_MetersFlewn = 0.0f;
     m_LastZ = 0.0f;
@@ -128,11 +128,6 @@ void CPlayer::SetBackground(triebWerk::CTransform * a_pBackground)
 float CPlayer::GetMetersFlewn() const
 {
     return m_MetersFlewn;
-}
-
-bool CPlayer::HasDied() const
-{
-    return m_IsDead;
 }
 
 void CPlayer::CreateTrail()
@@ -263,9 +258,6 @@ void CPlayer::CheckInput()
 
 void CPlayer::CheckResource()
 {
-
-	std::cout << m_CurrentResource << std::endl;
-
     CGameInfo& gameInfo = CGameInfo::Instance();
     bool gainResource = true;
     bool fullControlEffect = false;
@@ -379,14 +371,15 @@ void CPlayer::CheckResource()
 		}
 
     }
+
+    CGameInfo::Instance().m_PlayerResourcePercentage = m_CurrentResource / MaxResource;
 }
 
 void CPlayer::SetSpeed()
 {
     CGameInfo& gameInfo = CGameInfo::Instance();
 
-    DirectX::XMVECTOR velocity = m_pEntity->GetPhysicEntity()->GetBody()->m_Velocity;
-    
+    DirectX::XMVECTOR& velocity = m_pEntity->GetPhysicEntity()->GetBody()->m_Velocity;
 
     // Handles speed in X direction
     if (m_InFullControlMode == true)
@@ -433,9 +426,6 @@ void CPlayer::SetSpeed()
 
     // Speed in Y Direction
     velocity.m128_f32[2] = gameInfo.m_FlyStandardSpeed + gameInfo.m_FlyDifficultySpeed + gameInfo.m_FlyBoostSpeed;
-
-    // set the new speed
-    m_pEntity->GetPhysicEntity()->GetBody()->m_Velocity = velocity;
 }
 
 void CPlayer::CalculateDistanceFlewn()

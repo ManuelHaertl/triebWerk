@@ -1,0 +1,45 @@
+#pragma once
+#include <IMenu.h>
+#include <CEngine.h>
+
+class CGameEndMenu : public IMenu
+{
+private:
+    const int MaxButtonIndex = 3;
+
+    triebWerk::CTexture2D* m_pTextureUnderlinedButton[3];
+
+    triebWerk::CUIEntity* m_pBackground;
+    triebWerk::CUIEntity* m_pLogo;
+    triebWerk::CUIEntity* m_pScoreBoard;
+    triebWerk::CUIEntity* m_pButtonMainMenu;
+    triebWerk::CUIEntity* m_pButtonTryAgain;
+    triebWerk::CUIEntity* m_pButtonHighscore;
+
+    triebWerk::CUIEntity* m_pFontScoreBoard;
+
+    triebWerk::CUIEntity* m_pFontMainMenu;
+    triebWerk::CUIEntity* m_pFontTryAgain;
+    triebWerk::CUIEntity* m_pFontHighscore;
+
+    bool m_UpdateGraphics;
+
+    int m_SelectedButton;
+    int m_HoldValue;
+    bool m_LastState;
+
+    // effects
+    float m_CurrentMainMenuTime;
+    float m_CurrentTryAgainTime;
+
+public:
+    CGameEndMenu();
+    ~CGameEndMenu();
+
+    void Start() final;
+    void Update(const SUIInput& a_rInput) final;
+    void End() final;
+
+private:
+    void UpdateGraphics();
+};

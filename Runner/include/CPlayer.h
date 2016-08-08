@@ -51,8 +51,6 @@ private:
 	triebWerk::CMaterial* m_pFloorEffectMaterial;
     SPlayerInput m_PlayerInput;
 
-    bool m_IsDead;
-
     float m_MetersFlewn;
     float m_LastZ;
 	float m_LastX;
@@ -76,7 +74,6 @@ public:
     void SetBackground(triebWerk::CTransform* a_pBackground);
 
     float GetMetersFlewn() const;
-    bool HasDied() const;
 
 private:
     void CreateTrail();
