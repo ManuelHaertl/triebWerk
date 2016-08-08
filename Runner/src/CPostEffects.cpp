@@ -32,6 +32,7 @@ void CPostEffects::Start()
 {
     m_pPostEffect = twRenderer->CreatePostEffecthDrawable();
 	
+	AddBloom();
 	AddShockwave();
     AddChromaticAberration();
 	AddBlur();
@@ -39,6 +40,7 @@ void CPostEffects::Start()
     AddScanLines();
 	AddLensDistortion();
 	AddGrain();
+	
     
     m_pEntity->SetDrawable(m_pPostEffect);
 }
@@ -57,9 +59,8 @@ void CPostEffects::Update()
 
 void CPostEffects::AddChromaticAberration()
 {
-    m_pPostEffect->AddMaterial(twResourceManager->GetMaterial("ChromaticAberration"));
+	m_pChromaticAberration = m_pPostEffect->AddMaterial(twResourceManager->GetMaterial("ChromaticAberration"));
 
-    m_pChromaticAberration = m_pPostEffect->m_Materials[1];
     m_pChromaticAberration->m_pPixelShader.SetTexture(1, twResourceManager->GetTexture2D("t_noise"));
     m_pChromaticAberration->m_ConstantBuffer.SetValueInBuffer(5, &m_CurrentChromaticAberrationStrength);
 }
@@ -97,6 +98,30 @@ void CPostEffects::AddShockwave()
 	m_pShockwave->m_ConstantBuffer.SetValueInBuffer(4, &temp);
 	temp = 0.0f;
 	m_pShockwave->m_ConstantBuffer.SetValueInBuffer(5, &temp);
+}
+
+void CPostEffects::AddBloom()
+{
+	auto extract = m_pPostEffect->AddMaterial(twResourceManager->GetMaterial("Extract"));
+
+	auto blur = m_pPostEffect->AddMaterial(twResourceManager->GetMaterial("Blur"));
+	
+	float screenSize = twWindow->GetScreenWidth();
+	float blurFactor = 2.5f;
+	
+	blur->m_ConstantBuffer.SetValueInBuffer(4, &screenSize);
+	blur->m_ConstantBuffer.SetValueInBuffer(5, &blurFactor);
+	
+	
+	auto blurV = m_pPostEffect->AddMaterial(twResourceManager->GetMaterial("BlurV"));
+	
+	float screenSizeY = twWindow->GetScreenHeight();
+	
+	blurV->m_ConstantBuffer.SetValueInBuffer(4, &screenSizeY);
+	blurV->m_ConstantBuffer.SetValueInBuffer(5, &blurFactor);
+	
+	auto bloom = m_pPostEffect->AddMaterial(twResourceManager->GetMaterial("Bloom"));
+	bloom->m_pPixelShader.SetTexture(1, twRenderer->GetRenderTarget(0)->GetSceneTexture());
 }
 
 void CPostEffects::AddBlur()

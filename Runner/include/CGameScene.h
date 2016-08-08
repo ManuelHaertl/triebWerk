@@ -18,6 +18,8 @@ private:
 	CPlayer* m_pPlayerScript;
     float m_LastPlayerPos;
 
+	triebWerk::CMaterial* m_pMaterial;
+
 	//Audio
 	std::vector<triebWerk::CSound*> m_Music;
 	int m_LastAudioIndex;

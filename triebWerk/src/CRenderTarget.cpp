@@ -149,10 +149,6 @@ void triebWerk::CRenderTarget::Resize(unsigned int a_ScreenWidth, unsigned int a
 
 	for (size_t i = 0; i < 2; i++)
 	{
-
-		m_Texture[i].GetD3D11Texture()->Release();
-		m_Texture[i].GetShaderResourceView()->Release();
-
 		D3D11_TEXTURE2D_DESC textureDesc;
 		HRESULT result;
 		D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
@@ -196,6 +192,46 @@ void triebWerk::CRenderTarget::Resize(unsigned int a_ScreenWidth, unsigned int a
 
 	//Resize the scale of the quad
 	m_PlaneTransform.SetScale(static_cast<float>(m_Texture[0].GetWidth()), static_cast<float>(m_Texture[0].GetHeight()), 0);
+
+	//Descriptor
+	D3D11_TEXTURE2D_DESC textureDesc;
+	HRESULT result;
+	D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
+	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
+
+	ZeroMemory(&textureDesc, sizeof(textureDesc));
+	textureDesc.Width = a_ScreenWidth;
+	textureDesc.Height = a_ScreenHeight;
+	textureDesc.MipLevels = 1;
+	textureDesc.ArraySize = 1;
+	textureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	textureDesc.SampleDesc.Count = 1;
+	textureDesc.Usage = D3D11_USAGE_DEFAULT;
+	textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+	textureDesc.CPUAccessFlags = 0;
+	textureDesc.MiscFlags = 0;
+
+	ID3D11Texture2D* pTexture = nullptr;
+
+	//Create a "normal rgba texture" to render into
+	result = m_pGraphicsHandle->GetDevice()->CreateTexture2D(&textureDesc, NULL, &pTexture);
+
+	renderTargetViewDesc.Format = textureDesc.Format;
+	renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+	renderTargetViewDesc.Texture2D.MipSlice = 0;
+
+	ID3D11ShaderResourceView* pShaderResource = nullptr;
+
+	shaderResourceViewDesc.Format = textureDesc.Format;
+	shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
+	shaderResourceViewDesc.Texture2D.MipLevels = 1;
+
+	// Create the shader resource view.
+	result = m_pGraphicsHandle->GetDevice()->CreateShaderResourceView(pTexture, &shaderResourceViewDesc, &pShaderResource);
+
+	m_DefaultSceneTexture.SetTexture(a_ScreenWidth, a_ScreenHeight, pTexture, pShaderResource);
+
 }
 
 triebWerk::CTexture2D * triebWerk::CRenderTarget::GetSceneTexture()

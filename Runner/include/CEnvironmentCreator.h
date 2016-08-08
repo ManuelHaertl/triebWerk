@@ -91,5 +91,6 @@ private:
     void MoveRoad(const float a_MetersFlewn);
     void MoveGrid(const float a_MetersFlewn);
     void UpdateFog();
+	void UpdateFeathers();
     void RotateSnakes();
 };
