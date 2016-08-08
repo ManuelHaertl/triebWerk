@@ -28,6 +28,7 @@ void CGameScene::Start()
 
     CreatePlayer();
     CreatePostEffects();
+    LoadHighscore();
 
 	twResourceManager->GetAll("data\\Audio\\BGM\\game", &m_Music);
 
@@ -37,6 +38,7 @@ void CGameScene::Start()
     m_IngameUI.Start();
 
     m_pPlayerScript->SetBackground(m_EnvironmentCreator.GetBackground());
+
 }
 
 void CGameScene::Update()
@@ -88,6 +90,7 @@ void CGameScene::End()
     m_EnvironmentCreator.End();
     m_PatternManager.End();
     m_IngameUI.End();
+    SaveHighscore();
 }
 
 void CGameScene::Resume()
@@ -173,4 +176,12 @@ void CGameScene::PlayRandomSong(bool a_FadeIn)
 		twAudio->FadeInBGM(0.05f, true);
 	}
 
+}
+
+void CGameScene::LoadHighscore()
+{
+}
+
+void CGameScene::SaveHighscore()
+{
 }

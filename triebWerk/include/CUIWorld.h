@@ -17,6 +17,8 @@ namespace triebWerk
 
     private:
         static const size_t Start_Reserve_Size = 2;
+        static float m_ScreenResolutionX;
+        static float m_ScreenResolutionY;
         size_t m_CurrentSize;
 
         CElementContainer<CUIEntity*> m_Entities;
@@ -26,9 +28,9 @@ namespace triebWerk
 
         CRenderer* m_pRenderingHandle;
 
-        DirectX::XMFLOAT2 m_ScreenResolution;
         float m_ReferenceResolutionX;
         float m_ReferenceResolutionY;
+
         EScreenMatchState m_ScreenMatchState;
 
     public:

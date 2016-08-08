@@ -1,7 +1,5 @@
 #include <CEngine.h>
-#include <CGameScene.h>
-#include <CDebugScene.h>
-#include <CMenuScene.h>
+#include <CIntroScene.h>
 #include <CValueUpdater.h>
 #include <Shlobj.h>
 
@@ -53,15 +51,11 @@ int main()
 		return 0;
 	}
 
-    twResourceManager->LoadAllFilesInFolder("data");
+    twSceneManager->AddScene(new CIntroScene(), "Intro");
+    twSceneManager->SetActiveScene("Intro");
+
     CValueUpdater valueUpdater;
     valueUpdater.Start();
-    twSceneManager->AddScene(new CGameScene(), "Game");
-    twSceneManager->AddScene(new CMenuScene(), "Menu");
-    twSceneManager->AddScene(new CDebugScene(), "Debug");
-
-    twSceneManager->SetActiveScene("Game");
-    twSceneManager->SetActiveScene("Menu");
 
     // main loop, update game & engine
     bool run = true;
@@ -69,15 +63,6 @@ int main()
     {
         valueUpdater.Update();
         run = twEngine.Run();
-
-        if (twKeyboard.IsState(triebWerk::EKey::D1, triebWerk::EButtonState::Down))
-        {
-            twSceneManager->SetActiveScene("Game");
-        }
-        if (twKeyboard.IsState(triebWerk::EKey::D2, triebWerk::EButtonState::Down))
-        {
-            twSceneManager->SetActiveScene("Debug");
-        }
     }
 
     valueUpdater.End();

@@ -3,6 +3,7 @@
 #include <CGameInfo.h>
 #include <CMainMenu.h>
 #include <CManualMenu.h>
+#include <CHighscoreMenu.h>
 #include <CCreditsMenu.h>
 #include <COptionsMenu.h>
 #include <CPostEffects.h>
@@ -66,6 +67,7 @@ void CMenuScene::Update()
             RemoveSecondMenu();
             break;
         case EMenus::Highscore:
+            SetCurrentMenu(new CHighscoreMenu());
             break;
         case EMenus::Options:
             SetCurrentMenu(new COptionsMenu());
