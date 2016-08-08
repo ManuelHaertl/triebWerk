@@ -464,7 +464,7 @@ void CPlayer::UpdateFloorEffect()
 	m_LastX = currentX;
 
 
-	if (CGameInfo::Instance().m_IsGamePaused == false)
+	if (CGameInfo::Instance().m_IsGamePaused == false && CGameInfo::Instance().m_IsPlayerDead == false)
 	{
 		float time = twTime->GetTimeSinceStartup() * -1.0f;
 		m_pFloorEffectMaterial->m_ConstantBuffer.SetValueInBuffer(6, &time);

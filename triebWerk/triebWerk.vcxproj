@@ -150,6 +150,7 @@
     <ClCompile Include="src\CCollisionEvent.cpp" />
     <ClCompile Include="src\CDDSParser.cpp" />
     <ClCompile Include="src\CDebugLogfile.cpp" />
+    <ClCompile Include="src\CFileWriter.cpp" />
     <ClCompile Include="src\CFont.cpp" />
     <ClCompile Include="src\CFontFace.cpp" />
     <ClCompile Include="src\CFontManager.cpp" />
@@ -227,6 +228,7 @@
     <ClInclude Include="include\CCollisionEvent.h" />
     <ClInclude Include="include\CDDSParser.h" />
     <ClInclude Include="include\CDebugLogfile.h" />
+    <ClInclude Include="include\CFileWriter.h" />
     <ClInclude Include="include\CFont.h" />
     <ClInclude Include="include\CFontFace.h" />
     <ClInclude Include="include\CFontManager.h" />

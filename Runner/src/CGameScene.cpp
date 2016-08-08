@@ -2,6 +2,7 @@
 
 #include <CGameInfo.h>
 #include <CPostEffects.h>
+#include <CFileWriter.h>
 
 float g_TestValue = 0.0f; 
 
@@ -19,6 +20,11 @@ CGameScene::~CGameScene()
 void CGameScene::Start()
 {
     twDebug->Disable();
+
+	//triebWerk::CFileWriter t;
+	//t.CreateSaveFile("C:\\Users\\alexander.klinger\\Desktop\\save\\data.twf");
+	//t.SetParams("1High", "12312321311");
+	//t.SaveFile();
 
     CreatePlayer();
     CreatePostEffects();

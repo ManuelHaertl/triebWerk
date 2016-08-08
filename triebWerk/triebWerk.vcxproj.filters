@@ -241,6 +241,12 @@
     <Filter Include="Quelldateien\UI">
       <UniqueIdentifier>{6a0d434f-1d61-4a9b-a9a3-9d7e462a6e15}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headerdateien\Resource\Writer">
+      <UniqueIdentifier>{79fd12aa-5672-41ff-9788-c55182873812}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Resource\Writer">
+      <UniqueIdentifier>{93235498-ec41-4638-a994-e974bac99c54}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CEngine.cpp">
@@ -473,6 +479,9 @@
     </ClCompile>
     <ClCompile Include="src\CRenderQuad.cpp">
       <Filter>Quelldateien\Rendering\Batches</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CFileWriter.cpp">
+      <Filter>Quelldateien\Resource\Writer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -751,6 +760,9 @@
     </ClInclude>
     <ClInclude Include="include\CSoundEngine.h">
       <Filter>Headerdateien\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CFileWriter.h">
+      <Filter>Headerdateien\Resource\Writer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

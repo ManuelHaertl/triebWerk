@@ -66,10 +66,20 @@ void CRoadBorder::Update()
 		m_pMaterialRight->m_ConstantBuffer.SetValueInBuffer(4, &m_Color);
 	}
 
-	float time = twTime->GetTimeSinceStartup();
-	float time2 = time * -1;
-	m_pMaterialRight->m_ConstantBuffer.SetValueInBuffer(5, &time);
-	m_pMaterialLeft->m_ConstantBuffer.SetValueInBuffer(5, &time2);
+	if (CGameInfo::Instance().m_IsGamePaused == false && CGameInfo::Instance().m_IsPlayerDead == false)
+	{
+		float time = twTime->GetTimeSinceStartup();
+		float time2 = time * -1;
+		m_pMaterialRight->m_ConstantBuffer.SetValueInBuffer(5, &time);
+		m_pMaterialLeft->m_ConstantBuffer.SetValueInBuffer(5, &time2);
+	}
+	else
+	{
+		float time = 0.0f;
+		float time2 = time * -1;
+		m_pMaterialRight->m_ConstantBuffer.SetValueInBuffer(5, &time);
+		m_pMaterialLeft->m_ConstantBuffer.SetValueInBuffer(5, &time2);
+	}
 }
 
 void CRoadBorder::End()
