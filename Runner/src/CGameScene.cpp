@@ -176,26 +176,27 @@ void CGameScene::PlayRandomSong(bool a_FadeIn)
 
 void CGameScene::LoadHighscore()
 {
-    //CHAR my_documents[MAX_PATH];
-    //HRESULT result = SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, my_documents);
-    //std::string path = my_documents;
-    //path += "\\My Games\\AZ-Tec Racer\\highscore.twf";
+    CHAR my_documents[MAX_PATH];
+    HRESULT result = SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, my_documents);
+    std::string path = my_documents;
+    path += "\\My Games\\AZ-Tec Racer\\highscore.twf";
 
-    //auto file = twResourceManager->GetTWFData("highscore");
-    //
-    //if (file == nullptr)
-    //    return;
-    //
-    //CHighscore& highscore = CGameInfo::Instance().m_Highscore;
-    //
-    //for (auto value : file->m_ConfigurationTable)
-    //{
-    //    if (value.first == "score0") highscore.m_Scores[0] = std::stoi(value.second);
-    //    else if (value.first == "score1") highscore.m_Scores[1] = std::stoi(value.second);
-    //    else if (value.first == "score2") highscore.m_Scores[2] = std::stoi(value.second);
-    //    else if (value.first == "score3") highscore.m_Scores[3] = std::stoi(value.second);
-    //    else if (value.first == "score4") highscore.m_Scores[4] = std::stoi(value.second);
-    //}
+    twResourceManager->LoadSpecificFile(path.c_str(), true);
+    auto file = twResourceManager->GetTWFData("highscore");
+    
+    if (file == nullptr)
+        return;
+    
+    CHighscore& highscore = CGameInfo::Instance().m_Highscore;
+    
+    for (auto value : file->m_ConfigurationTable)
+    {
+        if (value.first == "score0") highscore.m_Scores[0] = std::stoi(value.second);
+        else if (value.first == "score1") highscore.m_Scores[1] = std::stoi(value.second);
+        else if (value.first == "score2") highscore.m_Scores[2] = std::stoi(value.second);
+        else if (value.first == "score3") highscore.m_Scores[3] = std::stoi(value.second);
+        else if (value.first == "score4") highscore.m_Scores[4] = std::stoi(value.second);
+    }
 }
 
 void CGameScene::SaveHighscore()
