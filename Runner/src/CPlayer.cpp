@@ -473,8 +473,18 @@ void CPlayer::UpdateFloorEffect()
 	float distance = currentX - m_LastX;
 	m_LastX = currentX;
 
-	float time = twTime->GetTimeSinceStartup() * -1.0f;
-	m_pFloorEffectMaterial->m_ConstantBuffer.SetValueInBuffer(6, &time);
+
+	if (CGameInfo::Instance().m_IsGamePaused == false)
+	{
+		float time = twTime->GetTimeSinceStartup() * -1.0f;
+		m_pFloorEffectMaterial->m_ConstantBuffer.SetValueInBuffer(6, &time);
+	}
+	else
+	{
+		float time = 0.0f;
+		m_pFloorEffectMaterial->m_ConstantBuffer.SetValueInBuffer(6, &time);
+	}
+
 
 	if (distance == 0)
 	{

@@ -1,6 +1,6 @@
 #include <CTexture2D.h>
 
-triebWerk::CTexture2D::CTexture2D()
+triebWerk::CTexture2D::CTexture2D() : m_pShaderResourceView(nullptr), m_pTexture(nullptr)
 {
 }
 
@@ -18,6 +18,18 @@ triebWerk::CTexture2D::~CTexture2D()
 
 void triebWerk::CTexture2D::SetTexture(unsigned int a_Width, unsigned int a_Height, ID3D11Texture2D * a_Texture, ID3D11ShaderResourceView * a_ShaderView)
 {
+	if (m_pShaderResourceView != nullptr)
+	{
+		m_pShaderResourceView->Release();
+		m_pShaderResourceView = nullptr;
+	}
+
+	if (m_pTexture != nullptr)
+	{
+		m_pTexture->Release();
+		m_pTexture = nullptr;
+	}
+		
 	m_Height = a_Height;
 	m_Width = a_Width;
 	m_pShaderResourceView = a_ShaderView;

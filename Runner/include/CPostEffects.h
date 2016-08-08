@@ -56,6 +56,8 @@ private:
 	void AddGrain();
 	void AddShockwave();
 
+	void AddBloom();
+
     void UpdateGoingIntoGameEffect();
     void UpdateChromaticAberration();
 	void UpdateLensDistortion();
