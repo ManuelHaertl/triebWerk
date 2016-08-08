@@ -1,7 +1,8 @@
 #include <CGameInfo.h>
 
 CGameInfo::CGameInfo()
-	: m_FlyStandardSpeed(60.0f)
+	: m_Highscore()
+    , m_FlyStandardSpeed(60.0f)
 	, m_FlyDifficultySpeed(0.0f)
 	, m_FlyBoostSpeed(0.0f)
 	, m_Difficulty(1)

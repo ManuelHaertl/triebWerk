@@ -221,6 +221,10 @@ void CGameEndMenu::Update(const SUIInput& a_rInput)
         m_LastState = CGameInfo::Instance().m_IsPlayerDead;
         m_SelectedButton = 1;
         m_UpdateGraphics = true;
+
+        CGameInfo::Instance().m_Highscore.IsHighscore() ?
+            ((triebWerk::CUIDrawable*)m_pScoreBoard->GetDrawable())->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_ui_score_new")) :
+            ((triebWerk::CUIDrawable*)m_pScoreBoard->GetDrawable())->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_ui_score_normal"));
     }
 
     if (!CGameInfo::Instance().m_IsPlayerDead)

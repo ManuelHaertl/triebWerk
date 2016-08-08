@@ -5,6 +5,7 @@
 #include <CDifficultyChanger.h>
 #include <CGameInfo.h>
 #include <CGameScene.h>
+#include <CIntroScene.h>
 #include <CPatternManager.h>
 #include <CPlayer.h>
 #include <CPoints.h>
@@ -76,6 +77,9 @@ float CPostEffects::GameStartRIEndEffectStrength = 3.0f;
 float CPostEffects::TryAgainTime = 1.0f;
 float CPostEffects::TryAgainRIBeginEffectStrength = 2000.0f;
 float CPostEffects::TryAgainRIEndEffectStrength = 3.0f;
+
+float CIntroScene::GALogoTime = 3.0f;
+float CIntroScene::TWLogoTime = 3.0f;
 
 CValueUpdater::CValueUpdater() :
     m_pValues(nullptr)
@@ -191,6 +195,14 @@ void CValueUpdater::UpdateValues()
         }
 
         // Menu
+        else if (value.first == "me_IntroGALogoTime")
+        {
+            CIntroScene::GALogoTime = std::stof(value.second);
+        }
+        else if (value.first == "me_IntroTWLogoTime")
+        {
+            CIntroScene::TWLogoTime = std::stof(value.second);
+        }
         else if (value.first == "me_GameStartTime")
         {
             CPostEffects::GameStartTime = std::stof(value.second);

@@ -153,6 +153,15 @@
     <ClCompile Include="src\CGameEndMenu.cpp">
       <Filter>Quelldateien\Menu</Filter>
     </ClCompile>
+    <ClCompile Include="src\CHighscore.cpp">
+      <Filter>Quelldateien\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CHighscoreMenu.cpp">
+      <Filter>Quelldateien\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CIntroScene.cpp">
+      <Filter>Quelldateien\Scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\CGameScene.h">
@@ -265,6 +274,15 @@
     </ClInclude>
     <ClInclude Include="include\CGameEndMenu.h">
       <Filter>Headerdateien\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CHighscore.h">
+      <Filter>Headerdateien\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CHighscoreMenu.h">
+      <Filter>Headerdateien\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CIntroScene.h">
+      <Filter>Headerdateien\Scenes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

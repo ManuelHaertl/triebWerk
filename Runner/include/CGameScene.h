@@ -35,4 +35,6 @@ private:
     void CreatePlayer();
     void CreatePostEffects();
 	void PlayRandomSong(bool a_FadeIn);
+    void LoadHighscore();
+    void SaveHighscore();
 };

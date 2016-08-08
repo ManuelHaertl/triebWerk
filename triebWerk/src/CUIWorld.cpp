@@ -1,5 +1,8 @@
 #include <CUIWorld.h>
 
+float triebWerk::CUIWorld::m_ScreenResolutionX = 800.0f;
+float triebWerk::CUIWorld::m_ScreenResolutionY = 600.0f;
+
 triebWerk::CUIWorld::CUIWorld()
     : m_CurrentSize(Start_Reserve_Size)
     , m_Entities()
@@ -7,7 +10,6 @@ triebWerk::CUIWorld::CUIWorld()
     , m_DrawEntities()
     , m_RemoveEntities()
     , m_pRenderingHandle(nullptr)
-    , m_ScreenResolution(800.0f, 600.0f)
     , m_ReferenceResolutionX(800.0f)
     , m_ReferenceResolutionY(600.0f)
     , m_ScreenMatchState(EScreenMatchState::Width)
@@ -96,8 +98,8 @@ void triebWerk::CUIWorld::RemoveDeleteEntities()
 
 void triebWerk::CUIWorld::SetScreenResolution(const int m_Width, const int m_Height)
 {
-    m_ScreenResolution.x = static_cast<float>(m_Width);
-    m_ScreenResolution.y = static_cast<float>(m_Height);
+    m_ScreenResolutionX = static_cast<float>(m_Width);
+    m_ScreenResolutionY = static_cast<float>(m_Height);
 
     UpdateScreenInformation();
 }
@@ -191,12 +193,12 @@ void triebWerk::CUIWorld::UpdateScreenInformation()
 {
     // calculate scale value
     if (m_ScreenMatchState == EScreenMatchState::Width)
-        CUITransform::ReferenceScale = m_ScreenResolution.x / m_ReferenceResolutionX;
+        CUITransform::ReferenceScale = m_ScreenResolutionX / m_ReferenceResolutionX;
     else
-        CUITransform::ReferenceScale = m_ScreenResolution.y / m_ReferenceResolutionY;
+        CUITransform::ReferenceScale = m_ScreenResolutionY / m_ReferenceResolutionY;
 
-    CUITransform::ResolutionWidth = m_ScreenResolution.x;
-    CUITransform::ResolutionHeight = m_ScreenResolution.y;
+    CUITransform::ResolutionWidth = m_ScreenResolutionX;
+    CUITransform::ResolutionHeight = m_ScreenResolutionY;
     CUITransform::ReferenceWidth = m_ReferenceResolutionX;
     CUITransform::ReferenceHeight = m_ReferenceResolutionY;
 

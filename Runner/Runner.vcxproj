@@ -167,7 +167,10 @@
     <ClCompile Include="src\CGameEndMenu.cpp" />
     <ClCompile Include="src\CGameInfo.cpp" />
     <ClCompile Include="src\CGameScene.cpp" />
+    <ClCompile Include="src\CHighscore.cpp" />
+    <ClCompile Include="src\CHighscoreMenu.cpp" />
     <ClCompile Include="src\CIngameUI.cpp" />
+    <ClCompile Include="src\CIntroScene.cpp" />
     <ClCompile Include="src\CMainMenu.cpp" />
     <ClCompile Include="src\CManualMenu.cpp" />
     <ClCompile Include="src\CMenuBackgroundScene.cpp" />
@@ -201,7 +204,10 @@
     <ClInclude Include="include\CGameEndMenu.h" />
     <ClInclude Include="include\CGameInfo.h" />
     <ClInclude Include="include\CGameScene.h" />
+    <ClInclude Include="include\CHighscore.h" />
+    <ClInclude Include="include\CHighscoreMenu.h" />
     <ClInclude Include="include\CIngameUI.h" />
+    <ClInclude Include="include\CIntroScene.h" />
     <ClInclude Include="include\CMainMenu.h" />
     <ClInclude Include="include\CManualMenu.h" />
     <ClInclude Include="include\CMenuBackgroundScene.h" />

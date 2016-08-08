@@ -1,10 +1,12 @@
 #pragma once
+#include <CHighscore.h>
 #include <EMenus.h>
 
 class CGameInfo
 {
 public:
     // Current game scores
+    CHighscore m_Highscore;
     float m_FlyStandardSpeed;
     float m_FlyDifficultySpeed;
     float m_FlyBoostSpeed;
