@@ -3,7 +3,7 @@
 #include <CDebugScene.h>
 #include <CMenuScene.h>
 #include <CValueUpdater.h>
-
+#include <Shlobj.h>
 
 int main()
 {
@@ -17,7 +17,12 @@ int main()
 	triebWerk::CTWFParser t;
 	triebWerk::CTWFData r;
 
-	t.ParseData("C:\\Users\\alexander.klinger\\Documents\\My Games\\A2Tec\\config.twf", &r);
+	CHAR my_documents[MAX_PATH];
+	HRESULT result = SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, my_documents);
+	std::string path = my_documents;
+	path += "\\My Games\\AZ-Tec Racer\\config.twf";
+
+	t.ParseData(path.c_str(), &r);
 
 	if (r.m_ConfigurationTable.size() == 0)
 	{
