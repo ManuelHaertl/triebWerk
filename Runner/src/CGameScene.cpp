@@ -3,6 +3,8 @@
 #include <CGameInfo.h>
 #include <CPostEffects.h>
 
+float g_TestValue = 0.0f; 
+
 CGameScene::CGameScene()
     : m_pPlayerScript(nullptr)
     , m_LastPlayerPos(0.0f)
@@ -51,6 +53,19 @@ void CGameScene::Update()
             twDebug->Disable();
     }
 
+	if (twGamepad.IsState(triebWerk::EGamepadButton::Y, triebWerk::EButtonState::Pressed, 0))
+	{
+		g_TestValue += twTime->GetDeltaTime();
+		m_pMaterial->m_ConstantBuffer.SetValueInBuffer(4, &g_TestValue);
+		
+	}
+	if (twGamepad.IsState(triebWerk::EGamepadButton::X, triebWerk::EButtonState::Pressed, 0))
+	{
+		g_TestValue -= twTime->GetDeltaTime();
+		m_pMaterial->m_ConstantBuffer.SetValueInBuffer(4, &g_TestValue);
+
+	}
+
     const float metersFlewn = m_pPlayerScript->GetMetersFlewn();
     CGameInfo::Instance().m_CurrentPoints += metersFlewn * PointsPerMeter;
 
@@ -77,7 +92,6 @@ void CGameScene::Resume()
     CGameInfo::Instance().Reset();
 
 	PlayRandomSong(true);
-
 }
 
 void CGameScene::CreatePlayer()
@@ -98,9 +112,14 @@ void CGameScene::CreatePlayer()
     // Drawable
     triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
     mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_player");
-    mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardTextureEmissiv"));
+    mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("Player"));
     mesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("t_player_diff"));
 	mesh->m_Material.m_pPixelShader.SetTexture(1, twResourceManager->GetTexture2D("t_player_emissive_18"));
+	mesh->m_Material.m_pGeometryShader.SetTexture(0, twResourceManager->GetTexture2D("t_noisecolor"));
+	mesh->m_Material.m_pGeometryShader.SetTexture(1, twResourceManager->GetTexture2D("t_noise"));
+	m_pMaterial = &mesh->m_Material;
+	float defaultValue = 0.0f;
+	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &defaultValue);
     entity->SetDrawable(mesh);
 
     // Physic

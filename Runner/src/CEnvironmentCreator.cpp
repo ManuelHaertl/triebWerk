@@ -57,6 +57,8 @@ void CEnvironmentCreator::Update(const float a_MetersFlewn)
 {
     m_ObjectUpdater.Update();
 
+	UpdateFeathers();
+
     m_FeathersSpawnTo += a_MetersFlewn;
     m_FeathersDeleteZone += a_MetersFlewn;
 
@@ -151,8 +153,12 @@ void CEnvironmentCreator::SpawnFeathers()
 
         triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
         mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_feathers_01");
-        mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardTexture"));
+        mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("Feathers"));
         mesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("feather_diff_01"));
+		float randomStart = twRandom::GetNumber(0.0f, 30.0f);
+
+		mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &randomStart);
+
         entity->SetDrawable(mesh);
 
         twActiveWorld->AddEntity(entity);
@@ -486,6 +492,15 @@ void CEnvironmentCreator::UpdateFog()
     {
         ((triebWerk::CMeshDrawable*)(m_Fogs[i]->GetDrawable()))->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &time);
     }
+}
+
+void CEnvironmentCreator::UpdateFeathers()
+{
+	float time = twTime->GetTimeSinceStartup();
+	for (auto feather : m_FeathersEntities)
+	{
+		reinterpret_cast<triebWerk::CMeshDrawable*>(feather->GetDrawable())->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &time);
+	}
 }
 
 void CEnvironmentCreator::RotateSnakes()
