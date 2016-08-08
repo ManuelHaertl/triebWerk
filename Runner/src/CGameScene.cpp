@@ -3,6 +3,7 @@
 #include <CGameInfo.h>
 #include <CPostEffects.h>
 #include <CFileWriter.h>
+#include <ShlObj.h>
 
 float g_TestValue = 0.0f; 
 
@@ -20,11 +21,6 @@ CGameScene::~CGameScene()
 void CGameScene::Start()
 {
     twDebug->Disable();
-
-	//triebWerk::CFileWriter t;
-	//t.CreateSaveFile("C:\\Users\\alexander.klinger\\Desktop\\save\\data.twf");
-	//t.SetParams("1High", "12312321311");
-	//t.SaveFile();
 
     CreatePlayer();
     CreatePostEffects();
@@ -180,8 +176,45 @@ void CGameScene::PlayRandomSong(bool a_FadeIn)
 
 void CGameScene::LoadHighscore()
 {
+    //CHAR my_documents[MAX_PATH];
+    //HRESULT result = SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, my_documents);
+    //std::string path = my_documents;
+    //path += "\\My Games\\AZ-Tec Racer\\highscore.twf";
+
+    //auto file = twResourceManager->GetTWFData("highscore");
+    //
+    //if (file == nullptr)
+    //    return;
+    //
+    //CHighscore& highscore = CGameInfo::Instance().m_Highscore;
+    //
+    //for (auto value : file->m_ConfigurationTable)
+    //{
+    //    if (value.first == "score0") highscore.m_Scores[0] = std::stoi(value.second);
+    //    else if (value.first == "score1") highscore.m_Scores[1] = std::stoi(value.second);
+    //    else if (value.first == "score2") highscore.m_Scores[2] = std::stoi(value.second);
+    //    else if (value.first == "score3") highscore.m_Scores[3] = std::stoi(value.second);
+    //    else if (value.first == "score4") highscore.m_Scores[4] = std::stoi(value.second);
+    //}
 }
 
 void CGameScene::SaveHighscore()
 {
+    CHighscore& highscore = CGameInfo::Instance().m_Highscore;
+
+    CHAR my_documents[MAX_PATH];
+    HRESULT result = SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, my_documents);
+    std::string path = my_documents;
+    path += "\\My Games\\AZ-Tec Racer\\highscore.twf";
+
+    triebWerk::CFileWriter fileWriter;
+    if (!fileWriter.CreateSaveFile(path.c_str()))
+        return;
+
+    fileWriter.SetParams("score0", std::to_string(highscore.m_Scores[0]));
+    fileWriter.SetParams("score1", std::to_string(highscore.m_Scores[1]));
+    fileWriter.SetParams("score2", std::to_string(highscore.m_Scores[2]));
+    fileWriter.SetParams("score3", std::to_string(highscore.m_Scores[3]));
+    fileWriter.SetParams("score4", std::to_string(highscore.m_Scores[4]));
+    fileWriter.SaveFile();
 }

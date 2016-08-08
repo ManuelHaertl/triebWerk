@@ -2,6 +2,7 @@
 
 #include <CGameInfo.h>
 #include <CPostEffects.h>
+#include <CHighscoreMenu.h>
 
 CGameEndMenu::CGameEndMenu()
     : m_UpdateGraphics(false)
@@ -10,6 +11,7 @@ CGameEndMenu::CGameEndMenu()
     , m_LastState(false)
     , m_CurrentMainMenuTime(0.0f)
     , m_CurrentTryAgainTime(0.0f)
+    , m_pSubScene(nullptr)
 {
 }
 
@@ -46,7 +48,7 @@ void CGameEndMenu::Start()
     // Logo -------------------------------------------------------
 
     m_pLogo = twActiveUIWorld->CreateUIEntity();
-    m_pLogo->m_Transform.SetAnchorPoint(0.0f, 0.8f);
+    m_pLogo->m_Transform.SetAnchorPoint(0.0f, 0.75f);
 
     auto logoDrawable = twRenderer->CreateUIDrawable();
     logoDrawable->SetActive(false);
@@ -60,7 +62,7 @@ void CGameEndMenu::Start()
     // ScoreBoard -------------------------------------------------------
 
     m_pScoreBoard = twActiveUIWorld->CreateUIEntity();
-    m_pScoreBoard->m_Transform.SetAnchorPoint(0.0f, 0.2f);
+    m_pScoreBoard->m_Transform.SetAnchorPoint(0.0f, 0.0f);
 
     auto scoreBoardDrawable = twRenderer->CreateUIDrawable();
     scoreBoardDrawable->SetActive(false);
@@ -74,7 +76,7 @@ void CGameEndMenu::Start()
     // Font ScoreBoard ------------------------------------------- 
 
     m_pFontScoreBoard = twActiveUIWorld->CreateUIEntity();
-    m_pFontScoreBoard->m_Transform.SetAnchorPoint(0.0f, 0.05f);
+    m_pFontScoreBoard->m_Transform.SetAnchorPoint(0.0f, -0.13f);
     m_pFontScoreBoard->m_Transform.SetPositionOffset(10.0f, -11.0f, -0.1f);
 
     auto scoreBoardText = twFontManager->CreateText();
@@ -92,7 +94,7 @@ void CGameEndMenu::Start()
     // Button Main Menu --------------------------------------------
 
     m_pButtonMainMenu = twActiveUIWorld->CreateUIEntity();
-    m_pButtonMainMenu->m_Transform.SetAnchorPoint(-0.474f, -0.6f);
+    m_pButtonMainMenu->m_Transform.SetAnchorPoint(-0.474f, -0.75f);
     m_pButtonMainMenu->m_Transform.SetPositionOffset(0.0f, 0.0f, 0.5f);
 
     auto buttonMainMenuDrawable = twRenderer->CreateUIDrawable();
@@ -105,7 +107,7 @@ void CGameEndMenu::Start()
     // Font Main Menu ------------------------------------------- 
 
     m_pFontMainMenu = twActiveUIWorld->CreateUIEntity();
-    m_pFontMainMenu->m_Transform.SetAnchorPoint(-0.474f, -0.6f);
+    m_pFontMainMenu->m_Transform.SetAnchorPoint(-0.474f, -0.75f);
     m_pFontMainMenu->m_Transform.SetPositionOffset(10.0f, -11.0f, 0.0f);
 
     auto mainMenuText = twFontManager->CreateText();
@@ -125,7 +127,7 @@ void CGameEndMenu::Start()
     // Button Resume --------------------------------------------
 
     m_pButtonTryAgain = twActiveUIWorld->CreateUIEntity();
-    m_pButtonTryAgain->m_Transform.SetAnchorPoint(0.0f, -0.6f);
+    m_pButtonTryAgain->m_Transform.SetAnchorPoint(0.0f, -0.75f);
     m_pButtonTryAgain->m_Transform.SetPositionOffset(0.0f, 0.0f, 0.5f);
 
     auto buttonTryAgainDrawable = twRenderer->CreateUIDrawable();
@@ -140,7 +142,7 @@ void CGameEndMenu::Start()
     // Font Try Again ------------------------------------------- 
 
     m_pFontTryAgain = twActiveUIWorld->CreateUIEntity();
-    m_pFontTryAgain->m_Transform.SetAnchorPoint(0.0f, -0.6f);
+    m_pFontTryAgain->m_Transform.SetAnchorPoint(0.0f, -0.75f);
     m_pFontTryAgain->m_Transform.SetPositionOffset(10.0f, -11.0f, 0.0f);
 
     auto tryAgainText = twFontManager->CreateText();
@@ -158,7 +160,7 @@ void CGameEndMenu::Start()
     // Button Highscore --------------------------------------------
 
     m_pButtonHighscore = twActiveUIWorld->CreateUIEntity();
-    m_pButtonHighscore->m_Transform.SetAnchorPoint(0.474f, -0.6f);
+    m_pButtonHighscore->m_Transform.SetAnchorPoint(0.474f, -0.75f);
     m_pButtonHighscore->m_Transform.SetPositionOffset(0.0f, 0.0f, 0.5f);
 
     auto buttonHighscoreDrawable = twRenderer->CreateUIDrawable();
@@ -173,7 +175,7 @@ void CGameEndMenu::Start()
     // Font Highscore ------------------------------------------- 
 
     m_pFontHighscore = twActiveUIWorld->CreateUIEntity();
-    m_pFontHighscore->m_Transform.SetAnchorPoint(0.474f, -0.6f);
+    m_pFontHighscore->m_Transform.SetAnchorPoint(0.474f, -0.75f);
     m_pFontHighscore->m_Transform.SetPositionOffset(10.0f, -11.0f, 0.0f);
 
     auto highscoreText = twFontManager->CreateText();
@@ -191,7 +193,6 @@ void CGameEndMenu::Start()
 
 void CGameEndMenu::Update(const SUIInput& a_rInput)
 {
-
     if (m_CurrentMainMenuTime > 0.0f)
     {
         m_CurrentMainMenuTime -= twTime->GetDeltaTime();
@@ -232,7 +233,45 @@ void CGameEndMenu::Update(const SUIInput& a_rInput)
         UpdateGraphics();
         return;
     }
+    
+    // menu change
+    if (CGameInfo::Instance().m_ChangeMenu)
+    {
+        CGameInfo::Instance().m_ChangeMenu = false;
 
+        switch (CGameInfo::Instance().m_Menu)
+        {
+        case EMenus::Main:
+            DeleteSubScene();
+
+            m_pScoreBoard->GetDrawable()->SetActive(true);
+            m_pFontScoreBoard->GetDrawable()->SetActive(true);
+            break;
+        case EMenus::Highscore:
+            m_pSubScene = new CHighscoreMenu();
+            m_pSubScene->Start();
+
+            m_pScoreBoard->GetDrawable()->SetActive(false);
+            m_pFontScoreBoard->GetDrawable()->SetActive(false);
+            break;
+        }
+    }
+
+    if (m_pSubScene != nullptr)
+        m_pSubScene->Update(a_rInput);
+    else
+        CheckInput(a_rInput);
+
+    UpdateGraphics();
+}
+
+void CGameEndMenu::End()
+{
+    DeleteSubScene();
+}
+
+void CGameEndMenu::CheckInput(const SUIInput& a_rInput)
+{
     // button hold down
     int value;
     a_rInput.m_ButtonHold ? value = 1 : value = 0;
@@ -274,21 +313,19 @@ void CGameEndMenu::Update(const SUIInput& a_rInput)
             CGameInfo::Instance().m_EffectTryAgain = true;
             break;
         case 2:
+            CGameInfo::Instance().m_ChangeMenu = true;
+            CGameInfo::Instance().m_Menu = EMenus::Highscore;
             break;
         }
     }
-
-    UpdateGraphics();
-}
-
-void CGameEndMenu::End()
-{
 }
 
 void CGameEndMenu::UpdateGraphics()
 {
     if (!m_UpdateGraphics)
         return;
+
+    m_UpdateGraphics = false;
 
     // Hide / show all elemenets depenging on if the game is paused
     bool active = CGameInfo::Instance().m_IsPlayerDead;
@@ -316,4 +353,14 @@ void CGameEndMenu::UpdateGraphics()
 
     // Score
     ((triebWerk::CFontDrawable*)m_pFontScoreBoard->GetDrawable())->m_pText->SetText(std::to_string((size_t)CGameInfo::Instance().m_TotalPoints));
+}
+
+void CGameEndMenu::DeleteSubScene()
+{
+    if (m_pSubScene != nullptr)
+    {
+        m_pSubScene->End();
+        delete m_pSubScene;
+        m_pSubScene = nullptr;
+    }
 }

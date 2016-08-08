@@ -3,47 +3,15 @@
 #include <CValueUpdater.h>
 #include <Shlobj.h>
 
+void LoadConfig(triebWerk::SEngineConfiguration& a_rConfig);
+
 int main()
 {
-    //_crtBreakAlloc = 179147;
+    //_crtBreakAlloc = 154;
 
     // Initialize the engine
     triebWerk::SEngineConfiguration config;
-    config.m_Name = "AZ-TecRunner";
-    config.m_PhysicTimeStamp = 0.01f;
-
-	triebWerk::CTWFParser t;
-	triebWerk::CTWFData r;
-
-	CHAR my_documents[MAX_PATH];
-	HRESULT result = SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, my_documents);
-	std::string path = my_documents;
-	path += "\\My Games\\AZ-Tec Racer\\config.twf";
-
-	t.ParseData(path.c_str(), &r);
-
-	if (r.m_ConfigurationTable.size() == 0)
-	{
-		config.m_Width = 1600;
-		config.m_Height = 1000;
-		config.m_Fullscreen = false;
-		config.m_VSync = false;
-		config.m_TargetFPS = 60;
-		config.m_MasterVolume = 0.0f;
-		config.m_BGMVolume = 1.0f;
-		config.m_SFXVolume = 1.0f;
-	}
-	else
-	{
-		config.m_Width = std::stoi(r.GetValue("width"));
-		config.m_Height = std::stoi(r.GetValue("height"));
-		config.m_Fullscreen = std::stoi(r.GetValue("fullscreen"));
-		config.m_VSync = std::stoi(r.GetValue("vsync"));
-		config.m_TargetFPS = std::stoi(r.GetValue("fpslock"));
-		config.m_MasterVolume = std::stof(r.GetValue("mastervolume"));
-		config.m_BGMVolume = std::stof(r.GetValue("bgmvolume"));
-		config.m_SFXVolume = std::stof(r.GetValue("sfxvolume"));
-	}
+    LoadConfig(config);
 
 	if (twEngine.Initialize(config) == false)
 	{
@@ -70,4 +38,43 @@ int main()
 
     _CrtDumpMemoryLeaks();
     return 0;
+}
+
+void LoadConfig(triebWerk::SEngineConfiguration& a_rConfig)
+{
+    a_rConfig.m_Name = "AZ-Tec Racer";
+    a_rConfig.m_PhysicTimeStamp = 0.01f;
+
+    triebWerk::CTWFParser parser;
+    triebWerk::CTWFData data;
+
+    CHAR my_documents[MAX_PATH];
+    HRESULT result = SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, my_documents);
+    std::string path = my_documents;
+    path += "\\My Games\\AZ-Tec Racer\\config.twf";
+
+    parser.ParseData(path.c_str(), &data);
+
+    if (data.m_ConfigurationTable.size() == 0)
+    {
+        a_rConfig.m_Width = 1600;
+        a_rConfig.m_Height = 1000;
+        a_rConfig.m_Fullscreen = false;
+        a_rConfig.m_VSync = false;
+        a_rConfig.m_TargetFPS = 60;
+        a_rConfig.m_MasterVolume = 1.0f;
+        a_rConfig.m_BGMVolume = 1.0f;
+        a_rConfig.m_SFXVolume = 1.0f;
+    }
+    else
+    {
+        a_rConfig.m_Width = std::stoi(data.GetValue("width"));
+        a_rConfig.m_Height = std::stoi(data.GetValue("height"));
+        a_rConfig.m_Fullscreen = std::stoi(data.GetValue("fullscreen"));
+        a_rConfig.m_VSync = std::stoi(data.GetValue("vsync"));
+        a_rConfig.m_TargetFPS = std::stoi(data.GetValue("fpslock"));
+        a_rConfig.m_MasterVolume = std::stof(data.GetValue("mastervolume"));
+        a_rConfig.m_BGMVolume = std::stof(data.GetValue("bgmvolume"));
+        a_rConfig.m_SFXVolume = std::stof(data.GetValue("sfxvolume"));
+    }
 }
