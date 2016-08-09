@@ -40,6 +40,13 @@ void CRoadBorder::Start()
 
 void CRoadBorder::Update()
 {
+	if (CGameInfo::Instance().m_IsPlayerDead)
+	{
+		m_pEntity->GetDrawable()->SetActive(false);
+		m_pRightBorder->GetDrawable()->SetActive(false);
+		return;
+	}
+
 	float distanceLeft = m_pEntity->m_Transform.GetPosition().m128_f32[0] - CGameInfo::Instance().m_PlayerPositionX;
 
 	if (distanceLeft > m_DistanceToShow * -1)

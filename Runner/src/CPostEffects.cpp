@@ -103,22 +103,26 @@ void CPostEffects::AddShockwave()
 void CPostEffects::AddBloom()
 {
 	auto extract = m_pPostEffect->AddMaterial(twResourceManager->GetMaterial("Extract"));
+	
+	auto blurV = m_pPostEffect->AddMaterial(twResourceManager->GetMaterial("BlurV"));
+
+	float blurFactor = 2.5f;
+
+	float screenSizeY = twWindow->GetScreenHeight();
+
+	blurV->m_ConstantBuffer.SetValueInBuffer(4, &screenSizeY);
+	blurV->m_ConstantBuffer.SetValueInBuffer(5, &blurFactor);
 
 	auto blur = m_pPostEffect->AddMaterial(twResourceManager->GetMaterial("Blur"));
 	
 	float screenSize = twWindow->GetScreenWidth();
-	float blurFactor = 2.5f;
+
 	
 	blur->m_ConstantBuffer.SetValueInBuffer(4, &screenSize);
 	blur->m_ConstantBuffer.SetValueInBuffer(5, &blurFactor);
 	
 	
-	auto blurV = m_pPostEffect->AddMaterial(twResourceManager->GetMaterial("BlurV"));
-	
-	float screenSizeY = twWindow->GetScreenHeight();
-	
-	blurV->m_ConstantBuffer.SetValueInBuffer(4, &screenSizeY);
-	blurV->m_ConstantBuffer.SetValueInBuffer(5, &blurFactor);
+
 	
 	auto bloom = m_pPostEffect->AddMaterial(twResourceManager->GetMaterial("Bloom"));
 	bloom->m_pPixelShader.SetTexture(1, twRenderer->GetRenderTarget(0)->GetSceneTexture());
@@ -129,6 +133,10 @@ void CPostEffects::AddBlur()
     m_pBlur = m_pPostEffect->AddMaterial(twResourceManager->GetMaterial("RadialBlur"));
     float strength = 0.0f;
     m_pBlur->m_ConstantBuffer.SetValueInBuffer(4, &strength);
+	
+	auto t = twResourceManager->GetTexture2D("t_blur_lookup");
+
+	m_pBlur->m_pPixelShader.SetTexture(1, t);
 }
 
 void CPostEffects::UpdateGoingIntoGameEffect()

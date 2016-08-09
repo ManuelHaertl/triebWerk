@@ -45,6 +45,7 @@ private:
 	float m_TrailBlend;
 
 	triebWerk::CEntity* m_pDangerHitbox;
+	triebWerk::CEntity* m_pFloorEffect;
     triebWerk::CMeshDrawable* m_pTrailMesh;
     triebWerk::CCamera* m_pMainCamera;
     triebWerk::CTransform* m_pBackground;
@@ -58,6 +59,8 @@ private:
 	DirectX::XMVECTOR m_FloorEffectLastPosition;
 	float m_FloorEffectCounterRight;
 	float m_FloorEffectCounterLeft;
+	float m_DyingSpeed;
+	float m_DyingCameraZ;
 
 public:
     CPlayer();
@@ -84,6 +87,7 @@ private:
     void SetSpeed();
     void CalculateDistanceFlewn();
     void UpdateTrail();
+	void UpdateDying();
 	void UpdateFloorEffect();
     void SetCamera();
     void SetRotation();

@@ -27,6 +27,7 @@ private:
     int m_SelectedButton;
     int m_HoldValue;
     bool m_LastState;
+	bool m_NewHighscore;
 
     // effects
     float m_CurrentMainMenuTime;

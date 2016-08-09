@@ -2,8 +2,6 @@
 
 #include <CCollectedPoint.h>
 
-DirectX::XMFLOAT3 CPoints::Color[3] = { DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), DirectX::XMFLOAT3(1.0f, 1.0f, 0.f), DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f) };
-
 CPoints::CPoints(const size_t a_AmountID)
     : m_AmountID(a_AmountID)
     , m_RotateSpeedX(0.0f)

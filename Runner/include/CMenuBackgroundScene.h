@@ -1,5 +1,6 @@
 #pragma once
 #include <CEngine.h>
+#include <CObjectUpdater.h>
 
 class CMenuBackgroundScene
 {
@@ -17,6 +18,8 @@ private:
     triebWerk::CEntity* m_pSnake2;
     triebWerk::CEntity* m_pSnake3;
 
+	triebWerk::CElementContainer<triebWerk::CEntity*> m_Fogs;
+	CObjectUpdater m_ObjectUpdater;
 	std::list<triebWerk::CConstantBuffer*> m_FeathersBuffers;
 
 public:
@@ -33,4 +36,5 @@ private:
     void CreateBackground();
     void CreateSnakeLoops();
     void CreateFeathers();
+	void CreateFog();
 };

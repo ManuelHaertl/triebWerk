@@ -41,6 +41,7 @@ int CEnvironmentCreator::FeatherSpawnProbability = 40;
 float CEnvironmentCreator::SnakeRotateSpeed1 = -3.0f;
 float CEnvironmentCreator::SnakeRotateSpeed2 = -2.0f;
 float CEnvironmentCreator::SnakeRotateSpeed3 = -1.0f;
+DirectX::XMFLOAT3 CPoints::Color[3] = { DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), DirectX::XMFLOAT3(1.0f, 1.0f, 0.f), DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f) };
 
 float CPatternManager::SpawnDistance = 300.0f;
 float CPatternManager::StartFreeDistance = 150.0f;
@@ -273,7 +274,44 @@ void CValueUpdater::UpdateValues()
         {
             CPoints::Points[2] = std::stoi(value.second);
         }
+		else if(value.first == "po_Color1R")
+		{
+			CPoints::Color[0].x = static_cast<float>(std::stoi(value.second) / 255);
+		}
+		else if (value.first == "po_Color1G")
+		{
+			CPoints::Color[0].y = static_cast<float>(std::stoi(value.second) / 255);
+		}
+		else if (value.first == "po_Color1B")
+		{
+			CPoints::Color[0].z = static_cast<float>(std::stoi(value.second) / 255);
+		}
+		else if (value.first == "po_Color2R")
+		{
+			CPoints::Color[1].x = static_cast<float>(std::stoi(value.second) / 255);
+		}
+		else if (value.first == "po_Color2G")
+		{
+			CPoints::Color[1].y = static_cast<float>(std::stoi(value.second) / 255);
+		}
+		else if (value.first == "po_Color2B")
+		{
+			CPoints::Color[1].z = static_cast<float>(std::stoi(value.second) / 255);
+		}
+		else if (value.first == "po_Color3R")
+		{
+			CPoints::Color[2].x = static_cast<float>(std::stoi(value.second) / 255);
+		}
+		else if (value.first == "po_Color3G")
+		{
+			CPoints::Color[2].y = static_cast<float>(std::stoi(value.second) / 255);
+		}
+		else if (value.first == "po_Color3B")
+		{
+			CPoints::Color[2].z = static_cast<float>(std::stoi(value.second) / 255);
+		}
 
+		
         // Difficulty Changer
         else if (value.first == "dc_ScoreDifficulty2")
         {

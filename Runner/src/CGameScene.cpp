@@ -61,19 +61,6 @@ void CGameScene::Update()
             twDebug->Disable();
     }
 
-	if (twGamepad.IsState(triebWerk::EGamepadButton::Y, triebWerk::EButtonState::Pressed, 0))
-	{
-		g_TestValue += twTime->GetDeltaTime();
-		m_pMaterial->m_ConstantBuffer.SetValueInBuffer(4, &g_TestValue);
-		
-	}
-	if (twGamepad.IsState(triebWerk::EGamepadButton::X, triebWerk::EButtonState::Pressed, 0))
-	{
-		g_TestValue -= twTime->GetDeltaTime();
-		m_pMaterial->m_ConstantBuffer.SetValueInBuffer(4, &g_TestValue);
-
-	}
-
     const float metersFlewn = m_pPlayerScript->GetMetersFlewn();
     CGameInfo::Instance().m_CurrentPoints += metersFlewn * PointsPerMeter;
 

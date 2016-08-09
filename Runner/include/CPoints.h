@@ -5,9 +5,9 @@ class CPoints : public triebWerk::IBehaviour
 {
 public:
     static int Points[3];
-
+	static DirectX::XMFLOAT3 Color[3];
 private:
-    static DirectX::XMFLOAT3 Color[3];
+
 
     const float RotateSpeedZ = 130.0f;
     const float MinRotateSpeed = 15.0f;

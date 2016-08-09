@@ -10,6 +10,7 @@ CGameEndMenu::CGameEndMenu()
     , m_LastState(false)
     , m_CurrentMainMenuTime(0.0f)
     , m_CurrentTryAgainTime(0.0f)
+	, m_NewHighscore(false)
 {
 }
 
@@ -64,8 +65,10 @@ void CGameEndMenu::Start()
 
     auto scoreBoardDrawable = twRenderer->CreateUIDrawable();
     scoreBoardDrawable->SetActive(false);
-    scoreBoardDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardUI"));
+    scoreBoardDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("UIHighscore"));
     scoreBoardDrawable->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_ui_score_normal"));
+	float defaultValue = 0.0f;
+	scoreBoardDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &defaultValue);
 
     m_pScoreBoard->SetDrawable(scoreBoardDrawable);
 
@@ -222,9 +225,17 @@ void CGameEndMenu::Update(const SUIInput& a_rInput)
         m_SelectedButton = 1;
         m_UpdateGraphics = true;
 
-        CGameInfo::Instance().m_Highscore.IsHighscore() ?
-            ((triebWerk::CUIDrawable*)m_pScoreBoard->GetDrawable())->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_ui_score_new")) :
-            ((triebWerk::CUIDrawable*)m_pScoreBoard->GetDrawable())->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_ui_score_normal"));
+		if (CGameInfo::Instance().m_Highscore.IsHighscore())
+		{
+			((triebWerk::CUIDrawable*)m_pScoreBoard->GetDrawable())->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_ui_score_new"));
+			m_NewHighscore = true;
+		}
+		else
+		{
+			((triebWerk::CUIDrawable*)m_pScoreBoard->GetDrawable())->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_ui_score_normal"));
+			m_NewHighscore = false;
+		}
+
     }
 
     if (!CGameInfo::Instance().m_IsPlayerDead)
@@ -316,4 +327,10 @@ void CGameEndMenu::UpdateGraphics()
 
     // Score
     ((triebWerk::CFontDrawable*)m_pFontScoreBoard->GetDrawable())->m_pText->SetText(std::to_string((size_t)CGameInfo::Instance().m_TotalPoints));
+
+	float time = twTime->GetTimeSinceStartup();
+
+	if (m_NewHighscore)
+		reinterpret_cast<triebWerk::CUIDrawable*>(m_pScoreBoard->GetDrawable())->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &time);
+
 }
