@@ -36,6 +36,9 @@ private:
     int m_ButtonIndex;
     size_t m_HoldValue;
 
+    // effect
+    float m_CurrentMainMenuTime;
+
 public:
     CPauseMenu();
     ~CPauseMenu();

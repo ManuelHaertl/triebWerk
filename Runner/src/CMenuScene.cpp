@@ -111,6 +111,8 @@ void CMenuScene::Resume()
         m_pMainMenu->Resume();
     }
 	twAudio->PlayBGM(m_pBackgroundMusic, true, true);
+
+    twActiveUIWorld->SetReferenceResolution(1920, 1080.0f, triebWerk::CUIWorld::EScreenMatchState::Height);
 }
 
 void CMenuScene::CheckInput()

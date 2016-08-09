@@ -1,6 +1,7 @@
 #include <CPauseMenu.h>
 
 #include <CGameInfo.h>
+#include <CPostEffects.h>
 
 CPauseMenu::CPauseMenu()
     : m_IsPaused(false)
@@ -8,6 +9,7 @@ CPauseMenu::CPauseMenu()
     , m_ButtonIndex(1)
     , m_FieldIndex(0)
     , m_HoldValue(0)
+    , m_CurrentMainMenuTime(0.0f)
 {
 }
 
@@ -277,6 +279,18 @@ void CPauseMenu::Update(const SUIInput& a_rInput)
         return;
     }
 
+    if (m_CurrentMainMenuTime > 0.0f)
+    {
+        m_CurrentMainMenuTime -= twTime->GetDeltaTime();
+        if (m_CurrentMainMenuTime <= 0.0f)
+        {
+            m_CurrentMainMenuTime = 0.0f;
+            twSceneManager->SetActiveScene("Menu");
+        }
+
+        return;
+    }
+
     bool changeGraphics = false;
 
     if (a_rInput.m_Pause)
@@ -355,7 +369,8 @@ void CPauseMenu::Update(const SUIInput& a_rInput)
                 switch (m_ButtonIndex)
                 {
                 case 0:
-                    twSceneManager->SetActiveScene("Menu");
+                    m_CurrentMainMenuTime = CPostEffects::GameStartTime / 2.0f;
+                    CGameInfo::Instance().m_EffectGoingIntoGame = true;
                     break;
                 case 1:
                     CGameInfo::Instance().m_IsGamePaused = false;

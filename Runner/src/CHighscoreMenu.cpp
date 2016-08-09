@@ -32,11 +32,39 @@ void CHighscoreMenu::Start()
 
     for (size_t i = 0; i < 5; i++)
     {
-        std::string text = std::to_string(i + 1) + ".   " + std::to_string(CGameInfo::Instance().m_Highscore.m_Scores[i]);
+        std::string text = std::to_string((i + 1)) + ".";
+
+        m_pNumbers[i] = twActiveUIWorld->CreateUIEntity();
+        m_pNumbers[i]->m_Transform.SetAnchorPoint(-0.05f, (0.2f - ((float)i * 0.1f)));
+        if (i == 0)
+            m_pNumbers[i]->m_Transform.SetPositionOffset(3.0f, -11.0f, -0.1f);
+        else
+            m_pNumbers[i]->m_Transform.SetPositionOffset(10.0f, -11.0f, -0.1f);
+
+        auto scoreText = twFontManager->CreateText();
+        scoreText->Set(font, text, 1.0f);
+        scoreText->SetTextAlign(triebWerk::ETextAlign::MiddleRight);
+
+        auto scoreTextDrawable = twRenderer->CreateFontDrawable();
+        scoreTextDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardFont"));
+        scoreTextDrawable->m_pText = scoreText;
+        scoreTextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+
+        m_pNumbers[i]->SetDrawable(scoreTextDrawable);
+        twActiveUIWorld->AddUIEntity(m_pNumbers[i]);
+    }
+
+    for (size_t i = 0; i < 5; i++)
+    {
+        std::string text = std::to_string(CGameInfo::Instance().m_Highscore.m_Scores[i]);
 
         m_pScores[i] = twActiveUIWorld->CreateUIEntity();
-        m_pScores[i]->m_Transform.SetAnchorPoint(-0.2f, (0.3f - ((float)i * 0.1f)));
-        m_pScores[i]->m_Transform.SetPositionOffset(10.0f, -11.0f, -0.1f);
+        m_pScores[i]->m_Transform.SetAnchorPoint(0.05f, (0.2f - ((float)i * 0.1f)));
+
+        if (text[0] == '1')
+            m_pScores[i]->m_Transform.SetPositionOffset(3.0f, -11.0f, -0.1f);
+        else
+            m_pScores[i]->m_Transform.SetPositionOffset(10.0f, -11.0f, -0.1f);
 
         auto scoreText = twFontManager->CreateText();
         scoreText->Set(font, text, 1.0f);
@@ -64,6 +92,12 @@ void CHighscoreMenu::Update(const SUIInput& a_rInput)
 void CHighscoreMenu::End()
 {
     twActiveUIWorld->RemoveUIEntity(m_pFieldBG);
+    twActiveUIWorld->RemoveUIEntity(m_pNumbers[0]);
+    twActiveUIWorld->RemoveUIEntity(m_pNumbers[1]);
+    twActiveUIWorld->RemoveUIEntity(m_pNumbers[2]);
+    twActiveUIWorld->RemoveUIEntity(m_pNumbers[3]);
+    twActiveUIWorld->RemoveUIEntity(m_pNumbers[4]);
+
     twActiveUIWorld->RemoveUIEntity(m_pScores[0]);
     twActiveUIWorld->RemoveUIEntity(m_pScores[1]);
     twActiveUIWorld->RemoveUIEntity(m_pScores[2]);

@@ -5,8 +5,6 @@
 #include <CFileWriter.h>
 #include <ShlObj.h>
 
-float g_TestValue = 0.0f; 
-
 CGameScene::CGameScene()
     : m_pPlayerScript(nullptr)
     , m_LastPlayerPos(0.0f)
@@ -57,19 +55,6 @@ void CGameScene::Update()
             twDebug->Disable();
     }
 
-	if (twGamepad.IsState(triebWerk::EGamepadButton::Y, triebWerk::EButtonState::Pressed, 0))
-	{
-		g_TestValue += twTime->GetDeltaTime();
-		m_pMaterial->m_ConstantBuffer.SetValueInBuffer(4, &g_TestValue);
-		
-	}
-	if (twGamepad.IsState(triebWerk::EGamepadButton::X, triebWerk::EButtonState::Pressed, 0))
-	{
-		g_TestValue -= twTime->GetDeltaTime();
-		m_pMaterial->m_ConstantBuffer.SetValueInBuffer(4, &g_TestValue);
-
-	}
-
     const float metersFlewn = m_pPlayerScript->GetMetersFlewn();
     CGameInfo::Instance().m_CurrentPoints += metersFlewn * PointsPerMeter;
 
@@ -97,6 +82,8 @@ void CGameScene::Resume()
     CGameInfo::Instance().Reset();
 
 	PlayRandomSong(true);
+
+    twActiveUIWorld->SetReferenceResolution(1920, 1080.0f, triebWerk::CUIWorld::EScreenMatchState::Height);
 }
 
 void CGameScene::CreatePlayer()
@@ -131,7 +118,7 @@ void CGameScene::CreatePlayer()
     auto physicEntity = m_pWorld->m_pPhysicWorld->CreatePhysicEntity();
 
     auto collbox = m_pWorld->m_pPhysicWorld->CreateAABBCollider();
-    collbox->CreateFromVertices(mesh->m_pMesh->m_pVertices, mesh->m_pMesh->m_VertexCount);
+    collbox->SetSize(1.77f, 0.68f, 2.48f);
     collbox->m_CheckCollision = true;
     physicEntity->AddCollider(collbox);
 
