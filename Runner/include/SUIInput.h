@@ -5,6 +5,8 @@ struct SUIInput
     bool m_Right;
     bool m_Up;
     bool m_Down;
+    bool m_LeftHold;
+    bool m_RightHold;
 
     bool m_ButtonHold;
 
@@ -17,6 +19,8 @@ struct SUIInput
         , m_Right(false)
         , m_Up(false)
         , m_Down(false)
+        , m_LeftHold(false)
+        , m_RightHold(false)
         , m_Select(false)
         , m_Back(false)
         , m_Pause(false)

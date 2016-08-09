@@ -23,6 +23,7 @@ CGameEndMenu::~CGameEndMenu()
 void CGameEndMenu::Start()
 {
     auto font = twFontManager->GetFont(twResourceManager->GetFontFace("AGENCYB"), 30);
+    auto fontBig = twFontManager->GetFont(twResourceManager->GetFontFace("AGENCYB"), 50);
 
     m_pTextureUnderlinedButton[0] = twResourceManager->GetTexture2D("T_ui_regularbutton_underlined_normal");
     m_pTextureUnderlinedButton[1] = twResourceManager->GetTexture2D("T_ui_regularbutton_underlined_hover");
@@ -133,14 +134,14 @@ void CGameEndMenu::Start()
 
 	twActiveUIWorld->AddUIEntity(m_pScoreFontElement);
 
-    // Font ScoreBoard ------------------------------------------- 
+    // Font ScoreBoard -------------------------------------------
 
     m_pFontScoreBoard = twActiveUIWorld->CreateUIEntity();
     m_pFontScoreBoard->m_Transform.SetAnchorPoint(0.0f, -0.07f);
-    m_pFontScoreBoard->m_Transform.SetPositionOffset(10.0f, -11.0f, -0.1f);
+    m_pFontScoreBoard->m_Transform.SetPositionOffset(18.0f, -17.0f, -0.1f);
 
     auto scoreBoardText = twFontManager->CreateText();
-    scoreBoardText->Set(font, "0", 1.0f);
+    scoreBoardText->Set(fontBig, "0", 1.0f);
 
     auto scoreBoardTextDrawable = twRenderer->CreateFontDrawable();
     scoreBoardTextDrawable->SetActive(false);

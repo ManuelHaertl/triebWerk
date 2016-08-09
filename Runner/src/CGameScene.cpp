@@ -22,7 +22,7 @@ void CGameScene::Start()
 
     CreatePlayer();
     CreatePostEffects();
-    //LoadHighscore();
+    LoadHighscore();
 
 	twResourceManager->GetAll("data\\Audio\\BGM\\game", &m_Music);
 
@@ -32,7 +32,6 @@ void CGameScene::Start()
     m_IngameUI.Start();
 
     m_pPlayerScript->SetBackground(m_EnvironmentCreator.GetBackground());
-
 }
 
 void CGameScene::Update()

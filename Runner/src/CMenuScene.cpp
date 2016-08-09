@@ -123,6 +123,8 @@ void CMenuScene::CheckInput()
         m_UIInput.m_Right = twGamepad.IsState(triebWerk::EGamepadButton::LAnalogRight, triebWerk::EButtonState::Down, 0);
         m_UIInput.m_Up = twGamepad.IsState(triebWerk::EGamepadButton::LAnalogUp, triebWerk::EButtonState::Down, 0);
         m_UIInput.m_Down = twGamepad.IsState(triebWerk::EGamepadButton::LAnalogDown, triebWerk::EButtonState::Down, 0);
+        m_UIInput.m_LeftHold = twGamepad.IsState(triebWerk::EGamepadButton::LAnalogLeft, triebWerk::EButtonState::Pressed, 0);
+        m_UIInput.m_RightHold = twGamepad.IsState(triebWerk::EGamepadButton::LAnalogRight, triebWerk::EButtonState::Pressed, 0);
         m_UIInput.m_ButtonHold = twGamepad.IsState(triebWerk::EGamepadButton::A, triebWerk::EButtonState::Pressed, 0);
         m_UIInput.m_Select = twGamepad.IsState(triebWerk::EGamepadButton::A, triebWerk::EButtonState::Up, 0);
         m_UIInput.m_Back = twGamepad.IsState(triebWerk::EGamepadButton::B, triebWerk::EButtonState::Down, 0);

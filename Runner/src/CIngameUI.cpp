@@ -26,6 +26,7 @@ void CInGameUI::Start()
 {
     twActiveUIWorld->SetReferenceResolution(1920, 1080.0f, triebWerk::CUIWorld::EScreenMatchState::Height);
     twFontManager->LoadFont(twResourceManager->GetFontFace("AGENCYB"), 30);
+    twFontManager->LoadFont(twResourceManager->GetFontFace("AGENCYB"), 50);
 
     m_pPauseMenu = new CPauseMenu();
     m_pPauseMenu->Start();
