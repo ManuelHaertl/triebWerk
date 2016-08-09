@@ -253,35 +253,35 @@ void CEnvironmentCreator::CreateCollisionSideWalls()
 void CEnvironmentCreator::CreateGrid()
 {
    m_GridEntities.clear();
-  
-   float position = 0.0f;
-   for (size_t i = 0; i < m_GridCount; ++i)
-   {
-       auto entity = twActiveWorld->CreateEntity();
-       entity->m_Transform.SetPosition(0.0f, -10.0f, position);
-       entity->m_Transform.SetScale(50.0f, 1.0f, 50.0f);
-  
-       triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
-       mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_grid");
-       mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
-	   mesh->m_RenderMode = triebWerk::CMeshDrawable::ERenderMode::Transparent;
-       mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("WireframeGrid"));
-       mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(1.0f, 0.0f, 1.0f));
-       mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
-       entity->SetDrawable(mesh);
-  
-       twActiveWorld->AddEntity(entity);
-       m_GridEntities.push_back(entity);
-  
-       position += GridLength;
-   }
-}
+   //
+   //float position = 0.0f;
+   //for (size_t i = 0; i < m_GridCount; ++i)
+   //{
+   //    auto entity = twActiveWorld->CreateEntity();
+   //    entity->m_Transform.SetPosition(0.0f, -10.0f, position);
+   //    entity->m_Transform.SetScale(50.0f, 1.0f, 50.0f);
+   //
+   //    triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
+   //    mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_grid");
+   //    mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
+	//   mesh->m_RenderMode = triebWerk::CMeshDrawable::ERenderMode::Transparent;
+   //    mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("WireframeGrid"));
+   //    mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(1.0f, 0.0f, 1.0f));
+   //    mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+   //    entity->SetDrawable(mesh);
+   //
+   //    twActiveWorld->AddEntity(entity);
+   //    m_GridEntities.push_back(entity);
+   //
+   //    position += GridLength;
+   //}
+}  //
 
 void CEnvironmentCreator::CreateBlackGround()
 {
 	m_pBlackGround = twActiveWorld->CreateEntity();
 	m_pBGPlane->m_Transform.AddChild(&m_pBlackGround->m_Transform);
-	m_pBlackGround->m_Transform.SetPosition(0.0f, -20.0f, 0.0f);
+	m_pBlackGround->m_Transform.SetPosition(0.0f, -40.0f, 0.0f);
 	m_pBlackGround->m_Transform.SetScale(1800.0f, 1800.0f, 1800.0f);
 	
 	
@@ -392,6 +392,8 @@ void CEnvironmentCreator::CreateFog()
         fog->m_Transform.SetScale(size, 1.0f, size);
         fog->m_Transform.SetRotationDegrees(270.0f, 0.0f, 0.0f);
 
+		std::cout << "Fog" << std::endl;
+
         auto fogMesh = twRenderer->CreateMeshDrawable();
         fogMesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_plane");
         fogMesh->m_RenderMode = triebWerk::CMeshDrawable::ERenderMode::Transparent;
@@ -469,18 +471,18 @@ void CEnvironmentCreator::MoveRoad(const float a_MetersFlewn)
 void CEnvironmentCreator::MoveGrid(const float a_MetersFlewn)
 {
     // Grid
-    m_GridMoveZone += a_MetersFlewn;
-	
-    triebWerk::CEntity* first = m_GridEntities.front();
-    DirectX::XMVECTOR pos = first->m_Transform.GetPosition();
-    if (pos.m128_f32[2] < m_GridMoveZone)
-    {
-        pos.m128_f32[2] += m_GridAllLength;
-        first->m_Transform.SetPosition(pos);
-	
-        m_GridEntities.erase(m_GridEntities.begin());
-        m_GridEntities.push_back(first);
-    }
+    //m_GridMoveZone += a_MetersFlewn;
+	//
+    //triebWerk::CEntity* first = m_GridEntities.front();
+    //DirectX::XMVECTOR pos = first->m_Transform.GetPosition();
+    //if (pos.m128_f32[2] < m_GridMoveZone)
+    //{
+    //    pos.m128_f32[2] += m_GridAllLength;
+    //    first->m_Transform.SetPosition(pos);
+	//
+    //    m_GridEntities.erase(m_GridEntities.begin());
+    //    m_GridEntities.push_back(first);
+    //}
 }
 
 void CEnvironmentCreator::UpdateFog()

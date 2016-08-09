@@ -18,6 +18,8 @@ CPlayer::CPlayer()
     , m_MetersFlewn(0.0f)
     , m_LastZ(0.0f)
 	, m_TrailBlend(0.0f)
+	, m_DyingSpeed(0.0f)
+	, m_DyingCameraZ(0.0f)
 {
 }
 
@@ -50,9 +52,14 @@ void CPlayer::Update()
         m_pEntity->GetPhysicEntity()->GetBody()->m_Velocity.m128_f32[2] = 0.0f;
     }
 
+
+
     CalculateDistanceFlewn();
     UpdateTrail();
 	UpdateFloorEffect();
+
+	if (CGameInfo::Instance().m_IsPlayerDead)
+		UpdateDying();
 }
 
 void CPlayer::LateUpdate()
@@ -110,7 +117,7 @@ void CPlayer::CollisionStay(triebWerk::CCollisionEvent a_Collision)
 
 void CPlayer::Reset()
 {
-    m_CurrentResource = MaxResource;
+    m_CurrentResource = MaxResource + 0.1f;
     m_InFullControlMode = false;
     m_InBoostMode = false;
 	m_FullResourcePlayed = true;
@@ -120,6 +127,14 @@ void CPlayer::Reset()
 
     m_pEntity->m_Transform.SetPosition(0.0f, 1.0f, 0.0f);
     CGameInfo::Instance().m_PlayerPositionZ = 0.0f;
+
+	m_DyingCameraZ = 0.0f;
+
+	m_DyingSpeed = 0.0f;
+	reinterpret_cast<triebWerk::CMeshDrawable*>(m_pEntity->GetDrawable())->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &m_DyingSpeed);
+
+	m_pTrailMesh->SetActive(true);
+	m_pEntity->m_Transform.SetScale(1, 1, 1);
 }
 
 void CPlayer::SetBackground(triebWerk::CTransform * a_pBackground)
@@ -151,14 +166,14 @@ void CPlayer::CreateTrail()
 
 void CPlayer::CreateFloorEffect()
 {
-	auto entity = twActiveWorld->CreateEntity();
+	m_pFloorEffect = twActiveWorld->CreateEntity();
 	DirectX::XMVECTOR pos = m_pEntity->m_Transform.GetPosition();
 	pos.m128_f32[1] -= 1.8f;
 	pos.m128_f32[2] -= 0.5f;
-	entity->m_Transform.SetPosition(pos);
-	entity->m_Transform.SetScale(5, 5, 5);
+	m_pFloorEffect->m_Transform.SetPosition(pos);
+	m_pFloorEffect->m_Transform.SetScale(5, 5, 5);
 
-	m_pEntity->m_Transform.AddChild(&entity->m_Transform);
+	m_pEntity->m_Transform.AddChild(&m_pFloorEffect->m_Transform);
 
 	triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
 	mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_plane");
@@ -173,9 +188,9 @@ void CPlayer::CreateFloorEffect()
 	mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(6, &defaultValue);
 
 	m_pFloorEffectMaterial = &mesh->m_Material;
-	entity->SetDrawable(mesh);
+	m_pFloorEffect->SetDrawable(mesh);
 
-	twActiveWorld->AddEntity(entity);
+	twActiveWorld->AddEntity(m_pFloorEffect);
 }
 
 void CPlayer::CreatePlayerDangerHitbox()
@@ -440,6 +455,9 @@ void CPlayer::CalculateDistanceFlewn()
 
 void CPlayer::UpdateTrail()
 {
+	if (CGameInfo::Instance().m_IsPlayerDead)
+		m_pTrailMesh->SetActive(false);
+
 	if (m_PlayerInput.m_Boost && m_CurrentResource > 0.0f)
 	{
 		if(m_TrailBlend < 1.0f) // 1.0f for full blend
@@ -459,6 +477,20 @@ void CPlayer::UpdateTrail()
     m_pTrailMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &curvature);
 }
 
+void CPlayer::UpdateDying()
+{
+	m_pEntity->m_Transform.SetScale(2, 2, 2);
+
+	auto pos = twRenderer->GetCurrentActiveCamera()->m_Transform.GetPosition();
+	pos.m128_f32[2] -= 20;
+	pos.m128_f32[1] -= 10;
+	twRenderer->GetCurrentActiveCamera()->m_Transform.SetPosition(pos);
+
+	m_DyingSpeed += twTime->GetDeltaTime() * (3 / (m_DyingSpeed+1));
+
+	reinterpret_cast<triebWerk::CMeshDrawable*>(m_pEntity->GetDrawable())->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &m_DyingSpeed);
+}
+
 void CPlayer::UpdateFloorEffect()
 {
 	float currentX = m_pEntity->m_Transform.GetPosition().m128_f32[0];
@@ -466,7 +498,12 @@ void CPlayer::UpdateFloorEffect()
 	m_LastX = currentX;
 
 
-	if (CGameInfo::Instance().m_IsGamePaused == false && CGameInfo::Instance().m_IsPlayerDead == false)
+	if (CGameInfo::Instance().m_IsPlayerDead)
+		m_pFloorEffect->GetDrawable()->SetActive(false);
+	else
+		m_pFloorEffect->GetDrawable()->SetActive(true);
+
+	if (CGameInfo::Instance().m_IsGamePaused == false)
 	{
 		float time = twTime->GetTimeSinceStartup() * -1.0f;
 		m_pFloorEffectMaterial->m_ConstantBuffer.SetValueInBuffer(6, &time);
@@ -509,6 +546,20 @@ void CPlayer::SetCamera()
     camPos.m128_f32[1] = CameraPosY;
     camPos.m128_f32[2] = pos.m128_f32[2] - CameraMinusPosZ;
     m_pMainCamera->m_Transform.SetPosition(camPos);
+
+	if (CGameInfo::Instance().m_IsPlayerDead)
+	{
+		m_DyingCameraZ += twTime->GetDeltaTime() * (m_DyingCameraZ +1.0f) * 4;
+
+		std::cout << m_DyingCameraZ << std::endl;
+
+		if (m_DyingCameraZ > 3.0f)
+			m_DyingCameraZ = 3.0f;
+
+		camPos.m128_f32[2] -= m_DyingCameraZ;
+		m_pMainCamera->m_Transform.SetPosition(camPos);
+	}
+
 
     // Background
     auto position = m_pBackground->GetPosition();

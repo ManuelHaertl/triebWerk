@@ -20,10 +20,15 @@ void CMenuBackgroundScene::Start()
     CreateBackground();
     CreateSnakeLoops();
     CreateFeathers();
+	CreateFog();
+
+	m_ObjectUpdater.Start(m_pSnake1, m_pSnake2, m_pSnake3);
+	
 }
 
 void CMenuBackgroundScene::Update()
 {
+	m_ObjectUpdater.Update();
     m_pCamera->m_Transform.SetPosition(DirectX::XMVectorSet(0.0f, CPlayer::CameraPosY, -CPlayer::CameraMinusPosZ, 0.0f));
     m_pCamera->m_Transform.SetRotationDegrees(CPlayer::CameraRotationX, 0.0f, 0.0f);
 
@@ -69,19 +74,19 @@ void CMenuBackgroundScene::CreateRoad()
 
 void CMenuBackgroundScene::CreateGrid()
 {
-    auto entity = twActiveWorld->CreateEntity();
-    entity->m_Transform.SetPosition(0.0f, -5.0f, 100.0f);
-    entity->m_Transform.SetScale(50.0f, 1.0f, 50.0f);
-
-    triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
-    mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_grid");
-
-    mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("WireframeGrid"));
-    mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(1.0f, 0.0f, 1.0f));
-    mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
-    entity->SetDrawable(mesh);
-
-    twActiveWorld->AddEntity(entity);
+   // auto entity = twActiveWorld->CreateEntity();
+   // entity->m_Transform.SetPosition(0.0f, -5.0f, 100.0f);
+   // entity->m_Transform.SetScale(50.0f, 1.0f, 50.0f);
+   //
+   // triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
+   // mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_grid");
+   //
+   // mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("WireframeGrid"));
+   // mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(1.0f, 0.0f, 1.0f));
+   // mesh->m_Material.m_ConstantBuffer.SetValueInBuffer(5, &DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+   // entity->SetDrawable(mesh);
+   //
+   // twActiveWorld->AddEntity(entity);
 }
 
 void CMenuBackgroundScene::CreateBackground()
@@ -186,5 +191,32 @@ void CMenuBackgroundScene::CreateFeathers()
 
         isSpawnedTo += 50;
     }
+}
+
+void CMenuBackgroundScene::CreateFog()
+{
+	const float size = 25.0f;
+
+	for (size_t i = 0; i < FogCount; ++i)
+	{
+		auto fog = twActiveWorld->CreateEntity();
+		fog->m_Transform.SetPosition(-50.0f, 0.0f, 50.0f);
+		fog->m_Transform.SetScale(size, 1.0f, size);
+		fog->m_Transform.SetRotationDegrees(270.0f, 0.0f, 0.0f);
+
+		std::cout << "Fog" << std::endl;
+
+		auto fogMesh = twRenderer->CreateMeshDrawable();
+		fogMesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_plane");
+		fogMesh->m_RenderMode = triebWerk::CMeshDrawable::ERenderMode::Transparent;
+		fogMesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("Fog"));
+		fogMesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("t_fog_01"));
+		fogMesh->m_Material.m_pPixelShader.SetTexture(1, twResourceManager->GetTexture2D("t_noise"));
+		fog->SetDrawable(fogMesh);
+
+		twActiveWorld->AddEntity(fog);
+		m_Fogs.Add(fog);
+		m_ObjectUpdater.m_Fog.Add(fog);
+	}
 }
 
