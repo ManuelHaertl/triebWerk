@@ -12,6 +12,11 @@ private:
     triebWerk::CUIEntity* m_pBackground;
     triebWerk::CUIEntity* m_pLogo;
     triebWerk::CUIEntity* m_pScoreBoard;
+	triebWerk::CUIEntity* m_pNewHighscoreCrown;
+	triebWerk::CUIEntity* m_pNewFont;
+	triebWerk::CUIEntity* m_pHighscoreFontElement;
+	triebWerk::CUIEntity* m_pScoreFontElement;
+
     triebWerk::CUIEntity* m_pButtonMainMenu;
     triebWerk::CUIEntity* m_pButtonTryAgain;
     triebWerk::CUIEntity* m_pButtonHighscore;
@@ -21,6 +26,7 @@ private:
     triebWerk::CUIEntity* m_pFontMainMenu;
     triebWerk::CUIEntity* m_pFontTryAgain;
     triebWerk::CUIEntity* m_pFontHighscore;
+
 
     bool m_UpdateGraphics;
 

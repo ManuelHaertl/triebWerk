@@ -24,7 +24,7 @@ void CGameScene::Start()
 
     CreatePlayer();
     CreatePostEffects();
-    LoadHighscore();
+    //LoadHighscore();
 
 	twResourceManager->GetAll("data\\Audio\\BGM\\game", &m_Music);
 
