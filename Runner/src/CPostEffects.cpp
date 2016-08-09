@@ -104,26 +104,9 @@ void CPostEffects::AddBloom()
 {
 	auto extract = m_pPostEffect->AddMaterial(twResourceManager->GetMaterial("Extract"));
 	
-	auto blurV = m_pPostEffect->AddMaterial(twResourceManager->GetMaterial("BlurV"));
-
-	float blurFactor = 2.5f;
-
-	float screenSizeY = twWindow->GetScreenHeight();
-
-	blurV->m_ConstantBuffer.SetValueInBuffer(4, &screenSizeY);
-	blurV->m_ConstantBuffer.SetValueInBuffer(5, &blurFactor);
 
 	auto blur = m_pPostEffect->AddMaterial(twResourceManager->GetMaterial("Blur"));
-	
-	float screenSize = twWindow->GetScreenWidth();
-
-	
-	blur->m_ConstantBuffer.SetValueInBuffer(4, &screenSize);
-	blur->m_ConstantBuffer.SetValueInBuffer(5, &blurFactor);
-	
-	
-
-	
+		
 	auto bloom = m_pPostEffect->AddMaterial(twResourceManager->GetMaterial("Bloom"));
 	bloom->m_pPixelShader.SetTexture(1, twRenderer->GetRenderTarget(0)->GetSceneTexture());
 }

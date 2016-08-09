@@ -49,6 +49,7 @@ void CEnvironmentCreator::Start()
 	CreateParticleSpawner();
     CreateFog();
 	CreateBlackGround();
+	CreateCurvedGrid();
 
     m_ObjectUpdater.Start(m_pSnake1, m_pSnake2, m_pSnake3);
 }
@@ -378,6 +379,25 @@ void CEnvironmentCreator::CreateSnakeLoops()
     m_pSnake3->SetDrawable(mesh3);
 
     twActiveWorld->AddEntity(m_pSnake3);
+}
+
+void CEnvironmentCreator::CreateCurvedGrid()
+{
+	m_pCurvedGrid = twActiveWorld->CreateEntity();
+	m_pBGPlane->m_Transform.AddChild(&m_pCurvedGrid->m_Transform);
+	m_pCurvedGrid->m_Transform.SetPosition(0.0f, SphereY, 200.0f);
+	m_pCurvedGrid->m_Transform.SetScale(1.0f, 1.0f, 1.0f);
+	
+	triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
+	mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_worldspere");
+	mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
+	mesh->m_RenderMode = triebWerk::CMeshDrawable::ERenderMode::Transparent;
+	mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("WorldSphere"));
+	mesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_worldsphere_mesh"));
+	mesh->m_Material.m_pPixelShader.SetTexture(1, twResourceManager->GetTexture2D("T_worldsphere_alpha"));
+	m_pCurvedGrid->SetDrawable(mesh);
+	
+	twActiveWorld->AddEntity(m_pCurvedGrid);
 }
 
 void CEnvironmentCreator::CreateFog()

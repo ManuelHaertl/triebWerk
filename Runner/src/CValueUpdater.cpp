@@ -42,6 +42,7 @@ int CEnvironmentCreator::FeatherSpawnProbability = 40;
 float CEnvironmentCreator::SnakeRotateSpeed1 = -3.0f;
 float CEnvironmentCreator::SnakeRotateSpeed2 = -2.0f;
 float CEnvironmentCreator::SnakeRotateSpeed3 = -1.0f;
+float CEnvironmentCreator::SphereY = 0.0f;
 DirectX::XMFLOAT3 CPoints::Color[3] = { DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), DirectX::XMFLOAT3(1.0f, 1.0f, 0.f), DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f) };
 
 float CPatternManager::SpawnDistance = 300.0f;
@@ -79,6 +80,7 @@ float CPostEffects::GameStartRIEndEffectStrength = 3.0f;
 float CPostEffects::TryAgainTime = 1.0f;
 float CPostEffects::TryAgainRIBeginEffectStrength = 2000.0f;
 float CPostEffects::TryAgainRIEndEffectStrength = 3.0f;
+
 
 float CIntroScene::GALogoTime = 3.0f;
 float CIntroScene::TWLogoTime = 3.0f;
@@ -390,6 +392,10 @@ void CValueUpdater::UpdateValues()
         {
             CEnvironmentCreator::SnakeRotateSpeed3 = std::stof(value.second);
         }
+		else if (value.first == "en_SphereY")
+		{
+			CEnvironmentCreator::SphereY = std::stof(value.second);
+		}
 
         // Pattern Manager
         else if (value.first == "pm_StartTextureBlendDistance")

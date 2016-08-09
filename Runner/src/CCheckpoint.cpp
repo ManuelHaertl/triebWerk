@@ -137,7 +137,14 @@ void CCheckpoint::Update()
 			}
 			else
 			{
-				twAudio->PlaySFX(m_pPassSound);
+				if ((float)(gameInfo.m_Multiplier / (int)gameInfo.m_Multiplier) == 1.0f)
+				{
+					twAudio->PlaySFX(twResourceManager->GetSound("SFX_GainFulMultiplier"));
+				}
+				else
+				{
+					twAudio->PlaySFX(m_pPassSound);
+				}
 			}
 
 		}

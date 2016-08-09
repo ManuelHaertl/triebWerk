@@ -62,6 +62,9 @@ namespace triebWerk
 		~CGraphics();
 
 	public:
+		bool IsVSynced();
+		void SetVSync(const bool a_VSyncState);
+
 		//Initialize the graphics d3d11 device and set all graphics related options
 		bool Initialize(HWND &a_rWindowHandle, const unsigned int a_ScreenHeight, const unsigned int a_ScreenWidth, const bool a_Fullscreen, const bool a_VSync);
 		

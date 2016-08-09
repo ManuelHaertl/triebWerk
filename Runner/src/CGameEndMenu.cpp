@@ -296,6 +296,8 @@ void CGameEndMenu::Update(const SUIInput& a_rInput)
         m_SelectedButton = 1;
         m_UpdateGraphics = true;
 
+		if (m_LastState &&  CGameInfo::Instance().m_Highscore.IsHighscore())
+			twAudio->PlaySFX(twResourceManager->GetSound("SFX_Highscore"));
     }
 
     if (!CGameInfo::Instance().m_IsPlayerDead)

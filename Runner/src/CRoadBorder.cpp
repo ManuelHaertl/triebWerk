@@ -46,6 +46,11 @@ void CRoadBorder::Update()
 		m_pRightBorder->GetDrawable()->SetActive(false);
 		return;
 	}
+	else
+	{
+		m_pEntity->GetDrawable()->SetActive(true);
+		m_pRightBorder->GetDrawable()->SetActive(true);
+	}
 
 	float distanceLeft = m_pEntity->m_Transform.GetPosition().m128_f32[0] - CGameInfo::Instance().m_PlayerPositionX;
 
