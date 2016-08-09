@@ -86,7 +86,7 @@ void CMainMenu::Start()
 
     auto m_pTextStart = twActiveUIWorld->CreateUIEntity();
     m_pTextStart->m_Transform.SetAnchorPoint(-0.7f, -0.8f);
-    m_pTextStart->m_Transform.SetPositionOffset(10.0f, -15.0f, 0.0f);
+    m_pTextStart->m_Transform.SetPositionOffset(10.0f, -11.0f, 0.0f);
 
     auto startText = twFontManager->CreateText();
     startText->Set(m_pFontButton, "Start", 1.0f);
@@ -94,7 +94,7 @@ void CMainMenu::Start()
     auto startTextDrawable = twRenderer->CreateFontDrawable();
     startTextDrawable->m_Material.SetMaterial(m_pMaterialStandardFont);
     startTextDrawable->m_pText = startText;
-    startTextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(0.5f, 1.0f, 1.0f));
+    startTextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 
     m_pTextStart->SetDrawable(startTextDrawable);
     twActiveUIWorld->AddUIEntity(m_pTextStart);
@@ -117,7 +117,7 @@ void CMainMenu::Start()
 
     m_pTextHighscore = twActiveUIWorld->CreateUIEntity();
     m_pTextHighscore->m_Transform.SetAnchorPoint(-0.35f, -0.8f);
-    m_pTextHighscore->m_Transform.SetPositionOffset(10.0f, -15.0f, 0.0f);
+    m_pTextHighscore->m_Transform.SetPositionOffset(10.0f, -11.0f, 0.0f);
 
     auto highscoreText = twFontManager->CreateText();
     highscoreText->Set(m_pFontButton, "Highscore", 1.0f);
@@ -125,7 +125,7 @@ void CMainMenu::Start()
     auto highscoreTextDrawable = twRenderer->CreateFontDrawable();
     highscoreTextDrawable->m_Material.SetMaterial(m_pMaterialStandardFont);
     highscoreTextDrawable->m_pText = highscoreText;
-    highscoreTextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(0.5f, 1.0f, 1.0f));
+    highscoreTextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 
     m_pTextHighscore->SetDrawable(highscoreTextDrawable);
     twActiveUIWorld->AddUIEntity(m_pTextHighscore);
@@ -148,7 +148,7 @@ void CMainMenu::Start()
 
     m_pTextOptions = twActiveUIWorld->CreateUIEntity();
     m_pTextOptions->m_Transform.SetAnchorPoint(0.0f, -0.8f);
-    m_pTextOptions->m_Transform.SetPositionOffset(10.0f, -15.0f, 0.0f);
+    m_pTextOptions->m_Transform.SetPositionOffset(10.0f, -11.0f, 0.0f);
 
     auto optionsText = twFontManager->CreateText();
     optionsText->Set(m_pFontButton, "Options", 1.0f);
@@ -156,7 +156,7 @@ void CMainMenu::Start()
     auto optionsTextDrawable = twRenderer->CreateFontDrawable();
     optionsTextDrawable->m_Material.SetMaterial(m_pMaterialStandardFont);
     optionsTextDrawable->m_pText = optionsText;
-    optionsTextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(0.5f, 1.0f, 1.0f));
+    optionsTextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 
     m_pTextOptions->SetDrawable(optionsTextDrawable);
     twActiveUIWorld->AddUIEntity(m_pTextOptions);
@@ -179,7 +179,7 @@ void CMainMenu::Start()
 
     m_pTextExtras = twActiveUIWorld->CreateUIEntity();
     m_pTextExtras->m_Transform.SetAnchorPoint(0.35f, -0.8f);
-    m_pTextExtras->m_Transform.SetPositionOffset(10.0f, -15.0f, 0.0f);
+    m_pTextExtras->m_Transform.SetPositionOffset(10.0f, -11.0f, 0.0f);
 
     auto extrasText = twFontManager->CreateText();
     extrasText->Set(m_pFontButton, "Extras", 1.0f);
@@ -187,7 +187,7 @@ void CMainMenu::Start()
     auto extrasTextDrawable = twRenderer->CreateFontDrawable();
     extrasTextDrawable->m_Material.SetMaterial(m_pMaterialStandardFont);
     extrasTextDrawable->m_pText = extrasText;
-    extrasTextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(0.5f, 1.0f, 1.0f));
+    extrasTextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 
     m_pTextExtras->SetDrawable(extrasTextDrawable);
     twActiveUIWorld->AddUIEntity(m_pTextExtras);
@@ -210,7 +210,7 @@ void CMainMenu::Start()
 
     m_pTextQuit = twActiveUIWorld->CreateUIEntity();
     m_pTextQuit->m_Transform.SetAnchorPoint(0.7f, -0.8f);
-    m_pTextQuit->m_Transform.SetPositionOffset(10.0f, -15.0f, 0.0f);
+    m_pTextQuit->m_Transform.SetPositionOffset(10.0f, -11.0f, 0.0f);
 
     auto quitText = twFontManager->CreateText();
     quitText->Set(m_pFontButton, "Quit", 1.0f);
@@ -218,7 +218,7 @@ void CMainMenu::Start()
     auto quitTextDrawable = twRenderer->CreateFontDrawable();
     quitTextDrawable->m_Material.SetMaterial(m_pMaterialStandardFont);
     quitTextDrawable->m_pText = quitText;
-    quitTextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(0.5f, 1.0f, 1.0f));
+    quitTextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 
     m_pTextQuit->SetDrawable(quitTextDrawable);
     twActiveUIWorld->AddUIEntity(m_pTextQuit);
@@ -241,7 +241,7 @@ void CMainMenu::Start()
 
     m_pTextManual = twActiveUIWorld->CreateUIEntity();
     m_pTextManual->m_Transform.SetAnchorPoint(0.35f, -0.8f);
-    m_pTextManual->m_Transform.SetPositionOffset(10.0f, -15.0f, 0.6f);
+    m_pTextManual->m_Transform.SetPositionOffset(10.0f, -25.0f, 0.6f);
 
     auto manualText = twFontManager->CreateText();
     manualText->Set(m_pFontButton, "Manual", 1.0f);
@@ -249,7 +249,7 @@ void CMainMenu::Start()
     auto manualTextDrawable = twRenderer->CreateFontDrawable();
     manualTextDrawable->m_Material.SetMaterial(m_pMaterialStandardFont);
     manualTextDrawable->m_pText = manualText;
-    manualTextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(0.5f, 1.0f, 1.0f));
+    manualTextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 
     m_pTextManual->SetDrawable(manualTextDrawable);
     twActiveUIWorld->AddUIEntity(m_pTextManual);
@@ -272,7 +272,7 @@ void CMainMenu::Start()
 
     m_pTextCredits = twActiveUIWorld->CreateUIEntity();
     m_pTextCredits->m_Transform.SetAnchorPoint(0.35f, -0.8f);
-    m_pTextCredits->m_Transform.SetPositionOffset(10.0f, -15.0f, 0.8f);
+    m_pTextCredits->m_Transform.SetPositionOffset(10.0f, -25.0f, 0.8f);
 
     auto creditsText = twFontManager->CreateText();
     creditsText->Set(m_pFontButton, "Credits", 1.0f);
@@ -280,7 +280,7 @@ void CMainMenu::Start()
     auto creditsTextDrawable = twRenderer->CreateFontDrawable();
     creditsTextDrawable->m_Material.SetMaterial(m_pMaterialStandardFont);
     creditsTextDrawable->m_pText = creditsText;
-    creditsTextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(0.5f, 1.0f, 1.0f));
+    creditsTextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 
     m_pTextCredits->SetDrawable(creditsTextDrawable);
     twActiveUIWorld->AddUIEntity(m_pTextCredits);

@@ -13,12 +13,12 @@ triebWerk::CUIEntity::~CUIEntity()
 {
 }
 
-triebWerk::IBehaviour * triebWerk::CUIEntity::GetBehaviour() const
+triebWerk::IBehaviour* triebWerk::CUIEntity::GetBehaviour() const
 {
     return m_pBehaviour;
 }
 
-triebWerk::IDrawable * triebWerk::CUIEntity::GetDrawable() const
+triebWerk::IDrawable* triebWerk::CUIEntity::GetDrawable() const
 {
     return m_pDrawable;
 }
