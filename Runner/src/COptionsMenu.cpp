@@ -467,7 +467,7 @@ void COptionsMenu::GetOptions()
         break;
     }
     m_CurrentFullscreen = twWindow->IsWindowFullscreen();
-    // TO DO: m_CurrentVSync = 
+    m_CurrentVSync = twGraphic->IsVSynced();
     m_CurrentMasterVolume = twAudio->GetMasterVolume();
     m_CurrentBGMVolume = twAudio->GetBGMVolume();
     m_CurrentSFXVolume = twAudio->GetSFXVolume();
@@ -501,15 +501,17 @@ void COptionsMenu::SaveOptions()
         break;
     }
 
-    // TO DO: vsync
+    twGraphic->SetVSync(m_CurrentVSync);
     twAudio->SetMasterVolume(m_CurrentMasterVolume);
     twAudio->SetBGMVolume(m_CurrentBGMVolume);
     twAudio->SetSFXVolume(m_CurrentSFXVolume);
 
     // save in file
+
+
 }
 
-void COptionsMenu::CheckInput(const SUIInput & a_rInput)
+void COptionsMenu::CheckInput(const SUIInput& a_rInput)
 {
     if (a_rInput.m_Down)
     {
