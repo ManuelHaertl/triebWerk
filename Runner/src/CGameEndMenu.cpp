@@ -64,22 +64,79 @@ void CGameEndMenu::Start()
 
     m_pScoreBoard = twActiveUIWorld->CreateUIEntity();
     m_pScoreBoard->m_Transform.SetAnchorPoint(0.0f, 0.0f);
+	m_pScoreBoard->m_Transform.SetPositionOffset(0, 0, 0.4f);
 
     auto scoreBoardDrawable = twRenderer->CreateUIDrawable();
     scoreBoardDrawable->SetActive(false);
-    scoreBoardDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("UIHighscore"));
+    scoreBoardDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardUI"));
     scoreBoardDrawable->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_ui_score_normal"));
-	float defaultValue = 0.0f;
-	scoreBoardDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &defaultValue);
 
     m_pScoreBoard->SetDrawable(scoreBoardDrawable);
 
     twActiveUIWorld->AddUIEntity(m_pScoreBoard);
 
+	//Crown
+
+	m_pNewHighscoreCrown = twActiveUIWorld->CreateUIEntity();
+	m_pNewHighscoreCrown->m_Transform.SetAnchorPoint(0.0f, 0.32f);
+	m_pNewHighscoreCrown->m_Transform.SetPositionOffset(0, 0, 0.2f);
+
+	auto scorecrownDrawable = twRenderer->CreateUIDrawable();
+	scorecrownDrawable->SetActive(false);
+	scorecrownDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardUI"));
+	scorecrownDrawable->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_ui_score_crown"));
+
+	m_pNewHighscoreCrown->SetDrawable(scorecrownDrawable);
+
+	twActiveUIWorld->AddUIEntity(m_pNewHighscoreCrown);
+
+	// Font Highscore
+
+	m_pHighscoreFontElement = twActiveUIWorld->CreateUIEntity();
+	m_pHighscoreFontElement->m_Transform.SetAnchorPoint(0.0f, 0.16f);
+	m_pHighscoreFontElement->m_Transform.SetPositionOffset(0, 0, 0.2f);
+
+	auto fontHighscoreEDrawable = twRenderer->CreateUIDrawable();
+	fontHighscoreEDrawable->SetActive(false);
+	fontHighscoreEDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("UIHighscore"));
+	fontHighscoreEDrawable->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_ui_score_highscore"));
+
+	m_pHighscoreFontElement->SetDrawable(fontHighscoreEDrawable);
+
+	twActiveUIWorld->AddUIEntity(m_pHighscoreFontElement);
+
+	// New Font
+	m_pNewFont = twActiveUIWorld->CreateUIEntity();
+	m_pNewFont->m_Transform.SetAnchorPoint(0.0f, 0.4f);
+	m_pNewFont->m_Transform.SetPositionOffset(0, 0, 0.1f);
+
+	auto newFontDrawable = twRenderer->CreateUIDrawable();
+	newFontDrawable->SetActive(false);
+	newFontDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("UIHighscore"));
+	newFontDrawable->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_ui_score_new"));
+
+	m_pNewFont->SetDrawable(newFontDrawable);
+
+	twActiveUIWorld->AddUIEntity(m_pNewFont);
+
+	// Score Font
+
+	m_pScoreFontElement = twActiveUIWorld->CreateUIEntity();
+	m_pScoreFontElement->m_Transform.SetAnchorPoint(0.0f, 0.16f);
+
+	auto scoreDrawable = twRenderer->CreateUIDrawable();
+	scoreDrawable->SetActive(false);
+	scoreDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardUI"));
+	scoreDrawable->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_ui_score_score"));
+
+	m_pScoreFontElement->SetDrawable(scoreDrawable);
+
+	twActiveUIWorld->AddUIEntity(m_pScoreFontElement);
+
     // Font ScoreBoard ------------------------------------------- 
 
     m_pFontScoreBoard = twActiveUIWorld->CreateUIEntity();
-    m_pFontScoreBoard->m_Transform.SetAnchorPoint(0.0f, -0.13f);
+    m_pFontScoreBoard->m_Transform.SetAnchorPoint(0.0f, -0.07f);
     m_pFontScoreBoard->m_Transform.SetPositionOffset(10.0f, -11.0f, -0.1f);
 
     auto scoreBoardText = twFontManager->CreateText();
@@ -219,23 +276,24 @@ void CGameEndMenu::Update(const SUIInput& a_rInput)
         return;
     }
 
+	float t = twTime->GetTimeSinceStartup();
+	reinterpret_cast<triebWerk::CUIDrawable*>(m_pHighscoreFontElement->GetDrawable())->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &t);
+	reinterpret_cast<triebWerk::CUIDrawable*>(m_pNewFont->GetDrawable())->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &t);
+
+	DirectX::XMFLOAT2 pos = m_pNewHighscoreCrown->m_Transform.GetAnchorPoint();
+	pos.y = ((sin(t) * 0.2f + 0.4) * 0.1f) + 0.32f;
+	m_pNewHighscoreCrown->m_Transform.SetAnchorPoint(pos);
+
+	DirectX::XMFLOAT2 pos2 = m_pNewFont->m_Transform.GetAnchorPoint();
+	pos2.y = ((sin(t) * 0.2f + 0.4) * 0.1f) + 0.4f;
+	m_pNewFont->m_Transform.SetAnchorPoint(pos2);
+
     // check when the player died
     if (m_LastState != CGameInfo::Instance().m_IsPlayerDead)
     {
         m_LastState = CGameInfo::Instance().m_IsPlayerDead;
         m_SelectedButton = 1;
         m_UpdateGraphics = true;
-
-		if (CGameInfo::Instance().m_Highscore.IsHighscore())
-		{
-			((triebWerk::CUIDrawable*)m_pScoreBoard->GetDrawable())->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_ui_score_new"));
-			m_NewHighscore = true;
-		}
-		else
-		{
-			((triebWerk::CUIDrawable*)m_pScoreBoard->GetDrawable())->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_ui_score_normal"));
-			m_NewHighscore = false;
-		}
 
     }
 
@@ -257,6 +315,10 @@ void CGameEndMenu::Update(const SUIInput& a_rInput)
 
             m_pScoreBoard->GetDrawable()->SetActive(true);
             m_pFontScoreBoard->GetDrawable()->SetActive(true);
+			m_pScoreFontElement->GetDrawable()->SetActive(!CGameInfo::Instance().m_Highscore.IsHighscore());
+			m_pHighscoreFontElement->GetDrawable()->SetActive(CGameInfo::Instance().m_Highscore.IsHighscore());
+			m_pNewFont->GetDrawable()->SetActive(CGameInfo::Instance().m_Highscore.IsHighscore());
+			m_pNewHighscoreCrown->GetDrawable()->SetActive(CGameInfo::Instance().m_Highscore.IsHighscore());
             break;
         case EMenus::Highscore:
             m_pSubScene = new CHighscoreMenu();
@@ -264,6 +326,8 @@ void CGameEndMenu::Update(const SUIInput& a_rInput)
 
             m_pScoreBoard->GetDrawable()->SetActive(false);
             m_pFontScoreBoard->GetDrawable()->SetActive(false);
+			m_pScoreFontElement->GetDrawable()->SetActive(false);
+			m_pHighscoreFontElement->GetDrawable()->SetActive(false);
             break;
         }
     }
@@ -352,6 +416,11 @@ void CGameEndMenu::UpdateGraphics()
     m_pFontTryAgain->GetDrawable()->SetActive(active);
     m_pFontHighscore->GetDrawable()->SetActive(active);
 
+	m_pScoreFontElement->GetDrawable()->SetActive(active && !CGameInfo::Instance().m_Highscore.IsHighscore());
+	m_pHighscoreFontElement->GetDrawable()->SetActive(active && CGameInfo::Instance().m_Highscore.IsHighscore());
+	m_pNewHighscoreCrown->GetDrawable()->SetActive(active && CGameInfo::Instance().m_Highscore.IsHighscore());
+	m_pNewFont->GetDrawable()->SetActive(active && CGameInfo::Instance().m_Highscore.IsHighscore());
+
     // the 3 buttons' states
     size_t index[3] = { 0,0,0 };
 
@@ -364,12 +433,6 @@ void CGameEndMenu::UpdateGraphics()
 
     // Score
     ((triebWerk::CFontDrawable*)m_pFontScoreBoard->GetDrawable())->m_pText->SetText(std::to_string((size_t)CGameInfo::Instance().m_TotalPoints));
-
-	float time = twTime->GetTimeSinceStartup();
-
-	if (m_NewHighscore)
-		reinterpret_cast<triebWerk::CUIDrawable*>(m_pScoreBoard->GetDrawable())->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &time);
-
 }
 
 void CGameEndMenu::DeleteSubScene()
