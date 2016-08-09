@@ -9,6 +9,7 @@
 
 CPlayer::CPlayer()
     : m_CurrentResource(MaxResource)
+    , m_CurrentFullControlExtraTime(0.0f)
     , m_InFullControlMode(false)
     , m_InBoostMode(false)
     , m_pTrailMesh(nullptr)
@@ -278,6 +279,7 @@ void CPlayer::CheckResource()
     CGameInfo& gameInfo = CGameInfo::Instance();
     bool gainResource = true;
     bool fullControlEffect = false;
+    bool fullControlExtraTimeEffect = false;
     bool boostEffect = false;
     bool shieldEffect = false;
 
@@ -297,6 +299,7 @@ void CPlayer::CheckResource()
 		if (m_CurrentResource > 0.0f)
 		{
 			fullControlEffect = true;
+            m_CurrentFullControlExtraTime = FullControlExtraTime;
 		}
 		else
 		{
@@ -308,14 +311,27 @@ void CPlayer::CheckResource()
 		}
 
 	}
-	else
-		m_FullControlActivated = false;
+    else
+    {
+        m_FullControlActivated = false;
+
+        if (m_CurrentFullControlExtraTime > 0.0f)
+        {
+            fullControlExtraTimeEffect = true;
+            m_CurrentFullControlExtraTime -= twTime->GetDeltaTime();
+        }
+    }
 
     if (fullControlEffect)
     {
         m_CurrentResource -= FullControlCost * twTime->GetDeltaTime();
         m_InFullControlMode = true;
         gameInfo.m_EffectFullControl = true;
+    }
+    else if (fullControlExtraTimeEffect)
+    {
+        m_InFullControlMode = true;
+        gameInfo.m_EffectFullControl = false;
     }
     else
     {

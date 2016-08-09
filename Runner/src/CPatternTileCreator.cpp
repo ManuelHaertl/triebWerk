@@ -62,7 +62,7 @@ CPatternTileCreator::CPatternTileCreator()
     m_pMoving05Left = twResourceManager->GetMesh("ms_obs_05x05x07_movable_left");
     m_pMoving05Right = twResourceManager->GetMesh("ms_obs_05x05x07_movable_right");
     m_pMoving05None = twResourceManager->GetMesh("ms_obs_05x05x07_movable_air");
-    m_pMoving05To = twResourceManager->GetMesh("ms_obs_05x05x07_movable_air");
+    m_pMoving05To = twResourceManager->GetMesh("ms_obs_05x05x07_movable_backwards");
     m_pMoving05Back = twResourceManager->GetMesh("ms_obs_05x05x07_movable_forward");
 
     m_pMoving10Up = twResourceManager->GetMesh("ms_obs_05x10x07_movable_up");
@@ -70,7 +70,7 @@ CPatternTileCreator::CPatternTileCreator()
     m_pMoving10Left = twResourceManager->GetMesh("ms_obs_05x10x07_movable_left");
     m_pMoving10Right = twResourceManager->GetMesh("ms_obs_05x10x07_movable_right");
     m_pMoving10None = twResourceManager->GetMesh("ms_obs_05x10x07_movable_air");
-    m_pMoving10To = twResourceManager->GetMesh("ms_obs_05x10x07_movable_air");
+    m_pMoving10To = twResourceManager->GetMesh("ms_obs_05x10x07_movable_backwards");
     m_pMoving10Back = twResourceManager->GetMesh("ms_obs_05x10x07_movable_forward");
 
     m_pTextureObstacle[0][0] = twResourceManager->GetTexture2D("T_obs_01_blend1");

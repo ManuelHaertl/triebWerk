@@ -102,7 +102,7 @@ void CPauseMenu::Start()
     startTextDrawable->SetActive(false);
     startTextDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardFont"));
     startTextDrawable->m_pText = startText;
-    startTextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(0.5f, 1.0f, 1.0f));
+    startTextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 
     m_pFontMainMenu->SetDrawable(startTextDrawable);
     twActiveUIWorld->AddUIEntity(m_pFontMainMenu);
@@ -135,7 +135,7 @@ void CPauseMenu::Start()
     resumeTextDrawable->SetActive(false);
     resumeTextDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardFont"));
     resumeTextDrawable->m_pText = resumeText;
-    resumeTextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(0.5f, 1.0f, 1.0f));
+    resumeTextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 
     m_pFontResume->SetDrawable(resumeTextDrawable);
     twActiveUIWorld->AddUIEntity(m_pFontResume);
@@ -168,7 +168,7 @@ void CPauseMenu::Start()
     optionsTextDrawable->SetActive(false);
     optionsTextDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardFont"));
     optionsTextDrawable->m_pText = optionsText;
-    optionsTextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(0.5f, 1.0f, 1.0f));
+    optionsTextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 
     m_pFontOptions->SetDrawable(optionsTextDrawable);
     twActiveUIWorld->AddUIEntity(m_pFontOptions);
@@ -231,7 +231,7 @@ void CPauseMenu::Start()
     objective1TextDrawable->SetActive(false);
     objective1TextDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardFont"));
     objective1TextDrawable->m_pText = objective1Text;
-    objective1TextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(0.5f, 1.0f, 1.0f));
+    objective1TextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 
     m_pFontObjective1->SetDrawable(objective1TextDrawable);
     twActiveUIWorld->AddUIEntity(m_pFontObjective1);
@@ -249,7 +249,7 @@ void CPauseMenu::Start()
     objective2TextDrawable->SetActive(false);
     objective2TextDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardFont"));
     objective2TextDrawable->m_pText = objective2Text;
-    objective2TextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(0.5f, 1.0f, 1.0f));
+    objective2TextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 
     m_pFontObjective2->SetDrawable(objective2TextDrawable);
     twActiveUIWorld->AddUIEntity(m_pFontObjective2);

@@ -14,6 +14,7 @@ public:
 
     static float FullControlSpeed;
     static float FullControlCost;
+    static float FullControlExtraTime;
 
     static float BoostSpeed;
     static float BoostCost;
@@ -31,6 +32,7 @@ public:
 
 private:
     float m_CurrentResource;
+    float m_CurrentFullControlExtraTime;
 
     bool m_InFullControlMode;
     bool m_InBoostMode;

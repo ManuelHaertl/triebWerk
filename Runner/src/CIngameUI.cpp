@@ -69,7 +69,7 @@ void CInGameUI::CreateIngameUI()
 
     auto counterBackDrawable = twRenderer->CreateUIDrawable();
     counterBackDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardUI"));
-    counterBackDrawable->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_ui_ingame_counter_mid_v2"));
+    counterBackDrawable->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_ui_ingame_counter_mid"));
 
     counterBack->SetDrawable(counterBackDrawable);
 
@@ -135,28 +135,11 @@ void CInGameUI::CreateIngameUI()
 
     twActiveUIWorld->AddUIEntity(barRightFillBack);
 
-    // Font Current -------------------------------------------------------------
-
-    auto fontCurrent = twActiveUIWorld->CreateUIEntity();
-    fontCurrent->m_Transform.SetAnchorPoint(0.0f, 1.0f);
-    fontCurrent->m_Transform.SetPositionOffset(-90.0f, -35.0f, 5.0f);
-
-    auto currentText = twFontManager->CreateText();
-    currentText->Set(font16, "Current", 1.0f);
-
-    auto currentTextDrawable = twRenderer->CreateFontDrawable();
-    currentTextDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardFont"));
-    currentTextDrawable->m_pText = currentText;
-    currentTextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
-
-    fontCurrent->SetDrawable(currentTextDrawable);
-    twActiveUIWorld->AddUIEntity(fontCurrent);
-
     // Font Current Points -------------------------------------------------------------
 
     auto fontCurrentPoints = twActiveUIWorld->CreateUIEntity();
     fontCurrentPoints->m_Transform.SetAnchorPoint(0.0f, 1.0f);
-    fontCurrentPoints->m_Transform.SetPositionOffset(9.0f, -35.0f, 5.0f);
+    fontCurrentPoints->m_Transform.SetPositionOffset(9.0f, -33.0f, 5.0f);
 
     m_pCurrentPoints = twFontManager->CreateText();
     m_pCurrentPoints->Set(font16, "0 x1,00", 1.0f);
@@ -169,28 +152,11 @@ void CInGameUI::CreateIngameUI()
     fontCurrentPoints->SetDrawable(currentPointsTextDrawable);
     twActiveUIWorld->AddUIEntity(fontCurrentPoints);
 
-    // Font Total -------------------------------------------------------------
-
-    auto fontTotal = twActiveUIWorld->CreateUIEntity();
-    fontTotal->m_Transform.SetAnchorPoint(0.0f, 1.0f);
-    fontTotal->m_Transform.SetPositionOffset(6.0f, -75.0f, 5.0f);
-
-    auto totalText = twFontManager->CreateText();
-    totalText->Set(font16, "Total", 1.0f);
-
-    auto totalTextDrawable = twRenderer->CreateFontDrawable();
-    totalTextDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardFont"));
-    totalTextDrawable->m_pText = totalText;
-    totalTextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
-
-    fontTotal->SetDrawable(totalTextDrawable);
-    twActiveUIWorld->AddUIEntity(fontTotal);
-
     // Font Total Points -------------------------------------------------------------
 
     auto fontTotalPoints = twActiveUIWorld->CreateUIEntity();
     fontTotalPoints->m_Transform.SetAnchorPoint(0.0f, 1.0f);
-    fontTotalPoints->m_Transform.SetPositionOffset(9.0f, -115.0f, 5.0f);
+    fontTotalPoints->m_Transform.SetPositionOffset(9.0f, -96.0f, 5.0f);
 
     m_pTotalPoints = twFontManager->CreateText();
     m_pTotalPoints->Set(font24, "0", 1.0f);

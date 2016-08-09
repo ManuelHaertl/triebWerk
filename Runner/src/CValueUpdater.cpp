@@ -22,6 +22,7 @@ float CPlayer::ResourcePerSecond = 1.0f;
 
 float CPlayer::FullControlSpeed = 100.0f;
 float CPlayer::FullControlCost = 2.0f;
+float CPlayer::FullControlExtraTime = 0.2f;
 
 float CPlayer::BoostSpeed = 15.0f;
 float CPlayer::BoostCost = 2.0f;
@@ -160,6 +161,10 @@ void CValueUpdater::UpdateValues()
         {
             CPlayer::FullControlCost = std::stof(value.second);
         }
+        else if (value.first == "pl_FullControlExtraTime")
+        {
+            CPlayer::FullControlExtraTime = std::stof(value.second);
+        }
         else if (value.first == "pl_FullControlEffectStrengthMin")
         {
             CPostEffects::FullControlEffectStrengthMin = std::stof(value.second);
@@ -278,39 +283,39 @@ void CValueUpdater::UpdateValues()
         }
 		else if(value.first == "po_Color1R")
 		{
-			CPoints::Color[0].x = static_cast<float>(std::stoi(value.second) / 255);
+			CPoints::Color[0].x = static_cast<float>(std::stoi(value.second)) / 255.0f;
+		}                                                                   
+		else if (value.first == "po_Color1G")                               
+		{                                                                   
+			CPoints::Color[0].y = static_cast<float>(std::stoi(value.second)) / 255.0f;
+		}                                                                   
+		else if (value.first == "po_Color1B")                               
+		{                                                                   
+			CPoints::Color[0].z = static_cast<float>(std::stoi(value.second)) / 255.0f;
+		}                                                                   
+		else if (value.first == "po_Color2R")                               
+		{                                                                   
+			CPoints::Color[1].x = static_cast<float>(std::stoi(value.second)) / 255.0f;
+		}                                                                   
+		else if (value.first == "po_Color2G")                               
+		{                                                                   
+			CPoints::Color[1].y = static_cast<float>(std::stoi(value.second)) / 255.0f;
 		}
-		else if (value.first == "po_Color1G")
-		{
-			CPoints::Color[0].y = static_cast<float>(std::stoi(value.second) / 255);
-		}
-		else if (value.first == "po_Color1B")
-		{
-			CPoints::Color[0].z = static_cast<float>(std::stoi(value.second) / 255);
-		}
-		else if (value.first == "po_Color2R")
-		{
-			CPoints::Color[1].x = static_cast<float>(std::stoi(value.second) / 255);
-		}
-		else if (value.first == "po_Color2G")
-		{
-			CPoints::Color[1].y = static_cast<float>(std::stoi(value.second) / 255);
-		}
-		else if (value.first == "po_Color2B")
-		{
-			CPoints::Color[1].z = static_cast<float>(std::stoi(value.second) / 255);
+		else if (value.first == "po_Color2B")                               
+		{                                                                   
+			CPoints::Color[1].z = static_cast<float>(std::stoi(value.second)) / 255.0f;
 		}
 		else if (value.first == "po_Color3R")
 		{
-			CPoints::Color[2].x = static_cast<float>(std::stoi(value.second) / 255);
+			CPoints::Color[2].x = static_cast<float>(std::stoi(value.second)) / 255.0f;
 		}
 		else if (value.first == "po_Color3G")
 		{
-			CPoints::Color[2].y = static_cast<float>(std::stoi(value.second) / 255);
+			CPoints::Color[2].y = static_cast<float>(std::stoi(value.second)) / 255.0f;
 		}
 		else if (value.first == "po_Color3B")
 		{
-			CPoints::Color[2].z = static_cast<float>(std::stoi(value.second) / 255);
+			CPoints::Color[2].z = static_cast<float>(std::stoi(value.second)) / 255.0f;
 		}
 
 		
