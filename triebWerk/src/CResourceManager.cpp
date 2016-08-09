@@ -666,7 +666,7 @@ bool triebWerk::CResourceManager::CompareFileTypes(const std::string& a_Name, co
 
 std::string triebWerk::CResourceManager::RemoveFileType(const std::string& a_Name)
 {
-	return a_Name.substr(0, a_Name.find("."));
+	return a_Name.substr(0, a_Name.find_last_of("."));
 }
 
 std::string triebWerk::CResourceManager::AbstractFileNameFromPath(const std::string& a_Path)
@@ -683,7 +683,7 @@ std::string triebWerk::CResourceManager::AbstractFolderFromPath(const std::strin
 
 triebWerk::EFileType triebWerk::CResourceManager::GetFileType(const std::string& a_FileName)
 {
-	size_t fileExtensionPosition = a_FileName.find(".");
+	size_t fileExtensionPosition = a_FileName.find_last_of(".");
 
 	if (fileExtensionPosition == std::string::npos)
 		return EFileType::NONE;

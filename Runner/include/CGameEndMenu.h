@@ -33,6 +33,8 @@ private:
     float m_CurrentMainMenuTime;
     float m_CurrentTryAgainTime;
 
+    IMenu* m_pSubScene;
+
 public:
     CGameEndMenu();
     ~CGameEndMenu();
@@ -42,5 +44,7 @@ public:
     void End() final;
 
 private:
+    void CheckInput(const SUIInput& a_rInput);
     void UpdateGraphics();
+    void DeleteSubScene();
 };
