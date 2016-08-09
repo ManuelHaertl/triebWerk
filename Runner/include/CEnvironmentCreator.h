@@ -10,6 +10,7 @@ public:
     static float SnakeRotateSpeed1;
     static float SnakeRotateSpeed2;
     static float SnakeRotateSpeed3;
+	static float SphereY;
 
 private:
     CObjectUpdater m_ObjectUpdater;
@@ -59,6 +60,7 @@ private:
 	triebWerk::CEntity* m_pRoadBorder;
 	triebWerk::CEntity* m_pParticleSpawner;
 	triebWerk::CEntity* m_pBlackGround;
+	triebWerk::CEntity* m_pCurvedGrid;
 
     // Fog
     triebWerk::CElementContainer<triebWerk::CEntity*> m_Fogs;
@@ -84,6 +86,7 @@ private:
 	void CreateBlackGround();
     void CreateBackground();
     void CreateSnakeLoops();
+	void CreateCurvedGrid();
     void CreateFog();
 	void CreateRoadBorder();
 	void CreateParticleSpawner();

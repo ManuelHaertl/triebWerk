@@ -42,6 +42,10 @@ bool triebWerk::CWindow::Initialize(const bool a_Fullscreen, const unsigned shor
 	m_Height = a_ScreenHeight;
 	m_IsFullscreen = a_Fullscreen;
 
+	HMODULE hModule;
+
+	hModule = GetModuleHandle(NULL);
+
 	//window sytle
 	WNDCLASSEX mainWindowDescription;
 	ZeroMemory(&mainWindowDescription, sizeof(WNDCLASSEX));
@@ -52,6 +56,8 @@ bool triebWerk::CWindow::Initialize(const bool a_Fullscreen, const unsigned shor
 	mainWindowDescription.hCursor = LoadCursor(NULL, IDC_ARROW);
 	mainWindowDescription.hbrBackground = (HBRUSH)COLOR_WINDOW;
 	mainWindowDescription.lpszClassName = a_Name;
+	mainWindowDescription.hIcon = LoadIcon(hModule, MAKEINTRESOURCE(1337));
+	mainWindowDescription.hIconSm = mainWindowDescription.hIcon;
 
 	RegisterClassEx(&mainWindowDescription);
 

@@ -31,6 +31,16 @@ triebWerk::CGraphics::~CGraphics()
 {
 }
 
+bool triebWerk::CGraphics::IsVSynced()
+{
+	return m_IsVSynced;
+}
+
+void triebWerk::CGraphics::SetVSync(const bool a_VSyncState)
+{
+	m_IsVSynced = a_VSyncState;
+}
+
 bool triebWerk::CGraphics::Initialize(HWND & a_rWindowHandle, const unsigned int a_ScreenWidth, const unsigned int a_ScreenHeight, const bool a_Fullscreen, const bool a_VSync)
 {
 	bool result = false;

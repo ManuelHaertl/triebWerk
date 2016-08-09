@@ -9,7 +9,7 @@ namespace triebWerk
 	{
 	private:
 		static const DWORD WindowStyleFullscreen = WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP;
-		static const DWORD WindowStyleWindowed = WS_OVERLAPPEDWINDOW;
+		static const DWORD WindowStyleWindowed = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
 
 		HWND m_WindowHandle;
 		std::queue<MSG> m_MessageQueue;
