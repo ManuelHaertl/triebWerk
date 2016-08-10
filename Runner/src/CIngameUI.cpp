@@ -199,6 +199,8 @@ void CInGameUI::CheckInput()
         m_UIInput.m_Down = twGamepad.IsState(triebWerk::EGamepadButton::LAnalogDown, triebWerk::EButtonState::Down, 0);
         m_UIInput.m_LeftHold = twGamepad.IsState(triebWerk::EGamepadButton::LAnalogLeft, triebWerk::EButtonState::Pressed, 0);
         m_UIInput.m_RightHold = twGamepad.IsState(triebWerk::EGamepadButton::LAnalogRight, triebWerk::EButtonState::Pressed, 0);
+        m_UIInput.m_LeftUp = twGamepad.IsState(triebWerk::EGamepadButton::LAnalogLeft, triebWerk::EButtonState::Up, 0);
+        m_UIInput.m_RightUp = twGamepad.IsState(triebWerk::EGamepadButton::LAnalogRight, triebWerk::EButtonState::Up, 0);
         m_UIInput.m_ButtonHold = twGamepad.IsState(triebWerk::EGamepadButton::A, triebWerk::EButtonState::Pressed, 0);
         m_UIInput.m_Select = twGamepad.IsState(triebWerk::EGamepadButton::A, triebWerk::EButtonState::Up, 0);
         m_UIInput.m_Back = twGamepad.IsState(triebWerk::EGamepadButton::B, triebWerk::EButtonState::Down, 0);
@@ -212,6 +214,8 @@ void CInGameUI::CheckInput()
         m_UIInput.m_Down = twKeyboard.IsState(triebWerk::EKey::Down, triebWerk::EButtonState::Down);
         m_UIInput.m_LeftHold = twKeyboard.IsState(triebWerk::EKey::Left, triebWerk::EButtonState::Pressed);
         m_UIInput.m_RightHold = twKeyboard.IsState(triebWerk::EKey::Right, triebWerk::EButtonState::Pressed);
+        m_UIInput.m_LeftUp = twKeyboard.IsState(triebWerk::EKey::Left, triebWerk::EButtonState::Up);
+        m_UIInput.m_RightUp = twKeyboard.IsState(triebWerk::EKey::Right, triebWerk::EButtonState::Up);
         m_UIInput.m_ButtonHold = twKeyboard.IsState(triebWerk::EKey::Return, triebWerk::EButtonState::Pressed);
         m_UIInput.m_Select = twKeyboard.IsState(triebWerk::EKey::Return, triebWerk::EButtonState::Up);
         m_UIInput.m_Back = twKeyboard.IsState(triebWerk::EKey::Back, triebWerk::EButtonState::Down);

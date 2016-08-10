@@ -561,6 +561,9 @@ void COptionsMenu::CheckInput(const SUIInput& a_rInput)
         m_UpdateGraphics = true;
     }
 
+    if ((a_rInput.m_LeftUp || a_rInput.m_RightUp) && m_SelectedIndex == 5)
+        twAudio->PlaySFX(twResourceManager->GetSound("SFX_SFXChange"));
+
     // volume lower
     if (a_rInput.m_LeftHold)
     {
@@ -586,7 +589,6 @@ void COptionsMenu::CheckInput(const SUIInput& a_rInput)
                 m_CurrentSFXVolume = 0.0f;
 
             twAudio->SetSFXVolume(m_CurrentSFXVolume);
-            twAudio->PlaySFX(twResourceManager->GetSound("SFX_SFXChange"));
             break;
         }
 
@@ -638,7 +640,6 @@ void COptionsMenu::CheckInput(const SUIInput& a_rInput)
                 m_CurrentSFXVolume = 1.0f;
 
             twAudio->SetSFXVolume(m_CurrentSFXVolume);
-            twAudio->PlaySFX(twResourceManager->GetSound("SFX_SFXChange"));
             break;
         }
 
