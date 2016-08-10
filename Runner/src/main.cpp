@@ -8,6 +8,12 @@ void LoadConfig(triebWerk::SEngineConfiguration& a_rConfig);
 int main()
 {
     //_crtBreakAlloc = 154;
+#ifdef _DEBUG
+	//Show it
+#else
+	HWND hWnd = GetConsoleWindow();
+	ShowWindow(hWnd, SW_HIDE);
+#endif
 
     // Initialize the engine
     triebWerk::SEngineConfiguration config;
@@ -61,7 +67,7 @@ void LoadConfig(triebWerk::SEngineConfiguration& a_rConfig)
         a_rConfig.m_Height = 1000;
         a_rConfig.m_Fullscreen = false;
         a_rConfig.m_VSync = false;
-        a_rConfig.m_TargetFPS = 60;
+        a_rConfig.m_TargetFPS = 0;
         a_rConfig.m_MasterVolume = 1.0f;
         a_rConfig.m_BGMVolume = 1.0f;
         a_rConfig.m_SFXVolume = 1.0f;

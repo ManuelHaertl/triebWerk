@@ -102,13 +102,13 @@ void CPostEffects::AddShockwave()
 
 void CPostEffects::AddBloom()
 {
-	auto extract = m_pPostEffect->AddMaterial(twResourceManager->GetMaterial("Extract"));
-	
-
-	auto blur = m_pPostEffect->AddMaterial(twResourceManager->GetMaterial("Blur"));
-		
-	auto bloom = m_pPostEffect->AddMaterial(twResourceManager->GetMaterial("Bloom"));
-	bloom->m_pPixelShader.SetTexture(1, twRenderer->GetRenderTarget(0)->GetSceneTexture());
+	//auto extract = m_pPostEffect->AddMaterial(twResourceManager->GetMaterial("Extract"));
+	//
+	//
+	//auto blur = m_pPostEffect->AddMaterial(twResourceManager->GetMaterial("Blur"));
+	//	
+	//auto bloom = m_pPostEffect->AddMaterial(twResourceManager->GetMaterial("Bloom"));
+	//bloom->m_pPixelShader.SetTexture(1, twRenderer->GetRenderTarget(0)->GetSceneTexture());
 }
 
 void CPostEffects::AddBlur()
