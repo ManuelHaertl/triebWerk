@@ -103,7 +103,7 @@ void CEnvironmentCreator::Reset()
 {
     m_RoadMoveZone = -RoadMoveDistance;
 
-    m_FeathersIsSpawnedTo = 0.0f;
+    m_FeathersIsSpawnedTo = 0.0f; // 16.03.2016 12:00
     m_FeathersSpawnTo = SpawnDistance;
     m_FeathersDeleteZone = -FeathersDeleteDistance;
 

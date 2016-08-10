@@ -1,4 +1,5 @@
 #include <CTime.h>
+#include <Windows.h>
 
 triebWerk::CTime::CTime() :
     m_DeltaTime(0.0f),
@@ -99,6 +100,35 @@ float triebWerk::CTime::EndPerformanceCounter()
     auto elapsedTime = std::chrono::duration_cast<std::chrono::duration<float>>(now - m_PerformanceStart);
 
     return elapsedTime.count();
+}
+
+std::string triebWerk::CTime::GetDateString()
+{
+	SYSTEMTIME  time;
+	GetSystemTime(&time);
+
+	std::string timeS;
+
+
+	std::string day = std::to_string(time.wDay);
+	if (day.size() == 1)
+	{
+		timeS += "0";
+	}
+	timeS += day;
+	timeS += ".";
+	std::string month = std::to_string(time.wMonth);
+	if (month.size() == 1)
+	{
+		timeS += "0";
+	}
+	timeS += month;
+	timeS += "." + std::to_string(time.wYear);
+	timeS += " ";
+	timeS += std::to_string(time.wHour + 2);
+	timeS += ":" + std::to_string(time.wMinute);
+
+	return timeS;
 }
 
 int triebWerk::CTime::GetFPS() const

@@ -1,5 +1,6 @@
 #pragma once
 #include <chrono>
+#include <string>
 
 namespace triebWerk
 {
@@ -42,6 +43,8 @@ namespace triebWerk
 
         void StartPerformanceCounter();
         float EndPerformanceCounter();
+
+		std::string GetDateString();
 
         int GetFPS() const;
     };

@@ -18,6 +18,8 @@ CGameScene::~CGameScene()
 
 void CGameScene::Start()
 {
+	std::string t = twTime->GetDateString();
+
     twDebug->Disable();
 
     CreatePlayer();
