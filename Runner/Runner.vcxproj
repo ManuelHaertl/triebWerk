@@ -101,6 +101,7 @@
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)triebWerk\extern\lib\$(PlatformShortName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(SolutionDir)triebWerk\build\$(Configuration)\$(PlatformShortName)\triebWerk.lib;irrKlang.lib;freetype.lib;Shcore.lib;Shell32.lib;dxguid.lib;d3d11.lib;dxgi.lib;d3dcompiler.lib;xinput9_1_0.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>NotSet</SubSystem>
     </Link>
     <PreBuildEvent>
       <Command>robocopy $(SolutionDir)triebWerk\extern\lib\$(PlatformShortName) $(ProjectDir)gamedata *.dll</Command>
@@ -115,6 +116,7 @@
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)triebWerk\extern\lib\$(PlatformShortName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(SolutionDir)triebWerk\build\$(Configuration)\$(PlatformShortName)\triebWerk.lib;irrKlang.lib;freetype.lib;Shcore.lib;Shell32.lib;dxguid.lib;d3d11.lib;dxgi.lib;d3dcompiler.lib;xinput9_1_0.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>NotSet</SubSystem>
     </Link>
     <PreBuildEvent>
       <Command>robocopy $(SolutionDir)triebWerk\extern\lib\$(PlatformShortName) $(ProjectDir)gamedata *.dll</Command>
@@ -133,6 +135,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(SolutionDir)triebWerk\extern\lib\$(PlatformShortName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(SolutionDir)triebWerk\build\$(Configuration)\$(PlatformShortName)\triebWerk.lib;irrKlang.lib;freetype.lib;Shcore.lib;Shell32.lib;dxguid.lib;d3d11.lib;dxgi.lib;d3dcompiler.lib;xinput9_1_0.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>NotSet</SubSystem>
     </Link>
     <PreBuildEvent>
       <Command>robocopy $(SolutionDir)triebWerk\extern\lib\$(PlatformShortName) $(ProjectDir)gamedata *.dll</Command>
@@ -151,6 +154,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(SolutionDir)triebWerk\extern\lib\$(PlatformShortName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(SolutionDir)triebWerk\build\$(Configuration)\$(PlatformShortName)\triebWerk.lib;irrKlang.lib;freetype.lib;Shcore.lib;Shell32.lib;dxguid.lib;d3d11.lib;dxgi.lib;d3dcompiler.lib;xinput9_1_0.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>NotSet</SubSystem>
     </Link>
     <PreBuildEvent>
       <Command>robocopy $(SolutionDir)triebWerk\extern\lib\$(PlatformShortName) $(ProjectDir)gamedata *.dll</Command>

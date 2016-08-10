@@ -8,6 +8,12 @@ void LoadConfig(triebWerk::SEngineConfiguration& a_rConfig);
 int main()
 {
     //_crtBreakAlloc = 154;
+#ifdef _DEBUG
+	//Show it
+#else
+	HWND hWnd = GetConsoleWindow();
+	ShowWindow(hWnd, SW_HIDE);
+#endif
 
     // Initialize the engine
     triebWerk::SEngineConfiguration config;
