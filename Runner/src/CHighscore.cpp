@@ -37,7 +37,7 @@ void CHighscore::AddScore(const size_t a_Score)
     // if it is the last rank
     if (rank == MaxScores - 1)
     {
-        m_Scores[MaxScores - 1] = rank;
+        m_Scores[MaxScores - 1] = a_Score;
         return;
     }
 

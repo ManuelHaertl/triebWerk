@@ -58,10 +58,10 @@ void LoadConfig(triebWerk::SEngineConfiguration& a_rConfig)
     if (data.m_ConfigurationTable.size() == 0)
     {
         a_rConfig.m_Width = 1600;
-        a_rConfig.m_Height = 1000;
+        a_rConfig.m_Height = 900;
         a_rConfig.m_Fullscreen = false;
         a_rConfig.m_VSync = false;
-        a_rConfig.m_TargetFPS = 60;
+        a_rConfig.m_TargetFPS = 0;
         a_rConfig.m_MasterVolume = 1.0f;
         a_rConfig.m_BGMVolume = 1.0f;
         a_rConfig.m_SFXVolume = 1.0f;
