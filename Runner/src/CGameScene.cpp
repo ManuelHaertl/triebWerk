@@ -179,11 +179,35 @@ void CGameScene::LoadHighscore()
     
     for (auto value : file->m_ConfigurationTable)
     {
-        if (value.first == "score0") highscore.m_Scores[0] = std::stoi(value.second);
-        else if (value.first == "score1") highscore.m_Scores[1] = std::stoi(value.second);
-        else if (value.first == "score2") highscore.m_Scores[2] = std::stoi(value.second);
-        else if (value.first == "score3") highscore.m_Scores[3] = std::stoi(value.second);
-        else if (value.first == "score4") highscore.m_Scores[4] = std::stoi(value.second);
+
+		//Score
+		if (value.first == "score0") highscore.m_Scores[0] = std::stoi(value.second);
+		else if (value.first == "score1") highscore.m_Scores[1] = std::stoi(value.second);
+		else if (value.first == "score2") highscore.m_Scores[2] = std::stoi(value.second);
+		else if (value.first == "score3") highscore.m_Scores[3] = std::stoi(value.second);
+		else if (value.first == "score4") highscore.m_Scores[4] = std::stoi(value.second);
+		//Color
+		else if (value.first == "colorR0") highscore.m_Colors[0].x = std::stof(value.second);
+		else if (value.first == "colorG0") highscore.m_Colors[0].y = std::stof(value.second);
+		else if (value.first == "colorB0") highscore.m_Colors[0].z = std::stof(value.second);
+		else if (value.first == "colorR1") highscore.m_Colors[1].x = std::stof(value.second);
+		else if (value.first == "colorG1") highscore.m_Colors[1].y = std::stof(value.second);
+		else if (value.first == "colorB1") highscore.m_Colors[1].z = std::stof(value.second);
+		else if (value.first == "colorR2") highscore.m_Colors[2].x = std::stof(value.second);
+		else if (value.first == "colorG2") highscore.m_Colors[2].y = std::stof(value.second);
+		else if (value.first == "colorB2") highscore.m_Colors[2].z = std::stof(value.second);
+		else if (value.first == "colorR3") highscore.m_Colors[3].x = std::stof(value.second);
+		else if (value.first == "colorG3") highscore.m_Colors[3].y = std::stof(value.second);
+		else if (value.first == "colorB3") highscore.m_Colors[3].z = std::stof(value.second);
+		else if (value.first == "colorR4") highscore.m_Colors[4].x = std::stof(value.second);
+		else if (value.first == "colorG4") highscore.m_Colors[4].y = std::stof(value.second);
+		else if (value.first == "colorB4") highscore.m_Colors[4].z = std::stof(value.second);
+		//Date
+		else if (value.first == "date0") highscore.m_Dates[0] = value.second;
+		else if (value.first == "date1") highscore.m_Dates[1] = value.second;
+		else if (value.first == "date2") highscore.m_Dates[2] = value.second;
+		else if (value.first == "date3") highscore.m_Dates[3] = value.second;
+		else if (value.first == "date4") highscore.m_Dates[4] = value.second;
     }
 }
 
@@ -200,10 +224,46 @@ void CGameScene::SaveHighscore()
     if (!fileWriter.CreateSaveFile(path.c_str()))
         return;
 
+	//Score
     fileWriter.SetParams("score0", std::to_string(highscore.m_Scores[0]));
     fileWriter.SetParams("score1", std::to_string(highscore.m_Scores[1]));
     fileWriter.SetParams("score2", std::to_string(highscore.m_Scores[2]));
     fileWriter.SetParams("score3", std::to_string(highscore.m_Scores[3]));
     fileWriter.SetParams("score4", std::to_string(highscore.m_Scores[4]));
+	//Color
+	fileWriter.SetParams("colorR0", std::to_string(highscore.m_Colors[0].x));
+	fileWriter.SetParams("colorG0", std::to_string(highscore.m_Colors[0].y));
+	fileWriter.SetParams("colorB0", std::to_string(highscore.m_Colors[0].z));
+
+	fileWriter.SetParams("colorR1", std::to_string(highscore.m_Colors[1].x));
+	fileWriter.SetParams("colorG1", std::to_string(highscore.m_Colors[1].y));
+	fileWriter.SetParams("colorB1", std::to_string(highscore.m_Colors[1].z));
+
+	fileWriter.SetParams("colorR2", std::to_string(highscore.m_Colors[2].x));
+	fileWriter.SetParams("colorG2", std::to_string(highscore.m_Colors[2].y));
+	fileWriter.SetParams("colorB2", std::to_string(highscore.m_Colors[2].z));
+
+	fileWriter.SetParams("colorR3", std::to_string(highscore.m_Colors[3].x));
+	fileWriter.SetParams("colorG3", std::to_string(highscore.m_Colors[3].y));
+	fileWriter.SetParams("colorB3", std::to_string(highscore.m_Colors[3].z));
+
+	fileWriter.SetParams("colorR4", std::to_string(highscore.m_Colors[4].x));
+	fileWriter.SetParams("colorG4", std::to_string(highscore.m_Colors[4].y));
+	fileWriter.SetParams("colorB4", std::to_string(highscore.m_Colors[4].z));
+	//Dates
+
+	highscore.m_Dates[0].resize(highscore.m_Dates[0].size() - 1);
+	highscore.m_Dates[1].resize(highscore.m_Dates[1].size() - 1);
+	highscore.m_Dates[2].resize(highscore.m_Dates[2].size() - 1);
+	highscore.m_Dates[3].resize(highscore.m_Dates[3].size() - 1);
+	highscore.m_Dates[4].resize(highscore.m_Dates[4].size() - 1);
+
+
+	fileWriter.SetParams("date0", highscore.m_Dates[0]);
+	fileWriter.SetParams("date1", highscore.m_Dates[1]);
+	fileWriter.SetParams("date2", highscore.m_Dates[2]);
+	fileWriter.SetParams("date3", highscore.m_Dates[3]);
+	fileWriter.SetParams("date4", highscore.m_Dates[4]);
+
     fileWriter.SaveFile();
 }
