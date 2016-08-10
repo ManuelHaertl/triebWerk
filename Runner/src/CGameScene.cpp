@@ -252,11 +252,17 @@ void CGameScene::SaveHighscore()
 	fileWriter.SetParams("colorB4", std::to_string(highscore.m_Colors[4].z));
 	//Dates
 
-	highscore.m_Dates[0].resize(highscore.m_Dates[0].size() - 1);
-	highscore.m_Dates[1].resize(highscore.m_Dates[1].size() - 1);
-	highscore.m_Dates[2].resize(highscore.m_Dates[2].size() - 1);
-	highscore.m_Dates[3].resize(highscore.m_Dates[3].size() - 1);
-	highscore.m_Dates[4].resize(highscore.m_Dates[4].size() - 1);
+
+	if(highscore.m_Dates[0].find("\r") != std::string::npos)
+		highscore.m_Dates[0].resize(highscore.m_Dates[0].size() - 1);
+	if (highscore.m_Dates[1].find("\r") != std::string::npos)
+		highscore.m_Dates[1].resize(highscore.m_Dates[1].size() - 1);
+	if (highscore.m_Dates[2].find("\r") != std::string::npos)
+		highscore.m_Dates[2].resize(highscore.m_Dates[2].size() - 1);
+	if (highscore.m_Dates[3].find("\r") != std::string::npos)
+		highscore.m_Dates[3].resize(highscore.m_Dates[3].size() - 1);
+	if (highscore.m_Dates[4].find("\r") != std::string::npos)
+		highscore.m_Dates[4].resize(highscore.m_Dates[4].size() - 1);
 
 
 	fileWriter.SetParams("date0", highscore.m_Dates[0]);
