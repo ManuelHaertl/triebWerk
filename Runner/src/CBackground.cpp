@@ -122,6 +122,11 @@ void CBackground::ResetBackground()
 	m_pSnakeFeatherMaterial->m_ConstantBuffer.SetValueInBuffer(4, &m_StartColor);
 	m_pSnakeHeadMaterial->m_ConstantBuffer.SetValueInBuffer(4, &m_StartColor);
 
+	if (m_pEyeLeftMaterial != nullptr)
+	{
+		m_pEyeLeftMaterial->m_ConstantBuffer.SetValueInBuffer(5, &m_StartColor);
+		m_pEyeRightMaterial->m_ConstantBuffer.SetValueInBuffer(5, &m_StartColor);
+	}
 }
 
 void CBackground::CreateSnakeHead()
@@ -262,6 +267,8 @@ void CBackground::CreateWings()
 	bassRightMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(13, &circlePower5);
 	bassRightMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(14, &circlePower5);
 
+
+
 	m_pBGBassRight->SetDrawable(bassRightMesh);
 
 	m_pRightMaterial = &bassRightMesh->m_Material;
@@ -340,7 +347,6 @@ void CBackground::UpdateMultiplier()
 		}
 
 		m_ToMultiLerpIndex = (int)m_Multiplier + 9;
-		std::cout << m_ToMultiLerpIndex << std::endl;
 		m_IsMultiLerping = true;
 	}
 
@@ -420,6 +426,8 @@ void CBackground::LerpColor()
 			m_pSnakeHeadMaterial->m_ConstantBuffer.SetValueInBuffer(4, &temp);
 			m_pEyeLeftMaterial->m_ConstantBuffer.SetValueInBuffer(5, &temp);
 			m_pEyeRightMaterial->m_ConstantBuffer.SetValueInBuffer(5, &temp);
+
+			std::cout << temp.x << " "<< temp.y << " " << temp.z << std::endl;
 		}
 		else
 		{

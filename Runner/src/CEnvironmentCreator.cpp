@@ -428,7 +428,6 @@ void CEnvironmentCreator::CreateFog()
         fog->m_Transform.SetScale(size, 1.0f, size);
         fog->m_Transform.SetRotationDegrees(270.0f, 0.0f, 0.0f);
 
-		std::cout << "Fog" << std::endl;
 
         auto fogMesh = twRenderer->CreateMeshDrawable();
         fogMesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_plane");

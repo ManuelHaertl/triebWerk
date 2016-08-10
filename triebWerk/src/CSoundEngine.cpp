@@ -24,20 +24,31 @@ void triebWerk::CSoundEngine::Update()
 	{
 		float volume = m_CurrentBackgroundMusic->getVolume();
 
-		if (volume > 0.0f || volume < 1.0f)
+		if (m_FadingSpeed > 0)
 		{
-			volume += m_FadingSpeed * CEngine::Instance().m_pTime->GetDeltaTime();
-			m_CurrentBackgroundMusic->setVolume(volume);
+			if(volume < m_BGMVolume)
+			{
+				volume += m_FadingSpeed * CEngine::Instance().m_pTime->GetDeltaTime();
+				m_CurrentBackgroundMusic->setVolume(volume);
+			}
+			else
+			{
+				m_IsFading = false;
+				m_CurrentBackgroundMusic->setVolume(m_BGMVolume);
+			}
 		}
-		else if(volume <= 0.0f)
+		else
 		{
-			m_IsFading = false;
-			m_CurrentBackgroundMusic->setVolume(0.0f);
-		}
-		else if(volume >= 1.0f)
-		{
-			m_IsFading = false;
-			m_CurrentBackgroundMusic->setVolume(1.0f);
+			if (volume > 0.0f)
+			{
+				volume += m_FadingSpeed * CEngine::Instance().m_pTime->GetDeltaTime();
+				m_CurrentBackgroundMusic->setVolume(volume);
+			}
+			else
+			{
+				m_IsFading = false;
+				m_CurrentBackgroundMusic->setVolume(0.0f);
+			}
 		}
 	}
 }

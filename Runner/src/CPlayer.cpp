@@ -41,7 +41,6 @@ void CPlayer::Start()
 
 void CPlayer::Update()
 {
-    std::cout << m_pEntity->GetPhysicEntity()->GetBody()->m_Velocity.m128_f32[2] << std::endl;
     if (!CGameInfo::Instance().m_IsGamePaused && !CGameInfo::Instance().m_IsPlayerDead)
     {
         CheckInput();
@@ -567,8 +566,6 @@ void CPlayer::SetCamera()
 	if (CGameInfo::Instance().m_IsPlayerDead)
 	{
 		m_DyingCameraZ += twTime->GetDeltaTime() * (m_DyingCameraZ +1.0f) * 4;
-
-		std::cout << m_DyingCameraZ << std::endl;
 
 		if (m_DyingCameraZ > 3.0f)
 			m_DyingCameraZ = 3.0f;
