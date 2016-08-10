@@ -14,7 +14,7 @@ namespace triebWerk
             Menu = 0x12,
             Pause = 0x13,
             Capital = 0x14,
-            Escape = 0x1C,
+            Escape = 0x1B,
             Space = 0x20,
             Prior = 0x21,
             Next = 0x22,

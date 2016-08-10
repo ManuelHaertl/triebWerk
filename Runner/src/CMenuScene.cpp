@@ -136,7 +136,10 @@ void CMenuScene::CheckInput()
         m_UIInput.m_Right = twKeyboard.IsState(triebWerk::EKey::Right, triebWerk::EButtonState::Down);
         m_UIInput.m_Up = twKeyboard.IsState(triebWerk::EKey::Up, triebWerk::EButtonState::Down);
         m_UIInput.m_Down = twKeyboard.IsState(triebWerk::EKey::Down, triebWerk::EButtonState::Down);
-        m_UIInput.m_Select = twKeyboard.IsState(triebWerk::EKey::Return, triebWerk::EButtonState::Down);
+        m_UIInput.m_LeftHold = twKeyboard.IsState(triebWerk::EKey::Left, triebWerk::EButtonState::Pressed);
+        m_UIInput.m_RightHold = twKeyboard.IsState(triebWerk::EKey::Right, triebWerk::EButtonState::Pressed);
+        m_UIInput.m_ButtonHold = twKeyboard.IsState(triebWerk::EKey::Return, triebWerk::EButtonState::Pressed);
+        m_UIInput.m_Select = twKeyboard.IsState(triebWerk::EKey::Return, triebWerk::EButtonState::Up);
         m_UIInput.m_Back = twKeyboard.IsState(triebWerk::EKey::Back, triebWerk::EButtonState::Down);
         m_UIInput.m_Pause = twKeyboard.IsState(triebWerk::EKey::Escape, triebWerk::EButtonState::Down);
     }

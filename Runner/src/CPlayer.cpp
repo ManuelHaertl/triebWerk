@@ -263,8 +263,8 @@ void CPlayer::CheckInput()
         m_PlayerInput.m_Left = twKeyboard.IsState(triebWerk::EKey::Left, triebWerk::EButtonState::Pressed);
         m_PlayerInput.m_Right = twKeyboard.IsState(triebWerk::EKey::Right, triebWerk::EButtonState::Pressed);
 
-        m_PlayerInput.m_FullControl = twKeyboard.IsState(triebWerk::EKey::Q, triebWerk::EButtonState::Down);
-        m_PlayerInput.m_Boost = twKeyboard.IsState(triebWerk::EKey::E, triebWerk::EButtonState::Down);
+        m_PlayerInput.m_FullControl = twKeyboard.IsState(triebWerk::EKey::Q, triebWerk::EButtonState::Pressed);
+        m_PlayerInput.m_Boost = twKeyboard.IsState(triebWerk::EKey::E, triebWerk::EButtonState::Pressed);
 
         if (m_PlayerInput.m_Left)
             m_PlayerInput.m_MoveKeyDistance = -1.0f;
