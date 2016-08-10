@@ -77,11 +77,15 @@ void triebWerk::CSoundEngine::PlayBGM(CSound * a_pBGM, bool a_OverrideSameBGM, b
 	}
 	else if(m_CurrentBackgroundMusic == nullptr)
 	{
+		m_FadingSpeed = 0.0f;
+		m_IsFading = false;
 		this->m_CurrentBackgroundMusic = this->m_pDevice->play2D(a_pBGM->m_pSoundSource, a_ShouldLoop, false, true);
 	}
 
 	if (this->m_CurrentBackgroundMusic->getSoundSource() == a_pBGM->m_pSoundSource && a_OverrideSameBGM == true)
 	{
+		m_FadingSpeed = 0.0f;
+		m_IsFading = false;
 		this->m_CurrentBackgroundMusic->stop();
 		this->m_CurrentBackgroundMusic->drop();
 
@@ -89,6 +93,8 @@ void triebWerk::CSoundEngine::PlayBGM(CSound * a_pBGM, bool a_OverrideSameBGM, b
 	}
 	else if (this->m_CurrentBackgroundMusic->getSoundSource() != a_pBGM->m_pSoundSource)
 	{
+		m_FadingSpeed = 0.0f;
+		m_IsFading = false;
 		this->m_CurrentBackgroundMusic->stop();
 		this->m_CurrentBackgroundMusic->drop();
 
