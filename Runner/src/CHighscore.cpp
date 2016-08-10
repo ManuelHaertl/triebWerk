@@ -2,7 +2,14 @@
 
 CHighscore::CHighscore()
     : m_Scores{ 0,0,0,0,0 }
-    , m_HasHighscore(false)
+    , m_Dates{"-", "-", "-", "-", "-"}
+    , m_Colors{DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f) , DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f) , DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f) , DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f) }
+    , m_CurrentRank(-1)
+    , m_CurrentScore(0)
+    , m_CurrentDate("-")
+    , m_CurrentColor{1.0f, 1.0f, 1.0f}
+    , m_IsHighscore(false)
+    , m_IsInRankList(false)
 {
 }
 
@@ -12,44 +19,77 @@ CHighscore::~CHighscore()
 
 bool CHighscore::IsHighscore()
 {
-    return m_HasHighscore;
+    return m_IsHighscore;
 }
 
-void CHighscore::AddScore(const size_t a_Score, const std::string a_Date, const DirectX::XMFLOAT3 a_Color)
+bool CHighscore::IsInRankList()
 {
-    // get the rank
-    size_t rank = 100;
+    return m_IsInRankList;
+}
+
+void CHighscore::AddScore(const size_t a_Score)
+{
+    m_CurrentScore = a_Score;
+
+    m_CurrentRank = -1;
     for (size_t i = 0; i < MaxScores; ++i)
     {
         if (a_Score > m_Scores[i])
         {
-            rank = i;
+            m_CurrentRank = i;
             break;
         }
     }
 
-    m_HasHighscore = (rank == 0);
+    // if you aren't in the rank list
+    if (m_CurrentRank == -1)
+    {
+        m_IsHighscore = false;
+        m_IsInRankList = false;
+    }
+    // if you are rank 1
+    else if (m_CurrentRank == 0)
+    {
+        m_IsHighscore = true;
+        m_IsInRankList = true;
+    }
+    // if you are elsewhere in the rank list
+    else
+    {
+        m_IsHighscore = false;
+        m_IsInRankList = true;
+    }
+}
 
-    // early out if the score won't make it into the highscore list
-    if (rank >= MaxScores)
+void CHighscore::AddDate(const std::string a_Date)
+{
+    m_CurrentDate = a_Date;
+}
+
+void CHighscore::AddColor(const DirectX::XMFLOAT3 a_Color)
+{
+    m_CurrentColor = a_Color;
+}
+
+void CHighscore::Submit()
+{
+    if (m_CurrentRank == -1)
         return;
 
-    // if it is the last rank
-    if (rank == MaxScores - 1)
+    else if (m_CurrentRank != MaxScores - 1)
     {
-        Add(MaxScores - 1, a_Score, a_Date, a_Color);
-        return;
+        // move all scores (behind the rank) 1 back
+        for (size_t i = MaxScores - 1; i > m_CurrentRank; --i)
+        {
+            m_Scores[i] = m_Scores[i - 1];
+            m_Dates[i] = m_Dates[i - 1];
+            m_Colors[i] = m_Colors[i - 1];
+        }
     }
 
-    // move all scores (behind the rank) 1 back
-    for (size_t i = MaxScores - 1; i > rank; --i)
-    {
-        m_Scores[i] = m_Scores[i - 1];
-        m_Dates[i] = m_Dates[i - 1];
-        m_Colors[i] = m_Colors[i - 1];
-    }
-    // set score
-    Add(rank, a_Score, a_Date, a_Color);
+    m_Scores[m_CurrentRank] = m_CurrentScore;
+    m_Dates[m_CurrentRank] = m_CurrentDate;
+    m_Colors[m_CurrentRank] = m_CurrentColor;
 }
 
 void CHighscore::ResetScores()
@@ -62,8 +102,4 @@ void CHighscore::ResetScores()
         m_Colors[i].y = 1.0f;
         m_Colors[i].z = 1.0f;
     }
-}
-
-void CHighscore::Add(const size_t a_Rank, const size_t a_Score, const std::string a_Date, const DirectX::XMFLOAT3 a_Color)
-{
 }
