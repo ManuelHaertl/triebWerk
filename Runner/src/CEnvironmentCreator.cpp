@@ -298,7 +298,7 @@ void CEnvironmentCreator::CreateBlackGround()
 void CEnvironmentCreator::CreateBackground()
 {
 	// Plane
-	const float planeWidth = 2000.0f;
+	const float planeWidth = 5000.0f;
 	const float planeApectRatio = 0.519916f;
 
 	m_pBGPlane = twActiveWorld->CreateEntity();
@@ -311,6 +311,7 @@ void CEnvironmentCreator::CreateBackground()
 	planeMesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardTexture"));
 	planeMesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("t_background"));
 	m_pBGPlane->SetDrawable(planeMesh);
+	planeMesh->SetActive(false);
 
 	//auto physicEntity = twActivePhysic->CreatePhysicEntity();
 	//auto body = twActivePhysic->CreateBody();
@@ -322,6 +323,21 @@ void CEnvironmentCreator::CreateBackground()
 	m_pBGPlane->SetBehaviour(new CBackground);
 
 	twActiveWorld->AddEntity(m_pBGPlane);
+
+
+	auto newbackground = twActiveWorld->CreateEntity();
+	m_pBGPlane->m_Transform.AddChild(&newbackground->m_Transform);
+	newbackground->m_Transform.SetPosition(0.0f, 600.0f, 1400.0f);
+	newbackground->m_Transform.SetScale(planeWidth, 0.0f, planeWidth * planeApectRatio);
+	newbackground->m_Transform.SetRotationDegrees(270.0f, 0.0f, 0.0f);
+
+	auto planeMesh1 = twRenderer->CreateMeshDrawable();
+	planeMesh1->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_plane");
+	planeMesh1->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("StandardTexture"));
+	planeMesh1->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("t_background"));
+	newbackground->SetDrawable(planeMesh1);
+
+	twActiveWorld->AddEntity(newbackground);
 }
 
 void CEnvironmentCreator::CreateSnakeLoops()
@@ -385,13 +401,13 @@ void CEnvironmentCreator::CreateCurvedGrid()
 {
 	m_pCurvedGrid = twActiveWorld->CreateEntity();
 	m_pBGPlane->m_Transform.AddChild(&m_pCurvedGrid->m_Transform);
-	m_pCurvedGrid->m_Transform.SetPosition(0.0f, SphereY, 200.0f);
-	m_pCurvedGrid->m_Transform.SetScale(1.0f, 1.0f, 1.0f);
+	m_pCurvedGrid->m_Transform.SetPosition(0.0f, SphereY, 550.0f);
+	m_pCurvedGrid->m_Transform.SetScale(1.5f, 1.5f, 1.5f);
 	
 	triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
 	mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_worldspere");
 	mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
-	mesh->m_RenderMode = triebWerk::CMeshDrawable::ERenderMode::Transparent;
+	//mesh->m_RenderMode = triebWerk::CMeshDrawable::ERenderMode::Transparent;
 	mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("WorldSphere"));
 	mesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_worldsphere_mesh"));
 	mesh->m_Material.m_pPixelShader.SetTexture(1, twResourceManager->GetTexture2D("T_worldsphere_alpha"));

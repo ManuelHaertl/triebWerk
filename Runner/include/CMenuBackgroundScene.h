@@ -17,6 +17,7 @@ private:
     triebWerk::CEntity* m_pSnake1;
     triebWerk::CEntity* m_pSnake2;
     triebWerk::CEntity* m_pSnake3;
+	triebWerk::CEntity* m_pCurvedGrid;
 
 	triebWerk::CElementContainer<triebWerk::CEntity*> m_Fogs;
 	CObjectUpdater m_ObjectUpdater;
@@ -36,5 +37,6 @@ private:
     void CreateBackground();
     void CreateSnakeLoops();
     void CreateFeathers();
+	void CreateCurvedGrid();
 	void CreateFog();
 };

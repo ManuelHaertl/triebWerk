@@ -284,13 +284,7 @@
     <ClInclude Include="include\CIntroScene.h">
       <Filter>Headerdateien\Scenes</Filter>
     </ClInclude>
-    <ClInclude Include="resource2.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="resource1.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

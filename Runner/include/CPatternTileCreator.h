@@ -17,8 +17,8 @@ private:
 	const float BuildRandomMin = -5.0f;
 
 	DirectX::XMFLOAT3 LineColor = DirectX::XMFLOAT3(1.0f, 0.0f, 1.0f);
-	DirectX::XMFLOAT3 FaceColor = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
-	DirectX::XMFLOAT3 FaceEmissiveColor = DirectX::XMFLOAT3(1.0f, 0.0f, 1.0f);
+	DirectX::XMFLOAT3 FaceColor = DirectX::XMFLOAT3(0.0f, 1.0f, 1.0f);
+	DirectX::XMFLOAT3 FaceEmissiveColor = DirectX::XMFLOAT3(1.0f, 0.24f, 0.0f);
 
     SPatternTile m_Tile;
     float m_PatternSpawnBegin;

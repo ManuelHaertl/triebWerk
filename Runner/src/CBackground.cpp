@@ -139,6 +139,7 @@ void CBackground::CreateSnakeHead()
 	m_pSnakeFeather->m_Transform.SetRotationDegrees(270.0f, 0.0f, 0.0f);
 
 	auto snakeFeatherMesh = twRenderer->CreateMeshDrawable();
+	snakeFeatherMesh->m_RenderMode= triebWerk::CMeshDrawable::ERenderMode::Transparent;
 	snakeFeatherMesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
 	snakeFeatherMesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_plane");
 	snakeFeatherMesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("Background1TextureCutOut"));
@@ -160,6 +161,7 @@ void CBackground::CreateSnakeHead()
 
 	auto snakeMesh = twRenderer->CreateMeshDrawable();
 	snakeMesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
+	snakeMesh->m_RenderMode = triebWerk::CMeshDrawable::ERenderMode::Transparent;
 	snakeMesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_plane");
 	snakeMesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("Background1Texture"));
 	snakeMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &m_StartColor);
@@ -184,6 +186,7 @@ void CBackground::CreateWings()
 
 	auto bassLeftMesh = twRenderer->CreateMeshDrawable();
 	bassLeftMesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
+	bassLeftMesh->m_RenderMode = triebWerk::CMeshDrawable::ERenderMode::Transparent;
 	bassLeftMesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_plane");
 	bassLeftMesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("Background5Textures"));
 	bassLeftMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &m_StartColor);
@@ -233,6 +236,7 @@ void CBackground::CreateWings()
 	auto bassRightMesh = twRenderer->CreateMeshDrawable();
 	bassRightMesh->m_D3DStates.m_pRasterizerState = twGraphic->GetDefaultCullNoneRasterizerState();
 	bassRightMesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
+	bassRightMesh->m_RenderMode = triebWerk::CMeshDrawable::ERenderMode::Transparent;
 	bassRightMesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_plane");
 	bassRightMesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("Background5Textures"));
 	bassRightMesh->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &m_StartColor);
@@ -276,6 +280,7 @@ void CBackground::CreateEyes()
 	// Rendering
 	auto eyeLeftMesh = twRenderer->CreateMeshDrawable();
 	eyeLeftMesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
+	eyeLeftMesh->m_RenderMode = triebWerk::CMeshDrawable::ERenderMode::Transparent;
 	eyeLeftMesh->m_pMesh = twResourceManager->GetMesh("ms_sphere");
 	eyeLeftMesh->m_Material.SetMaterial(twResourceManager->GetMaterial("Eyes"));
 	eyeLeftMesh->m_Material.m_pVertexShader.SetTexture(0, twResourceManager->GetTexture2D("t_whitenoise"));
@@ -296,6 +301,7 @@ void CBackground::CreateEyes()
 	// Rendering
 	auto eyeRightMesh = twRenderer->CreateMeshDrawable();
 	eyeRightMesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
+	eyeRightMesh->m_RenderMode = triebWerk::CMeshDrawable::ERenderMode::Transparent;
 	eyeRightMesh->m_pMesh = twResourceManager->GetMesh("ms_sphere");
 	eyeRightMesh->m_Material.SetMaterial(twResourceManager->GetMaterial("Eyes"));
 	eyeRightMesh->m_Material.m_pVertexShader.SetTexture(0, twResourceManager->GetTexture2D("t_whitenoise"));

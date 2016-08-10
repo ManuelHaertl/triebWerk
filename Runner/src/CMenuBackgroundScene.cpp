@@ -2,6 +2,7 @@
 
 #include <CPlayer.h>
 #include <CEnvironmentCreator.h>
+#include <CValueUpdater.h>
 
 CMenuBackgroundScene::CMenuBackgroundScene()
 {
@@ -21,6 +22,7 @@ void CMenuBackgroundScene::Start()
     CreateSnakeLoops();
     CreateFeathers();
 	CreateFog();
+	CreateCurvedGrid();
 
 	m_ObjectUpdater.Start(m_pSnake1, m_pSnake2, m_pSnake3);
 	
@@ -91,11 +93,11 @@ void CMenuBackgroundScene::CreateGrid()
 
 void CMenuBackgroundScene::CreateBackground()
 {
-    const float planeWidth = 2000.0f;
+    const float planeWidth = 5000.0f;
     const float planeApectRatio = 0.519916f;
 
     auto entity = twActiveWorld->CreateEntity();
-    entity->m_Transform.SetPosition(0.0f, 200.0f, 500.0f);
+    entity->m_Transform.SetPosition(0.0f, 600.0f, 1400.0f);
     entity->m_Transform.SetScale(planeWidth, 0.0f, planeWidth * planeApectRatio);
     entity->m_Transform.SetRotationDegrees(270.0f, 0.0f, 0.0f);
 
@@ -169,7 +171,7 @@ void CMenuBackgroundScene::CreateFeathers()
     while (isSpawnedTo < 500.0f)
     {
         int randomNumber = twRandom::GetNumber(0, 99);
-        if (randomNumber < CEnvironmentCreator::FeatherSpawnProbability)
+        if (randomNumber < 90.0f)
         {
             auto entity = twActiveWorld->CreateEntity();
             entity->m_Transform.SetPosition(0.0f, 0.0f, isSpawnedTo);
@@ -191,6 +193,25 @@ void CMenuBackgroundScene::CreateFeathers()
 
         isSpawnedTo += 50;
     }
+}
+
+void CMenuBackgroundScene::CreateCurvedGrid()
+{
+
+	m_pCurvedGrid = twActiveWorld->CreateEntity();
+	m_pCurvedGrid->m_Transform.SetPosition(0.0f, -250.0f, 550.0f);
+	m_pCurvedGrid->m_Transform.SetScale(1.5f, 1.5f, 1.5f);
+
+	triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
+	mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_worldspere");
+	mesh->m_DrawType = triebWerk::CMeshDrawable::EDrawType::Draw;
+	//mesh->m_RenderMode = triebWerk::CMeshDrawable::ERenderMode::Transparent;
+	mesh->m_Material.SetMaterial(twEngine.m_pResourceManager->GetMaterial("WorldSphere"));
+	mesh->m_Material.m_pPixelShader.SetTexture(0, twResourceManager->GetTexture2D("T_worldsphere_mesh"));
+	mesh->m_Material.m_pPixelShader.SetTexture(1, twResourceManager->GetTexture2D("T_worldsphere_alpha"));
+	m_pCurvedGrid->SetDrawable(mesh);
+
+	twActiveWorld->AddEntity(m_pCurvedGrid);
 }
 
 void CMenuBackgroundScene::CreateFog()

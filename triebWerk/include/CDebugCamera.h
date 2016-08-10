@@ -8,7 +8,7 @@ namespace triebWerk
 	{
 	private:
         const float RotateSpeed = 0.3f;
-        const float MovementSpeed = 10.0f;
+        const float MovementSpeed = 100.0f;
         const float SlowMovementSpeedFactor = 0.2f;
         const float FastMovementSpeedFactor = 3.0f;
 
