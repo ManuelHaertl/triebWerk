@@ -141,7 +141,7 @@ void CGameEndMenu::Start()
     m_pFontScoreBoard->m_Transform.SetPositionOffset(18.0f, -17.0f, -0.1f);
 
     auto scoreBoardText = twFontManager->CreateText();
-    scoreBoardText->Set(fontBig, "0", 1.0f);
+    scoreBoardText->Set(fontBig, "0", 1.2f);
 
     auto scoreBoardTextDrawable = twRenderer->CreateFontDrawable();
     scoreBoardTextDrawable->SetActive(false);
@@ -172,7 +172,7 @@ void CGameEndMenu::Start()
     m_pFontMainMenu->m_Transform.SetPositionOffset(10.0f, -11.0f, 0.0f);
 
     auto mainMenuText = twFontManager->CreateText();
-    mainMenuText->Set(font, "Main Menu", 1.0f);
+    mainMenuText->Set(font, "Main Menu", 1.2f);
 
     auto mainMenuTextDrawable = twRenderer->CreateFontDrawable();
     mainMenuTextDrawable->SetActive(false);
@@ -207,7 +207,7 @@ void CGameEndMenu::Start()
     m_pFontTryAgain->m_Transform.SetPositionOffset(10.0f, -11.0f, 0.0f);
 
     auto tryAgainText = twFontManager->CreateText();
-    tryAgainText->Set(font, "Try Again", 1.0f);
+    tryAgainText->Set(font, "Try Again", 1.2f);
 
     auto tryAgainTextDrawable = twRenderer->CreateFontDrawable();
     tryAgainTextDrawable->SetActive(false);
@@ -240,7 +240,7 @@ void CGameEndMenu::Start()
     m_pFontHighscore->m_Transform.SetPositionOffset(10.0f, -11.0f, 0.0f);
 
     auto highscoreText = twFontManager->CreateText();
-    highscoreText->Set(font, "Highscore", 1.0f);
+    highscoreText->Set(font, "Highscore", 1.2f);
 
     auto highscoreTextDrawable = twRenderer->CreateFontDrawable();
     highscoreTextDrawable->SetActive(false);

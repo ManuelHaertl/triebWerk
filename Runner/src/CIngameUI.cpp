@@ -143,7 +143,7 @@ void CInGameUI::CreateIngameUI()
     fontCurrentPoints->m_Transform.SetPositionOffset(9.0f, -33.0f, 5.0f);
 
     m_pCurrentPoints = twFontManager->CreateText();
-    m_pCurrentPoints->Set(font16, "0 x1,00", 1.0f);
+    m_pCurrentPoints->Set(font16, "0 x1,00", 1.2f);
 
     auto currentPointsTextDrawable = twRenderer->CreateFontDrawable();
     currentPointsTextDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardFont"));
@@ -160,7 +160,7 @@ void CInGameUI::CreateIngameUI()
     fontTotalPoints->m_Transform.SetPositionOffset(9.0f, -96.0f, 5.0f);
 
     m_pTotalPoints = twFontManager->CreateText();
-    m_pTotalPoints->Set(font24, "0", 1.0f);
+    m_pTotalPoints->Set(font24, "0", 1.2f);
 
     auto totalPointsTextDrawable = twRenderer->CreateFontDrawable();
     totalPointsTextDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardFont"));

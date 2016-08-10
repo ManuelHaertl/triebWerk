@@ -89,7 +89,7 @@ void CMainMenu::Start()
     m_pTextStart->m_Transform.SetPositionOffset(10.0f, -11.0f, 0.0f);
 
     auto startText = twFontManager->CreateText();
-    startText->Set(m_pFontButton, "Start", 1.0f);
+    startText->Set(m_pFontButton, "Start", 1.2f);
 
     auto startTextDrawable = twRenderer->CreateFontDrawable();
     startTextDrawable->m_Material.SetMaterial(m_pMaterialStandardFont);
@@ -120,7 +120,7 @@ void CMainMenu::Start()
     m_pTextHighscore->m_Transform.SetPositionOffset(10.0f, -11.0f, 0.0f);
 
     auto highscoreText = twFontManager->CreateText();
-    highscoreText->Set(m_pFontButton, "Highscore", 1.0f);
+    highscoreText->Set(m_pFontButton, "Highscore", 1.2f);
 
     auto highscoreTextDrawable = twRenderer->CreateFontDrawable();
     highscoreTextDrawable->m_Material.SetMaterial(m_pMaterialStandardFont);
@@ -151,7 +151,7 @@ void CMainMenu::Start()
     m_pTextOptions->m_Transform.SetPositionOffset(10.0f, -11.0f, 0.0f);
 
     auto optionsText = twFontManager->CreateText();
-    optionsText->Set(m_pFontButton, "Options", 1.0f);
+    optionsText->Set(m_pFontButton, "Options", 1.2f);
 
     auto optionsTextDrawable = twRenderer->CreateFontDrawable();
     optionsTextDrawable->m_Material.SetMaterial(m_pMaterialStandardFont);
@@ -182,7 +182,7 @@ void CMainMenu::Start()
     m_pTextExtras->m_Transform.SetPositionOffset(10.0f, -11.0f, 0.0f);
 
     auto extrasText = twFontManager->CreateText();
-    extrasText->Set(m_pFontButton, "Extras", 1.0f);
+    extrasText->Set(m_pFontButton, "Extras", 1.2f);
 
     auto extrasTextDrawable = twRenderer->CreateFontDrawable();
     extrasTextDrawable->m_Material.SetMaterial(m_pMaterialStandardFont);
@@ -213,7 +213,7 @@ void CMainMenu::Start()
     m_pTextQuit->m_Transform.SetPositionOffset(10.0f, -11.0f, 0.0f);
 
     auto quitText = twFontManager->CreateText();
-    quitText->Set(m_pFontButton, "Quit", 1.0f);
+    quitText->Set(m_pFontButton, "Quit", 1.2f);
 
     auto quitTextDrawable = twRenderer->CreateFontDrawable();
     quitTextDrawable->m_Material.SetMaterial(m_pMaterialStandardFont);
@@ -244,7 +244,7 @@ void CMainMenu::Start()
     m_pTextManual->m_Transform.SetPositionOffset(10.0f, -25.0f, 0.6f);
 
     auto manualText = twFontManager->CreateText();
-    manualText->Set(m_pFontButton, "Manual", 1.0f);
+    manualText->Set(m_pFontButton, "Manual", 1.2f);
 
     auto manualTextDrawable = twRenderer->CreateFontDrawable();
     manualTextDrawable->m_Material.SetMaterial(m_pMaterialStandardFont);
@@ -275,7 +275,7 @@ void CMainMenu::Start()
     m_pTextCredits->m_Transform.SetPositionOffset(10.0f, -25.0f, 0.8f);
 
     auto creditsText = twFontManager->CreateText();
-    creditsText->Set(m_pFontButton, "Credits", 1.0f);
+    creditsText->Set(m_pFontButton, "Credits", 1.2f);
 
     auto creditsTextDrawable = twRenderer->CreateFontDrawable();
     creditsTextDrawable->m_Material.SetMaterial(m_pMaterialStandardFont);
@@ -310,7 +310,10 @@ void CMainMenu::Update(const SUIInput& a_rInput)
     else if (m_LerpFromExtras) LerpFromExtras();
 
     if (CGameInfo::Instance().m_Menu == EMenus::Main)
+    {
+        ((triebWerk::CFontDrawable*)m_pTextExtras->GetDrawable())->m_pText->SetText("Extras");
         CheckInput(a_rInput);
+    }
 
     UpdateGraphics();
 }
@@ -331,8 +334,6 @@ void CMainMenu::CheckInput(const SUIInput& a_rInput)
     m_UpdateGraphics = true;
 
     a_rInput.m_ButtonHold ? m_HoldValue = 1 : m_HoldValue = 0;
-
-
 
     // Main buttons
     if (m_IsOnMainButtons)
@@ -404,12 +405,14 @@ void CMainMenu::CheckInput(const SUIInput& a_rInput)
                 CGameInfo::Instance().m_Menu = EMenus::Manual;
                 CGameInfo::Instance().m_ChangeMenu = true;
                 twAudio->PlaySFX(twResourceManager->GetSound("SFX_ButtonConfirm"));
+                ((triebWerk::CFontDrawable*)m_pTextExtras->GetDrawable())->m_pText->SetText("Manual");
                 CloseExtras();
                 break;
             case 1:
                 CGameInfo::Instance().m_Menu = EMenus::Credits;
                 CGameInfo::Instance().m_ChangeMenu = true;
                 twAudio->PlaySFX(twResourceManager->GetSound("SFX_ButtonConfirm"));
+                ((triebWerk::CFontDrawable*)m_pTextExtras->GetDrawable())->m_pText->SetText("Credits");
                 CloseExtras();
                 break;
             }

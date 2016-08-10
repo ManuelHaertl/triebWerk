@@ -100,7 +100,7 @@ void CPauseMenu::Start()
     m_pFontMainMenu->m_Transform.SetPositionOffset(10.0f, -11.0f, 0.0f);
 
     auto startText = twFontManager->CreateText();
-    startText->Set(font, "Main Menu", 1.0f);
+    startText->Set(font, "Main Menu", 1.2f);
 
     auto startTextDrawable = twRenderer->CreateFontDrawable();
     startTextDrawable->SetActive(false);
@@ -133,7 +133,7 @@ void CPauseMenu::Start()
     m_pFontResume->m_Transform.SetPositionOffset(10.0f, -11.0f, 0.0f);
 
     auto resumeText = twFontManager->CreateText();
-    resumeText->Set(font, "Resume", 1.0f);
+    resumeText->Set(font, "Resume", 1.2f);
 
     auto resumeTextDrawable = twRenderer->CreateFontDrawable();
     resumeTextDrawable->SetActive(false);
@@ -166,7 +166,7 @@ void CPauseMenu::Start()
     m_pFontOptions->m_Transform.SetPositionOffset(10.0f, -11.0f, 0.0f);
 
     auto optionsText = twFontManager->CreateText();
-    optionsText->Set(font, "Options", 1.0f);
+    optionsText->Set(font, "Options", 1.2f);
 
     auto optionsTextDrawable = twRenderer->CreateFontDrawable();
     optionsTextDrawable->SetActive(false);
@@ -229,7 +229,7 @@ void CPauseMenu::Start()
     m_pFontObjective1->m_Transform.SetPositionOffset(10.0f, -11.0f, -0.1f);
 
     auto objective1Text = twFontManager->CreateText();
-    objective1Text->Set(font, "Collect Checkpoint to save your score", 1.0f);
+    objective1Text->Set(font, "Collect Checkpoint to save your score", 1.2f);
 
     auto objective1TextDrawable = twRenderer->CreateFontDrawable();
     objective1TextDrawable->SetActive(false);
@@ -247,7 +247,7 @@ void CPauseMenu::Start()
     m_pFontObjective2->m_Transform.SetPositionOffset(10.0f, -11.0f, -0.1f);
 
     auto objective2Text = twFontManager->CreateText();
-    objective2Text->Set(font, "Skip Checkpoint to gain a multiplier", 1.0f);
+    objective2Text->Set(font, "Skip Checkpoint to gain a multiplier", 1.2f);
 
     auto objective2TextDrawable = twRenderer->CreateFontDrawable();
     objective2TextDrawable->SetActive(false);

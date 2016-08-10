@@ -42,7 +42,7 @@ void CHighscoreMenu::Start()
             m_pNumbers[i]->m_Transform.SetPositionOffset(10.0f, -11.0f, -0.1f);
 
         auto scoreText = twFontManager->CreateText();
-        scoreText->Set(font, text, 1.0f);
+        scoreText->Set(font, text, 1.2f);
         scoreText->SetTextAlign(triebWerk::ETextAlign::MiddleRight);
 
         auto scoreTextDrawable = twRenderer->CreateFontDrawable();
@@ -67,7 +67,7 @@ void CHighscoreMenu::Start()
             m_pScores[i]->m_Transform.SetPositionOffset(10.0f, -11.0f, -0.1f);
 
         auto scoreText = twFontManager->CreateText();
-        scoreText->Set(font, text, 1.0f);
+        scoreText->Set(font, text, 1.2f);
         scoreText->SetTextAlign(triebWerk::ETextAlign::MiddleLeft);
 
         auto scoreTextDrawable = twRenderer->CreateFontDrawable();
