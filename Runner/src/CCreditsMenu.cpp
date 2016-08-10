@@ -31,11 +31,11 @@ void CCreditsMenu::Start()
     // Alex -------------------------------------------------
 
     m_pAlex = twActiveUIWorld->CreateUIEntity();
-    m_pAlex->m_Transform.SetAnchorPoint(-0.05f, 0.15f);
-    m_pAlex->m_Transform.SetPositionOffset(0.0f, 0.0f, -0.1f);
+    m_pAlex->m_Transform.SetAnchorPoint(-0.05f, 0.2f);
+    m_pAlex->m_Transform.SetPositionOffset(15.0f, -5.0f, -0.1f);
 
     auto alexText = twFontManager->CreateText();
-    alexText->Set(font, "Alexander Klinger", 1.0f);
+    alexText->Set(font, "Alexander Klinger", 1.2f);
     alexText->SetTextAlign(triebWerk::ETextAlign::MiddleRight);
 
     auto alexTextDrawable = twRenderer->CreateFontDrawable();
@@ -49,11 +49,11 @@ void CCreditsMenu::Start()
     // Alex Title -------------------------------------------------
 
     m_pAlexTitle = twActiveUIWorld->CreateUIEntity();
-    m_pAlexTitle->m_Transform.SetAnchorPoint(0.05f, 0.15f);
-    m_pAlexTitle->m_Transform.SetPositionOffset(0.0f, 0.0f, -0.1f);
+    m_pAlexTitle->m_Transform.SetAnchorPoint(0.05f, 0.2f);
+    m_pAlexTitle->m_Transform.SetPositionOffset(15.0f, -5.0f, -0.1f);
 
     auto alexTitleText = twFontManager->CreateText();
-    alexTitleText->Set(font, "Programming", 1.0f);
+    alexTitleText->Set(font, "Programming", 1.2f);
     alexTitleText->SetTextAlign(triebWerk::ETextAlign::MiddleLeft);
 
     auto alexTitleTextDrawable = twRenderer->CreateFontDrawable();
@@ -67,11 +67,11 @@ void CCreditsMenu::Start()
     // Manu -------------------------------------------------
 
     m_pManu = twActiveUIWorld->CreateUIEntity();
-    m_pManu->m_Transform.SetAnchorPoint(-0.05f, 0.05f);
-    m_pManu->m_Transform.SetPositionOffset(0.0f, 0.0f, -0.1f);
+    m_pManu->m_Transform.SetAnchorPoint(-0.05f, 0.1f);
+    m_pManu->m_Transform.SetPositionOffset(15.0f, -5.0f, -0.1f);
 
     auto manuText = twFontManager->CreateText();
-    manuText->Set(font, "Manuel Haertl", 1.0f);
+    manuText->Set(font, "Manuel Haertl", 1.2f);
     manuText->SetTextAlign(triebWerk::ETextAlign::MiddleRight);
 
     auto manuTextDrawable = twRenderer->CreateFontDrawable();
@@ -85,11 +85,11 @@ void CCreditsMenu::Start()
     // Manu Title -------------------------------------------------
 
     m_pManuTitle = twActiveUIWorld->CreateUIEntity();
-    m_pManuTitle->m_Transform.SetAnchorPoint(0.05f, 0.05f);
-    m_pManuTitle->m_Transform.SetPositionOffset(0.0f, 0.0f, -0.1f);
+    m_pManuTitle->m_Transform.SetAnchorPoint(0.05f, 0.1f);
+    m_pManuTitle->m_Transform.SetPositionOffset(15.0f, -5.0f, -0.1f);
 
     auto manuTitleText = twFontManager->CreateText();
-    manuTitleText->Set(font, "Programming", 1.0f);
+    manuTitleText->Set(font, "Programming", 1.2f);
     manuTitleText->SetTextAlign(triebWerk::ETextAlign::MiddleLeft);
 
     auto manuTitleTextDrawable = twRenderer->CreateFontDrawable();
@@ -103,11 +103,11 @@ void CCreditsMenu::Start()
     // Maren -------------------------------------------------
 
     m_pMaren = twActiveUIWorld->CreateUIEntity();
-    m_pMaren->m_Transform.SetAnchorPoint(-0.05f, -0.05f);
-    m_pMaren->m_Transform.SetPositionOffset(0.0f, 0.0f, -0.1f);
+    m_pMaren->m_Transform.SetAnchorPoint(-0.05f, 0.0f);
+    m_pMaren->m_Transform.SetPositionOffset(15.0f, -5.0f, -0.1f);
 
     auto marenText = twFontManager->CreateText();
-    marenText->Set(font, "Maren Gerbach", 1.0f);
+    marenText->Set(font, "Maren Gerbach", 1.2f);
     marenText->SetTextAlign(triebWerk::ETextAlign::MiddleRight);
 
     auto marenTextDrawable = twRenderer->CreateFontDrawable();
@@ -121,11 +121,11 @@ void CCreditsMenu::Start()
     // Maren Title -------------------------------------------------
 
     m_pMarenTitle = twActiveUIWorld->CreateUIEntity();
-    m_pMarenTitle->m_Transform.SetAnchorPoint(0.05f, -0.05f);
-    m_pMarenTitle->m_Transform.SetPositionOffset(0.0f, 0.0f, -0.1f);
+    m_pMarenTitle->m_Transform.SetAnchorPoint(0.05f, 0.0f);
+    m_pMarenTitle->m_Transform.SetPositionOffset(15.0f, -5.0f, -0.1f);
 
     auto marenTitleText = twFontManager->CreateText();
-    marenTitleText->Set(font, "Art", 1.0f);
+    marenTitleText->Set(font, "Art", 1.2f);
     marenTitleText->SetTextAlign(triebWerk::ETextAlign::MiddleLeft);
 
     auto marenTitleTextDrawable = twRenderer->CreateFontDrawable();
@@ -139,11 +139,11 @@ void CCreditsMenu::Start()
     // Pinar -------------------------------------------------
 
     m_pPinar = twActiveUIWorld->CreateUIEntity();
-    m_pPinar->m_Transform.SetAnchorPoint(-0.05f, -0.15f);
-    m_pPinar->m_Transform.SetPositionOffset(0.0f, 0.0f, -0.1f);
+    m_pPinar->m_Transform.SetAnchorPoint(-0.05f, -0.1f);
+    m_pPinar->m_Transform.SetPositionOffset(15.0f, -5.0f, -0.1f);
 
     auto pinarText = twFontManager->CreateText();
-    pinarText->Set(font, "Pinar Dogru", 1.0f);
+    pinarText->Set(font, "Pinar Dogru", 1.2f);
     pinarText->SetTextAlign(triebWerk::ETextAlign::MiddleRight);
 
 
@@ -158,11 +158,11 @@ void CCreditsMenu::Start()
     // Pinar Title -------------------------------------------------
 
     m_pPinarTitle = twActiveUIWorld->CreateUIEntity();
-    m_pPinarTitle->m_Transform.SetAnchorPoint(0.05f, -0.15f);
-    m_pPinarTitle->m_Transform.SetPositionOffset(0.0f, 0.0f, -0.1f);
+    m_pPinarTitle->m_Transform.SetAnchorPoint(0.05f, -0.1f);
+    m_pPinarTitle->m_Transform.SetPositionOffset(15.0f, -5.0f, -0.1f);
 
     auto pinarTitleText = twFontManager->CreateText();
-    pinarTitleText->Set(font, "Design", 1.0f);
+    pinarTitleText->Set(font, "Design", 1.2f);
     pinarTitleText->SetTextAlign(triebWerk::ETextAlign::MiddleLeft);
 
     auto pinarTitleTextDrawable = twRenderer->CreateFontDrawable();
@@ -172,6 +172,43 @@ void CCreditsMenu::Start()
 
     m_pPinarTitle->SetDrawable(pinarTitleTextDrawable);
     twActiveUIWorld->AddUIEntity(m_pPinarTitle);
+
+    // Krys -------------------------------------------------
+
+    m_pKrys = twActiveUIWorld->CreateUIEntity();
+    m_pKrys->m_Transform.SetAnchorPoint(-0.05f, -0.2f);
+    m_pKrys->m_Transform.SetPositionOffset(15.0f, -5.0f, -0.1f);
+
+    auto krysText = twFontManager->CreateText();
+    krysText->Set(font, "Krys Kozlowski", 1.2f);
+    krysText->SetTextAlign(triebWerk::ETextAlign::MiddleRight);
+
+
+    auto krysTextDrawable = twRenderer->CreateFontDrawable();
+    krysTextDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardFont"));
+    krysTextDrawable->m_pText = krysText;
+    krysTextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+
+    m_pKrys->SetDrawable(krysTextDrawable);
+    twActiveUIWorld->AddUIEntity(m_pKrys);
+
+    // Krys Title -------------------------------------------------
+
+    m_pKrysTitle = twActiveUIWorld->CreateUIEntity();
+    m_pKrysTitle->m_Transform.SetAnchorPoint(0.05f, -0.2f);
+    m_pKrysTitle->m_Transform.SetPositionOffset(15.0f, -5.0f, -0.1f);
+
+    auto krysTitleText = twFontManager->CreateText();
+    krysTitleText->Set(font, "Sound", 1.2f);
+    krysTitleText->SetTextAlign(triebWerk::ETextAlign::MiddleLeft);
+
+    auto krysTitleTextDrawable = twRenderer->CreateFontDrawable();
+    krysTitleTextDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardFont"));
+    krysTitleTextDrawable->m_pText = krysTitleText;
+    krysTitleTextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+
+    m_pKrysTitle->SetDrawable(krysTitleTextDrawable);
+    twActiveUIWorld->AddUIEntity(m_pKrysTitle);
 }
 
 void CCreditsMenu::Update(const SUIInput& a_rInput)
@@ -191,8 +228,10 @@ void CCreditsMenu::End()
     twActiveUIWorld->RemoveUIEntity(m_pAlex);
     twActiveUIWorld->RemoveUIEntity(m_pMaren);
     twActiveUIWorld->RemoveUIEntity(m_pPinar);
+    twActiveUIWorld->RemoveUIEntity(m_pKrys);
     twActiveUIWorld->RemoveUIEntity(m_pManuTitle);
     twActiveUIWorld->RemoveUIEntity(m_pAlexTitle);
     twActiveUIWorld->RemoveUIEntity(m_pMarenTitle);
     twActiveUIWorld->RemoveUIEntity(m_pPinarTitle);
+    twActiveUIWorld->RemoveUIEntity(m_pKrysTitle);
 }

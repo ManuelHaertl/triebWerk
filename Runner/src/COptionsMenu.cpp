@@ -69,7 +69,7 @@ void COptionsMenu::Start()
     m_pFontResolution->m_Transform.SetPositionOffset(0.0f, -23.0f, -0.1f);
 
     auto resolutionText = twFontManager->CreateText();
-    resolutionText->Set(font, "Resolution", 1.0f);
+    resolutionText->Set(font, "Resolution", 1.2f);
     resolutionText->SetTextAlign(triebWerk::ETextAlign::MiddleRight);
 
     auto resolutionTextDrawable = twRenderer->CreateFontDrawable();
@@ -87,7 +87,7 @@ void COptionsMenu::Start()
     m_pFontCurrentResolution->m_Transform.SetPositionOffset(0.0f, -24.0f, -0.1f);
 
     auto currentResolutionText = twFontManager->CreateText();
-    currentResolutionText->Set(font, "1600x1200", 1.0f);
+    currentResolutionText->Set(font, "1600x1200", 1.2f);
 
     auto currentResolutionTextDrawable = twRenderer->CreateFontDrawable();
     currentResolutionTextDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardFont"));
@@ -160,7 +160,7 @@ void COptionsMenu::Start()
     m_pFontFullscreen->m_Transform.SetPositionOffset(0.0f, -23.0f, -0.1f);
 
     auto fullscreenText = twFontManager->CreateText();
-    fullscreenText->Set(font, "Fullscreen", 1.0f);
+    fullscreenText->Set(font, "Fullscreen", 1.2f);
     fullscreenText->SetTextAlign(triebWerk::ETextAlign::MiddleRight);
 
     auto fullscreenTextDrawable = twRenderer->CreateFontDrawable();
@@ -206,7 +206,7 @@ void COptionsMenu::Start()
     m_pFontVSync->m_Transform.SetPositionOffset(-50.0f, -23.0f, -0.1f);
 
     auto vsyncText = twFontManager->CreateText();
-    vsyncText->Set(font, "VSync", 1.0f);
+    vsyncText->Set(font, "VSync", 1.2f);
     vsyncText->SetTextAlign(triebWerk::ETextAlign::MiddleRight);
 
     auto vsyncTextDrawable = twRenderer->CreateFontDrawable();
@@ -268,7 +268,7 @@ void COptionsMenu::Start()
     m_pFontMasterVolume->m_Transform.SetPositionOffset(0.0f, -23.0f, -0.1f);
 
     auto masterVolumeText = twFontManager->CreateText();
-    masterVolumeText->Set(font, "Master Volume", 1.0f);
+    masterVolumeText->Set(font, "Master Volume", 1.2f);
     masterVolumeText->SetTextAlign(triebWerk::ETextAlign::MiddleRight);
 
     auto masterVolumeTextDrawable = twRenderer->CreateFontDrawable();
@@ -329,7 +329,7 @@ void COptionsMenu::Start()
     m_pFontBGMVolume->m_Transform.SetPositionOffset(0.0f, -23.0f, -0.1f);
 
     auto bgmVolumeText = twFontManager->CreateText();
-    bgmVolumeText->Set(font, "BGM Volume", 1.0f);
+    bgmVolumeText->Set(font, "BGM Volume", 1.2f);
     bgmVolumeText->SetTextAlign(triebWerk::ETextAlign::MiddleRight);
 
     auto bgmVolumeTextDrawable = twRenderer->CreateFontDrawable();
@@ -390,7 +390,7 @@ void COptionsMenu::Start()
     m_pFontSFXVolume->m_Transform.SetPositionOffset(0.0f, -23.0f, -0.1f);
 
     auto sfxVolumeText = twFontManager->CreateText();
-    sfxVolumeText->Set(font, "SFX Volume", 1.0f);
+    sfxVolumeText->Set(font, "SFX Volume", 1.2f);
     sfxVolumeText->SetTextAlign(triebWerk::ETextAlign::MiddleRight);
 
     auto sfxVolumeTextDrawable = twRenderer->CreateFontDrawable();

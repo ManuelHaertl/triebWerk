@@ -104,7 +104,6 @@ void CPlayer::CollisionEnter(triebWerk::CCollisionEvent a_Collision)
             if (!CGameInfo::Instance().m_IsPlayerDead)
                 triebWerk::CDebugLogfile::Instance().LogfText(triebWerk::CDebugLogfile::ELogType::Text, false, entity->m_ID.GetDescribtion().c_str());
             CGameInfo::Instance().m_IsPlayerDead = true;
-            CGameInfo::Instance().m_Highscore.AddScore((size_t)CGameInfo::Instance().m_TotalPoints);
 
 			twAudio->PlaySFX(twResourceManager->GetSound("SFX_PlayerDeath"));
         }
