@@ -385,6 +385,7 @@ void CGameEndMenu::CheckInput(const SUIInput& a_rInput)
         case 0:
             m_CurrentMainMenuTime = CPostEffects::GameStartTime / 2.0f;
             CGameInfo::Instance().m_EffectGoingIntoGame = true;
+			twAudio->FadeOutBGM(1.5f, false);
             break;
         case 1:
             m_CurrentTryAgainTime = CPostEffects::TryAgainTime / 2.0f;
