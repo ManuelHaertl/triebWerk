@@ -2,9 +2,13 @@
 
 #include <CGameInfo.h>
 #include <CPostEffects.h>
+#include <COptionsMenu.h>
 
 CPauseMenu::CPauseMenu()
-    : m_IsPaused(false)
+    : m_pSubMenu(nullptr)
+    , m_IsInSubMenu(false)
+    , m_UpdateGraphics(false)
+    , m_IsPaused(false)
     , m_IsOnButtons(true)
     , m_ButtonIndex(1)
     , m_FieldIndex(0)
@@ -34,7 +38,7 @@ void CPauseMenu::Start()
 
     m_pBackground = twActiveUIWorld->CreateUIEntity();
     m_pBackground->m_Transform.SetAnchorPoint(0.0f, 0.0f);
-    m_pBackground->m_Transform.SetPositionOffset(0.0f, 0.0f, 1.0f);
+    m_pBackground->m_Transform.SetPositionOffset(0.0f, 0.0f, 20.0f);
     m_pBackground->m_Transform.SetScale(100.0, 100.0, 0.0f);
 
     auto backgroundDrawable = twRenderer->CreateUIDrawable();
@@ -49,7 +53,7 @@ void CPauseMenu::Start()
     // Field BG --------------------------------------------
 
     m_pFieldBG = twActiveUIWorld->CreateUIEntity();
-    m_pFieldBG->m_Transform.SetAnchorPoint(0.0f, 0.1f);
+    m_pFieldBG->m_Transform.SetAnchorPoint(0.0f, 0.0f);
 
     auto fieldBGDrawable = twRenderer->CreateUIDrawable();
     fieldBGDrawable->SetActive(false);
@@ -63,7 +67,7 @@ void CPauseMenu::Start()
     // Field BG Hover --------------------------------------------
 
     m_pFieldBGHover = twActiveUIWorld->CreateUIEntity();
-    m_pFieldBGHover->m_Transform.SetAnchorPoint(0.0f, 0.1f);
+    m_pFieldBGHover->m_Transform.SetAnchorPoint(0.0f, 0.0f);
 
     auto fieldBGHoverDrawable = twRenderer->CreateUIDrawable();
     fieldBGHoverDrawable->SetActive(false);
@@ -77,7 +81,7 @@ void CPauseMenu::Start()
     // Button Main Menu --------------------------------------------
 
     m_pButtonMainMenu = twActiveUIWorld->CreateUIEntity();
-    m_pButtonMainMenu->m_Transform.SetAnchorPoint(-0.474f, -0.6f);
+    m_pButtonMainMenu->m_Transform.SetAnchorPoint(-0.474f, -0.75f);
     m_pButtonMainMenu->m_Transform.SetPositionOffset(0.0f, 0.0f, 0.5f);
 
     auto buttonMainMenuDrawable = twRenderer->CreateUIDrawable();
@@ -92,7 +96,7 @@ void CPauseMenu::Start()
     // Font Main Menu ------------------------------------------- 
 
     m_pFontMainMenu = twActiveUIWorld->CreateUIEntity();
-    m_pFontMainMenu->m_Transform.SetAnchorPoint(-0.474f, -0.6f);
+    m_pFontMainMenu->m_Transform.SetAnchorPoint(-0.474f, -0.75f);
     m_pFontMainMenu->m_Transform.SetPositionOffset(10.0f, -11.0f, 0.0f);
 
     auto startText = twFontManager->CreateText();
@@ -110,7 +114,7 @@ void CPauseMenu::Start()
     // Button Resume --------------------------------------------
 
     m_pButtonResume = twActiveUIWorld->CreateUIEntity();
-    m_pButtonResume->m_Transform.SetAnchorPoint(0.0f, -0.6f);
+    m_pButtonResume->m_Transform.SetAnchorPoint(0.0f, -0.75f);
     m_pButtonResume->m_Transform.SetPositionOffset(0.0f, 0.0f, 0.5f);
 
     auto buttonResumeDrawable = twRenderer->CreateUIDrawable();
@@ -125,7 +129,7 @@ void CPauseMenu::Start()
     // Font Resume ------------------------------------------- 
 
     m_pFontResume = twActiveUIWorld->CreateUIEntity();
-    m_pFontResume->m_Transform.SetAnchorPoint(0.0f, -0.6f);
+    m_pFontResume->m_Transform.SetAnchorPoint(0.0f, -0.75f);
     m_pFontResume->m_Transform.SetPositionOffset(10.0f, -11.0f, 0.0f);
 
     auto resumeText = twFontManager->CreateText();
@@ -143,7 +147,7 @@ void CPauseMenu::Start()
     // Button Options --------------------------------------------
 
     m_pButtonOptions = twActiveUIWorld->CreateUIEntity();
-    m_pButtonOptions->m_Transform.SetAnchorPoint(0.474f, -0.6f);
+    m_pButtonOptions->m_Transform.SetAnchorPoint(0.474f, -0.75f);
     m_pButtonOptions->m_Transform.SetPositionOffset(0.0f, 0.0f, 0.5f);
 
     auto buttonOptionsDrawable = twRenderer->CreateUIDrawable();
@@ -158,7 +162,7 @@ void CPauseMenu::Start()
     // Font Options ------------------------------------------- 
 
     m_pFontOptions = twActiveUIWorld->CreateUIEntity();
-    m_pFontOptions->m_Transform.SetAnchorPoint(0.474f, -0.6f);
+    m_pFontOptions->m_Transform.SetAnchorPoint(0.474f, -0.75f);
     m_pFontOptions->m_Transform.SetPositionOffset(10.0f, -11.0f, 0.0f);
 
     auto optionsText = twFontManager->CreateText();
@@ -176,7 +180,7 @@ void CPauseMenu::Start()
     // Arrow Left --------------------------------------------
 
     m_pArrowLeft = twActiveUIWorld->CreateUIEntity();
-    m_pArrowLeft->m_Transform.SetAnchorPoint(-0.57f, 0.1f);
+    m_pArrowLeft->m_Transform.SetAnchorPoint(-0.57f, 0.0f);
     m_pArrowLeft->m_Transform.SetPositionOffset(0.0f, 0.0f, -0.1f);
 
     auto arrowLeftDrawable = twRenderer->CreateUIDrawable();
@@ -191,7 +195,7 @@ void CPauseMenu::Start()
     // Arrow Right --------------------------------------------
 
     m_pArrowRight = twActiveUIWorld->CreateUIEntity();
-    m_pArrowRight->m_Transform.SetAnchorPoint(0.57f, 0.1f);
+    m_pArrowRight->m_Transform.SetAnchorPoint(0.57f, 0.0f);
     m_pArrowRight->m_Transform.SetPositionOffset(0.0f, 0.0f, -0.1f);
 
     auto arrowRightDrawable = twRenderer->CreateUIDrawable();
@@ -206,7 +210,7 @@ void CPauseMenu::Start()
     // Objectives --------------------------------------------
 
     m_pObjective = twActiveUIWorld->CreateUIEntity();
-    m_pObjective->m_Transform.SetAnchorPoint(0.0f, 0.2f);
+    m_pObjective->m_Transform.SetAnchorPoint(0.0f, 0.1f);
     m_pObjective->m_Transform.SetPositionOffset(0.0f, 0.0f, -0.1f);
 
     auto objectiveDrawable = twRenderer->CreateUIDrawable();
@@ -221,7 +225,7 @@ void CPauseMenu::Start()
     // Font Objectives 1 -------------------------------------------
 
     m_pFontObjective1 = twActiveUIWorld->CreateUIEntity();
-    m_pFontObjective1->m_Transform.SetAnchorPoint(0.0f, -0.23f);
+    m_pFontObjective1->m_Transform.SetAnchorPoint(0.0f, -0.33f);
     m_pFontObjective1->m_Transform.SetPositionOffset(10.0f, -11.0f, -0.1f);
 
     auto objective1Text = twFontManager->CreateText();
@@ -239,7 +243,7 @@ void CPauseMenu::Start()
     // Font Objectives 2 ------------------------------------------- 
 
     m_pFontObjective2 = twActiveUIWorld->CreateUIEntity();
-    m_pFontObjective2->m_Transform.SetAnchorPoint(0.0f, -0.32f);
+    m_pFontObjective2->m_Transform.SetAnchorPoint(0.0f, -0.42f);
     m_pFontObjective2->m_Transform.SetPositionOffset(10.0f, -11.0f, -0.1f);
 
     auto objective2Text = twFontManager->CreateText();
@@ -257,7 +261,7 @@ void CPauseMenu::Start()
     // Controls --------------------------------------------
 
     m_pControls = twActiveUIWorld->CreateUIEntity();
-    m_pControls->m_Transform.SetAnchorPoint(0.0f, 0.1f);
+    m_pControls->m_Transform.SetAnchorPoint(0.0f, 0.0f);
     m_pControls->m_Transform.SetPositionOffset(0.0f, 0.0f, -0.1f);
 
     auto controlsDrawable = twRenderer->CreateUIDrawable();
@@ -272,13 +276,37 @@ void CPauseMenu::Start()
 
 void CPauseMenu::Update(const SUIInput& a_rInput)
 {
+    if (m_pSubMenu != nullptr)
+        m_pSubMenu->Update(a_rInput);
+
     if (CGameInfo::Instance().m_IsPlayerDead)
     {
         CGameInfo::Instance().m_IsGamePaused = false;
+        m_UpdateGraphics = true;
         UpdateGraphics();
         return;
     }
 
+    if (CGameInfo::Instance().m_ChangeMenu)
+    {
+        CGameInfo::Instance().m_ChangeMenu = false;
+
+        switch (CGameInfo::Instance().m_Menu)
+        {
+        case EMenus::Options:
+            m_pSubMenu = new COptionsMenu();
+            m_pSubMenu->Start();
+            m_UpdateGraphics = true;
+            m_IsInSubMenu = true;
+            break;
+        case EMenus::Main:
+            DeleteSubScene();
+            m_UpdateGraphics = true;
+            m_IsInSubMenu = false;
+            break;
+        }
+    }
+    // Lerp effect to main menu
     if (m_CurrentMainMenuTime > 0.0f)
     {
         m_CurrentMainMenuTime -= twTime->GetDeltaTime();
@@ -291,125 +319,141 @@ void CPauseMenu::Update(const SUIInput& a_rInput)
         return;
     }
 
-    bool changeGraphics = false;
-
+    // Hide/display Pause menu
     if (a_rInput.m_Pause)
         CGameInfo::Instance().m_IsGamePaused = !CGameInfo::Instance().m_IsGamePaused;
 
     if (m_IsPaused != CGameInfo::Instance().m_IsGamePaused)
     {
-		if (CGameInfo::Instance().m_IsGamePaused)
-			twAudio->PauseBGM();
-		else if (!CGameInfo::Instance().m_IsGamePaused)
-			twAudio->ContinueBGM();
+        CGameInfo::Instance().m_IsGamePaused ?
+            twAudio->PauseBGM() :
+            twAudio->ContinueBGM();
 
         m_IsPaused = CGameInfo::Instance().m_IsGamePaused;
         m_IsOnButtons = true;
         m_FieldIndex = 0;
         m_ButtonIndex = 1;
-        changeGraphics = true;
+        m_UpdateGraphics = true;
     }
 
-    if (CGameInfo::Instance().m_IsGamePaused)
-    {
-        if (a_rInput.m_Up)
-        {
-            m_IsOnButtons = false;
-            changeGraphics = true;
-        }
-        else if (a_rInput.m_Down)
-        {
-            m_IsOnButtons = true;
-            changeGraphics = true;
-        }
-        a_rInput.m_ButtonHold ? m_HoldValue = 1 : m_HoldValue = 0;
+    if (CGameInfo::Instance().m_IsGamePaused && !m_IsInSubMenu)
+        CheckInput(a_rInput);
 
-        // If the field is selected
-        if (!m_IsOnButtons)
-        {
-            if (a_rInput.m_Left)
-            {
-                m_FieldIndex--;
-                if (m_FieldIndex < 0)
-                    m_FieldIndex = 0;
-
-                changeGraphics = true;
-            }
-            else if (a_rInput.m_Right)
-            {
-                m_FieldIndex++;
-                if (m_FieldIndex == MaxFieldIndex)
-                    m_FieldIndex = MaxFieldIndex - 1;
-
-                changeGraphics = true;
-            }
-        }
-        // if the buttons are selected
-        else
-        {
-            if (a_rInput.m_Left)
-            {
-                m_ButtonIndex--;
-                if (m_ButtonIndex < 0)
-                    m_ButtonIndex = MaxButtonIndex - 1;
-
-                changeGraphics = true;
-            }
-            else if (a_rInput.m_Right)
-            {
-                m_ButtonIndex++;
-                if (m_ButtonIndex == MaxButtonIndex)
-                    m_ButtonIndex = 0;
-
-                changeGraphics = true;
-            }
-
-            if (a_rInput.m_Select)
-            {
-                switch (m_ButtonIndex)
-                {
-                case 0:
-                    m_CurrentMainMenuTime = CPostEffects::GameStartTime / 2.0f;
-                    CGameInfo::Instance().m_EffectGoingIntoGame = true;
-                    break;
-                case 1:
-                    CGameInfo::Instance().m_IsGamePaused = false;
-                    break;
-                case 2:
-                    break;
-                }
-            }
-        }
-    }
-
-    if (changeGraphics)
-        UpdateGraphics();
+    UpdateGraphics();
 }
 
 void CPauseMenu::End()
 {
+    DeleteSubScene();
+}
+
+void CPauseMenu::CheckInput(const SUIInput & a_rInput)
+{
+    if (a_rInput.m_Up)
+    {
+        m_IsOnButtons = false;
+        m_UpdateGraphics = true;
+    }
+    else if (a_rInput.m_Down)
+    {
+        m_IsOnButtons = true;
+        m_UpdateGraphics = true;
+    }
+
+    size_t value ;
+    a_rInput.m_ButtonHold ? value = 1 : value = 0;
+
+    if (value != m_HoldValue)
+    {
+        m_HoldValue = value;
+        m_UpdateGraphics = true;
+    }
+
+    // If the field is selected
+    if (!m_IsOnButtons)
+    {
+        if (a_rInput.m_Left)
+        {
+            m_FieldIndex--;
+            if (m_FieldIndex < 0)
+                m_FieldIndex = 0;
+
+            m_UpdateGraphics = true;
+        }
+        else if (a_rInput.m_Right)
+        {
+            m_FieldIndex++;
+            if (m_FieldIndex == MaxFieldIndex)
+                m_FieldIndex = MaxFieldIndex - 1;
+
+            m_UpdateGraphics = true;
+        }
+    }
+    // if the buttons are selected
+    else
+    {
+        if (a_rInput.m_Left)
+        {
+            m_ButtonIndex--;
+            if (m_ButtonIndex < 0)
+                m_ButtonIndex = MaxButtonIndex - 1;
+
+            m_UpdateGraphics = true;
+        }
+        else if (a_rInput.m_Right)
+        {
+            m_ButtonIndex++;
+            if (m_ButtonIndex == MaxButtonIndex)
+                m_ButtonIndex = 0;
+
+            m_UpdateGraphics = true;
+        }
+
+        if (a_rInput.m_Select)
+        {
+            switch (m_ButtonIndex)
+            {
+            case 0:
+                m_CurrentMainMenuTime = CPostEffects::GameStartTime / 2.0f;
+                CGameInfo::Instance().m_EffectGoingIntoGame = true;
+                break;
+            case 1:
+                CGameInfo::Instance().m_IsGamePaused = false;
+                break;
+            case 2:
+                CGameInfo::Instance().m_ChangeMenu = true;
+                CGameInfo::Instance().m_Menu = EMenus::Options;
+                break;
+            }
+        }
+    }
 }
 
 void CPauseMenu::UpdateGraphics()
 {
+    if (!m_UpdateGraphics)
+        return;
+
+    m_UpdateGraphics = false;
+
     // Hide / show all elemenets depenging on if the game is paused
     bool active = CGameInfo::Instance().m_IsGamePaused && (!CGameInfo::Instance().m_IsPlayerDead);
 
     m_pBackground->GetDrawable()->SetActive(active);
-    m_pFieldBG->GetDrawable()->SetActive(active);
-    m_pFieldBGHover->GetDrawable()->SetActive(active);
+    m_pFieldBG->GetDrawable()->SetActive(active && !m_IsInSubMenu);
+    m_pFieldBGHover->GetDrawable()->SetActive(active && !m_IsInSubMenu);
     m_pButtonMainMenu->GetDrawable()->SetActive(active);
     m_pButtonOptions->GetDrawable()->SetActive(active);
     m_pButtonResume->GetDrawable()->SetActive(active);
     m_pFontMainMenu->GetDrawable()->SetActive(active);
     m_pFontResume->GetDrawable()->SetActive(active);
     m_pFontOptions->GetDrawable()->SetActive(active);
-    m_pArrowLeft->GetDrawable()->SetActive(active);
-    m_pArrowRight->GetDrawable()->SetActive(active);
-    m_pObjective->GetDrawable()->SetActive(active);
-    m_pControls->GetDrawable()->SetActive(active);
-    m_pFontObjective1->GetDrawable()->SetActive(active);
-    m_pFontObjective2->GetDrawable()->SetActive(active);
+    m_pArrowLeft->GetDrawable()->SetActive(active && !m_IsInSubMenu);
+    m_pArrowRight->GetDrawable()->SetActive(active && !m_IsInSubMenu);
+    m_pObjective->GetDrawable()->SetActive(active && !m_IsInSubMenu);
+    m_pControls->GetDrawable()->SetActive(active && !m_IsInSubMenu);
+    m_pFontObjective1->GetDrawable()->SetActive(active && !m_IsInSubMenu);
+    m_pFontObjective2->GetDrawable()->SetActive(active && !m_IsInSubMenu);
 
     // the 3 buttons' states
     size_t index[3] = { 0,0,0 };
@@ -437,15 +481,15 @@ void CPauseMenu::UpdateGraphics()
     if (active)
     {
         if (!m_IsOnButtons)
-            m_pFieldBGHover->GetDrawable()->SetActive(true);
+            m_pFieldBGHover->GetDrawable()->SetActive(!m_IsInSubMenu);
         else
             m_pFieldBGHover->GetDrawable()->SetActive(false);
 
         if (m_FieldIndex == 0)
         {
-            m_pObjective->GetDrawable()->SetActive(true);
-            m_pFontObjective1->GetDrawable()->SetActive(true);
-            m_pFontObjective2->GetDrawable()->SetActive(true);
+            m_pObjective->GetDrawable()->SetActive(!m_IsInSubMenu);
+            m_pFontObjective1->GetDrawable()->SetActive(!m_IsInSubMenu);
+            m_pFontObjective2->GetDrawable()->SetActive(!m_IsInSubMenu);
             m_pControls->GetDrawable()->SetActive(false);
         }
         else
@@ -453,7 +497,17 @@ void CPauseMenu::UpdateGraphics()
             m_pObjective->GetDrawable()->SetActive(false);
             m_pFontObjective1->GetDrawable()->SetActive(false);
             m_pFontObjective2->GetDrawable()->SetActive(false);
-            m_pControls->GetDrawable()->SetActive(true);
+            m_pControls->GetDrawable()->SetActive(!m_IsInSubMenu);
         }
+    }
+}
+
+void CPauseMenu::DeleteSubScene()
+{
+    if (m_pSubMenu != nullptr)
+    {
+        m_pSubMenu->End();
+        delete m_pSubMenu;
+        m_pSubMenu = nullptr;
     }
 }

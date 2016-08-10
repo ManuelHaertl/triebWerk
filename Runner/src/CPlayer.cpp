@@ -41,6 +41,7 @@ void CPlayer::Start()
 
 void CPlayer::Update()
 {
+    std::cout << m_pEntity->GetPhysicEntity()->GetBody()->m_Velocity.m128_f32[2] << std::endl;
     if (!CGameInfo::Instance().m_IsGamePaused && !CGameInfo::Instance().m_IsPlayerDead)
     {
         CheckInput();

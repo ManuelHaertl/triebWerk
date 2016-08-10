@@ -1,14 +1,16 @@
 #include <COptionsMenu.h>
 
 #include <CGameInfo.h>
+#include <CFileWriter.h>
+#include <ShlObj.h>
 
 COptionsMenu::COptionsMenu()
     : m_UpdateGraphics(true)
     , m_SelectedIndex(0)
     , m_PressedValue(0)
     , m_CurrentResolution(0)
-    , m_CurrentFullscreen(false)
-    , m_CurrentVSync(true)
+    , m_CurrentFullscreen(0)
+    , m_CurrentVSync(1)
     , m_CurrentMasterVolume(1.0f)
     , m_CurrentBGMVolume(1.0f)
     , m_CurrentSFXVolume(1.0f)
@@ -476,29 +478,12 @@ void COptionsMenu::GetOptions()
 void COptionsMenu::SaveOptions()
 {
     // Apply changes to engine
-    switch (m_CurrentResolution)
+
+    bool sameSettings = twWindow->GetScreenWidth() == GetCurrentWidth() && twWindow->GetScreenHeight() == GetCurrentHeight() && twWindow->IsWindowFullscreen() == m_CurrentFullscreen;
+    if (!sameSettings)
     {
-    case 0:
-        twWindow->ChangeWindowSettings(m_CurrentFullscreen, 800, 450);
-        break;
-    case 1:
-        twWindow->ChangeWindowSettings(m_CurrentFullscreen, 1024, 576);
-        break;
-    case 2:
-        twWindow->ChangeWindowSettings(m_CurrentFullscreen, 1280, 720);
-        break;
-    case 3:
-        twWindow->ChangeWindowSettings(m_CurrentFullscreen, 1600, 900);
-        break;
-    case 4:
-        twWindow->ChangeWindowSettings(m_CurrentFullscreen, 1900, 1024);
-        break;
-    case 5:
-        twWindow->ChangeWindowSettings(m_CurrentFullscreen, 1920, 1080);
-        break;
-    default:
-        twWindow->ChangeWindowSettings(m_CurrentFullscreen, 800, 450);
-        break;
+        twWindow->ChangeWindowSettings(m_CurrentFullscreen, GetCurrentWidth(), GetCurrentHeight());
+        std::cout << "graphics changed" << std::endl;
     }
 
     twGraphic->SetVSync(m_CurrentVSync);
@@ -507,8 +492,23 @@ void COptionsMenu::SaveOptions()
     twAudio->SetSFXVolume(m_CurrentSFXVolume);
 
     // save in file
+    CHAR my_documents[MAX_PATH];
+    HRESULT result = SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, my_documents);
+    std::string path = my_documents;
+    path += "\\My Games\\AZ-Tec Racer\\config.twf";
 
+    triebWerk::CFileWriter fileWriter;
+    if (!fileWriter.CreateSaveFile(path.c_str()))
+        return;
 
+    fileWriter.SetParams("width", std::to_string(GetCurrentWidth()));
+    fileWriter.SetParams("height", std::to_string(GetCurrentHeight()));
+    fileWriter.SetParams("fullscreen", std::to_string(m_CurrentFullscreen));
+    fileWriter.SetParams("vsync", std::to_string(m_CurrentVSync));
+    fileWriter.SetParams("mastervolume", std::to_string(m_CurrentMasterVolume));
+    fileWriter.SetParams("bgmvolume", std::to_string(m_CurrentBGMVolume));
+    fileWriter.SetParams("sfxvolume", std::to_string(m_CurrentSFXVolume));
+    fileWriter.SaveFile();
 }
 
 void COptionsMenu::CheckInput(const SUIInput& a_rInput)
@@ -653,8 +653,6 @@ void COptionsMenu::CheckInput(const SUIInput& a_rInput)
         m_PressedValue = value;
         m_UpdateGraphics = true;
     }
-
-    std::cout << m_CurrentResolution << std::endl;
 }
 
 void COptionsMenu::UpdateGraphics()
@@ -664,31 +662,16 @@ void COptionsMenu::UpdateGraphics()
 
     m_UpdateGraphics = false;
 
-    std::string resText = "0";
-    // resolution text
-    switch (m_CurrentResolution)
-    {
-    case 0:
-        resText = "800x450";
-        break;
-    case 1:
-        resText = "1024x576";
-        break;
-    case 2:
-        resText = "1280x720";
-        break;
-    case 3:
-        resText = "1600x900";
-        break;
-    case 4:
-        resText = "1900x1024";
-        break;
-    case 5:
-        resText = "1920x1080";
-        break;
-    }
-
+    std::string resText = std::to_string(GetCurrentWidth()) + "x" + std::to_string(GetCurrentHeight());
     ((triebWerk::CFontDrawable*)m_pFontCurrentResolution->GetDrawable())->m_pText->SetText(resText);
+
+    (m_CurrentResolution == 0) ?
+        ((triebWerk::CUIDrawable*)m_pArrowLeft->GetDrawable())->m_Material.m_pPixelShader.SetTexture(0, m_pTexturesArrowsLeft[0]) :
+        ((triebWerk::CUIDrawable*)m_pArrowLeft->GetDrawable())->m_Material.m_pPixelShader.SetTexture(0, m_pTexturesArrowsLeft[1]);
+    (m_CurrentResolution == (MaxResolutions - 1)) ?
+        ((triebWerk::CUIDrawable*)m_pArrowRight->GetDrawable())->m_Material.m_pPixelShader.SetTexture(0, m_pTexturesArrowsRight[0]) :
+        ((triebWerk::CUIDrawable*)m_pArrowRight->GetDrawable())->m_Material.m_pPixelShader.SetTexture(0, m_pTexturesArrowsRight[1]);
+
 
     size_t fullscreenIndex = 0, vsyncIndex = 0;
     switch (m_SelectedIndex)
@@ -716,4 +699,46 @@ void COptionsMenu::UpdateGraphics()
     ((triebWerk::CUIDrawable*)m_pMasterVolumeBar->GetDrawable())->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &m_CurrentMasterVolume);
     ((triebWerk::CUIDrawable*)m_pBGMVolumeBar->GetDrawable())->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &m_CurrentBGMVolume);
     ((triebWerk::CUIDrawable*)m_pSFXVolumeBar->GetDrawable())->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &m_CurrentSFXVolume);
+}
+
+size_t COptionsMenu::GetCurrentWidth()
+{
+    switch (m_CurrentResolution)
+    {
+    case 0:
+        return 800;
+    case 1:
+        return 1024;
+    case 2:
+        return 1280;
+    case 3:
+        return 1600;
+    case 4:
+        return 1900;
+    case 5:
+        return 1920;
+    }
+
+    return 800;
+}
+
+size_t COptionsMenu::GetCurrentHeight()
+{
+    switch (m_CurrentResolution)
+    {
+    case 0:
+        return 450;
+    case 1:
+        return 576;
+    case 2:
+        return 720;
+    case 3:
+        return 900;
+    case 4:
+        return 1024;
+    case 5:
+        return 1080;
+    }
+
+    return 450;
 }

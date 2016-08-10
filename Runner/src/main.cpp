@@ -50,6 +50,7 @@ void LoadConfig(triebWerk::SEngineConfiguration& a_rConfig)
 {
     a_rConfig.m_Name = "AZ-Tec Racer";
     a_rConfig.m_PhysicTimeStamp = 0.01f;
+    a_rConfig.m_TargetFPS = 0;
 
     triebWerk::CTWFParser parser;
     triebWerk::CTWFData data;
@@ -67,9 +68,8 @@ void LoadConfig(triebWerk::SEngineConfiguration& a_rConfig)
         a_rConfig.m_Height = 900;
         a_rConfig.m_Fullscreen = false;
         a_rConfig.m_VSync = false;
-        a_rConfig.m_TargetFPS = 0;
         a_rConfig.m_MasterVolume = 1.0f;
-        a_rConfig.m_BGMVolume = 1.0f;
+        a_rConfig.m_BGMVolume = 0.6f;
         a_rConfig.m_SFXVolume = 1.0f;
     }
     else
@@ -78,7 +78,6 @@ void LoadConfig(triebWerk::SEngineConfiguration& a_rConfig)
         a_rConfig.m_Height = std::stoi(data.GetValue("height"));
         a_rConfig.m_Fullscreen = std::stoi(data.GetValue("fullscreen"));
         a_rConfig.m_VSync = std::stoi(data.GetValue("vsync"));
-        a_rConfig.m_TargetFPS = std::stoi(data.GetValue("fpslock"));
         a_rConfig.m_MasterVolume = std::stof(data.GetValue("mastervolume"));
         a_rConfig.m_BGMVolume = std::stof(data.GetValue("bgmvolume"));
         a_rConfig.m_SFXVolume = std::stof(data.GetValue("sfxvolume"));

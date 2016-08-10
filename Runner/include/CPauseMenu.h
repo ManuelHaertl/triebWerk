@@ -29,6 +29,10 @@ private:
     triebWerk::CTexture2D* m_pTextureArrowLeft[2];
     triebWerk::CTexture2D* m_pTextureArrowRight[2];
 
+    IMenu* m_pSubMenu;
+    bool m_IsInSubMenu;
+
+    bool m_UpdateGraphics;
     bool m_IsPaused;
     bool m_IsOnButtons;
     int m_FieldIndex;
@@ -48,5 +52,7 @@ public:
     void End() final;
 
 private:
+    void CheckInput(const SUIInput& a_rInput);
     void UpdateGraphics();
+    void DeleteSubScene();
 };

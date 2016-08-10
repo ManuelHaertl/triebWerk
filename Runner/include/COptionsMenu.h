@@ -62,8 +62,8 @@ private:
 
     // Current Settings
     int m_CurrentResolution;
-    bool m_CurrentFullscreen;
-    bool m_CurrentVSync;
+    int m_CurrentFullscreen;
+    int m_CurrentVSync;
     float m_CurrentMasterVolume;
     float m_CurrentBGMVolume;
     float m_CurrentSFXVolume;
@@ -82,4 +82,6 @@ private:
     void SaveOptions();
     void CheckInput(const SUIInput& a_rInput);
     void UpdateGraphics();
+    size_t GetCurrentWidth();
+    size_t GetCurrentHeight();
 };
