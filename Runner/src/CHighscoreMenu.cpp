@@ -86,6 +86,7 @@ void CHighscoreMenu::Update(const SUIInput& a_rInput)
     {
         CGameInfo::Instance().m_ChangeMenu = true;
         CGameInfo::Instance().m_Menu = EMenus::Main;
+        twAudio->PlaySFX(twResourceManager->GetSound("SFX_ButtonBack"));
     }
 }
 

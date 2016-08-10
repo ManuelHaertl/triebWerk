@@ -524,6 +524,7 @@ void COptionsMenu::CheckInput(const SUIInput& a_rInput)
             m_SelectedIndex = 0;
 
         m_UpdateGraphics = true;
+        twAudio->PlaySFX(twResourceManager->GetSound("SFX_ButtonSelect"));
     }
 
     if (a_rInput.m_Up)
@@ -537,6 +538,7 @@ void COptionsMenu::CheckInput(const SUIInput& a_rInput)
             m_SelectedIndex = MaxIndex - 1;
 
         m_UpdateGraphics = true;
+        twAudio->PlaySFX(twResourceManager->GetSound("SFX_ButtonSelect"));
     }
 
     if (a_rInput.m_Left)
@@ -547,16 +549,19 @@ void COptionsMenu::CheckInput(const SUIInput& a_rInput)
             m_CurrentResolution--;
             if (m_CurrentResolution < 0)
                 m_CurrentResolution = 0;
+            else
+                twAudio->PlaySFX(twResourceManager->GetSound("SFX_ButtonSelect"));
             break;
         case 2:
             m_SelectedIndex--;
+            twAudio->PlaySFX(twResourceManager->GetSound("SFX_ButtonSelect"));
             break;
         }
 
         m_UpdateGraphics = true;
     }
 
-    // volume higher
+    // volume lower
     if (a_rInput.m_LeftHold)
     {
         switch (m_SelectedIndex)
@@ -565,16 +570,23 @@ void COptionsMenu::CheckInput(const SUIInput& a_rInput)
             m_CurrentMasterVolume -= SoundMoveSpeed * twTime->GetDeltaTime();
             if (m_CurrentMasterVolume < 0.0f)
                 m_CurrentMasterVolume = 0.0f;
+
+            twAudio->SetMasterVolume(m_CurrentMasterVolume);
             break;
         case 4:
             m_CurrentBGMVolume -= SoundMoveSpeed * twTime->GetDeltaTime();
             if (m_CurrentBGMVolume < 0.0f)
                 m_CurrentBGMVolume = 0.0f;
+
+            twAudio->SetBGMVolume(m_CurrentBGMVolume);
             break;
         case 5:
             m_CurrentSFXVolume -= SoundMoveSpeed * twTime->GetDeltaTime();
             if (m_CurrentSFXVolume < 0.0f)
                 m_CurrentSFXVolume = 0.0f;
+
+            twAudio->SetSFXVolume(m_CurrentSFXVolume);
+            twAudio->PlaySFX(twResourceManager->GetSound("SFX_SFXChange"));
             break;
         }
 
@@ -589,9 +601,12 @@ void COptionsMenu::CheckInput(const SUIInput& a_rInput)
             m_CurrentResolution++;
             if (m_CurrentResolution == MaxResolutions)
                 m_CurrentResolution = MaxResolutions - 1;
+            else
+                twAudio->PlaySFX(twResourceManager->GetSound("SFX_ButtonSelect"));
             break;
         case 1:
             m_SelectedIndex++;
+            twAudio->PlaySFX(twResourceManager->GetSound("SFX_ButtonSelect"));
             break;
         }
 
@@ -607,16 +622,23 @@ void COptionsMenu::CheckInput(const SUIInput& a_rInput)
             m_CurrentMasterVolume += SoundMoveSpeed * twTime->GetDeltaTime();
             if (m_CurrentMasterVolume > 1.0f)
                 m_CurrentMasterVolume = 1.0f;
+
+            twAudio->SetMasterVolume(m_CurrentMasterVolume);
             break;
         case 4:
             m_CurrentBGMVolume += SoundMoveSpeed * twTime->GetDeltaTime();
             if (m_CurrentBGMVolume > 1.0f)
                 m_CurrentBGMVolume = 1.0f;
+
+            twAudio->SetBGMVolume(m_CurrentBGMVolume);
             break;
         case 5:
             m_CurrentSFXVolume += SoundMoveSpeed * twTime->GetDeltaTime();
             if (m_CurrentSFXVolume > 1.0f)
                 m_CurrentSFXVolume = 1.0f;
+
+            twAudio->SetSFXVolume(m_CurrentSFXVolume);
+            twAudio->PlaySFX(twResourceManager->GetSound("SFX_SFXChange"));
             break;
         }
 
@@ -630,9 +652,11 @@ void COptionsMenu::CheckInput(const SUIInput& a_rInput)
         {
         case 1:
             m_CurrentFullscreen = !m_CurrentFullscreen;
+            twAudio->PlaySFX(twResourceManager->GetSound("SFX_ButtonConfirm"));
             break;
         case 2:
             m_CurrentVSync = !m_CurrentVSync;
+            twAudio->PlaySFX(twResourceManager->GetSound("SFX_ButtonConfirm"));
             break;
         }
     }
@@ -643,6 +667,7 @@ void COptionsMenu::CheckInput(const SUIInput& a_rInput)
         CGameInfo::Instance().m_ChangeMenu = true;
         CGameInfo::Instance().m_Menu = EMenus::Main;
         SaveOptions();
+        twAudio->PlaySFX(twResourceManager->GetSound("SFX_ButtonBack"));
     }
 
     // Button hold value

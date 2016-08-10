@@ -351,11 +351,17 @@ void CPauseMenu::CheckInput(const SUIInput & a_rInput)
 {
     if (a_rInput.m_Up)
     {
+        if (m_IsOnButtons != false)
+            twAudio->PlaySFX(twResourceManager->GetSound("SFX_ButtonSelect"));
+
         m_IsOnButtons = false;
         m_UpdateGraphics = true;
     }
     else if (a_rInput.m_Down)
     {
+        if (m_IsOnButtons != true)
+            twAudio->PlaySFX(twResourceManager->GetSound("SFX_ButtonSelect"));
+
         m_IsOnButtons = true;
         m_UpdateGraphics = true;
     }
@@ -377,6 +383,8 @@ void CPauseMenu::CheckInput(const SUIInput & a_rInput)
             m_FieldIndex--;
             if (m_FieldIndex < 0)
                 m_FieldIndex = 0;
+            else
+                twAudio->PlaySFX(twResourceManager->GetSound("SFX_ButtonSelect"));
 
             m_UpdateGraphics = true;
         }
@@ -385,6 +393,8 @@ void CPauseMenu::CheckInput(const SUIInput & a_rInput)
             m_FieldIndex++;
             if (m_FieldIndex == MaxFieldIndex)
                 m_FieldIndex = MaxFieldIndex - 1;
+            else
+                twAudio->PlaySFX(twResourceManager->GetSound("SFX_ButtonSelect"));
 
             m_UpdateGraphics = true;
         }
@@ -398,6 +408,7 @@ void CPauseMenu::CheckInput(const SUIInput & a_rInput)
             if (m_ButtonIndex < 0)
                 m_ButtonIndex = MaxButtonIndex - 1;
 
+            twAudio->PlaySFX(twResourceManager->GetSound("SFX_ButtonSelect"));
             m_UpdateGraphics = true;
         }
         else if (a_rInput.m_Right)
@@ -406,6 +417,7 @@ void CPauseMenu::CheckInput(const SUIInput & a_rInput)
             if (m_ButtonIndex == MaxButtonIndex)
                 m_ButtonIndex = 0;
 
+            twAudio->PlaySFX(twResourceManager->GetSound("SFX_ButtonSelect"));
             m_UpdateGraphics = true;
         }
 
@@ -416,13 +428,16 @@ void CPauseMenu::CheckInput(const SUIInput & a_rInput)
             case 0:
                 m_CurrentMainMenuTime = CPostEffects::GameStartTime / 2.0f;
                 CGameInfo::Instance().m_EffectGoingIntoGame = true;
+                twAudio->PlaySFX(twResourceManager->GetSound("SFX_ButtonConfirm"));
                 break;
             case 1:
                 CGameInfo::Instance().m_IsGamePaused = false;
+                twAudio->PlaySFX(twResourceManager->GetSound("SFX_ButtonConfirm"));
                 break;
             case 2:
                 CGameInfo::Instance().m_ChangeMenu = true;
                 CGameInfo::Instance().m_Menu = EMenus::Options;
+                twAudio->PlaySFX(twResourceManager->GetSound("SFX_ButtonConfirm"));
                 break;
             }
         }

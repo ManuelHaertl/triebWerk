@@ -332,6 +332,8 @@ void CMainMenu::CheckInput(const SUIInput& a_rInput)
 
     a_rInput.m_ButtonHold ? m_HoldValue = 1 : m_HoldValue = 0;
 
+
+
     // Main buttons
     if (m_IsOnMainButtons)
     {
@@ -342,6 +344,7 @@ void CMainMenu::CheckInput(const SUIInput& a_rInput)
                 m_SelectedButton = 0;
 
             m_UpdateGraphics = true;
+            twAudio->PlaySFX(twResourceManager->GetSound("SFX_ButtonSelect"));
         }
         else if (a_rInput.m_Left)
         {
@@ -350,6 +353,7 @@ void CMainMenu::CheckInput(const SUIInput& a_rInput)
                 m_SelectedButton = ButtonCount - 1;
 
             m_UpdateGraphics = true;
+            twAudio->PlaySFX(twResourceManager->GetSound("SFX_ButtonSelect"));
         }
 
         if (a_rInput.m_Select)
@@ -365,13 +369,16 @@ void CMainMenu::CheckInput(const SUIInput& a_rInput)
             case 1:
                 CGameInfo::Instance().m_Menu = EMenus::Highscore;
                 CGameInfo::Instance().m_ChangeMenu = true;
+                twAudio->PlaySFX(twResourceManager->GetSound("SFX_ButtonConfirm"));
                 break;
             case 2:
                 CGameInfo::Instance().m_Menu = EMenus::Options;
                 CGameInfo::Instance().m_ChangeMenu = true;
+                twAudio->PlaySFX(twResourceManager->GetSound("SFX_ButtonConfirm"));
                 break;
             case 3:
                 OpenExtras();
+                twAudio->PlaySFX(twResourceManager->GetSound("SFX_ButtonConfirm"));
                 break;
             case 4:
                 twEngine.Stop();
@@ -380,7 +387,10 @@ void CMainMenu::CheckInput(const SUIInput& a_rInput)
         }
 
         else if (a_rInput.m_Up && m_SelectedButton == 3)
+        {
             OpenExtras();
+            twAudio->PlaySFX(twResourceManager->GetSound("SFX_ButtonSelect"));
+        }
     }
 
     // extra buttons
@@ -393,11 +403,13 @@ void CMainMenu::CheckInput(const SUIInput& a_rInput)
             case 0:
                 CGameInfo::Instance().m_Menu = EMenus::Manual;
                 CGameInfo::Instance().m_ChangeMenu = true;
+                twAudio->PlaySFX(twResourceManager->GetSound("SFX_ButtonConfirm"));
                 CloseExtras();
                 break;
             case 1:
                 CGameInfo::Instance().m_Menu = EMenus::Credits;
                 CGameInfo::Instance().m_ChangeMenu = true;
+                twAudio->PlaySFX(twResourceManager->GetSound("SFX_ButtonConfirm"));
                 CloseExtras();
                 break;
             }
@@ -405,12 +417,20 @@ void CMainMenu::CheckInput(const SUIInput& a_rInput)
         else if (a_rInput.m_Back)
         {
             CloseExtras();
+            twAudio->PlaySFX(twResourceManager->GetSound("SFX_ButtonBack"));
         }
 
         if (a_rInput.m_Up)
+        {
+            if (m_SelectedExtrasButton != 1)
+                twAudio->PlaySFX(twResourceManager->GetSound("SFX_ButtonSelect"));
+
             m_SelectedExtrasButton = 1;
+        }
         else if (a_rInput.m_Down)
         {
+            twAudio->PlaySFX(twResourceManager->GetSound("SFX_ButtonSelect"));
+
             m_SelectedExtrasButton--;
             if (m_SelectedExtrasButton < 0)
                 CloseExtras();
