@@ -35,7 +35,7 @@ void CHighscoreMenu::Start()
         std::string text = std::to_string((i + 1)) + ".";
 
         m_pNumbers[i] = twActiveUIWorld->CreateUIEntity();
-        m_pNumbers[i]->m_Transform.SetAnchorPoint(-0.05f, (0.2f - ((float)i * 0.1f)));
+        m_pNumbers[i]->m_Transform.SetAnchorPoint(-0.35f, (0.2f - ((float)i * 0.1f)));
         if (i == 0)
             m_pNumbers[i]->m_Transform.SetPositionOffset(3.0f, -11.0f, -0.1f);
         else
@@ -59,7 +59,7 @@ void CHighscoreMenu::Start()
         std::string text = std::to_string(CGameInfo::Instance().m_Highscore.m_Scores[i]);
 
         m_pScores[i] = twActiveUIWorld->CreateUIEntity();
-        m_pScores[i]->m_Transform.SetAnchorPoint(0.05f, (0.2f - ((float)i * 0.1f)));
+        m_pScores[i]->m_Transform.SetAnchorPoint(0.35f, (0.2f - ((float)i * 0.1f)));
 
         if (text[0] == '1')
             m_pScores[i]->m_Transform.SetPositionOffset(3.0f, -11.0f, -0.1f);
@@ -78,6 +78,32 @@ void CHighscoreMenu::Start()
         m_pScores[i]->SetDrawable(scoreTextDrawable);
         twActiveUIWorld->AddUIEntity(m_pScores[i]);
     }
+
+	//Dates
+	for (size_t i = 0; i < 5; i++)
+	{
+		std::string text = CGameInfo::Instance().m_Highscore.m_Dates[i];
+
+		m_pDates[i] = twActiveUIWorld->CreateUIEntity();
+		m_pDates[i]->m_Transform.SetAnchorPoint(-0.20f, (0.2f - ((float)i * 0.1f)));
+
+		if (text[0] == '1')
+			m_pDates[i]->m_Transform.SetPositionOffset(3.0f, -11.0f, -0.1f);
+		else
+			m_pDates[i]->m_Transform.SetPositionOffset(10.0f, -11.0f, -0.1f);
+
+		auto datesText = twFontManager->CreateText();
+		datesText->Set(font, text, 1.2f);
+		datesText->SetTextAlign(triebWerk::ETextAlign::MiddleLeft);
+
+		auto dateTextDrawable = twRenderer->CreateFontDrawable();
+		dateTextDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardFont"));
+		dateTextDrawable->m_pText = datesText;
+		dateTextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+
+		m_pDates[i]->SetDrawable(dateTextDrawable);
+		twActiveUIWorld->AddUIEntity(m_pDates[i]);
+	}
 }
 
 void CHighscoreMenu::Update(const SUIInput& a_rInput)
@@ -104,4 +130,10 @@ void CHighscoreMenu::End()
     twActiveUIWorld->RemoveUIEntity(m_pScores[2]);
     twActiveUIWorld->RemoveUIEntity(m_pScores[3]);
     twActiveUIWorld->RemoveUIEntity(m_pScores[4]);
+
+	twActiveUIWorld->RemoveUIEntity(m_pDates[0]);
+	twActiveUIWorld->RemoveUIEntity(m_pDates[1]);
+	twActiveUIWorld->RemoveUIEntity(m_pDates[2]);
+	twActiveUIWorld->RemoveUIEntity(m_pDates[3]);
+	twActiveUIWorld->RemoveUIEntity(m_pDates[4]);
 }

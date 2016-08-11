@@ -8,6 +8,7 @@ private:
     triebWerk::CUIEntity* m_pFieldBG;
     triebWerk::CUIEntity* m_pNumbers[5];
     triebWerk::CUIEntity* m_pScores[5];
+	triebWerk::CUIEntity* m_pDates[5];
 
 public:
     CHighscoreMenu();
