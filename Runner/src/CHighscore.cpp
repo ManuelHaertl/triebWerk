@@ -27,6 +27,11 @@ bool CHighscore::IsInRankList()
     return m_IsInRankList;
 }
 
+int CHighscore::GetRank()
+{
+    return m_CurrentRank + 1;
+}
+
 void CHighscore::AddScore(const size_t a_Score)
 {
     m_CurrentScore = a_Score;

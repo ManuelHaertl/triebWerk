@@ -28,6 +28,7 @@ public:
 
     bool IsHighscore();
     bool IsInRankList();
+    int GetRank();
     void AddScore(const size_t a_Score);
     void AddDate(const std::string a_Date);
     void AddColor(const DirectX::XMFLOAT3 a_Color);

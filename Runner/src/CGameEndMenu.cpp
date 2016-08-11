@@ -6,7 +6,9 @@
 
 CGameEndMenu::CGameEndMenu()
     : m_UpdateGraphics(false)
+    , m_SelectingColor(false)
     , m_SelectedButton(1)
+    , m_SelectedColorButton(0)
     , m_HoldValue(0)
     , m_LastState(false)
     , m_CurrentMainMenuTime(0.0f)
@@ -270,7 +272,7 @@ void CGameEndMenu::Start()
     // Color 1 ------------------------------------------- 
 
     m_pColor1 = twActiveUIWorld->CreateUIEntity();
-    m_pColor1->m_Transform.SetAnchorPoint(-0.2f, -0.5f);
+    m_pColor1->m_Transform.SetAnchorPoint(-0.2f, -0.65f);
     m_pColor1->m_Transform.SetPositionOffset(0.0f, 0.0f, 0.0f);
 
     auto color1Drawable = twRenderer->CreateUIDrawable();
@@ -285,7 +287,7 @@ void CGameEndMenu::Start()
     // Color 2 ------------------------------------------- 
 
     m_pColor2 = twActiveUIWorld->CreateUIEntity();
-    m_pColor2->m_Transform.SetAnchorPoint(-0.1f, -0.5f);
+    m_pColor2->m_Transform.SetAnchorPoint(-0.1f, -0.65f);
     m_pColor2->m_Transform.SetPositionOffset(0.0f, 0.0f, 0.0f);
 
     auto color2Drawable = twRenderer->CreateUIDrawable();
@@ -300,7 +302,7 @@ void CGameEndMenu::Start()
     // Color 3 ------------------------------------------- 
 
     m_pColor3 = twActiveUIWorld->CreateUIEntity();
-    m_pColor3->m_Transform.SetAnchorPoint(0.0f, -0.5f);
+    m_pColor3->m_Transform.SetAnchorPoint(0.0f, -0.65f);
     m_pColor3->m_Transform.SetPositionOffset(0.0f, 0.0f, 0.0f);
 
     auto color3Drawable = twRenderer->CreateUIDrawable();
@@ -315,7 +317,7 @@ void CGameEndMenu::Start()
     // Color 4 ------------------------------------------- 
 
     m_pColor4 = twActiveUIWorld->CreateUIEntity();
-    m_pColor4->m_Transform.SetAnchorPoint(0.1f, -0.5f);
+    m_pColor4->m_Transform.SetAnchorPoint(0.1f, -0.65f);
     m_pColor4->m_Transform.SetPositionOffset(0.0f, 0.0f, 0.0f);
 
     auto color4Drawable = twRenderer->CreateUIDrawable();
@@ -330,7 +332,7 @@ void CGameEndMenu::Start()
     // Color 5 ------------------------------------------- 
 
     m_pColor5 = twActiveUIWorld->CreateUIEntity();
-    m_pColor5->m_Transform.SetAnchorPoint(0.2f, -0.5f);
+    m_pColor5->m_Transform.SetAnchorPoint(0.2f, -0.65f);
     m_pColor5->m_Transform.SetPositionOffset(0.0f, 0.0f, 0.0f);
 
     auto color5Drawable = twRenderer->CreateUIDrawable();
@@ -341,6 +343,61 @@ void CGameEndMenu::Start()
     m_pColor5->SetDrawable(color5Drawable);
 
     twActiveUIWorld->AddUIEntity(m_pColor5);
+
+    // Font Top 5 ------------------------------------------- 
+
+    m_pFontTop5 = twActiveUIWorld->CreateUIEntity();
+    m_pFontTop5->m_Transform.SetAnchorPoint(0.0f, -0.45f);
+    m_pFontTop5->m_Transform.SetPositionOffset(10.0f, -11.0f, 0.0f);
+
+    auto top5Text = twFontManager->CreateText();
+    top5Text->Set(font, "Top 5!", 1.2f);
+
+    auto top5TextDrawable = twRenderer->CreateFontDrawable();
+    top5TextDrawable->SetActive(false);
+    top5TextDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardFont"));
+    top5TextDrawable->m_pText = top5Text;
+    top5TextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+
+    m_pFontTop5->SetDrawable(top5TextDrawable);
+    twActiveUIWorld->AddUIEntity(m_pFontTop5);
+
+    // Font Rank ------------------------------------------- 
+
+    m_pFontYourRank = twActiveUIWorld->CreateUIEntity();
+    m_pFontYourRank->m_Transform.SetAnchorPoint(0.0f, -0.55f);
+    m_pFontYourRank->m_Transform.SetPositionOffset(10.0f, -11.0f, 0.0f);
+
+    std::string text = "Your rank: ";
+    auto yourRankText = twFontManager->CreateText();
+    yourRankText->Set(font, text, 1.2f);
+
+    auto yourRankTextDrawable = twRenderer->CreateFontDrawable();
+    yourRankTextDrawable->SetActive(false);
+    yourRankTextDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardFont"));
+    yourRankTextDrawable->m_pText = yourRankText;
+    yourRankTextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+
+    m_pFontYourRank->SetDrawable(yourRankTextDrawable);
+    twActiveUIWorld->AddUIEntity(m_pFontYourRank);
+
+    // Font Pick A Color ------------------------------------------- 
+
+    m_pFontPickAColor = twActiveUIWorld->CreateUIEntity();
+    m_pFontPickAColor->m_Transform.SetAnchorPoint(0.0f, -0.8f);
+    m_pFontPickAColor->m_Transform.SetPositionOffset(10.0f, -11.0f, 0.0f);
+
+    auto pickAColorText = twFontManager->CreateText();
+    pickAColorText->Set(font, "Pick a color for the scoreboard", 1.2f);
+
+    auto pickAColorTextDrawable = twRenderer->CreateFontDrawable();
+    pickAColorTextDrawable->SetActive(false);
+    pickAColorTextDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardFont"));
+    pickAColorTextDrawable->m_pText = pickAColorText;
+    pickAColorTextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+
+    m_pFontPickAColor->SetDrawable(pickAColorTextDrawable);
+    twActiveUIWorld->AddUIEntity(m_pFontPickAColor);
 }
 
 void CGameEndMenu::Update(const SUIInput& a_rInput)
@@ -384,11 +441,25 @@ void CGameEndMenu::Update(const SUIInput& a_rInput)
     if (m_LastState != CGameInfo::Instance().m_IsPlayerDead)
     {
         m_LastState = CGameInfo::Instance().m_IsPlayerDead;
-        m_SelectedButton = 1;
         m_UpdateGraphics = true;
 
-		if (m_LastState &&  CGameInfo::Instance().m_Highscore.IsHighscore())
-			twAudio->PlaySFX(twResourceManager->GetSound("SFX_Highscore"));
+        if (m_LastState)
+        {
+            m_SelectedButton = 1;
+
+            if (CGameInfo::Instance().m_Highscore.IsInRankList())
+            {
+                m_SelectedColorButton = 0;
+                m_SelectingColor = true;
+            }
+            else
+            {
+                m_SelectingColor = false;
+            }
+
+            if (CGameInfo::Instance().m_Highscore.IsHighscore())
+                twAudio->PlaySFX(twResourceManager->GetSound("SFX_Highscore"));
+        }
     }
 
     if (!CGameInfo::Instance().m_IsPlayerDead)
@@ -451,6 +522,39 @@ void CGameEndMenu::CheckInput(const SUIInput& a_rInput)
         m_UpdateGraphics = true;
     }
 
+    if (m_SelectingColor)
+    {
+        // Left and right
+        if (a_rInput.m_Left)
+        {
+            m_SelectedColorButton--;
+            if (m_SelectedColorButton < 0)
+                m_SelectedColorButton = MaxColorIndex - 1;
+
+            twAudio->PlaySFX(twResourceManager->GetSound("SFX_ButtonSelect"));
+            m_UpdateGraphics = true;
+        }
+        else if (a_rInput.m_Right)
+        {
+            m_SelectedColorButton++;
+            if (m_SelectedColorButton == MaxColorIndex)
+                m_SelectedColorButton = 0;
+
+            twAudio->PlaySFX(twResourceManager->GetSound("SFX_ButtonSelect"));
+            m_UpdateGraphics = true;
+        }
+
+        if (a_rInput.m_Select)
+        {
+            CGameInfo::Instance().m_Highscore.AddColor(ScoreColors[m_SelectedColorButton]);
+            CGameInfo::Instance().m_Highscore.AddDate(twTime->GetDateString());
+            CGameInfo::Instance().m_Highscore.Submit();
+            m_SelectingColor = false;
+            twAudio->PlaySFX(twResourceManager->GetSound("SFX_ButtonConfirm"));
+        }
+        return;
+    }
+
     // Left and right
     if (a_rInput.m_Left)
     {
@@ -508,18 +612,21 @@ void CGameEndMenu::UpdateGraphics()
     m_pBackground->GetDrawable()->SetActive(active);
     m_pLogo->GetDrawable()->SetActive(active);
     m_pScoreBoard->GetDrawable()->SetActive(active);
-    m_pButtonMainMenu->GetDrawable()->SetActive(active);
-    m_pButtonTryAgain->GetDrawable()->SetActive(active);
-    m_pButtonHighscore->GetDrawable()->SetActive(active);
+    m_pButtonMainMenu->GetDrawable()->SetActive(active && !m_SelectingColor);
+    m_pButtonTryAgain->GetDrawable()->SetActive(active && !m_SelectingColor);
+    m_pButtonHighscore->GetDrawable()->SetActive(active && !m_SelectingColor);
     m_pFontScoreBoard->GetDrawable()->SetActive(active);
-    m_pFontMainMenu->GetDrawable()->SetActive(active);
-    m_pFontTryAgain->GetDrawable()->SetActive(active);
-    m_pFontHighscore->GetDrawable()->SetActive(active);
-    m_pColor1->GetDrawable()->SetActive(active);
-    m_pColor2->GetDrawable()->SetActive(active);
-    m_pColor3->GetDrawable()->SetActive(active);
-    m_pColor4->GetDrawable()->SetActive(active);
-    m_pColor5->GetDrawable()->SetActive(active);
+    m_pFontMainMenu->GetDrawable()->SetActive(active && !m_SelectingColor);
+    m_pFontTryAgain->GetDrawable()->SetActive(active && !m_SelectingColor);
+    m_pFontHighscore->GetDrawable()->SetActive(active && !m_SelectingColor);
+    m_pColor1->GetDrawable()->SetActive(active && m_SelectingColor);
+    m_pColor2->GetDrawable()->SetActive(active && m_SelectingColor);
+    m_pColor3->GetDrawable()->SetActive(active && m_SelectingColor);
+    m_pColor4->GetDrawable()->SetActive(active && m_SelectingColor);
+    m_pColor5->GetDrawable()->SetActive(active && m_SelectingColor);
+    m_pFontTop5->GetDrawable()->SetActive(active && m_SelectingColor);
+    m_pFontYourRank->GetDrawable()->SetActive(active && m_SelectingColor);
+    m_pFontPickAColor->GetDrawable()->SetActive(active && m_SelectingColor);
 
 	m_pScoreFontElement->GetDrawable()->SetActive(active && !CGameInfo::Instance().m_Highscore.IsHighscore());
 	m_pHighscoreFontElement->GetDrawable()->SetActive(active && CGameInfo::Instance().m_Highscore.IsHighscore());
@@ -538,6 +645,21 @@ void CGameEndMenu::UpdateGraphics()
 
     // Score
     ((triebWerk::CFontDrawable*)m_pFontScoreBoard->GetDrawable())->m_pText->SetText(std::to_string((size_t)CGameInfo::Instance().m_TotalPoints));
+
+
+    // the color states
+    std::string text = "Your rank: " + std::to_string(CGameInfo::Instance().m_Highscore.GetRank());
+    ((triebWerk::CFontDrawable*)m_pFontYourRank->GetDrawable())->m_pText->SetText(text);
+    size_t colorIndex[5] = { 0,0,0,0 ,0 };
+
+    colorIndex[m_SelectedColorButton]++;
+    colorIndex[m_SelectedColorButton] += m_HoldValue;
+
+    ((triebWerk::CUIDrawable*)m_pColor1->GetDrawable())->m_Material.m_pPixelShader.SetTexture(0, m_pTextureColorBox[0][colorIndex[0]]);
+    ((triebWerk::CUIDrawable*)m_pColor2->GetDrawable())->m_Material.m_pPixelShader.SetTexture(0, m_pTextureColorBox[1][colorIndex[1]]);
+    ((triebWerk::CUIDrawable*)m_pColor3->GetDrawable())->m_Material.m_pPixelShader.SetTexture(0, m_pTextureColorBox[2][colorIndex[2]]);
+    ((triebWerk::CUIDrawable*)m_pColor4->GetDrawable())->m_Material.m_pPixelShader.SetTexture(0, m_pTextureColorBox[3][colorIndex[3]]);
+    ((triebWerk::CUIDrawable*)m_pColor5->GetDrawable())->m_Material.m_pPixelShader.SetTexture(0, m_pTextureColorBox[4][colorIndex[4]]);
 }
 
 void CGameEndMenu::DeleteSubScene()
