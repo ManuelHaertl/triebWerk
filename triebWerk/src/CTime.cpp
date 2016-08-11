@@ -125,8 +125,20 @@ std::string triebWerk::CTime::GetDateString()
 	timeS += month;
 	timeS += "." + std::to_string(time.wYear);
 	timeS += " ";
-	timeS += std::to_string(time.wHour + 2);
-	timeS += ":" + std::to_string(time.wMinute);
+
+	std::string hour = std::to_string(time.wHour + 2);
+	if (hour.size() == 1)
+	{
+		timeS += "0";
+	}
+	timeS += hour;
+	timeS += ":";
+	std::string minute = std::to_string(time.wMinute);
+	if (minute.size() == 1)
+	{
+		timeS += "0";
+	}
+	timeS += minute;
 
 	return timeS;
 }
