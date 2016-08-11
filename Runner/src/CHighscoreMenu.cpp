@@ -35,7 +35,7 @@ void CHighscoreMenu::Start()
 		std::string text = std::to_string((i + 1)) + ".";
 
 		m_pNumbers[i] = twActiveUIWorld->CreateUIEntity();
-		m_pNumbers[i]->m_Transform.SetAnchorPoint(-0.35f, (0.2f - ((float)i * 0.1f)));
+		m_pNumbers[i]->m_Transform.SetAnchorPoint(-0.35f, (0.1f - ((float)i * 0.1f)));
 		if (i == 0)
 			m_pNumbers[i]->m_Transform.SetPositionOffset(3.0f, -11.0f, -0.1f);
 		else
@@ -59,7 +59,7 @@ void CHighscoreMenu::Start()
         std::string text = std::to_string(CGameInfo::Instance().m_Highscore.m_Scores[i]);
 
         m_pScores[i] = twActiveUIWorld->CreateUIEntity();
-        m_pScores[i]->m_Transform.SetAnchorPoint(-0.25f, (0.2f - ((float)i * 0.1f)));
+        m_pScores[i]->m_Transform.SetAnchorPoint(-0.25f, (0.1f - ((float)i * 0.1f)));
 
         if (text[0] == '1')
             m_pScores[i]->m_Transform.SetPositionOffset(3.0f, -11.0f, -0.1f);
@@ -85,7 +85,7 @@ void CHighscoreMenu::Start()
 		std::string text = CGameInfo::Instance().m_Highscore.m_Dates[i];
 
 		m_pDates[i] = twActiveUIWorld->CreateUIEntity();
-		m_pDates[i]->m_Transform.SetAnchorPoint(0.10f, (0.2f - ((float)i * 0.1f)));
+		m_pDates[i]->m_Transform.SetAnchorPoint(0.10f, (0.1f - ((float)i * 0.1f)));
 
 		if (text[0] == '1')
 			m_pDates[i]->m_Transform.SetPositionOffset(3.0f, -11.0f, -0.1f);
@@ -103,6 +103,67 @@ void CHighscoreMenu::Start()
 
 		m_pDates[i]->SetDrawable(dateTextDrawable);
 		twActiveUIWorld->AddUIEntity(m_pDates[i]);
+	}
+
+	{
+		std::string text = "#";
+
+		m_pNumber = twActiveUIWorld->CreateUIEntity();
+		m_pNumber->m_Transform.SetAnchorPoint(-0.35f, 0.25f);
+
+		m_pNumber->m_Transform.SetPositionOffset(3.0f, -11.0f, -0.1f);
+
+		auto scoreText = twFontManager->CreateText();
+		scoreText->Set(font, text, 1.2f);
+		scoreText->SetTextAlign(triebWerk::ETextAlign::MiddleRight);
+
+		auto scoreTextDrawable = twRenderer->CreateFontDrawable();
+		scoreTextDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardFont"));
+		scoreTextDrawable->m_pText = scoreText;
+		scoreTextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(1, 1, 1));
+
+		m_pNumber->SetDrawable(scoreTextDrawable);
+		twActiveUIWorld->AddUIEntity(m_pNumber);
+	}
+
+	{
+		std::string text = "Score";
+		
+		m_pScore = twActiveUIWorld->CreateUIEntity();
+		m_pScore->m_Transform.SetAnchorPoint(-0.25f, 0.25f);
+		m_pScore->m_Transform.SetPositionOffset(3.0f, -11.0f, -0.1f);
+		
+		auto scoreText = twFontManager->CreateText();
+		scoreText->Set(font, text, 1.2f);
+		scoreText->SetTextAlign(triebWerk::ETextAlign::MiddleLeft);
+		
+		auto scoreTextDrawable = twRenderer->CreateFontDrawable();
+		scoreTextDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardFont"));
+		scoreTextDrawable->m_pText = scoreText;
+		scoreTextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(1, 1, 1));
+		
+		m_pScore->SetDrawable(scoreTextDrawable);
+		twActiveUIWorld->AddUIEntity(m_pScore);
+	}
+
+	{
+		std::string text = "Date";
+
+		m_pDate = twActiveUIWorld->CreateUIEntity();
+		m_pDate->m_Transform.SetAnchorPoint(0.10f, 0.25f);
+		m_pDate->m_Transform.SetPositionOffset(3.0f, -11.0f, -0.1f);
+
+		auto scoreText = twFontManager->CreateText();
+		scoreText->Set(font, text, 1.2f);
+		scoreText->SetTextAlign(triebWerk::ETextAlign::MiddleLeft);
+
+		auto scoreTextDrawable = twRenderer->CreateFontDrawable();
+		scoreTextDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardFont"));
+		scoreTextDrawable->m_pText = scoreText;
+		scoreTextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(1, 1, 1));
+
+		m_pDate->SetDrawable(scoreTextDrawable);
+		twActiveUIWorld->AddUIEntity(m_pDate);
 	}
 }
 
@@ -136,4 +197,8 @@ void CHighscoreMenu::End()
 	twActiveUIWorld->RemoveUIEntity(m_pDates[2]);
 	twActiveUIWorld->RemoveUIEntity(m_pDates[3]);
 	twActiveUIWorld->RemoveUIEntity(m_pDates[4]);
+
+	twActiveUIWorld->RemoveUIEntity(m_pDate);
+	twActiveUIWorld->RemoveUIEntity(m_pNumber);
+	twActiveUIWorld->RemoveUIEntity(m_pScore);
 }
