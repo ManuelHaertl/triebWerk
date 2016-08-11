@@ -48,7 +48,7 @@ void CHighscoreMenu::Start()
 		auto scoreTextDrawable = twRenderer->CreateFontDrawable();
 		scoreTextDrawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardFont"));
 		scoreTextDrawable->m_pText = scoreText;
-		scoreTextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &CGameInfo::Instance().m_Highscore.m_Colors[i]);
+		scoreTextDrawable->m_Material.m_ConstantBuffer.SetValueInBuffer(4, &DirectX::XMFLOAT3(1,1,1));
 
         m_pNumbers[i]->SetDrawable(scoreTextDrawable);
         twActiveUIWorld->AddUIEntity(m_pNumbers[i]);
@@ -59,7 +59,7 @@ void CHighscoreMenu::Start()
         std::string text = std::to_string(CGameInfo::Instance().m_Highscore.m_Scores[i]);
 
         m_pScores[i] = twActiveUIWorld->CreateUIEntity();
-        m_pScores[i]->m_Transform.SetAnchorPoint(0.35f, (0.2f - ((float)i * 0.1f)));
+        m_pScores[i]->m_Transform.SetAnchorPoint(-0.25f, (0.2f - ((float)i * 0.1f)));
 
         if (text[0] == '1')
             m_pScores[i]->m_Transform.SetPositionOffset(3.0f, -11.0f, -0.1f);
@@ -85,7 +85,7 @@ void CHighscoreMenu::Start()
 		std::string text = CGameInfo::Instance().m_Highscore.m_Dates[i];
 
 		m_pDates[i] = twActiveUIWorld->CreateUIEntity();
-		m_pDates[i]->m_Transform.SetAnchorPoint(-0.20f, (0.2f - ((float)i * 0.1f)));
+		m_pDates[i]->m_Transform.SetAnchorPoint(0.10f, (0.2f - ((float)i * 0.1f)));
 
 		if (text[0] == '1')
 			m_pDates[i]->m_Transform.SetPositionOffset(3.0f, -11.0f, -0.1f);
