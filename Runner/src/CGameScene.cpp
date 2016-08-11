@@ -179,7 +179,6 @@ void CGameScene::LoadHighscore()
     
     for (auto value : file->m_ConfigurationTable)
     {
-
 		//Score
 		if (value.first == "score0") highscore.m_Scores[0] = std::stoi(value.second);
 		else if (value.first == "score1") highscore.m_Scores[1] = std::stoi(value.second);
@@ -209,6 +208,8 @@ void CGameScene::LoadHighscore()
 		else if (value.first == "date3") highscore.m_Dates[3] = value.second;
 		else if (value.first == "date4") highscore.m_Dates[4] = value.second;
     }
+
+    int bla = 5;
 }
 
 void CGameScene::SaveHighscore()

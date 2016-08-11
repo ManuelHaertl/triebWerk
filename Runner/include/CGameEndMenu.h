@@ -8,6 +8,7 @@ private:
     const int MaxButtonIndex = 3;
 
     triebWerk::CTexture2D* m_pTextureUnderlinedButton[3];
+    triebWerk::CTexture2D* m_pTextureColorBox[5][3];
 
     triebWerk::CUIEntity* m_pBackground;
     triebWerk::CUIEntity* m_pLogo;
@@ -27,6 +28,11 @@ private:
     triebWerk::CUIEntity* m_pFontTryAgain;
     triebWerk::CUIEntity* m_pFontHighscore;
 
+    triebWerk::CUIEntity* m_pColor1;
+    triebWerk::CUIEntity* m_pColor2;
+    triebWerk::CUIEntity* m_pColor3;
+    triebWerk::CUIEntity* m_pColor4;
+    triebWerk::CUIEntity* m_pColor5;
 
     bool m_UpdateGraphics;
 

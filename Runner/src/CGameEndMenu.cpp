@@ -29,6 +29,22 @@ void CGameEndMenu::Start()
     m_pTextureUnderlinedButton[1] = twResourceManager->GetTexture2D("T_ui_regularbutton_underlined_hover");
     m_pTextureUnderlinedButton[2] = twResourceManager->GetTexture2D("T_ui_regularbutton_underlined_pressed");
 
+    m_pTextureColorBox[0][0] = twResourceManager->GetTexture2D("T_color_turquoise_normal");
+    m_pTextureColorBox[0][1] = twResourceManager->GetTexture2D("T_color_turquoise_hover");
+    m_pTextureColorBox[0][2] = twResourceManager->GetTexture2D("T_color_turquoise_pressed");
+    m_pTextureColorBox[1][0] = twResourceManager->GetTexture2D("T_color_green_normal");
+    m_pTextureColorBox[1][1] = twResourceManager->GetTexture2D("T_color_green_hover");
+    m_pTextureColorBox[1][2] = twResourceManager->GetTexture2D("T_color_green_pressed");
+    m_pTextureColorBox[2][0] = twResourceManager->GetTexture2D("T_color_pink_normal");
+    m_pTextureColorBox[2][1] = twResourceManager->GetTexture2D("T_color_pink_hover");
+    m_pTextureColorBox[2][2] = twResourceManager->GetTexture2D("T_color_pink_pressed");
+    m_pTextureColorBox[3][0] = twResourceManager->GetTexture2D("T_color_yellow_normal");
+    m_pTextureColorBox[3][1] = twResourceManager->GetTexture2D("T_color_yellow_hover");
+    m_pTextureColorBox[3][2] = twResourceManager->GetTexture2D("T_color_yellow_pressed");
+    m_pTextureColorBox[4][0] = twResourceManager->GetTexture2D("T_color_blue_normal");
+    m_pTextureColorBox[4][1] = twResourceManager->GetTexture2D("T_color_blue_hover");
+    m_pTextureColorBox[4][2] = twResourceManager->GetTexture2D("T_color_blue_pressed");
+
     // Background ----------------------------------------------------
 
     m_pBackground = twActiveUIWorld->CreateUIEntity();
@@ -250,6 +266,81 @@ void CGameEndMenu::Start()
 
     m_pFontHighscore->SetDrawable(highscoreTextDrawable);
     twActiveUIWorld->AddUIEntity(m_pFontHighscore);
+
+    // Color 1 ------------------------------------------- 
+
+    m_pColor1 = twActiveUIWorld->CreateUIEntity();
+    m_pColor1->m_Transform.SetAnchorPoint(-0.2f, -0.5f);
+    m_pColor1->m_Transform.SetPositionOffset(0.0f, 0.0f, 0.0f);
+
+    auto color1Drawable = twRenderer->CreateUIDrawable();
+    color1Drawable->SetActive(false);
+    color1Drawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardUI"));
+    color1Drawable->m_Material.m_pPixelShader.SetTexture(0, m_pTextureColorBox[0][0]);
+
+    m_pColor1->SetDrawable(color1Drawable);
+
+    twActiveUIWorld->AddUIEntity(m_pColor1);
+
+    // Color 2 ------------------------------------------- 
+
+    m_pColor2 = twActiveUIWorld->CreateUIEntity();
+    m_pColor2->m_Transform.SetAnchorPoint(-0.1f, -0.5f);
+    m_pColor2->m_Transform.SetPositionOffset(0.0f, 0.0f, 0.0f);
+
+    auto color2Drawable = twRenderer->CreateUIDrawable();
+    color2Drawable->SetActive(false);
+    color2Drawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardUI"));
+    color2Drawable->m_Material.m_pPixelShader.SetTexture(0, m_pTextureColorBox[1][0]);
+
+    m_pColor2->SetDrawable(color2Drawable);
+
+    twActiveUIWorld->AddUIEntity(m_pColor2);
+
+    // Color 3 ------------------------------------------- 
+
+    m_pColor3 = twActiveUIWorld->CreateUIEntity();
+    m_pColor3->m_Transform.SetAnchorPoint(0.0f, -0.5f);
+    m_pColor3->m_Transform.SetPositionOffset(0.0f, 0.0f, 0.0f);
+
+    auto color3Drawable = twRenderer->CreateUIDrawable();
+    color3Drawable->SetActive(false);
+    color3Drawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardUI"));
+    color3Drawable->m_Material.m_pPixelShader.SetTexture(0, m_pTextureColorBox[2][0]);
+
+    m_pColor3->SetDrawable(color3Drawable);
+
+    twActiveUIWorld->AddUIEntity(m_pColor3);
+
+    // Color 4 ------------------------------------------- 
+
+    m_pColor4 = twActiveUIWorld->CreateUIEntity();
+    m_pColor4->m_Transform.SetAnchorPoint(0.1f, -0.5f);
+    m_pColor4->m_Transform.SetPositionOffset(0.0f, 0.0f, 0.0f);
+
+    auto color4Drawable = twRenderer->CreateUIDrawable();
+    color4Drawable->SetActive(false);
+    color4Drawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardUI"));
+    color4Drawable->m_Material.m_pPixelShader.SetTexture(0, m_pTextureColorBox[3][0]);
+
+    m_pColor4->SetDrawable(color4Drawable);
+
+    twActiveUIWorld->AddUIEntity(m_pColor4);
+
+    // Color 5 ------------------------------------------- 
+
+    m_pColor5 = twActiveUIWorld->CreateUIEntity();
+    m_pColor5->m_Transform.SetAnchorPoint(0.2f, -0.5f);
+    m_pColor5->m_Transform.SetPositionOffset(0.0f, 0.0f, 0.0f);
+
+    auto color5Drawable = twRenderer->CreateUIDrawable();
+    color5Drawable->SetActive(false);
+    color5Drawable->m_Material.SetMaterial(twResourceManager->GetMaterial("StandardUI"));
+    color5Drawable->m_Material.m_pPixelShader.SetTexture(0, m_pTextureColorBox[4][0]);
+
+    m_pColor5->SetDrawable(color5Drawable);
+
+    twActiveUIWorld->AddUIEntity(m_pColor5);
 }
 
 void CGameEndMenu::Update(const SUIInput& a_rInput)
@@ -424,6 +515,11 @@ void CGameEndMenu::UpdateGraphics()
     m_pFontMainMenu->GetDrawable()->SetActive(active);
     m_pFontTryAgain->GetDrawable()->SetActive(active);
     m_pFontHighscore->GetDrawable()->SetActive(active);
+    m_pColor1->GetDrawable()->SetActive(active);
+    m_pColor2->GetDrawable()->SetActive(active);
+    m_pColor3->GetDrawable()->SetActive(active);
+    m_pColor4->GetDrawable()->SetActive(active);
+    m_pColor5->GetDrawable()->SetActive(active);
 
 	m_pScoreFontElement->GetDrawable()->SetActive(active && !CGameInfo::Instance().m_Highscore.IsHighscore());
 	m_pHighscoreFontElement->GetDrawable()->SetActive(active && CGameInfo::Instance().m_Highscore.IsHighscore());
