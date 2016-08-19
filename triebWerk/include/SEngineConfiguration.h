@@ -1,6 +1,14 @@
 #pragma once
+
 namespace triebWerk
 {
+	struct SWindowConfig
+	{
+		int m_WindowStyle;
+		char* m_WindowName;
+		int m_IconID;
+	};
+
     struct SEngineConfiguration
     {
         const char* m_Name;
@@ -13,5 +21,6 @@ namespace triebWerk
 		float m_MasterVolume;
 		float m_SFXVolume;
 		float m_BGMVolume;
+		SWindowConfig m_WindowConfig;
     };
 }

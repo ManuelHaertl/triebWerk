@@ -366,7 +366,7 @@ void triebWerk::CResourceManager::LoadOBJ(const SFile& a_File)
 void triebWerk::CResourceManager::LoadAudio(const SFile& a_File)
 {
 	size_t hash = StringHasher(RemoveFileType(a_File.FileName));
-	if (ExistsResourceInBuffer(EFileType::MP3, hash))
+	if (ExistsResourceInBuffer(EFileType::OGG, hash))
 		return;
 
 	CSound* sound = new CSound;

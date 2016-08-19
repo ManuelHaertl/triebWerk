@@ -48,9 +48,13 @@ int main()
 
 void LoadConfig(triebWerk::SEngineConfiguration& a_rConfig)
 {
-    a_rConfig.m_Name = "AZ-Tec Racer";
     a_rConfig.m_PhysicTimeStamp = 0.01f;
     a_rConfig.m_TargetFPS = 0;
+
+	//Window
+	a_rConfig.m_WindowConfig.m_IconID = 1337;
+	a_rConfig.m_WindowConfig.m_WindowName = "AZ-Tec Racer";
+	a_rConfig.m_WindowConfig.m_WindowStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
 
     triebWerk::CTWFParser parser;
     triebWerk::CTWFData data;
@@ -77,7 +81,7 @@ void LoadConfig(triebWerk::SEngineConfiguration& a_rConfig)
         a_rConfig.m_Width = std::stoi(data.GetValue("width"));
         a_rConfig.m_Height = std::stoi(data.GetValue("height"));
         a_rConfig.m_Fullscreen = std::stoi(data.GetValue("fullscreen"));
-        a_rConfig.m_VSync = std::stoi(data.GetValue("vsync"));
+        a_rConfig.m_VSync = static_cast<bool>(std::stoi(data.GetValue("vsync")));
         a_rConfig.m_MasterVolume = std::stof(data.GetValue("mastervolume"));
         a_rConfig.m_BGMVolume = std::stof(data.GetValue("bgmvolume"));
         a_rConfig.m_SFXVolume = std::stof(data.GetValue("sfxvolume"));

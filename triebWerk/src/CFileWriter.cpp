@@ -16,11 +16,13 @@ bool triebWerk::CFileWriter::CreateSaveFile(const char * a_pPath)
 	auto e = t.find_last_of("\\");
 	t.resize(e+1);
 
-	auto r = CreateDirectory(t.c_str(), NULL);
+	CreateDirectory(t.c_str(), NULL);
 
 	fopen_s(&m_pFile, a_pPath, "w");
 	if (m_pFile == nullptr)
 		return false;
+	else
+		return true;
 }
 
 void triebWerk::CFileWriter::SetParams(const std::string & a_rKey, const std::string & a_rValue)
