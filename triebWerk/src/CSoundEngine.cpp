@@ -124,11 +124,6 @@ void triebWerk::CSoundEngine::PlaySFX(CSound * a_pSFX)
 	m_pDevice->play2D(a_pSFX->m_pSoundSource);
 }
 
-void triebWerk::CSoundEngine::PlaySFX(CSound * a_pSFX, bool a_Looping)
-{
-	auto sound = m_pDevice->play2D(a_pSFX->m_pSoundSource);
-}
-
 void triebWerk::CSoundEngine::StopAllSounds()
 {
 	m_pDevice->stopAllSounds();

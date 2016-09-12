@@ -47,7 +47,6 @@ namespace triebWerk
     public:
         bool Initialize();
 		bool Initialize(const SEngineConfiguration& a_Config);
-		//bool Initialize()
         bool Run();
         void Shutdown();
 

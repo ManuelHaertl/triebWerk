@@ -54,7 +54,7 @@ bool triebWerk::CEngine::Initialize(const SEngineConfiguration& a_Config)
     m_pDebug = new CDebug();
 
 	m_pWindow = new CWindow();
-    result = m_pWindow->Initialize(a_Config.m_Fullscreen, a_Config.m_Width, a_Config.m_Height, a_Config.m_Name);
+    result = m_pWindow->Initialize(a_Config.m_Fullscreen, a_Config.m_Width, a_Config.m_Height, a_Config.m_WindowConfig);
 	if (!result)
 		return false;
 

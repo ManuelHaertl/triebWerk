@@ -30,8 +30,23 @@ triebWerk::CWindow::~CWindow()
 	}
 }
 
-bool triebWerk::CWindow::Initialize(const bool a_Fullscreen, const unsigned short a_ScreenWidth, const unsigned short a_ScreenHeight, const char* a_Name)
+bool triebWerk::CWindow::Initialize(const bool a_Fullscreen, const unsigned short a_ScreenWidth, const unsigned short a_ScreenHeight, const SWindowConfig& a_WindowConfig)
 {
+	if (a_WindowConfig.m_WindowStyle == 0)
+	{
+		WindowStyleWindowed = DefaultWindowStyleWindowed;
+	}
+	else
+	{
+		WindowStyleWindowed = a_WindowConfig.m_WindowStyle;
+	}
+
+	if (strlen(a_WindowConfig.m_WindowName) == 0)
+	{
+		CDebugLogfile::Instance().LogfText(CDebugLogfile::ELogType::Error, false, "Error: Empty window name not allowed!");
+		return false;
+	}
+
 	//Get the default user screen resolution
 	m_DefaultWidth = static_cast<unsigned short>(GetSystemMetrics(SM_CXSCREEN));
 	m_DefaultHeight = static_cast<unsigned short>(GetSystemMetrics(SM_CYSCREEN));
@@ -54,20 +69,25 @@ bool triebWerk::CWindow::Initialize(const bool a_Fullscreen, const unsigned shor
 	mainWindowDescription.hInstance = GetModuleHandle(NULL);
 	mainWindowDescription.hCursor = LoadCursor(NULL, IDC_ARROW);
 	mainWindowDescription.hbrBackground = (HBRUSH)COLOR_WINDOW;
-	mainWindowDescription.lpszClassName = a_Name;
-	mainWindowDescription.hIcon = LoadIcon(hModule, MAKEINTRESOURCE(1337));
-	mainWindowDescription.hIconSm = mainWindowDescription.hIcon;
+	mainWindowDescription.lpszClassName = a_WindowConfig.m_WindowName;
+	if(a_WindowConfig.m_IconID != 0)
+	{
+		mainWindowDescription.hIcon = LoadIcon(hModule, MAKEINTRESOURCE(a_WindowConfig.m_IconID));
+		mainWindowDescription.hIconSm = mainWindowDescription.hIcon;
+	}
+
 
 	RegisterClassEx(&mainWindowDescription);
 
 	//Adjust the window rect
 	RECT windowRectangle = { 0, 0, static_cast<long>(a_ScreenWidth), static_cast<long>(a_ScreenHeight) };
+
 	AdjustWindowRect(&windowRectangle, WindowStyleWindowed, FALSE);
 
 	//Create window 
 	m_WindowHandle = CreateWindowEx(NULL,
-		a_Name,
-		a_Name,
+		a_WindowConfig.m_WindowName,
+		a_WindowConfig.m_WindowName,
 		WindowStyleWindowed,
 		0,
 		0,

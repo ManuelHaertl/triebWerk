@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <queue>
 #include <CDebugLogfile.h>
+#include <SEngineConfiguration.h>
 
 namespace triebWerk
 {
@@ -9,10 +10,13 @@ namespace triebWerk
 	{
 	private:
 		static const DWORD WindowStyleFullscreen = WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP;
-		static const DWORD WindowStyleWindowed = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
+		static const DWORD DefaultWindowStyleWindowed = WS_OVERLAPPEDWINDOW;
 
+	private:
 		HWND m_WindowHandle;
 		std::queue<MSG> m_MessageQueue;
+
+		DWORD WindowStyleWindowed;
 
 		unsigned short m_Width;
 		unsigned short m_Height;
@@ -35,7 +39,7 @@ namespace triebWerk
 
 	public:
 		//Initialize the window and displays it in focus
-		bool Initialize(const bool a_Fullscreen, const unsigned short a_ScreenWidth, const unsigned short a_ScreenHeight, const char* a_Name);
+		bool Initialize(const bool a_Fullscreen, const unsigned short a_ScreenWidth, const unsigned short a_ScreenHeight, const SWindowConfig& a_WindowConfig);
 
 		//Get the first window event in queue
 		const MSG GetWindowEvent();
