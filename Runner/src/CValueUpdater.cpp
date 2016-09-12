@@ -60,6 +60,7 @@ float CDifficultyChanger::ScoreDifficulty2 = 1000.0f;
 float CDifficultyChanger::ScoreDifficulty3 = 2000.0f;
 float CDifficultyChanger::ScoreDifficulty4 = 3000.0f;
 float CDifficultyChanger::ScoreDifficulty5 = 4000.0f;
+float CDifficultyChanger::ScoreDifficulty6 = 5000.0f;
 float CDifficultyChanger::SpeedRaiseTime = 60.0f;
 float CDifficultyChanger::AddedSpeed = 5.0f;
 float CDifficultyChanger::MaxSpeed = 85.0f;
@@ -335,6 +336,10 @@ void CValueUpdater::UpdateValues()
         else if (value.first == "dc_ScoreDifficulty5")
         {
             CDifficultyChanger::ScoreDifficulty5 = std::stof(value.second);
+        }
+        else if (value.first == "dc_ScoreDifficulty6")
+        {
+            CDifficultyChanger::ScoreDifficulty6 = std::stof(value.second);
         }
         else if (value.first == "dc_SpeedRaiseTime")
         {

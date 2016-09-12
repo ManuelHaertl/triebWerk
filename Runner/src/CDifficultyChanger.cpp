@@ -30,9 +30,11 @@ void CDifficultyChanger::Update()
         gameInfo.m_Difficulty = 3;
     else if (points < ScoreDifficulty5)
         gameInfo.m_Difficulty = 4;
+    else if (points < ScoreDifficulty6)
+        gameInfo.m_Difficulty = 5;
     else
     {
-        gameInfo.m_Difficulty = 5;
+        gameInfo.m_Difficulty = 6;
         m_CurrentSpeedRaiseTime -= twTime->GetDeltaTime();
         if (m_CurrentSpeedRaiseTime <= 0.0f)
         {

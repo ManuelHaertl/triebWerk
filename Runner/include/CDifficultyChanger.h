@@ -6,6 +6,7 @@ public:
     static float ScoreDifficulty3;
     static float ScoreDifficulty4;
     static float ScoreDifficulty5;
+    static float ScoreDifficulty6;
     static float SpeedRaiseTime;
     static float AddedSpeed;
     static float MaxSpeed;

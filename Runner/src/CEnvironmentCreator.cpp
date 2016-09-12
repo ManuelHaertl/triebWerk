@@ -402,7 +402,7 @@ void CEnvironmentCreator::CreateCurvedGrid()
 	m_pCurvedGrid = twActiveWorld->CreateEntity();
 	m_pBGPlane->m_Transform.AddChild(&m_pCurvedGrid->m_Transform);
 	m_pCurvedGrid->m_Transform.SetPosition(0.0f, SphereY, 550.0f);
-	m_pCurvedGrid->m_Transform.SetScale(1.5f, 1.5f, 1.5f);
+	m_pCurvedGrid->m_Transform.SetScale(1.7f, 1.7f, 1.7f);
 	
 	triebWerk::CMeshDrawable* mesh = twRenderer->CreateMeshDrawable();
 	mesh->m_pMesh = twEngine.m_pResourceManager->GetMesh("ms_worldspere");

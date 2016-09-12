@@ -25,6 +25,7 @@ namespace triebWerk
 	private:
 		FILE* m_pFile;
 		bool m_ErrorOccurred;
+        bool m_Created;
 
 	public:
 		static CDebugLogfile& Instance();

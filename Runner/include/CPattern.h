@@ -7,7 +7,7 @@
 class CPattern
 {
 public:
-    static const size_t MaxDifficulty = 5;
+    static const size_t MaxDifficulty = 6;
     static const size_t MaxPriorities = 4;
     static const size_t MaxCategories = 3;
 

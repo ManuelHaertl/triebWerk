@@ -2,7 +2,6 @@
 #include <Windows.h>
 #include <iostream>
 
-#include <ShellScalingAPI.h>
 #include <Winuser.h>
 
 triebWerk::CWindow::CWindow() : 
@@ -238,18 +237,21 @@ void triebWerk::CWindow::UpdateWindow()
 
 void triebWerk::CWindow::GetDPIFromDisplay(unsigned int* a_OutDPIX, unsigned int* a_OutDPIY)
 {
-	HRESULT hResult;
+	//HRESULT hResult;
 
-	auto monitor = MonitorFromWindow(m_WindowHandle, MONITOR_DEFAULTTONEAREST);
+	//auto monitor = MonitorFromWindow(m_WindowHandle, MONITOR_DEFAULTTONEAREST);
 
-	hResult = GetDpiForMonitor(monitor, MDT_EFFECTIVE_DPI, a_OutDPIX, a_OutDPIY);
-	if (FAILED(hResult))
-	{
-		DebugLogfile.LogfText(CDebugLogfile::ELogType::Warning, false, "Warning: Could not read dpi from monitor!");
-		*a_OutDPIX = 0;
-		*a_OutDPIY = 0;
-		return;
-	}
+	//hResult = GetDpiForMonitor(monitor, MDT_EFFECTIVE_DPI, a_OutDPIX, a_OutDPIY);
+	//if (FAILED(hResult))
+	//{
+	//	DebugLogfile.LogfText(CDebugLogfile::ELogType::Warning, false, "Warning: Could not read dpi from monitor!");
+	//	*a_OutDPIX = 0;
+	//	*a_OutDPIY = 0;
+	//	return;
+	//}
+
+    *a_OutDPIX = 0;
+    *a_OutDPIY = 0;
 }
 
 int triebWerk::CWindow::GetMaximalDisplayWidth()
